@@ -1,23 +1,21 @@
 # Welcome to the Gemini API Cookbook
-A collection of guides and examples for the Gemini API. You'll need a Gemini API key to run these examples. You can create one in [Google AI Studio](https://aistudio.google.com/app/apikey) with a single click. 
+
+A collection of guides and examples for the Gemini API. You'll need a Gemini API key to run these examples. You can [create](https://aistudio.google.com/app/apikey) one in Google AI Studio with a single click.
 
 Here's an overview of what you'll find.
+* [Quickstarts](https://github.com/google-gemini/gemini-api-cookbook/tree/main/quickstarts). Tutorials that show you how to write prompts and use different features of the API (safety, tuning, embeddings, function calling, etc).
+* [Examples](https://github.com/google-gemini/gemini-api-cookbook/tree/main/examples). A mix of fun examples and practical utilities.
+* A short [getting started](https://github.com/google-gemini/gemini-api-cookbook/blob/main/docs/Get_started.md) guide to point you in the right direction if you're new to the Gemini API.
 
-* [Docs](foo) contains an API Overview, the API Reference, and best practice guides (on prompting, safety, tuning, etc).
-* [Examples](foo) contains a mix of fun examples and practical utilities.
+Most of these examples are written in Python as Colab Notebooks. You can open these in [Google Colab](https://colab.research.google.com/) by clicking on the "Run in Colab" button at the top of each notebook, or run them in the environment of your choice.
 
-Inside the examples folder, you'll also find:
-* [Quickstarts](foo): simple examples of making your first prompt.
-* [Capabilities](foo): complete complete code examples that show you how to use different features of the API.
-    
-All of these examples are written in Python, and most are Jupyter Notebooks. You can open these in [Google Colab](https://https://colab.research.google.com/) by clicking on the "Run in Colab" button at the top of each notebook, or run them in the environment of your choice.
+Looking for examples in other programming languages?
+* Check out the getting stated guide above for links.
 
-Looking for examples in other programming languages? You can find them in the official SDKs.
-* Node.js 
-* Dart (Flutter)
-* Android
-* Swift
+Have questions? Find a bug?
+* Please open an [issue](https://github.com/google-gemini/gemini-api-cookbook/issues).
+* Ask for help on the [Forum](https://discuss.ai.google.dev).
 
-Contributions are welcome. You can find our contribution guidelines here: TODO. 
+Contributions are welcome. See [contributing](https://github.com/google-gemini/gemini-api-cookbook/blob/main/contributing.md) to learn more.
 
-You can find more documentation on [ai.google.dev](https://ai.google.dev).
+You can find more documentation on https://ai.google.dev

@@ -6,6 +6,7 @@ Here's an overview of what you'll find.
 * [Quickstarts](https://github.com/google-gemini/gemini-api-cookbook/tree/main/quickstarts). Tutorials that show you how to write prompts and use different features of the API (safety, tuning, embeddings, function calling, etc).
 * [Examples](https://github.com/google-gemini/gemini-api-cookbook/tree/main/examples). A mix of fun examples and practical utilities.
 * A short [getting started](https://github.com/google-gemini/gemini-api-cookbook/blob/main/docs/Get_started.md) guide to point you in the right direction if you're new to the Gemini API.
+* A [FAQ](https://github.com/google-gemini/gemini-api-cookbook/blob/main/FAQ.md) with common questions and answers.
 
 Most of these examples are written in Python as Colab Notebooks. You can open these in [Google Colab](https://colab.research.google.com/) by clicking on the "Run in Colab" button at the top of each notebook, or run them in the environment of your choice.
 

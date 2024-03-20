@@ -4,7 +4,7 @@ A collection of guides and examples for the Gemini API. You'll need a Gemini API
 
 Here's an overview of what you'll find.
 * A short [getting started](https://github.com/google-gemini/gemini-api-cookbook/blob/main/Getting_started.md) guide to point you in the right direction if you're new to the Gemini API.
-* [Quickstarts](https://github.com/google-gemini/gemini-api-cookbook/tree/main/quickstarts). Tutorials that show you how to write prompts and use different features of the API (safety, tuning, embeddings, function calling, etc).
+* [Quickstarts](https://github.com/google-gemini/gemini-api-cookbook/tree/main/quickstarts). Tutorials that show you how to write prompts and use different features of the API.
 * [Examples](https://github.com/google-gemini/gemini-api-cookbook/tree/main/examples). A mix of fun examples and practical utilities.
 * A [FAQ](https://github.com/google-gemini/gemini-api-cookbook/blob/main/FAQ.md) with common questions and answers.
 

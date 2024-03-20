@@ -5,11 +5,12 @@ The Gemini API gives you access to Gemini [models](https://ai.google.dev/models/
 1. Go to [Google AI Studio](https://aistudio.google.com/).
 2. Login with your Google account.
 3. [Create](https://aistudio.google.com/app/apikey) an API key.
-4. Use a [quickstart](https://github.com/google-gemini/gemini-api-cookbook/blob/main/quickstarts/Prompting.ipynb) for Python, or call the REST API [using](https://github.com/google-gemini/gemini-api-cookbook/blob/main/quickstarts/rest/rest_prompting.ipynb) curl. You can find quickstarts for more languages in the SDKs.
+4. Use a [quickstart](https://github.com/google-gemini/gemini-api-cookbook/blob/main/quickstarts/Prompting.ipynb) for Python, or call the REST API [using curl](https://github.com/google-gemini/gemini-api-cookbook/blob/main/quickstarts/rest/rest_prompting.ipynb). You can find quickstarts for more languages in the SDKs.
 
 **Official SDKs**
-The Gemini API is a REST API. You can call the API using a command line tool like `curl` ([example](https://github.com/google-gemini/gemini-api-cookbook/blob/main/quickstarts/curl/rest_prompting.ipynb)), or by using one of our official SDKs:
-* [Python](https://github.com/google/generative-ai-python) (start with a [quickstart](https://github.com/google-gemini/gemini-api-cookbook/tree/main/quickstarts) tutorial)
+
+The Gemini API is a REST API. You can call the API using a command line tool like `curl` , or by using one of our official SDKs:
+* [Python](https://github.com/google/generative-ai-python) 
 * [Node.js](https://github.com/google/generative-ai-js)
 * [Dart (Flutter)](https://github.com/google/generative-ai-dart)
 * [Android](https://github.com/google/generative-ai-android)

@@ -16,6 +16,6 @@ Have questions? Find a bug?
 * Open an [issue](https://github.com/google-gemini/gemini-api-cookbook/issues) on GitHub.
 * Ask for help on the [Forum](https://discuss.ai.google.dev).
 
-Contributions are welcome. See [contributing](https://github.com/google-gemini/gemini-api-cookbook/blob/main/Contributing.md) to learn more.
+Contributions are welcome. See [contributing](https://github.com/google-gemini/gemini-api-cookbook/blob/main/CONTRIBUTING.md) to learn more.
 
 You can find more documentation on https://ai.google.dev

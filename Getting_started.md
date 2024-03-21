@@ -18,13 +18,12 @@ The Gemini API is a REST API. You can call the API using a command line tool lik
 * [Go](https://github.com/google/generative-ai-go)
 
 **Capabilities**
-* Learn about the capabilities of the Gemini API by checking out the quickstarts for [safety](https://github.com/google-gemini/gemini-api-cookbook/blob/main/quickstarts/Safety.ipynb), [embeddings](https://github.com/google-gemini/gemini-api-cookbook/blob/main/quickstarts/Embeddings.ipynb), [tuning](https://github.com/google-gemini/gemini-api-cookbook/blob/main/quickstarts/Tuning.ipynb), and [function calling](https://github.com/google-gemini/gemini-api-cookbook/blob/main/quickstarts/Function_calling.ipynb). 
+* Learn about the capabilities of the Gemini API by checking out the quickstarts for [safety](https://github.com/google-gemini/gemini-api-cookbook/blob/main/quickstarts/Safety.ipynb), [embeddings](https://github.com/google-gemini/gemini-api-cookbook/blob/main/quickstarts/Embeddings.ipynb), and [function calling](https://github.com/google-gemini/gemini-api-cookbook/blob/main/quickstarts/Function_calling.ipynb). 
 
 **Examples**
-* Check out the [examples](https://github.com/google-gemini/gemini-api-cookbook) folder in the cookbook for more.
+* Check out the [examples](https://github.com/google-gemini/gemini-api-cookbook/tree/main/examples) folder in the cookbook for more.
 
 **Get help**
 * Ask questions and get help in the new [Google AI Developer Forum](https://discuss.ai.google.dev).
-* Find answers to common questions in the [FAQ](https://github.com/google-gemini/gemini-api-cookbook/blob/main/FAQ.md).
 
 Thank you for developing with Gemini! We’re excited to see what you create.

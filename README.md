@@ -10,7 +10,7 @@ Here's an overview of what you'll find.
 Most of these examples are written in Python as Colab Notebooks. You can open these in [Google Colab](https://colab.research.google.com/) by clicking on the "Run in Colab" button at the top of each notebook, or download and run them in the environment of your choice.
 
 Looking for examples in other programming languages?
-* Check out the getting stated guide above for links.
+* Check out the getting started guide above for links.
 
 Have questions? Find a bug?
 * Open an [issue](https://github.com/google-gemini/gemini-api-cookbook/issues) on GitHub.

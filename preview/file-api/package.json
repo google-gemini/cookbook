@@ -1,7 +1,7 @@
 {
-    "name": "files-api-client-samples",
+    "name": "file-api-client-samples",
     "version": "1.0.0",
-    "description": "Sample code to use the Files API and make Gemini 1.5 API requests.",
+    "description": "Sample code to use the File API and make Gemini API requests.",
     "private": true,
     "scripts": {
         "start": "node sample.js"

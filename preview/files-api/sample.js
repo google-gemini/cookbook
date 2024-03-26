@@ -45,6 +45,6 @@ async function run(filePath, fileDisplayName) {
     }
 }
 
-filePath = "sample_data/gemini.png";
+filePath = "sample_data/gemini_logo.png";
 fileDisplayName = "Gemini logo";
 run(filePath, fileDisplayName);

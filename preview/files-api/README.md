@@ -44,5 +44,5 @@ npm start
 
 ## cURL Bash Script Sample
 ```
-bash ./sample.sh -a "<YOUR_KEY>" -i "sample_data/gemini.png" -d "gemini logo"
+bash ./sample.sh -a "<YOUR_KEY>" -i "sample_data/gemini_logo.png" -d "gemini logo"
 ```

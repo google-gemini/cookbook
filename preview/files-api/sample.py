@@ -17,7 +17,7 @@ genai_service = googleapiclient.discovery.build_from_document(
     discovery_docs.content, developerKey=api_key)
 
 # Prepare file to upload to GenAI File API
-file_path = "sample_data/gemini.png"
+file_path = "sample_data/gemini_logo.png"
 media = MediaFileUpload(file_path, mimetype=mimetypes.guess_type(file_path)[0])
 body = {"file": {"displayName": "Gemini logo"}}
 

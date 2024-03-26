@@ -5,7 +5,7 @@ The Gemini File API provides a simple way for developers to upload files and use
 
 
 > [!IMPORTANT]
-> The File API is currently in [private preview](https://ai.google.dev/docs/api_versions) and is [only available in certain regions](https://ai.google.dev/available_regions).
+> The File API is currently in [private preview](https://github.com/google-gemini/gemini-api-cookbook/blob/main/preview/README.md) and is [only available in certain regions](https://ai.google.dev/available_regions).
 
 
 

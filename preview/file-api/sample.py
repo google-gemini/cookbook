@@ -1,41 +1,33 @@
-import googleapiclient
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
+import google.generativeai as genai
 import requests
 import os
 from dotenv import load_dotenv
-import mimetypes
 
 # Load environment variables from .env file
 load_dotenv()
 api_key = os.environ["GOOGLE_API_KEY"]
-GENAI_DISCOVERY_URL = f"https://generativelanguage.googleapis.com/$discovery/rest?version=v1beta&key={api_key}"
 
 # Initialize Google API Client
-discovery_docs = requests.get(GENAI_DISCOVERY_URL)
-genai_service = googleapiclient.discovery.build_from_document(
-    discovery_docs.content, developerKey=api_key)
+genai.configure(api_key=api_key)
 
 # Prepare file to upload to GenAI File API
 file_path = "sample_data/gemini_logo.png"
-media = MediaFileUpload(file_path, mimetype=mimetypes.guess_type(file_path)[0])
-body = {"file": {"displayName": "Gemini logo"}}
+display_name = "Gemini Logo"
+file_response = genai.upload_file(path=file_path,
+                             display_name=display_name)
+print(f"Uploaded file {file_response.display_name} as: {file_response.uri}")
 
-# Upload file
-create_file_request = genai_service.media().upload(media_body=media, body=body)
-create_file_response = create_file_request.execute()
-file_uri = create_file_response["file"]["uri"]
-file_mimetype = create_file_response["file"]["mimeType"]
-print("Uploaded file: " + file_uri)
+# Verify the file is uploaded to the API
+get_file = genai.get_file(name=file_response.name)
+print(f"Retrieved file {get_file.display_name} as: {get_file.uri}")
 
 # Make Gemini 1.5 API LLM call
 prompt = "Describe the image with a creative description"
-model = "models/gemini-1.5-pro-latest"
-contents = {"contents": [{ 
-  "parts":[
-    {"text": prompt},
-    {"file_data": {"file_uri": file_uri, "mime_type": file_mimetype}}]
-}]}
-genai_request = genai_service.models().generateContent(
-  model=model, body=contents)
-print(genai_request.execute())
+model_name = "models/gemini-1.5-pro-latest"
+model = genai.GenerativeModel(model_name=model_name)
+response = model.generate_content([prompt, file_response])
+print(response)
+
+# Delete the sample file
+genai.delete_file(name=file_response.name)
+print(f'Deleted file {file_response.display_name}')

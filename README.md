@@ -28,4 +28,4 @@ Open an [issue](https://github.com/google-gemini/gemini-api-cookbook/issues) on 
 ## Contributing
 Contributions are welcome. See [contributing](https://github.com/google-gemini/gemini-api-cookbook/blob/main/CONTRIBUTING.md) to learn more.
 
-Thank you for developing with Gemini! We’re excited to see what you create.
+Thank you for developing with the Gemini API! We’re excited to see what you create.

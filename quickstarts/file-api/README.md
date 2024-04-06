@@ -5,8 +5,7 @@ The Gemini File API provides a simple way for developers to upload files and use
 
 
 > [!IMPORTANT]
-> The File API is currently in [private preview](https://github.com/google-gemini/gemini-api-cookbook/blob/main/preview/README.md) and is [only available in certain regions](https://ai.google.dev/available_regions).
-
+> The File API is currently in beta and is [only available in certain regions](https://ai.google.dev/available_regions).
 
 
 ## Python Sample
@@ -42,6 +41,7 @@ npm start
 ```
 
 ## cURL Bash Script Sample
+The following script will upload a file given the file path.
 ```
 bash ./sample.sh -a "<YOUR_KEY>" -i "sample_data/gemini_logo.png" -d "Gemini logo"
 ```

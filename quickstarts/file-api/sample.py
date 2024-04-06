@@ -1,5 +1,4 @@
 import google.generativeai as genai
-import requests
 import os
 from dotenv import load_dotenv
 

@@ -19,7 +19,7 @@ touch .env
 echo "GOOGLE_API_KEY='YOUR_API_KEY'" >> .env
 
 # Install dependencies.
-pip3 install -r requirements.txt
+pip3 install -U -r requirements.txt
 
 # Run the sample code.
 python3 sample.py

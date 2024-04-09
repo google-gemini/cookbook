@@ -7,6 +7,15 @@ The Gemini File API provides a simple way for developers to upload files and use
 > [!IMPORTANT]
 > The File API is currently in beta and is [only available in certain regions](https://ai.google.dev/available_regions).
 
+## Quickstarts
+Ready to get started? Learn the essentials of uploading files and using them in GenerateContent requests to the Gemini API:
+
+[File API Colab](https://colab.research.google.com/github/google-gemini/gemini-api-cookbook/blob/main/quickstarts/File_API.ipynb)
+
+[Audio Colab](https://colab.research.google.com/github/google-gemini/gemini-api-cookbook/blob/main/quickstarts/Audio.ipynb)
+
+[Video Colab](https://colab.research.google.com/github/google-gemini/gemini-api-cookbook/blob/main/quickstarts/Video.ipynb)
+
 
 ## Python Sample
 ```

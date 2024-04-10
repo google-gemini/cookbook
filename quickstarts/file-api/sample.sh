@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Upload a file using the GenAI File API via curl.
 api_key=""

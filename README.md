@@ -11,7 +11,7 @@ The Gemini API gives you access to Gemini [models](https://ai.google.dev/models/
 4. Use a [quickstart](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Prompting.ipynb) for Python, or call the REST API [using curl](https://github.com/google-gemini/cookbook/blob/main/quickstarts/rest/Prompting_REST.ipynb).
 
 ### Capabilities
-Learn about the capabilities of the Gemini API by checking out the quickstarts for [safety](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Safety.ipynb), [embeddings](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Embeddings.ipynb), [function calling](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Function_calling.ipynb), and more.
+Learn about the capabilities of the Gemini API by checking out the quickstarts for [safety](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Safety.ipynb), [embeddings](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Embeddings.ipynb), [function calling](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Function_calling.ipynb), [audio](https://github.com/google-gemini/cookbook/blob/main/quickstarts/audio.ipynb), and more.
 
 ## Official SDKs
 The Gemini API is a REST API. You can call the API using a command line tool like `curl` , or by using one of our official SDKs:

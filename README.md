@@ -2,7 +2,7 @@
 This is a collection of guides and examples for the Gemini API, including [quickstart](https://github.com/google-gemini/cookbook/tree/main/quickstarts) tutorials for writing prompts and using different features of the API, and [examples](https://github.com/google-gemini/cookbook/tree/main/examples) of things you can build.
 
 ## Get started with the Gemini API
-The Gemini API gives you access to Gemini [models](https://ai.google.dev/models/gemini) created by [Google DeepMind](https://deepmind.google/technologies/gemini/#introduction). Gemini models are built from the ground up to be multimodal, so you can reason seamlessly across text, images, and code. You can use these to develop a [range of applications](https://ai.google.dev/examples/).
+The Gemini API gives you access to Gemini [models](https://ai.google.dev/models/gemini) created by [Google DeepMind](https://deepmind.google/technologies/gemini/#introduction). Gemini models are built from the ground up to be multimodal, so you can reason seamlessly across text, images, code, and audio. You can use these to develop a [range of applications](https://ai.google.dev/examples/).
 
 ### Start developing
 1. Go to [Google AI Studio](https://aistudio.google.com/).

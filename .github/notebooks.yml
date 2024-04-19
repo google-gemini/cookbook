@@ -50,7 +50,7 @@ jobs:
     - name: Fetch main branch
       run: git fetch -u origin main:main
 
-    # Full lint for website notebooks (incl. website button)
+    # Lint for all notebooks
     - name: Lint notebooks
       run: |
         if [ "${{ github.event_name }}" == "pull_request" ]; then

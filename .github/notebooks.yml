@@ -64,6 +64,7 @@ jobs:
           echo "No website notebooks modified in this pull request."
           exit 0
         else
+          echo "WARNING: If the button_colab check fails for you, make sure you have <table class=\"tfo-notebook-buttons\"...>"
           echo "Lint check with nblint:"
           python3 -m tensorflow_docs.tools.nblint \
             --styles=google,tensorflow \

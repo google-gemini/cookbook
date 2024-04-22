@@ -23,7 +23,7 @@ The Gemini API is a REST API. You can call the API using a command line tool lik
 * [Go](https://github.com/google/generative-ai-go)
 
 ## Get help
-Open an [issue](https://github.com/google-gemini/cookbook/issues) on GitHub.
+Ask a question on the new [Build with Google AI Forum](https://discuss.ai.google.dev/), or open an [issue](https://github.com/google-gemini/cookbook/issues) on GitHub.
 
 ## Contributing
 Contributions are welcome. See [contributing](https://github.com/google-gemini/cookbook/blob/main/CONTRIBUTING.md) to learn more.

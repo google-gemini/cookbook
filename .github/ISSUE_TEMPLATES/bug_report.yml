@@ -1,11 +1,11 @@
 name: Bug report
 description: Use this template to report bugs
-labels: ["type:bug"]
+labels: ["type:bug", "component:quickstarts", "component:examples"]
 body:
   - type: markdown
     attributes:
       value: >
-        **Note:** If this is a support question (e.g. _How do I do XYZ?_), please post on the [Google Developers Community](https://discord.gg/google-dev-community) Discord server's #palm-api channel instead. This is a great place to interact with developers, and to learn, share, and support each other.
+        **Note:** If this is a support question (e.g. _How do I do XYZ?_), please visit the [Discourse forum](https://discuss.ai.google.dev/). This is a great place to interact with developers, and to learn, share, and support each other.
   - type: textarea
     id: description
     attributes:

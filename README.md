@@ -30,4 +30,4 @@ Contributions are welcome. See [contributing](https://github.com/google-gemini/c
 
 Thank you for developing with the Gemini API! We’re excited to see what you create.
 
-Bing bong - testing an edit
+Bing bong - testing an edit. Actually we want to say this instead.

@@ -227,7 +227,7 @@ function attachFileToMeeting(event, file, fileName) {
   // Set up the options for listing the event with the advanced Google Calendar service.
   const options = {
       iCalUID: iCalEventId,
-    }
+    };
 
   // Use the primary calendar as the calendar ID to list events.
   const calendarId = 'primary';
@@ -247,7 +247,7 @@ function attachFileToMeeting(event, file, fileName) {
         'fileUrl': fileUrl,
         'title': fileName
       }]
-    }
+    };
 
     // Patch the event to add the file as an attachment.
     Calendar.Events.patch(patch, 'primary', eventId, {"supportsAttachments": true});  
@@ -256,30 +256,30 @@ function attachFileToMeeting(event, file, fileName) {
 function setupMeeting(time, recipient, filename) {
   const files = DriveApp.getFilesByName(filename);
   const file = files.next();
-  const blogContent = file.getAs("text/*").getDataAsString()
+  const blogContent = file.getAs("text/*").getDataAsString();
   
   var geminiOutput = callGemini("Give me a really short title of this blog and a summary with less than three sentences. Please return the result as a JSON with two fields: title and summary. \n" +  blogContent);
 
   // The Gemini model likes to enclose the JSON with ```json and ```
   geminiOutput = JSON.parse(geminiOutput.replace(/```(?:json|)/g, ""));  
-  const title = geminiOutput['title']
-  const fileSummary = geminiOutput['summary']
+  const title = geminiOutput['title'];
+  const fileSummary = geminiOutput['summary'];
 
   const event = CalendarApp.getDefaultCalendar().createEventFromDescription(`meet ${recipient} at ${time} to discuss "${title}"`); 
   event.setDescription(fileSummary);
-  attachFileToMeeting(event, file, filename)
+  attachFileToMeeting(event, file, filename);
 }
 
 function draftEmail(sheet_name, recipient) {
   
-  const prompt = `Compose the email body for ${recipient} with your insights for this chart. Use information in this chart only and do not do historical comparisons.`;
+  const prompt = `Compose the email body for ${recipient} with your insights for this chart. Use information in this chart only and do not do historical comparisons. Be concise.`;
 
   var files = DriveApp.getFilesByName(sheet_name);
   var sheet = SpreadsheetApp.openById(files.next().getId()).getSheetByName("Sheet1");
   var expenseChart = sheet.getCharts()[0];
 
-  var chartFile = DriveApp.createFile(expenseChart.getBlob().setName("ExpenseChart.png"))
-  var emailBody = callGeminiProVision(prompt, expenseChart) 
+  var chartFile = DriveApp.createFile(expenseChart.getBlob().setName("ExpenseChart.png"));
+  var emailBody = callGeminiProVision(prompt, expenseChart);
   GmailApp.createDraft(recipient+"@demo-email-provider.com", "College expenses", emailBody, {
       attachments: [chartFile.getAs(MimeType.PNG)],
       name: 'myname'

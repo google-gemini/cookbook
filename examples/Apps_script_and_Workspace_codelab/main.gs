@@ -35,6 +35,6 @@ function main() {
     Logger.log("Deck URL: " + deckURL);
   }
   else
-    Logger.log("no proper tool found")
+    Logger.log("no proper tool found");
 }
 

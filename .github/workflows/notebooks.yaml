@@ -1,0 +1,79 @@
+# Notebook-related checks
+
+name: Notebooks
+
+on:
+  # Relevant PRs
+  pull_request:
+    paths:
+    - "**.ipynb"
+  # Allow manual runs
+  workflow_dispatch:
+
+jobs:
+  # Format all notebooks.
+  nbfmt:
+    name: Notebook format
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+    - name: Install tensorflow-docs
+      run: python3 -m pip install -U git+https://github.com/tensorflow/docs
+    - name: Fetch main branch
+      run: git fetch -u origin main:main
+    - name: Check notebook formatting
+      run: |
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
+          # Only check notebooks modified in this pull request
+          readarray -t changed_notebooks < <(git diff --name-only main | grep '\.ipynb$' || true)
+        else
+          # Manual run, check everything
+          readarray -t changed_notebooks < <(find -name '*.ipynb')
+        fi
+        if [[ ${#changed_notebooks[@]} == 0 ]]; then
+          echo "No notebooks modified in this pull request."
+          exit 0
+        else
+          echo "Check formatting with nbfmt:"
+          python3 -m tensorflow_docs.tools.nbfmt --test "${changed_notebooks[@]}"
+        fi
+
+  nblint:
+    name: Notebook lint
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+    - name: Install tensorflow-docs
+      run: python3 -m pip install -U git+https://github.com/tensorflow/docs
+    - name: Fetch main branch
+      run: git fetch -u origin main:main
+
+    # Lint for all notebooks
+    - name: Lint notebooks
+      run: |
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
+          # Only check notebooks modified in this pull request
+          readarray -t changed_notebooks < <(git diff --name-only main |grep '\.ipynb$' || true)
+        else
+          # Manual run, check everything
+          readarray -t changed_notebooks < <(find . -name '*.ipynb')
+        fi
+        if [[ ${#changed_notebooks[@]} == 0 ]]; then
+          echo "No website notebooks modified in this pull request."
+          exit 0
+        else
+          echo "WARNING: If the button_colab check fails for you, make sure you have <table class=\"tfo-notebook-buttons\"...>"
+          echo "Lint check with nblint:"
+          python3 -m tensorflow_docs.tools.nblint \
+            --styles=google,tensorflow \
+            --arg=repo:google-gemini/cookbook \
+            --arg=branch:main \
+            --exclude_lint=tensorflow::button_download \
+            --exclude_lint=tensorflow::button_website \
+            --arg=base_url:https://ai.google.dev/ \
+            --exclude_lint=tensorflow::button_github \
+            "${changed_notebooks[@]}"
+        fi
+

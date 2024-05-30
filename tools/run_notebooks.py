@@ -30,7 +30,8 @@ flags.DEFINE_integer("timeout", 600, "Timeout in seconds for a cell's execution.
 FLAGS = flags.FLAGS
 
 SKIP_EXECUTE = [re.compile("pip .*install"),
-                re.compile("userdata\.get")]
+                re.compile("userdata\.get"),
+                re.compile("google.colab.*?userdata"),]
 
 
 class DiscardStatusMessagesFilter(logging.Filter):

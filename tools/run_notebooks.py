@@ -308,7 +308,7 @@ def main(argv):
 
     else:
         notebooks = [os.getcwd()]
-    notebook = [pathlib.Path(p) for p in notebooks]
+    notebooks = [pathlib.Path(p) for p in notebooks]
 
     def expand_dirs(paths):
         for p in paths:
@@ -317,7 +317,10 @@ def main(argv):
             else:
                 yield p
 
+
     notebooks = expand_dirs(notebooks)
+    notebooks = (nb for nb in notebooks if ".ipynb_checkpoints" not in nb.parts)
+    notebooks = list(notebooks)
 
     good_file = pathlib.Path('good.txt')
     if good_file.exists():
@@ -334,6 +337,7 @@ def main(argv):
     traceback_file = pathlib.Path('tracebacks.txt')
     with open(error_file, 'a') as ef, open(good_file, 'a') as df, open(traceback_file, 'a') as tbf:
         for notebook in tqdm.tqdm(notebooks):
+            print("\n\n"+"_"*80)
             print(notebook)
             if str(notebook) in good_notebooks:
                 print('    Okay!')
@@ -351,6 +355,7 @@ def main(argv):
                 tbf.write(f"notebook: {notebook}\n")
                 traceback.print_exception(e, file=tbf)
                 traceback.print_exception(e)
+                print(f"\n\nin notebook: {notebook}")
                 ef.write(str(notebook)+'\n')
             else:
                 print("    Okay!")

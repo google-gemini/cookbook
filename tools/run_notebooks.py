@@ -24,7 +24,6 @@ os.environ['PYDEVD_DISABLE_FILE_VALIDATION'] = '1'
 
 flags.DEFINE_bool("clean", False, "Remove the cache files and start a clearn run")
 flags.DEFINE_bool("debug", False, "Print the notebook execution log")
-flags.DEFINE_string("input_path", None, "Path to the input notebook.")
 flags.DEFINE_bool("save_output", False, "save the output back to the notebook file.")
 flags.DEFINE_integer("timeout", 600, "Timeout in seconds for a cell's execution.")
 
@@ -278,8 +277,16 @@ def execute(
             nbformat.write(nb, output_nb)
 
 
+def test_notebook(processor, notebook):
+    execute(
+        processor=processor,
+        input_notebook=str(notebook),
+        output_notebook=str(notebook),
+    )
+
+
 def main(argv):
-    del argv
+    notebooks = argv[1:]
 
     if FLAGS.debug:
         init_logging()
@@ -292,16 +299,25 @@ def main(argv):
 
     processor = CustomNotebookExecutor(timeout=FLAGS.timeout)
 
-    in_path = FLAGS.input_path
-    if in_path is None:
-        in_path = os.getcwd()
-    in_path = pathlib.Path(in_path)
+    if notebooks:
+        if len(notebooks) == 1:
+            print(notebooks[0])
+            test_notebook(processor, notebooks[0])
+            print('    Okay!')
+            return
 
-    if in_path.is_dir():
-        notebooks = in_path.rglob("*.ipynb")
-        notebooks = [nb for nb in notebooks if ".ipynb_checkpoints/" not in str(nb)]
     else:
-        notebooks = [in_path]
+        notebooks = [os.getcwd()]
+    notebook = [pathlib.Path(p) for p in notebooks]
+
+    def expand_dirs(paths):
+        for p in paths:
+            if p.is_dir():
+                yield from p.rglob("*.ipynb")
+            else:
+                yield p
+
+    notebooks = expand_dirs(notebooks)
 
     good_file = pathlib.Path('good.txt')
     if good_file.exists():
@@ -328,16 +344,13 @@ def main(argv):
 
             # Execute a notebook with the custom executor.
             try:
-                execute(
-                    processor=processor,
-                    input_notebook=str(notebook),
-                    output_notebook=str(notebook),
-                )
+                test_notebook(processor, notebook)
             except Exception as e:
                 print("    Error!")
                 tbf.write("_"*80 + "\n")
                 tbf.write(f"notebook: {notebook}\n")
                 traceback.print_exception(e, file=tbf)
+                traceback.print_exception(e)
                 ef.write(str(notebook)+'\n')
             else:
                 print("    Okay!")

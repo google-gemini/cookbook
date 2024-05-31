@@ -26,12 +26,14 @@ flags.DEFINE_bool("clean", False, "Remove the cache files and start a clearn run
 flags.DEFINE_bool("debug", False, "Print the notebook execution log")
 flags.DEFINE_bool("save_output", False, "save the output back to the notebook file.")
 flags.DEFINE_integer("timeout", 600, "Timeout in seconds for a cell's execution.")
+flags.DEFINE_list('skip', None, "list of path patterns to skip")
 
 FLAGS = flags.FLAGS
 
-SKIP_EXECUTE = [re.compile("pip .*install"),
+SKIP_EXECUTE = [re.compile("pip .*install .*google\.(ai\.generativelanguage|generativeai)"),
                 re.compile("userdata\.get"),
-                re.compile("google.colab.*?userdata"),]
+                re.compile("google.colab.*?userdata"),
+                re.compile("list(_tuned)?_models")]
 
 
 class DiscardStatusMessagesFilter(logging.Filter):
@@ -302,10 +304,12 @@ def main(argv):
 
     if notebooks:
         if len(notebooks) == 1:
-            print(notebooks[0])
-            test_notebook(processor, notebooks[0])
-            print('    Okay!')
-            return
+            nb = pathlib.Path(notebooks[0])
+            if nb.is_file():
+                print(nb)
+                test_notebook(processor, nb)
+                print('    Okay!')
+                return
 
     else:
         notebooks = [os.getcwd()]
@@ -320,7 +324,17 @@ def main(argv):
 
 
     notebooks = expand_dirs(notebooks)
-    notebooks = (nb for nb in notebooks if ".ipynb_checkpoints" not in nb.parts)
+    skip = [".ipynb_checkpoints"]
+    if FLAGS.skip:
+        skip.extend(FLAGS.skip)
+
+    def filter(paths):
+        for path in paths:
+            if any(s in str(path) for s in skip):
+                continue
+            yield path
+
+    notebooks = filter(notebooks)
     notebooks = list(notebooks)
 
     good_file = pathlib.Path('good.txt')

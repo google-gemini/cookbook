@@ -214,7 +214,7 @@ class CustomNotebookExecutor(nbconvert.preprocessors.ExecutePreprocessor):
     def preprocess_cell(self, cell, resources, cell_index, **kwargs):
         """Executes one cell in a notebook."""
         if not self._should_execute(cell):
-            print(">>>>>>>> Skiping cell:\n")
+            print(">>>>>>>> Skiping cell:")
             print(cell.source)
             print("<<<<<<<<")
 
@@ -356,7 +356,7 @@ def main(argv):
     traceback_file = pathlib.Path('tracebacks.txt')
     with open(error_file, 'a') as ef, open(good_file, 'a') as df, open(traceback_file, 'a') as tbf:
         for notebook in tqdm.tqdm(notebooks):
-            print("\n\n"+"_"*80)
+            print("\n"+"_"*80)
             print(notebook)
             if str(notebook) in good_notebooks:
                 print('    Okay!')

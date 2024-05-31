@@ -214,6 +214,10 @@ class CustomNotebookExecutor(nbconvert.preprocessors.ExecutePreprocessor):
     def preprocess_cell(self, cell, resources, cell_index, **kwargs):
         """Executes one cell in a notebook."""
         if not self._should_execute(cell):
+            print(">>>>>>>> Skiping cell:\n")
+            print(cell.source)
+            print("<<<<<<<<")
+
             return cell, resources
 
         return super().preprocess_cell(cell, resources, cell_index, **kwargs)

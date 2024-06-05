@@ -2,3 +2,13 @@
 **/.ipynb_checkpoints
 **/venv
 **/.python-version
+**/*.json
+**/*.jpg
+**/*.mp3
+**/*.mp4
+**/*.pdf
+**/*.txt
+**/*.cpp
+**/*.m4a
+**/*.png
+**/*.md

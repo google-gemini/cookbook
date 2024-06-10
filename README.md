@@ -19,13 +19,14 @@ Learn about the capabilities of the Gemini API by checking out the quickstarts. 
 * [JSON mode](https://github.com/google-gemini/cookbook/blob/main/quickstarts/JSON_mode.ipynb): Discover how to use JSON mode.
 * [Function Calling](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Function_calling.ipynb): The Gemini API works great with code. Use this quickstart to learn how to write prompts to understand and call functions. Then check out the [function calling config](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Function_calling_config.ipynb) tutorial to learn more.
 * [System Instructions](https://github.com/google-gemini/cookbook/blob/main/quickstarts/System_instructions.ipynb): Give models additional context on how to respond by setting system instructions.
+* [Embeddings](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Embeddings.ipynb): Create high quality and task-specific embeddings.
 * [Tuning](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Tuning.ipynb): Learn how to improve model performance on a specific task through tuning. 
 
 Browse the [quickstarts folder](https://github.com/google-gemini/cookbook/tree/main/quickstarts) for more tutorials, and check out the [examples folder](https://github.com/google-gemini/cookbook/tree/main/examples) for more cool examples.  
 
 ## Official SDKs
 The Gemini API is a REST API. You can call the API using a command line tool like `curl` (and you can find REST examples [here](https://github.com/google-gemini/cookbook/tree/main/quickstarts/rest)) , or by using one of our official SDKs:
-* [Python](https://github.com/google/generative-ai-python) - note: all the examples are in the cookbook, and they'll install the Python SDK for you. Start here.
+* [Python](https://github.com/google/generative-ai-python) - Note: all the notebooks in this cookbook install the Python SDK for you.
 * [Node.js](https://github.com/google/generative-ai-js)
 * [Dart (Flutter)](https://github.com/google/generative-ai-dart)
 * [Android](https://github.com/google/generative-ai-android)

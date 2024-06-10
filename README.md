@@ -11,7 +11,7 @@ The Gemini API gives you access to Gemini [models](https://ai.google.dev/models/
 4. Use a [quickstart](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Prompting.ipynb) for Python, or call the REST API [using curl](https://github.com/google-gemini/cookbook/blob/main/quickstarts/rest/Prompting_REST.ipynb).
 
 ## Table of contents
-Learn about the capabilities of the Gemini API by checking out the quickstarts. These are tutorials that walk you through how to use a feature of the Gemini API with complete end to end code.
+Learn about the capabilities of the Gemini API by checking out these quickstart tutorials.
 * [Authentication](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Authentication.ipynb): Start here to learn how you can set up your API key so you can get access to the Gemini API.
 * [Counting Tokens](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Counting_Tokens.ipynb) Tokens are the basic inputs to the Gemini models. Through this notebook, you will gain a better understanding of tokens through an interactive experience.
 * [Files](https://github.com/google-gemini/cookbook/blob/main/quickstarts/File_API.ipynb): Use the Gemini API to upload files (text, code, images, audio, video) and write prompts using them.
@@ -22,7 +22,7 @@ Learn about the capabilities of the Gemini API by checking out the quickstarts. 
 * [Embeddings](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Embeddings.ipynb): Create high quality and task-specific embeddings.
 * [Tuning](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Tuning.ipynb): Learn how to improve model performance on a specific task through tuning. 
 
-Browse the [quickstarts folder](https://github.com/google-gemini/cookbook/tree/main/quickstarts) for more tutorials, and check out the [examples folder](https://github.com/google-gemini/cookbook/tree/main/examples) for more cool examples.  
+You can find lots more in the [quickstarts folder](https://github.com/google-gemini/cookbook/tree/main/quickstarts), and check out the [examples folder](https://github.com/google-gemini/cookbook/tree/main/examples) for fun examples.  
 
 ## Official SDKs
 The Gemini API is a REST API. You can call the API using a command line tool like `curl` (and you can find REST examples [here](https://github.com/google-gemini/cookbook/tree/main/quickstarts/rest)) , or by using one of our official SDKs:

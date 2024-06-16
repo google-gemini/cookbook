@@ -1,4 +1,4 @@
-# Welcome to the Gemini API Cookbook
+# Welcome to the Gmini API Cookbook
 This is a collection of guides and examples for the Gemini API, including [quickstart](https://github.com/google-gemini/cookbook/tree/main/quickstarts) tutorials for writing prompts and using different features of the API, and [examples](https://github.com/google-gemini/cookbook/tree/main/examples) of things you can build.
 
 ## Get started with the Gemini API

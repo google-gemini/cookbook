@@ -8,6 +8,7 @@ This is a colletion of fun examples for the Gemini API.
 * [Clasify text with emeddings](https://github.com/google-gemini/cookbook/blob/main/examples/Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.
 * [Guess the shape](https://github.com/google-gemini/cookbook/blob/main/examples/Guess_the_shape.ipynb): A simple example of using images in prompts.
 * [Market a Jet Backpack](https://github.com/google-gemini/cookbook/blob/main/examples/Market_a_Jet_Backpack.ipynb): Create a marketing campaign from a product sketch.
+* [Object detection](https://github.com/google-gemini/cookbook/blob/main/examples/Object_detection.ipynb): Extensive examples with object detection, including with multiple classes, OCR, visual question answering, and even an interactive demo.  
 * [Opossum search](https://github.com/google-gemini/cookbook/blob/main/examples/Opossum_search.ipynb): Code generation with the Gemini API. Just for fun, you'll prompt the model to create a web app called "Opossum Search" that searches Google with "opossum" appended to the query.
 * [Search Wikipedia with ReAct](https://github.com/google-gemini/cookbook/blob/main/examples/Search_Wikipedia_using_ReAct.ipynb): Use ReAct prompting with Gemini 1.5 Flash to search Wikipedia interactively.
 * [Search Re-ranking with Embeddings](https://github.com/google-gemini/cookbook/blob/main/examples/Search_reranking_using_embeddings.ipynb): Use embeddings to re-rank search results.

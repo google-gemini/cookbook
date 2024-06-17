@@ -10,6 +10,10 @@ Those projects are ordered in an anti-chronological order and are the work of th
 
 ### [Vision + Math reasoning] Solving Math problems on a white board
 
+Gemini analyze the math drawn then conputes an answers as well as where to display it.
+
+<video src="https://video.twimg.com/tweet_video/GPy5adCXEAASRkv.mp4" width="300" /></video>
+
 <blockquote class="twitter-tweet" data-media-max-width="560"><p lang="en" dir="ltr">finally we can do maths <a href="https://t.co/SoECzN1Aom">pic.twitter.com/SoECzN1Aom</a></p>&mdash; tldraw (@tldraw) <a href="https://twitter.com/tldraw/status/1800518368895934606?ref_src=twsrc%5Etfw">June 11, 2024</a></blockquote>
 
 ### [Vision] [Gemini spatial example](https://gemini-spatial-example.grantcuster.com/)

@@ -6,7 +6,7 @@ You should also have a look at our Google-maintained [quickstarts](quickstarts/)
 
 ## Gemini API-powered projects
 
-Those projects are ordered in an anti-chronological order and are the work of their authors, who are not related to Google.
+Those projects are ordered in an anti-chronological order and are the work of their authors, who are are not necessarily affiliated with Google.
 
 ### [Caching] Helping with navigating a lot of documentation 
 

@@ -1,4 +1,4 @@
-# Awesome Gemini API exemples
+# Awesome Gemini API examples
 
 Here's a list of really cool Gemini-powered projects, demos and hacks that we liked. We hope that they will give you some ideas on what to build with Gemini next.
 

@@ -1,10 +1,10 @@
-# Awesome Gemini APIs exemples
+# Awesome Gemini API exemples
 
 Here's a list of really cool Gemini-powered projects, demos and hacks that we liked. We hope that they will give you some ideas on what to build with Gemini next.
 
 You should also have a look at our Google-maintained [quickstarts](quickstarts/) and [examples](examples/).
 
-## Gemini APIs-powered projects
+## Gemini API-powered projects
 
 Those projects are ordered in an anti-chronological order and are the work of their authors, who are not related to Google.
 
@@ -43,7 +43,7 @@ Gemini detects which application is used and which action is used in the app.
 
 ### [Vision] Drawings labelling in [<tldraw/>](https://tldraw.dev/)
 
-A Gemini APIs integration that labels your drawings.
+A Gemini API integration that labels your drawings.
 ![tldraw](https://pbs.twimg.com/tweet_video_thumb/GPOT8XtXAAEHyxh.jpg)
 
 <blockquote class="twitter-tweet" data-media-max-width="560"><p lang="en" dir="ltr">this demo may seem un-flashy but its actually huge for letting models interact better with a canvas, and also potentially massive for accessibility use cases <a href="https://t.co/58MFuLQ3kP">https://t.co/58MFuLQ3kP</a></p>&mdash; Lu wilson 🏳️‍🌈🏳️‍🌈 (@TodePond) <a href="https://twitter.com/TodePond/status/1797949557042753947?ref_src=twsrc%5Etfw">June 4, 2024</a></blockquote>

@@ -1,0 +1,47 @@
+name: Check that all new examples are linked in the examples README
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-link:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get added files
+        run: |
+          git fetch origin main
+          git diff --name-only origin/main HEAD > new_files.txt
+          echo "Added Files:"
+          cat new_files.txt  | sed 's/^/ - /'
+      - name: Check for new example files
+        run: |
+          if grep "examples/" new_files.txt; then
+            grep '^examples/' new_files.txt > new_example_files.txt
+            echo "Found new file(s) in examples/:"
+            cat new_example_files.txt  | sed 's/^/ - /'
+          else
+            echo "No new files found in examples/"
+          fi
+      - name: Check README links
+        run: |
+          if [[ -f new_example_files.txt ]]; then
+            all_linked=true
+            while IFS= read -r file; do
+              if ! grep -q "$file" examples/README.md; then
+                all_linked=false
+                echo "Link to '$file' not found in README.md"
+              fi
+            done < new_example_files.txt
+            if ! $all_linked; then
+              exit 1
+            fi
+          fi
+      - name: Fail Workflow if links are missing
+        uses: actions/github-script@v7
+        with:
+          script: |
+            if (process.exitCode === 1) {
+              core.setFailed('Missing link(s) to new example file(s) in example/README.md')
+            }

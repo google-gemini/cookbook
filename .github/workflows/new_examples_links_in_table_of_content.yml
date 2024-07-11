@@ -12,7 +12,7 @@ jobs:
       - name: Get added files
         run: |
           git fetch origin main
-          git diff --name-only origin/main HEAD > new_files.txt
+          git diff --name-status origin/main HEAD | grep ^A | cut -f2-
           echo "Added Files:"
           cat new_files.txt  | sed 's/^/ - /'
       - name: Check for new example files

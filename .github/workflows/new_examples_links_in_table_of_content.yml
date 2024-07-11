@@ -33,11 +33,12 @@ jobs:
                 if ! grep -q "${file/examples\//](}" examples/README.md; then
                   all_linked=false
                   echo "Link to '$file' not found in README.md"
+                  echo "::warning file=$file::Link to '$file' not found in README.md, please add one in the table of content"
+
                 fi
               fi
             done < new_example_files.txt
             if ! $all_linked; then
-              core.setFailed('Missing link(s) to new example file(s) in example/README.md')
               exit 1
             fi
           fi

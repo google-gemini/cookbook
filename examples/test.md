@@ -1,0 +1,1 @@
+adding a new file, without a link in the readme, it should trigger a warning

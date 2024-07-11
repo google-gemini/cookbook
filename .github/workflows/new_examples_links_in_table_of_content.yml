@@ -1,11 +1,11 @@
-name: Check that all new examples are linked in the examples README
+name: All new examples are linked in the README
 
 on:
   pull_request:
     branches: [ main ]
 
 jobs:
-  check-link:
+  new-example-links-in-examples-readme:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

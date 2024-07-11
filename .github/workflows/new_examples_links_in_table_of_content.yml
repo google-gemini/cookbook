@@ -30,8 +30,10 @@ jobs:
             all_linked=true
             while IFS= read -r file; do
               if ! grep -q "$file" examples/README.md; then
-                all_linked=false
-                echo "Link to '$file' not found in README.md"
+                if ! grep -q "${file/examples\//](}" examples/README.md; then
+                  all_linked=false
+                  echo "Link to '$file' not found in README.md"
+                fi
               fi
             done < new_example_files.txt
             if ! $all_linked; then

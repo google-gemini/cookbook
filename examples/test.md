@@ -1,0 +1,1 @@
+A new file is added, in the example folde. It should fail the check since the readme hasn't been updated.

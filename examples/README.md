@@ -1,7 +1,5 @@
 # Gemini API Examples
 
-[Tests, not to be kept that way] A link to the [new file](test.md) is added, it should now pass the check
-
 ## Table of contents
 This is a colletion of fun examples for the Gemini API. 
 * [Agents and Automatic Function Calling](https://github.com/google-gemini/cookbook/blob/main/examples/Agents_Function_Calling_Barista_Bot.ipynb): Create an agent (Barrista-bot) to take your coffee order. 

@@ -1,1 +1,0 @@
-A new file is added, but not in the example folde. It should not be checked.

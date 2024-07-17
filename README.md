@@ -27,7 +27,7 @@ Learn about the capabilities of the Gemini API by checking out these quickstart 
 * [System Instructions](https://github.com/google-gemini/cookbook/blob/main/quickstarts/System_instructions.ipynb): Give models additional context on how to respond by setting system instructions.
 * [Embeddings](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Embeddings.ipynb): Create high quality and task-specific embeddings.
 * [Tuning](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Tuning.ipynb): Learn how to improve model performance on a specific task through tuning. 
-* [Code execution](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Code_Execution.ipynb): Solve complex teasks by Generating and runing python code based on plain-text instructions. 
+* [Code execution](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Code_Execution.ipynb): Solve complex tasks by Generating and runing python code based on plain-text instructions. 
 
 You can find lots more in the [quickstarts folder](https://github.com/google-gemini/cookbook/tree/main/quickstarts), and check out the [examples folder](https://github.com/google-gemini/cookbook/tree/main/examples) for fun examples. We're also maintaining an [Awesome Gemini](Awesome_gemini.md) list of all the cool projects the community is building using Gemini. 
 

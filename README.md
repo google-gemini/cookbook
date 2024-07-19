@@ -33,7 +33,7 @@ You can find lots more in the [quickstarts folder](https://github.com/google-gem
 
 ## Official SDKs
 The Gemini API is a REST API. You can call the API using a command line tool like `curl` (and you can find REST examples [here](https://github.com/google-gemini/cookbook/tree/main/quickstarts/rest)) , or by using one of our official SDKs:
-* [Python](https://github.com/google/generative-ai-python) - Note: all the notebooks in this cookbook install the Python SDK for you.
+* [Python](https://github.com/google/generative-ai-python) - Note: all the notebooks in this cookbook install the Python SDK for you, and this cookbook is the best place to find Python examples.
 * [Node.js](https://github.com/google/generative-ai-js)
 * [Dart (Flutter)](https://github.com/google/generative-ai-dart)
 * [Android](https://github.com/google/generative-ai-android)
@@ -42,6 +42,9 @@ The Gemini API is a REST API. You can call the API using a command line tool lik
 
 ## Get help
 Ask a question on the [Google AI Developer Forum](https://discuss.ai.google.dev/).
+
+## The Gemini API on Google Cloud Vertex AI
+If you're an enterprise developer looking to build on a fully-managed platform, you can also use the Gemini API on Google Cloud. Check out this [repo](https://github.com/GoogleCloudPlatform/generative-ai) for lots of cool examples. 
 
 ## Contributing
 Contributions are welcome. See [contributing](https://github.com/google-gemini/cookbook/blob/main/CONTRIBUTING.md) to learn more.

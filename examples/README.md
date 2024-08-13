@@ -16,6 +16,7 @@ This is a colletion of fun examples for the Gemini API.
 * [Talk to documents](https://github.com/google-gemini/cookbook/blob/main/examples/Talk_to_documents_with_embeddings.ipynb): This is a basic intro to Retrieval Augmented Generation (RAG). Use embeddings to search through a custom database.
 * [Upload files to Colab](https://github.com/google-gemini/cookbook/blob/main/examples/Upload_files_to_Colab.ipynb): This is a helper notebook that shows how to upload files from your local computer to Colab. Note: to upload files to the Gemini API (text, code, images, audio, video), check out the [Files quickstart](https://github.com/google-gemini/cookbook/blob/main/quickstarts/File_API.ipynb).
 * [Voice Memos](https://github.com/google-gemini/cookbook/blob/main/examples/Voice_memos.ipynb): You'll use the Gemini API to help you generate ideas for your next blog post, based on voice memos you recorded on your phone, and previous articles you've written.
+* [Translate a public domain](https://github.com/google-gemini/cookbook/blob/main/examples/Translate_a_Public_Domain_Book.ipynb): In this notebook, you will explore Gemini model as a translation tool, demonstrating how to prepare data, create effective prompts, and save results into a `.txt` file.
 
 Folders
 * [Prompting examples](https://github.com/google-gemini/cookbook/tree/main/examples/prompting): A directory with examples of various prompting techniques. 

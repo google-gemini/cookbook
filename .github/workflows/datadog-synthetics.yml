@@ -11,7 +11,7 @@
 # 1. Add your Datadog API (DD_API_KEY) and Application Key (DD_APP_KEY) as secrets to your GitHub repository. For more information, see: https://docs.datadoghq.com/account_management/api-app-keys/.
 # 2. Start using the action within your workflow
 
-name: Run Datadog Synthetic tests            - name: API testing with Kubernetes
+name: / .github/workflows/datadog-synthetics.yml            
   # You may pin to the exact commit or the version.
   # uses: LinuxSuRen/api-testing@5971291be639b4fb7ea2a79d1a5fc3f333f5a223
   uses: LinuxSuRen/api-testing@v0.0.16

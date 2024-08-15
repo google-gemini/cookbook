@@ -24,5 +24,9 @@ Folders
 * [Prompting examples](https://github.com/google-gemini/cookbook/tree/main/examples/prompting): A directory with examples of various prompting techniques. 
 * [JSON Capabilities](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Tuning.ipynb): A directory with guides containing different types of tasks you can do with JSON schemas.
 * [Automate Google Workspace tasks with the Gemini API](https://github.com/google-gemini/cookbook/tree/main/examples/Apps_script_and_Workspace_codelab): This codelabs shows you how to connect to the Gemini API using Apps Script, and uses the function calling, vision and text capabilities to automate Google Workspace tasks - summarizing a document, analyzing a chart, sending an email and generating some slides directly. All of this is done from a free text input.
+* [ChromaDB](https://github.com/google-gemini/cookbook/tree/main/examples/chromadb): A directory with guides with to using Gemini with ChromaDB integrations.
+* [LangChain](https://github.com/google-gemini/cookbook/tree/main/examples/langchain): A directory with guides with to using Gemini with LangChain integrations.
+* [LlamaIndex](https://github.com/google-gemini/cookbook/tree/main/examples/llamaindex): A directory with guides with to using Gemini with LlamaIndex integrations.
+* [QDrant](https://github.com/google-gemini/cookbook/tree/main/examples/qdrant): A directory with guides with to using Gemini with QDrant integrations.
 
 There are even more examples in the [quickstarts](https://github.com/google-gemini/cookbook/tree/main/quickstarts) folder and in the [Awesome Gemini page](../Awesome_gemini.md).

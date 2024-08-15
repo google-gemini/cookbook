@@ -1,4 +1,4 @@
-# Use Gemini in OpenAI Format (via LiteLLM)
+# Use Gemini in OpenAI Format (via LiteLLM Python SDK)
 
 ## Pre-requisites
 * `pip install -q google-generativeai`
@@ -15,6 +15,23 @@ response = completion(
     model="gemini/gemini-pro", 
     messages=[{"role": "user", "content": "write code for saying hi from LiteLLM"}]
 )
+```
+
+## See Response Cost
+
+LiteLLM maintains an [updated map](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json) of costs across LLM Providers. This is used to calculate costs, and returned via `response._hidden_params["response_cost"]`. 
+
+```python
+from litellm import completion
+import os
+
+os.environ['GEMINI_API_KEY'] = ""
+response = completion(
+    model="gemini/gemini-pro", 
+    messages=[{"role": "user", "content": "write code for saying hi from LiteLLM"}]
+)
+
+print(response._hidden_params["response_cost"])
 ```
 
 ## Specifying Safety Settings 

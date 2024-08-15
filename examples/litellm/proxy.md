@@ -1,9 +1,12 @@
-# Use Gemini in OpenAI Format (via LiteLLM Proxy)
+# Use Gemini in OpenAI Format (via LiteLLM Gateway)
 
-Use LiteLLM Proxy to track usage + set budgets call Gemini/Anthropic/OpenAI etc.
+Use LiteLLM AI Gateway to loadbalance + track usage + set budgets across calls Gemini/VertexAI/etc. 
 
 
 Works for [Google AI Studio](https://docs.litellm.ai/docs/providers/gemini) + [Vertex AI](https://docs.litellm.ai/docs/providers/vertex) calls.
+
+
+Note: LiteLLM Gateway is **OpenAI-Compatible**. This means you can call it with any project (ContinueDev, Librechat, etc.) or sdk (Langfuse, LlamaIndex, Instructor, etc.), that supports OpenAI. 
 
 ## Sample Usage
 
@@ -39,7 +42,7 @@ litellm --config /path/to/config.yaml
 
 [Use with Langchain, LlamaIndex, Instructor, etc.](https://docs.litellm.ai/docs/proxy/user_keys)
 
-```bash
+```python
 import openai
 client = openai.OpenAI(
     api_key="anything",
@@ -48,7 +51,7 @@ client = openai.OpenAI(
 
 # request sent to model set on litellm proxy, `litellm --model`
 response = client.chat.completions.create(
-    model="gpt-3.5-turbo",
+    model="gemini-pro", # model name in config.yaml
     messages = [
         {
             "role": "user",
@@ -59,6 +62,255 @@ response = client.chat.completions.create(
 
 print(response)
 ```
+
+## Loadbalance + Fallbacks b/w Google AI Studio and VertexAI 
+
+LiteLLM supports loadbalancing + fallbacks across 100+ LLMs. Just use `model_name` to loadbalance between a group of models. 
+
+### Usage
+
+Let's setup loadbalancing between gemini-pro models and fallback to vertex_ai/anthropic in case of failure 
+
+Pre-requisites 
+- run `!gcloud auth application-default login` to add vertex credentials to your environment ([See alternative auth mechanisms](https://docs.litellm.ai/docs/providers/vertex))
+
+### 1. Setup config.yaml 
+
+```yaml 
+model_list:
+    - model_name: gemini-pro
+      litellm_params:
+        model: gemini/gemini-pro
+        api_key: os.environ/GEMINI_API_KEY
+    - model_name: gemini-pro
+      litellm_params:
+        model: vertex_ai/gemini-pro 
+        vertex_credentials: /path/to/service_account.json
+        vertex_project: my-project
+        vertex_region: my-region
+    - model_name: anthropic-vertex
+      litellm_params:
+        model: vertex_ai/claude-3-sonnet@20240229
+        vertex_ai_project: "my-test-project"
+        vertex_ai_location: "us-east-1"
+
+litellm_settings:
+  fallbacks: [{"gemini-pro": ["anthropic-vertex"]}]
+```
+
+### 2. Start proxy 
+
+```bash
+litellm --config /path/to/config.yaml 
+
+# RUNNING on http://0.0.0.0:4000
+```
+
+### 3. Test it! 
+
+1. Test simple call
+
+```bash
+curl -X POST 'http://0.0.0.0:4000/chat/completions' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "model": "gemini-pro",
+    "messages": [
+        {
+        "role": "user",
+        "content": "what llm are you"
+        }
+    ]
+}'
+```
+
+2. Test loadbalancing
+
+```bash
+curl -X POST 'http://0.0.0.0:4000/chat/completions' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: Bearer sk-1234' \
+-d '{
+  "model": "gemini-pro",
+  "messages": [
+        {"role": "user", "content": "Hi there!"}
+    ],
+    "mock_testing_rate_limit_error": true
+}'
+```
+
+3. Test fallbacks 
+
+```bash
+curl -X POST 'http://0.0.0.0:4000/chat/completions' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "model": "gemini-pro",
+    "messages": [
+        {
+        "role": "user",
+        "content": "what llm are you"
+        }
+    ],
+    "mock_testing_fallbacks": true 
+}'
+```
+
+
+## Track Usage
+
+LiteLLM supports logging to LLMOps tools like Langfuse, Langsmith, any OTEL endpoint, etc. as well as storage services like s3, gcs. [Full List](https://docs.litellm.ai/docs/proxy/logging)
+
+Here's how to log Gemini cost data to [Langsmith](https://www.langchain.com/langsmith) for usage tracking 
+
+
+### 1. Setup config.yaml 
+
+```yaml
+model_list:
+    - model_name: gemini-pro
+      litellm_params:
+        model: gemini/gemini-pro
+        api_key: os.environ/GEMINI_API_KEY
+
+litellm_settings:
+  success_callback: ["langsmith"] # 
+
+environment_variables: # can also just be added to env via `export key=value` 
+  LANGSMITH_API_KEY: "lsv2_pt_xxxxxxxx"
+  LANGSMITH_PROJECT: "litellm-proxy" # [OPTIONAL]
+  LANGSMITH_BASE_URL: "https://api.smith.langchain.com" # [OPTIONAL] only needed if you have a custom Langsmith instance
+```
+
+### 2. Start proxy 
+
+```bash
+litellm --config /path/to/config.yaml --detailed_debug
+
+# RUNNING on http://0.0.0.0:4000
+```
+
+### 3. Test it! 
+
+```bash
+curl -X POST 'http://0.0.0.0:4000/chat/completions' \
+-H 'Content-Type: application/json' \
+-d ' {
+      "model": "gemini-pro",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello, Gemini!"
+        }
+      ],
+    }
+'
+```
+
+Expect to see your call logged on your Langsmith project with the response_cost, token usage, etc. 
+
+## Advanced - Track Usage per project
+
+LiteLLM lets you track spend for a call by model, key, team, user, making it ideal for cost attribution and budgeting. [**Learn More**](https://docs.litellm.ai/docs/proxy/virtual_keys)
+
+Pre-requisites: 
+- [Setup LiteLLM Proxy with DB](https://docs.litellm.ai/docs/proxy/virtual_keys#setup)
+
+
+### Quick Start 
+
+Let's track spend by LiteLLM key. 
+
+1. Setup config.yaml 
+
+```yaml
+model_list:
+  - model_name: gemini-pro
+    litellm_params:
+      model: gemini/gemini-pro
+      api_key: os.environ/GEMINI_API_KEY
+
+general_settings: 
+  master_key: sk-1234 
+  database_url: "postgresql://<user>:<password>@<host>:<port>/<dbname>" # 👈 KEY CHANGE
+```
+
+2. Create LiteLLM Virtual key
+
+```bash
+curl -X POST 'http://0.0.0.0:4000/key/generate' \
+-H 'Authorization: Bearer <your-master-key>' \
+-H 'Content-Type: application/json' \
+-d '{}'
+```
+
+3. Make call with LiteLLM Virtual key 
+
+```bash
+curl -X POST 'http://0.0.0.0:4000/chat/completions' \
+-H 'Content-Type: application/json' \
+-d ' {
+      "model": "gemini-pro",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello, Gemini!"
+        }
+      ],
+    }
+'
+```
+
+### Set Budgets per project 
+
+Let's set budgets on a LiteLLM key. (Can also do this by [user/team](https://docs.litellm.ai/docs/proxy/users#set-budgets))
+
+1. Setup config.yaml 
+
+```yaml
+model_list:
+  - model_name: gemini-pro
+    litellm_params:
+      model: gemini/gemini-pro
+      api_key: os.environ/GEMINI_API_KEY
+
+general_settings: 
+  master_key: sk-1234 
+  database_url: "postgresql://<user>:<password>@<host>:<port>/<dbname>" # 👈 KEY CHANGE
+```
+
+2. Create LiteLLM Virtual key
+
+```bash
+curl -X POST 'http://0.0.0.0:4000/key/generate' \
+-H 'Authorization: Bearer <your-master-key>' \
+-H 'Content-Type: application/json' \
+-d '{"max_budget": 0, "budget_duration": "1m"}'
+```
+
+- "max_budget": This is the maximum budget allowed for a key within a period. By default, this is None. 
+- "budget_duration": Budget is reset at the end of specified duration. If not set, budget is never reset. You can set duration as seconds ("30s"), minutes ("30m"), hours ("30h"), days ("30d"), months ("1mo").
+
+[**See full API spec**](https://litellm-api.up.railway.app/#/key%20management/generate_key_fn_key_generate_post)
+
+3. Make call with LiteLLM Virtual key 
+
+```bash
+curl -X POST 'http://0.0.0.0:4000/chat/completions' \
+-H 'Content-Type: application/json' \
+-d ' {
+      "model": "gemini-pro",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hello, Gemini!"
+        }
+      ],
+    }
+'
+```
+
+Expect this call to fail, with a `BudgetExceededError:`. 
 
 
 ## Advanced - Specifying Safety Settings 
@@ -118,7 +370,7 @@ tools = [
 ]
 messages = [{"role": "user", "content": "What's the weather like in Boston today?"}]
 completion = client.chat.completions.create(
-  model="gpt-4o",
+  model="gemini-pro",
   messages=messages,
   tools=tools,
   tool_choice="auto"
@@ -135,6 +387,27 @@ LiteLLM Supports the following image types passed in `url`
 - Image in local storage - ./localimage.jpeg
 
 ## Sample Usage
+
+
+1. Setup config.yaml 
+```yaml
+model_list:
+    - model_name: gemini-pro
+      litellm_params:
+        model: gemini/gemini-pro
+        api_key: os.environ/GEMINI_API_KEY
+```
+
+2. Start proxy 
+
+```bash
+litellm --config /path/to/config.yaml
+
+# RUNNING on http://0.0.0.0:4000
+```
+
+3. Test it! 
+
 ```python
 
 from openai import OpenAI
@@ -142,7 +415,7 @@ from openai import OpenAI
 client = OpenAI(api_key="anything", base_url="http://0.0.0.0:4000")
 
 response = client.chat.completions.create(
-    model="gpt-4-turbo",
+    model="gemini-pro",
     messages=[
         {
             "role": "user",

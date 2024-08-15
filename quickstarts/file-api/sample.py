@@ -12,8 +12,7 @@ genai.configure(api_key=api_key)
 # Prepare file to upload to GenAI File API
 file_path = "sample_data/gemini_logo.png"
 display_name = "Gemini Logo"
-file_response = genai.upload_file(path=file_path,
-                             display_name=display_name)
+file_response = genai.upload_file(path=file_path, display_name=display_name)
 print(f"Uploaded file {file_response.display_name} as: {file_response.uri}")
 
 # Verify the file is uploaded to the API
@@ -29,4 +28,4 @@ print(response)
 
 # Delete the sample file
 genai.delete_file(name=file_response.name)
-print(f'Deleted file {file_response.display_name}')
+print(f"Deleted file {file_response.display_name}")

@@ -9,7 +9,7 @@ services:
     - '8080'
     - --scheme
     - http
-    image: cr.weaviate.io/semitechnologies/weaviate:1.24.8
+    image: cr.weaviate.io/semitechnologies/weaviate:1.25.10
     ports:
     - 8080:8080
     - 50051:50051

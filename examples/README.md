@@ -3,6 +3,7 @@
 ## Table of contents
 This is a colletion of fun examples for the Gemini API. 
 * [Agents and Automatic Function Calling](https://github.com/google-gemini/cookbook/blob/main/examples/Agents_Function_Calling_Barista_Bot.ipynb): Create an agent (Barrista-bot) to take your coffee order. 
+* [Classify and Analyze a Video](https://github.com/google-gemini/cookbook/blob/main/examples/Analyze_a_Video_Classification.ipynb): This notebook uses multimodal capabilities of the Gemini model to classify the species of animals shown in a video.
 * [Anomaly Detection](https://github.com/google-gemini/cookbook/blob/main/examples/Anomaly_detection_with_embeddings.ipynb): Use embeddings to detect anomalies in your datasets.
 * [Apollo 11 - long context example](https://github.com/google-gemini/cookbook/blob/main/examples/Apollo_11.ipynb): Search a 400 page transcript from Apollo 11.
 * [Clasify text with emeddings](https://github.com/google-gemini/cookbook/blob/main/examples/Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.

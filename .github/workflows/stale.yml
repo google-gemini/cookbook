@@ -9,6 +9,7 @@ on:
   schedule:
   # Scheduled to run at 1.30 UTC everyday
   - cron: '30 1 * * *'
+  workflow_dispatch:
 
 jobs:
   stale:

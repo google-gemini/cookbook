@@ -19,14 +19,14 @@ jobs:
       pull-requests: write
 
     steps:
-    - uses: actions/stale@v5
+    - uses: actions/stale@v9
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         days-before-issue-stale: 14
         days-before-issue-close: 14
         stale-issue-label: "status:stale"
         close-issue-reason: not_planned
-        any-of-labels: "status:awaiting user response,status:more data needed"
+        any-of-labels: "status:awaiting response,status:more data needed"
         stale-issue-message: >
           Marking this issue as stale since it has been open for 14 days with no activity.
           This issue will be closed if no further activity occurs.

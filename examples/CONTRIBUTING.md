@@ -10,7 +10,7 @@ The cookbook currently only accepts English Python and REST content directly, bu
 
 Before writing anything, [file an issue](https://github.com/google-gemini/cookbook/issues/new) describing what you want to contribute. Include:
 
-* Whether this is a “pure” Gemini API example or a third-party integration example.  
+* Whether this is a “pure” Gemini API example or a third-party integration example.
   * If pure:
     * Describe the use case and why it’s useful to developers (e.g. link to the underlying paper).
   * If non-pure:
@@ -19,8 +19,11 @@ Before writing anything, [file an issue](https://github.com/google-gemini/cookbo
 
 * A high-level outline of what you will write.
 
-* Any support you need.  
+* Any support you need.
   * For example, if you are worried that your English is not good enough, please call that out here. We are an inclusive community and will work with you to meet our high publication standards if your proposal is otherwise accepted.
+
+When you're ready to start writing, make a copy of the [notebook
+template](./templates/Template.ipynb) and follow the guidance within.
 
 All contributions must also adhere to the Gemini API's [terms of service](https://ai.google.dev/gemini-api/terms).
 

@@ -1,0 +1,25 @@
+---
+version: '3.4'
+services:
+  weaviate:
+    command:
+    - --host
+    - 0.0.0.0
+    - --port
+    - '8080'
+    - --scheme
+    - http
+    image: cr.weaviate.io/semitechnologies/weaviate:1.25.10
+    ports:
+    - 8080:8080
+    - 50051:50051
+    restart: on-failure:0
+    environment:
+      PALM_APIKEY: 'sk-key'
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: 'text2vec-palm'
+      ENABLE_MODULES: 'text2vec-palm, generative-palm'
+      CLUSTER_HOSTNAME: 'node1'
+...

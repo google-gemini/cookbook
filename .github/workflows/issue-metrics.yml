@@ -33,6 +33,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SEARCH_QUERY: 'repo:google-gemini/cookbook is:issue created:${{ env.last_month }} -reason:"not planned"'
+          LABELS_TO_MEASURE: "status:awaiting response,status:triaged,status:stale"
 
       - name: Create issue
         uses: peter-evans/create-issue-from-file@v5

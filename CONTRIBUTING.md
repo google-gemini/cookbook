@@ -32,6 +32,9 @@ Before you send a PR, or even write a single line, please file an [issue](https:
 
 Adding a new guide often involves lots of detailed reviews and we want to make sure that your idea is fully formed and has full support before you start writing anything. If you want to port an existing guide across (e.g. if you have a guide for Gemini on your own GitHub), feel free to link to it in the issue.
 
+When you're ready, start by using the [notebook
+template](./templates/Template.ipynb) and following the guidance within.
+
 ## Things we consider
 
 When accepting a new guide, we want to balance a few aspects.

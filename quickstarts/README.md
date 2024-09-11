@@ -18,4 +18,4 @@ Learn about the capabilities of the Gemini API by checking out these quickstarts
 * [Tuning](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Tuning.ipynb): Learn how to improve model performance on a specific task through tuning.
 * [Video](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video.ipynb): Upload a video to the Gemini API and use it in your prompt.
 
-When you're finished here, check out the [examples folder](https://github.com/google-gemini/cookbook/tree/main/examples) for more fun examples.  
+When you're finished here, check out the [examples folder](https://github.com/google-gemini/cookbook/tree/main/examples) or the [Awesome Gemini page](../Awesome_gemini.md) for more fun examples.  

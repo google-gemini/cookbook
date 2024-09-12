@@ -1,0 +1,3 @@
+👋 Welcome to Gemini Cookbook! This repo is a collection of all the guides and examples for the Gemini API.
+    - To get started, make sure you have your API Key from the Google AI studio
+    - Check out the 'README.md' file to know more

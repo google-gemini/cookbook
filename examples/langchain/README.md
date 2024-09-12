@@ -1,1 +1,1 @@
-[link to the new file](test.ipynb)
+[link to the new file](https://github.com/google-gemini/cookbook/tree/main/examples/langchain/test.ipynb)

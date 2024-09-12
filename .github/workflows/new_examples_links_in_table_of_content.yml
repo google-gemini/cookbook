@@ -15,14 +15,14 @@ jobs:
           git diff --name-status origin/main HEAD | grep ^A | cut -f2- > new_files.txt
           echo "Added Files:"
           cat new_files.txt  | sed 's/^/ - /'
-      - name: Check for new example files
+      - name: Check for new .ipynb files in the example folder
         run: |
-          if grep "examples/" new_files.txt; then
-            grep '^examples/' new_files.txt > new_example_files.txt
-            echo "Found new file(s) in examples/:"
+          if grep "examples/.*\.ipynb$" new_files.txt; then
+            grep '^examples/.*\.ipynb$' new_files.txt > new_example_files.txt
+            echo "Found new .ipynb file(s) in examples/:"
             cat new_example_files.txt  | sed 's/^/ - /'
           else
-            echo "No new files found in examples/"
+            echo "No new .ipynb files found in examples/"
           fi
       - name: Check README links
         run: |

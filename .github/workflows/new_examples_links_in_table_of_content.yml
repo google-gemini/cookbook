@@ -31,12 +31,14 @@ jobs:
             while IFS= read -r file; do
               # Get the directory of the new example file
               example_dir=$(dirname "$file")
+              # Get the filename without the directory path
+              filename=$(basename "$file")
 
               # Check if link exists in examples/README.md 
               if ! grep -q "$file" examples/README.md && ! grep -q "${file/examples\//](}" examples/README.md; then
                 # Check if a README.md exists in the sub-folder, and if so, check for the link there
                 if [[ -f "$example_dir/README.md" ]]; then
-                  if ! grep -q "$file" "$example_dir/README.md" && ! grep -q "${file/examples\//](}" "$example_dir/README.md"; then
+                  if ! grep -q "$filename" "$example_dir/README.md" && ! grep -q "$filename" "$example_dir/README.md"; then
                     all_linked=false
                     echo "Link to '$file' not found in examples/README.md or $example_dir/README.md"
                     echo "::warning file=$file::Link to '$file' not found in a README.md, please add one"

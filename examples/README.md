@@ -31,7 +31,8 @@ This is a collection of fun examples for the Gemini API.
 ### Folders
 
 * [Prompting examples](https://github.com/google-gemini/cookbook/tree/main/examples/prompting): A directory with examples of various prompting techniques. 
-* [JSON Capabilities](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Tuning.ipynb): A directory with guides containing different types of tasks you can do with JSON schemas.
+* [JSON Capabilities](https://github.com/google-gemini/cookbook/tree/main/examples/json-capabilities): A directory with guides containing different types of tasks you can do with JSON schemas.
 * [Automate Google Workspace tasks with the Gemini API](https://github.com/google-gemini/cookbook/tree/main/examples/Apps_script_and_Workspace_codelab): This codelabs shows you how to connect to the Gemini API using Apps Script, and uses the function calling, vision and text capabilities to automate Google Workspace tasks - summarizing a document, analyzing a chart, sending an email and generating some slides directly. All of this is done from a free text input.
+* [Langchain examples](https://github.com/google-gemini/cookbook/tree/main/examples/langchain): A directory with multiple examples using Gemini with Langchain.
 
 There are even more examples in the [quickstarts](https://github.com/google-gemini/cookbook/tree/main/quickstarts) folder and in the [Awesome Gemini page](../Awesome_gemini.md).

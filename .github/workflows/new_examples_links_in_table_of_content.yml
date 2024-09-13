@@ -15,7 +15,7 @@ jobs:
         uses: tj-actions/changed-files@v45
         with:
           files:  |
-            examples/**/*.ipynb
+            examples/**.ipynb
       - name: Check README links
         env:
           NEW_FILES: ${{ steps.changed_files.added_files }}

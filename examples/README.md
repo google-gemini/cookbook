@@ -35,3 +35,5 @@ This is a collection of fun examples for the Gemini API.
 * [Automate Google Workspace tasks with the Gemini API](https://github.com/google-gemini/cookbook/tree/main/examples/Apps_script_and_Workspace_codelab): This codelabs shows you how to connect to the Gemini API using Apps Script, and uses the function calling, vision and text capabilities to automate Google Workspace tasks - summarizing a document, analyzing a chart, sending an email and generating some slides directly. All of this is done from a free text input.
 
 There are even more examples in the [quickstarts](https://github.com/google-gemini/cookbook/tree/main/quickstarts) folder and in the [Awesome Gemini page](../Awesome_gemini.md).
+
+[test](examples/test_to_be_deleted_before_merging.ipynb)

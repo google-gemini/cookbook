@@ -18,11 +18,12 @@ jobs:
             examples/**/*.ipynb
       - name: Check README links
         env:
+          # We only want the added file so that if we do an exception we dop not have to make an exception again each time qu're editing the file
           NEW_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
           README: examples/README.md
         run: |
           all_linked=true
-          for file in ${ALL_CHANGED_FILES}; do
+          for file in ${NEW_FILES}; do
             echo "$file was added"
             # Get the directory of the new example file
             example_dir=$(dirname "$file")

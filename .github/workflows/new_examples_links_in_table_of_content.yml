@@ -38,12 +38,16 @@ jobs:
                   all_linked=false
                   echo "Link to '$file' not found in "$README".md or $example_dir/README.md"
                   echo "::warning file=$file::Link to '$file' not found in a README.md, please add one"
+                else
+                  echo "Link to '$file' found in $example_dir/README.md"
                 fi
               else
                 all_linked=false
                 echo "Link to '$file' not found in $README, and no README.md found in $example_dir"
                 echo "::warning file=$file::Link to '$file' not found in $README, please add one (or create a README.md in the sub-folder)"
               fi
+            else
+              echo "Link to '$file' found in $README"
             fi
           done
           if ! $all_linked; then

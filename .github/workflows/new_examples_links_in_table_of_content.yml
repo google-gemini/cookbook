@@ -11,14 +11,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: Get Changed Files
-        id: changed_files
+        id: changed-files
         uses: tj-actions/changed-files@v45
         with:
           files:  |
             examples/*.ipynb
       - name: Check README links
         env:
-          NEW_FILES: ${{ steps.changed_files.added_files }}
+          NEW_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
           README: examples/README.md
         run: |
           echo "$NEW_FILES";

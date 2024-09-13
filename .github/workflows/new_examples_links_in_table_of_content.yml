@@ -4,11 +4,12 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  FOLDER: examples
+
 jobs:
   new-example-links-in-examples-readme:
     runs-on: ubuntu-latest
-    env:
-      FOLDER: examples
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3

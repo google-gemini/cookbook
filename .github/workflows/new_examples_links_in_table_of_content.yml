@@ -17,13 +17,13 @@ jobs:
         uses: tj-actions/changed-files@v45
         with:
           files:  |
-            "$FOLDER/**/*.ipynb"
+            ${FOLDER}/**/*.ipynb
       - name: Check README links
         env:
           # We only want the added file so that if we do an exception we dop not have to make an exception again each time qu're editing the file
           NEW_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
           FOLDER: examples
-          README: "$FOLDER/README.md"
+          README: ${FOLDER}/README.md
         run: |
           all_linked=true
           for file in ${NEW_FILES}; do

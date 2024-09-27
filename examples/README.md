@@ -9,7 +9,7 @@ This is a collection of fun examples for the Gemini API.
 * [Anomaly Detection](https://github.com/google-gemini/cookbook/blob/main/examples/Anomaly_detection_with_embeddings.ipynb): Use embeddings to detect anomalies in your datasets.
 * [Analyze a Video with Summarization](https://github.com/google-gemini/cookbook/blob/main/examples/Analyze_a_Video_Summarization.ipynb): This notebook shows how you can use Gemini API's multimodal capabilities for video summarization.
 * [Apollo 11 - long context example](https://github.com/google-gemini/cookbook/blob/main/examples/Apollo_11.ipynb): Search a 400 page transcript from Apollo 11.
-* [Clasify text with emeddings](https://github.com/google-gemini/cookbook/blob/main/examples/Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.
+* [Clasify text with embeddings](https://github.com/google-gemini/cookbook/blob/main/examples/Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.
 * [Guess the shape](https://github.com/google-gemini/cookbook/blob/main/examples/Guess_the_shape.ipynb): A simple example of using images in prompts.
 * [Market a Jet Backpack](https://github.com/google-gemini/cookbook/blob/main/examples/Market_a_Jet_Backpack.ipynb): Create a marketing campaign from a product sketch.
 * [Object detection](https://github.com/google-gemini/cookbook/blob/main/examples/Object_detection.ipynb): Extensive examples with object detection, including with multiple classes, OCR, visual question answering, and even an interactive demo.  

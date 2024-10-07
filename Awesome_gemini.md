@@ -8,11 +8,9 @@ You should also have a look at our Google-maintained [quickstarts](quickstarts/)
 
 Those projects are ordered in an anti-chronological order and are the work of their authors, who are are not necessarily affiliated with Google.
 
-### Creating workflows using Gemini
+### Creating workflows diagrams using Gemini
 
 From [Gitesh Mahadik](https://medium.com/@gitesh08), Create amazing workflows diagrams for your next pack of slides: https://medium.com/google-cloud/how-to-generate-workflow-diagrams-using-gemini-8d3d538bd2e7
-
-![Creating workflows using Gemini]([https://pbs.twimg.com/media/GP818DAWUAEkZSA?format=jpg&name=900x900](https://miro.medium.com/v2/resize:fit:1100/format:webp/1*e7i4vs23hjt_oMuUpvTejA.gif))
 
 ### [Caching] Helping with navigating a lot of documentation 
 

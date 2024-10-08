@@ -23,6 +23,7 @@ This is a collection of fun examples for the Gemini API.
 * [Translate a public domain](https://github.com/google-gemini/cookbook/blob/main/examples/Translate_a_Public_Domain_Book.ipynb): In this notebook, you will explore Gemini model as a translation tool, demonstrating how to prepare data, create effective prompts, and save results into a `.txt` file.
 * [Working with Charts, Graphs, and Slide Decks](https://github.com/google-gemini/cookbook/blob/main/examples/Working_with_Charts_Graphs_and_Slide_Decks.ipynb): Gemini models are powerful multimodal LLMs that can process both text and image inputs. This notebook shows how Gemini 1.5 Flash model is capable of extracting data from various images.
 * [Entity extraction](https://github.com/google-gemini/cookbook/blob/main/examples/Entity_Extraction.ipynb): Use Gemini API to speed up some of your tasks, such as searching through text to extract needed information. Entity extraction with a Gemini model is a simple query, and you can ask it to retrieve its answer in the form that you prefer.
+* [Parallel Image Analysis](https://github.com/google-gemini/cookbook/blob/main/examples/Parallel_Image_Analysis.ipynb) This notebook demonstrates how to prompt multiple images and obtain a summary for each image in JSON format using threading.
 
 ### Integrations
 

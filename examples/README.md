@@ -8,6 +8,7 @@ This is a collection of fun examples for the Gemini API.
 * [Classify and Analyze a Video](https://github.com/google-gemini/cookbook/blob/main/examples/Analyze_a_Video_Classification.ipynb): This notebook uses multimodal capabilities of the Gemini model to classify the species of animals shown in a video.
 * [Anomaly Detection](https://github.com/google-gemini/cookbook/blob/main/examples/Anomaly_detection_with_embeddings.ipynb): Use embeddings to detect anomalies in your datasets.
 * [Analyze a Video with Summarization](https://github.com/google-gemini/cookbook/blob/main/examples/Analyze_a_Video_Summarization.ipynb): This notebook shows how you can use Gemini API's multimodal capabilities for video summarization.
+* [Multimodal RAG](https://github.com/google-gemini/cookbook/blob/main/examples/Multimodal_RAG_with_Gemini.ipynb): Learn how to perform multimodal RAG with images and text with the Gemini API.
 * [Apollo 11 - long context example](https://github.com/google-gemini/cookbook/blob/main/examples/Apollo_11.ipynb): Search a 400 page transcript from Apollo 11.
 * [Clasify text with emeddings](https://github.com/google-gemini/cookbook/blob/main/examples/Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.
 * [Guess the shape](https://github.com/google-gemini/cookbook/blob/main/examples/Guess_the_shape.ipynb): A simple example of using images in prompts.

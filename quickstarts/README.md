@@ -10,8 +10,9 @@ Learn about the capabilities of the Gemini API by checking out these quickstarts
 * [Audio](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Audio.ipynb): Learn how to use the Gemini API with audio files.
 * [JSON mode](https://github.com/google-gemini/cookbook/blob/main/quickstarts/JSON_mode.ipynb): Discover how to use JSON mode.
 * [Function Calling](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Function_calling.ipynb): The Gemini API works great with code. Use this quickstart to learn how to write prompts to understand and call functions. Then check out the [function calling config](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Function_calling_config.ipynb) tutorial to learn more.
-* [PDF files](https://github.com/google-gemini/cookbook/blob/main/quickstarts/PDF_Files.ipynb). Learn how to work with PDF files, to and upload text and images.
+* [PDF files](https://github.com/google-gemini/cookbook/blob/main/quickstarts/PDF_Files.ipynb): Learn how to work with PDF files, to and upload text and images.
 * [System Instructions](https://github.com/google-gemini/cookbook/blob/main/quickstarts/System_instructions.ipynb): Give models additional context on how to respond by setting system instructions.
+* [Search Grounding](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Search_Grounding.ipynb): Introduction on how to use the search grounding feature available in Gemini to provide resources to summarized answers from the Gemini model.
 * [Safety](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Safety.ipynb): Configure safety settings in the Gemini API.
 * [Streaming](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Streaming.ipynb): Learn how to use streaming for single interactions, and for chat.
 * [Embeddings](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Embeddings.ipynb): Create high quality and task-specific embeddings.

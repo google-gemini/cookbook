@@ -2,6 +2,7 @@
 
 ## Table of contents
 Learn about the capabilities of the Gemini API by checking out these quickstarts. They walk you through how to use a feature of the Gemini API with complete end to end code.
+* [Asynchronous requests](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Asynchronous_requests.ipynb): Learn how to use Python's async/await API with the Gemini SDK to parallelize calls.
 * [Authentication](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Authentication.ipynb): Start here to learn how you can set up your API key so you can get access to the Gemini API.
 * [Counting Tokens](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Counting_Tokens.ipynb) Tokens are the basic inputs to the Gemini models. Through this notebook, you will gain a better understanding of tokens through an interactive experience.
 * [Gemini Flash Introduction](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Gemini_Flash_Introduction.ipynb): Get started with Gemini Flash 1.5.
@@ -18,4 +19,4 @@ Learn about the capabilities of the Gemini API by checking out these quickstarts
 * [Tuning](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Tuning.ipynb): Learn how to improve model performance on a specific task through tuning.
 * [Video](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video.ipynb): Upload a video to the Gemini API and use it in your prompt.
 
-When you're finished here, check out the [examples folder](https://github.com/google-gemini/cookbook/tree/main/examples) or the [Awesome Gemini page](../Awesome_gemini.md) for more fun examples.  
+When you're finished here, check out the [examples folder](https://github.com/google-gemini/cookbook/tree/main/examples) or the [Awesome Gemini page](../Awesome_gemini.md) for more fun examples.

@@ -8,6 +8,10 @@ You should also have a look at our Google-maintained [quickstarts](quickstarts/)
 
 Those projects are ordered in an anti-chronological order and are the work of their authors, who are are not necessarily affiliated with Google.
 
+### Creating workflows diagrams using Gemini
+
+From [Gitesh Mahadik](https://medium.com/@gitesh08), Create amazing workflows diagrams for your next pack of slides: https://medium.com/google-cloud/how-to-generate-workflow-diagrams-using-gemini-8d3d538bd2e7
+
 ### [Caching] Helping with navigating a lot of documentation 
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">The context caching feature for Gemini is really neat!<br><br>As you all know, I write a lot and document AI research progress in lots of places. But I also tend to forget research findings due to the vast amount of papers I read so I wanted to try whether context caching can help me… <a href="https://t.co/7Q7G2RapFD">pic.twitter.com/7Q7G2RapFD</a></p>&mdash; elvis (@omarsar0) <a href="https://twitter.com/omarsar0/status/1803171489446785354?ref_src=twsrc%5Etfw">June 18, 2024</a></blockquote>

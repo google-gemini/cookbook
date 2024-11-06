@@ -1,0 +1,6 @@
+👋 Welcome to the Gemini API Cookbook! This repo is a collection of all the guides and examples for the Gemini API.
+    - To get started, make sure you have an API Key from [Google AI
+      studio](https://aistudio.google.com/app/apikey)
+    - Note that the notebooks were written to run in Google Colab, so they may
+      not always work in Codespaces
+    - Check out the 'README.md' file to know more

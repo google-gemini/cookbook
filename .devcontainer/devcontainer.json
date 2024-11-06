@@ -1,0 +1,17 @@
+{
+    "name": "Gemini Cookbook Dev Container",
+    "image": "mcr.microsoft.com/devcontainers/universal:2",
+    "waitFor": "onCreateCommand",
+    "updateContentCommand": "python3 -m pip install ipywidgets",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-toolsai.jupyter",
+                "ms-python.python",
+                "eamodio.gitlens"
+            ]
+        }
+    },
+
+    "postCreateCommand": "sudo cp .devcontainer/welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt"
+}

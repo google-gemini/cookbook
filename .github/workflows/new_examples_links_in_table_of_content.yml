@@ -8,37 +8,48 @@ jobs:
   new-example-links-in-examples-readme:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Get added files
-        run: |
-          git fetch origin main
-          git diff --name-status origin/main HEAD | grep ^A | cut -f2- > new_files.txt
-          echo "Added Files:"
-          cat new_files.txt  | sed 's/^/ - /'
-      - name: Check for new example files
-        run: |
-          if grep "examples/" new_files.txt; then
-            grep '^examples/' new_files.txt > new_example_files.txt
-            echo "Found new file(s) in examples/:"
-            cat new_example_files.txt  | sed 's/^/ - /'
-          else
-            echo "No new files found in examples/"
-          fi
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Get Changed Files
+        id: changed-files
+        uses: tj-actions/changed-files@v45
+        with:
+          files:  |
+            examples/**/*.ipynb
       - name: Check README links
+        env:
+          # We only want the added file so that if we do an exception we dop not have to make an exception again each time qu're editing the file
+          NEW_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+          README: examples/README.md
         run: |
-          if [[ -f new_example_files.txt ]]; then
-            all_linked=true
-            while IFS= read -r file; do
-              if ! grep -q "$file" examples/README.md; then
-                if ! grep -q "${file/examples\//](}" examples/README.md; then
-                  all_linked=false
-                  echo "Link to '$file' not found in README.md"
-                  echo "::warning file=$file::Link to '$file' not found in examples/README.md, please add one in the table of content"
+          all_linked=true
+          for file in ${NEW_FILES}; do
+            echo "$file was added"
+            # Get the directory of the new notebook file
+            notebook_dir=$(dirname "$file")
+            # Get the filename without the directory path
+            filename=$(basename "$file")
 
+            # Check if link exists in $README 
+            if ! grep -q "$file" "$README" && ! grep -q "${file/examples\//](}" "$README"; then
+              # Check if a README.md exists in the sub-folder, and if so, check for the link there
+              if [[ -f "$notebook_dir/README.md" ]]; then
+                if ! grep -q "$filename" "$notebook_dir/README.md"; then
+                  all_linked=false
+                  echo "  Link to '$file' not found in "$README".md or $notebook_dir/README.md"
+                  echo "::warning file=$file::Link to '$file' not found in a README.md, please add one"
+                else
+                  echo "  Link to '$file' found in $notebook_dir/README.md"
                 fi
+              else
+                all_linked=false
+                echo "  Link to '$file' not found in $README, and no README.md found in $notebook_dir"
+                echo "::warning file=$file::Link to '$file' not found in $README, please add one (or create a README.md in the sub-folder)"
               fi
-            done < new_example_files.txt
-            if ! $all_linked; then
-              exit 1
+            else
+              echo "  Link to '$file' found in $README"
             fi
+          done
+          if ! $all_linked; then
+            exit 1
           fi

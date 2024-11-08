@@ -48,7 +48,7 @@ If you're an enterprise developer looking to build on a fully-managed platform, 
 
 ## Project IDX
 
-<a href="https://idx.google.com/import?url=https%3A%2F%2Fgithub.com%2Fgoogle-gemini%2Fcookbook">
+<a href="https://idx.google.com/new?template=https%3A%2F%2Fgithub.com%2Fgoogle-gemini%2Fcookbook">
   <picture>
     <source
       media="(prefers-color-scheme: dark)"

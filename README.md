@@ -4,6 +4,21 @@ This is a collection of guides and examples for the Gemini API, including [quick
 ## Get started with the Gemini API
 The Gemini API gives you access to Gemini [models](https://ai.google.dev/models/gemini) created by [Google DeepMind](https://deepmind.google/technologies/gemini/#introduction). Gemini models are built from the ground up to be multimodal, so you can reason seamlessly across text, images, code, and audio. You can use these to develop a [range of applications](https://ai.google.dev/examples/).
 
+<a href="https://idx.google.com/import?url=https%3A%2F%2Fgithub.com%2Fgoogle-gemini%2Fcookbook">
+  <picture>
+    <source
+      media="(prefers-color-scheme: dark)"
+      srcset="https://cdn.idx.dev/btn/try_dark_32.svg">
+    <source
+      media="(prefers-color-scheme: light)"
+      srcset="https://cdn.idx.dev/btn/try_light_32.svg">
+    <img
+      height="32"
+      alt="Try in IDX"
+      src="https://cdn.idx.dev/btn/try_purple_32.svg">
+  </picture>
+</a>
+
 ### Start developing
 1. Go to [Google AI Studio](https://aistudio.google.com/).
 2. Login with your Google account.

@@ -8,10 +8,10 @@ The Gemini API gives you access to Gemini [models](https://ai.google.dev/models/
   <picture>
     <source
       media="(prefers-color-scheme: dark)"
-      srcset="https://cdn.idx.dev/btn/try_dark_32.svg">
+      srcset="https://cdn.idx.dev/btn/try_light_32.svg">
     <source
       media="(prefers-color-scheme: light)"
-      srcset="https://cdn.idx.dev/btn/try_light_32.svg">
+      srcset="https://cdn.idx.dev/btn/try_dark_32.svg">
     <img
       height="32"
       alt="Try in IDX"

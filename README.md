@@ -4,21 +4,6 @@ This is a collection of guides and examples for the Gemini API, including [quick
 ## Get started with the Gemini API
 The Gemini API gives you access to Gemini [models](https://ai.google.dev/models/gemini) created by [Google DeepMind](https://deepmind.google/technologies/gemini/#introduction). Gemini models are built from the ground up to be multimodal, so you can reason seamlessly across text, images, code, and audio. You can use these to develop a [range of applications](https://ai.google.dev/examples/).
 
-<a href="https://idx.google.com/import?url=https%3A%2F%2Fgithub.com%2Fgoogle-gemini%2Fcookbook">
-  <picture>
-    <source
-      media="(prefers-color-scheme: dark)"
-      srcset="https://cdn.idx.dev/btn/try_light_32.svg">
-    <source
-      media="(prefers-color-scheme: light)"
-      srcset="https://cdn.idx.dev/btn/try_dark_32.svg">
-    <img
-      height="32"
-      alt="Try in IDX"
-      src="https://cdn.idx.dev/btn/try_purple_32.svg">
-  </picture>
-</a>
-
 ### Start developing
 1. Go to [Google AI Studio](https://aistudio.google.com/).
 2. Login with your Google account.
@@ -59,7 +44,38 @@ The Gemini API is a REST API. You can call the API using a command line tool lik
 Ask a question on the [Google AI Developer Forum](https://discuss.ai.google.dev/).
 
 ## The Gemini API on Google Cloud Vertex AI
-If you're an enterprise developer looking to build on a fully-managed platform, you can also use the Gemini API on Google Cloud. Check out this [repo](https://github.com/GoogleCloudPlatform/generative-ai) for lots of cool examples. 
+If you're an enterprise developer looking to build on a fully-managed platform, you can also use the Gemini API on Google Cloud. Check out this [repo](https://github.com/GoogleCloudPlatform/generative-ai) for lots of cool examples.
+
+## Project IDX
+
+<a href="https://idx.google.com/import?url=https%3A%2F%2Fgithub.com%2Fgoogle-gemini%2Fcookbook">
+  <picture>
+    <source
+      media="(prefers-color-scheme: dark)"
+      srcset="https://cdn.idx.dev/btn/try_light_32.svg">
+    <source
+      media="(prefers-color-scheme: light)"
+      srcset="https://cdn.idx.dev/btn/try_dark_32.svg">
+    <img
+      height="32"
+      alt="Try in IDX"
+      src="https://cdn.idx.dev/btn/try_purple_32.svg">
+  </picture>
+</a>
+
+To run the cookbook notebooks in [IDX](https://idx.dev) change the API Key logic in each note book you want to run:
+
+```diff
+- from google.colab import userdata
+- GOOGLE_API_KEY=userdata.get('GOOGLE_API_KEY')
++ GOOGLE_API_KEY='TODO'
+
+genai.configure(api_key=GOOGLE_API_KEY)
+```
+
+Replace the TODO with your Gemini API key by:
+- Selecting "Add Gemini API" in the "Project IDX" panel in the sidebar
+- Or by visiting https://g.co/ai/idxGetGeminiKey
 
 ## Contributing
 Contributions are welcome. See [contributing](https://github.com/google-gemini/cookbook/blob/main/CONTRIBUTING.md) to learn more.

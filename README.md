@@ -63,7 +63,7 @@ If you're an enterprise developer looking to build on a fully-managed platform, 
   </picture>
 </a>
 
-To run the cookbook notebooks in [IDX](https://idx.dev) change the API Key logic in each note book you want to run:
+To run a notebook in [IDX](https://idx.dev) change the API Key fetching logic in each notebook you want to run:
 
 ```diff
 - from google.colab import userdata

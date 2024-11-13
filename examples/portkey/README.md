@@ -1,4 +1,4 @@
-# Portkey AI with Groq
+# Portkey AI with Gemini
 [Portkey](https://portkey.ai/?utm_source=gemini&utm_medium=external_integration&utm_campaign=gemini-docs) is the Control Panel for AI apps, offering an AI Gateway and Observability Suite that enables teams to build **reliable**, **cost-efficient**, and **fast** applications. This guide will walk you through integrating Portkey with Google Gemini, allowing you to leverage Gemini's powerful LLMs through Portkey's unified API and advanced features.
 
 ## Key Features
@@ -30,9 +30,9 @@ To use Gemini with Portkey, you'll need two keys:
 1. **Portkey API Key**: Sign up at [app.portkey.ai](https://app.portkey.ai/signup?utm_source=gemini&utm_medium=external_integration&utm_campaign=gemini-docs) and copy your [API key](https://app.portkey.ai/api-keys?utm_source=gemini&utm_medium=external_integration&utm_campaign=gemini-docs).
 2. **Gemini API Key**: Generate your [Gemini API Key](https://aistudio.google.com/apikey).
 
-Create a `Virtual Key` in Portkey to securely store your Groq API key:
+Create a `Virtual Key` in Portkey to securely store your Gemini API key:
 
-1. Navigate to the Virtual Keys tab in Portkey, and create a new key for Groq
+1. Navigate to the Virtual Keys tab in Portkey, and create a new key for Gemini
 2. Use the Virtual Key in your code:
 
 ```python
@@ -49,7 +49,7 @@ portkey = Portkey(
 > You can also make API calls without using virtual key, learn more [here](https://github.com/portkey-ai/gateway)
 ### 4. Make API Calls
 
-Now you can make calls to models powered by Groq for fast inference speed and low latency through Portkey:
+Now you can make calls to models powered by Gemini through Portkey:
 
 ```python
 completion = portkey.chat.completions.create(
@@ -181,7 +181,7 @@ retry_fallback_config = {
 }
 ```
 
-This configuration attempts to retry the Geimin's request up to 3 times if a timeout or rate limit error occurs. If all retries fail, it will fallback to OpenAI's GPT-3.5 Turbo, and if that fails, to Anthropic's Claude 3.5.
+This configuration attempts to retry the Geimini's request up to 3 times if a timeout or rate limit error occurs. If all retries fail, it will fallback to OpenAI's GPT-3.5 Turbo, and if that fails, to Anthropic's Claude 3.5.
 
 ### 4. Conditional Routing
 

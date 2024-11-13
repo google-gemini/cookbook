@@ -67,13 +67,13 @@ To run a notebook in [IDX](https://idx.dev) change the API Key fetching logic in
 
 ```diff
 - from google.colab import userdata
++ import os
 - GOOGLE_API_KEY=userdata.get('GOOGLE_API_KEY')
-+ GOOGLE_API_KEY='TODO'
-
++ GOOGLE_API_KEY=os.environ['GOOGLE_API_KEY']
 genai.configure(api_key=GOOGLE_API_KEY)
 ```
 
-Replace the TODO with your Gemini API key by:
+Replace the TODO in `.idx/dev.nix` with your Gemini API key by:
 - Selecting "Add Gemini API" in the "Project IDX" panel in the sidebar
 - Or by visiting https://g.co/ai/idxGetGeminiKey
 

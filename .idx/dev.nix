@@ -9,7 +9,9 @@
     pkgs.python311Packages.pip
   ];
   # Sets environment variables in the workspace
-  env = {};
+  env = {
+    GOOGLE_API_KEY="TODO";
+  };
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [

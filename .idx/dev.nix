@@ -26,6 +26,7 @@
           python -m venv .venv
           source .venv/bin/activate
           pip install -r requirements.txt
+          python scripts/api-key.py
         '';
         # Open editors for the following files by default, if they exist:
         default.openFiles = [ "main.ipynb" ];

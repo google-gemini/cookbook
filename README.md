@@ -63,17 +63,7 @@ If you're an enterprise developer looking to build on a fully-managed platform, 
   </picture>
 </a>
 
-To run a notebook in [IDX](https://idx.dev) change the API Key fetching logic in each notebook you want to run:
-
-```diff
-- from google.colab import userdata
-+ import os
-- GOOGLE_API_KEY=userdata.get('GOOGLE_API_KEY')
-+ GOOGLE_API_KEY=os.environ['GOOGLE_API_KEY']
-genai.configure(api_key=GOOGLE_API_KEY)
-```
-
-Replace the TODO in `.idx/dev.nix` with your Gemini API key by:
+To run any notebook in [IDX](https://idx.dev) replace the TODO in `.idx/dev.nix` with your Gemini API key by:
 - Selecting "Add Gemini API" in the "Project IDX" panel in the sidebar
 - Or by visiting https://g.co/ai/idxGetGeminiKey
 

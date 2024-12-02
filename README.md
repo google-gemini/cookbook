@@ -44,7 +44,28 @@ The Gemini API is a REST API. You can call the API using a command line tool lik
 Ask a question on the [Google AI Developer Forum](https://discuss.ai.google.dev/).
 
 ## The Gemini API on Google Cloud Vertex AI
-If you're an enterprise developer looking to build on a fully-managed platform, you can also use the Gemini API on Google Cloud. Check out this [repo](https://github.com/GoogleCloudPlatform/generative-ai) for lots of cool examples. 
+If you're an enterprise developer looking to build on a fully-managed platform, you can also use the Gemini API on Google Cloud. Check out this [repo](https://github.com/GoogleCloudPlatform/generative-ai) for lots of cool examples.
+
+## Project IDX
+
+<a href="https://idx.google.com/new?template=https%3A%2F%2Fgithub.com%2Fgoogle-gemini%2Fcookbook">
+  <picture>
+    <source
+      media="(prefers-color-scheme: dark)"
+      srcset="https://cdn.idx.dev/btn/try_light_32.svg">
+    <source
+      media="(prefers-color-scheme: light)"
+      srcset="https://cdn.idx.dev/btn/try_dark_32.svg">
+    <img
+      height="32"
+      alt="Try in IDX"
+      src="https://cdn.idx.dev/btn/try_purple_32.svg">
+  </picture>
+</a>
+
+To run any notebook in [IDX](https://idx.dev) replace the TODO in `.idx/dev.nix` with your Gemini API key by:
+- Selecting "Add Gemini API" in the "Project IDX" panel in the sidebar
+- Or by visiting https://g.co/ai/idxGetGeminiKey
 
 ## Contributing
 Contributions are welcome. See [contributing](https://github.com/google-gemini/cookbook/blob/main/CONTRIBUTING.md) to learn more.

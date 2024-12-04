@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 const fs = require('fs');
 const {google} = require('googleapis');
 const mime = require('mime-types');
+const path = require('path');
 
 // Load environment variables from .env file
 dotenv.config({ path: '.env' });
@@ -45,6 +46,6 @@ async function run(filePath, fileDisplayName) {
     }
 }
 
-filePath = "sample_data/gemini_logo.png";
-fileDisplayName = "Gemini logo";
+const filePath = path.join("sample_data", "gemini_logo.png");
+const fileDisplayName = "Gemini logo";
 run(filePath, fileDisplayName);

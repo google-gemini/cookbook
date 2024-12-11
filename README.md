@@ -1,6 +1,8 @@
 # Welcome to the Gemini API Cookbook
 This is a collection of guides and examples for the Gemini API, including [quickstart](https://github.com/google-gemini/cookbook/tree/main/quickstarts) tutorials for writing prompts and using different features of the API, and [examples](https://github.com/google-gemini/cookbook/tree/main/examples) of things you can build.
 
+**NEW**: Check out the latest Gemini 2.0 capabilities in [the docs](https://ai.google.dev/gemini-api/docs/models/gemini-v2), [Google AI Studio](https://aistudio.google.com/app/live?model=gemini-2.0-flash-exp) and here in the [cookbook](./gemini-2/).
+
 ## Get started with the Gemini API
 The Gemini API gives you access to Gemini [models](https://ai.google.dev/models/gemini) created by [Google DeepMind](https://deepmind.google/technologies/gemini/#introduction). Gemini models are built from the ground up to be multimodal, so you can reason seamlessly across text, images, code, and audio. You can use these to develop a [range of applications](https://ai.google.dev/examples/).
 
@@ -12,8 +14,7 @@ The Gemini API gives you access to Gemini [models](https://ai.google.dev/models/
 
 ## What's New?
 We're excited to show you the latest additions to the Gemini API, and new notebooks.
-* [Code execution](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Code_Execution.ipynb): Solve complex tasks by generating and running Python code based on plain-text instructions. 
-* [VectorDB](https://github.com/google-gemini/cookbook/blob/main/examples/chromadb/Vectordb_with_chroma.ipynb): Create a vector database and retrieve answers to questions from the database. 
+* [Gemini 2.0](./gemini-2/): Explore the capabilities of the new Gemini 2.0 model, including real-time vision and audio streaming applications with tool use. 
 
 ## Table of contents
 

@@ -38,9 +38,7 @@ SEND_SAMPLE_RATE = 16000
 RECEIVE_SAMPLE_RATE = 24000
 CHUNK_SIZE = 512
 
-# host='generativelanguage.googleapis.com'
-#host = "autopush-generativelanguage.sandbox.googleapis.com"
-host = "preprod-generativelanguage.googleapis.com"
+host='generativelanguage.googleapis.com'
 model = "gemini-2.0-flash-exp"
 
 api_key = os.environ['GOOGLE_API_KEY']

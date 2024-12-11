@@ -2,7 +2,7 @@
 #set -ex
 
 # This script shows you how to use `websocat` to interact with the Gemini 2.0
-# Multimodal Live API. 
+# Multimodal Live API.
 
 # You need to set $GOOGLE_API_KEY
 # And you'll need:
@@ -35,7 +35,7 @@ echo "Output processing..."
 # Launch the model connection and wire it up to the pipes.
 websocat -n wss://${HOST}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${API_KEY} <gemini_input >gemini_output &
 socket_pid=$!
-#echo "Model connected."
+echo "Model connected."
 
 # Issue setup handshake.
 echo '{"setup": {"model": "models/'${MODEL}'", "generation_config": {"response_modalities":["TEXT"]}}}' |tee >(jq) >gemini_input

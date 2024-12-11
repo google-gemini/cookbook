@@ -2,8 +2,7 @@
 
 This is a collection of websocket-specific examples and quickstarts for using the **experimental** Gemini 2.0 Flash model.
 
-To learn about what’s new in the 2.0 model release and the new Google GenAI SDKs, check out the [Gemini 2.0 model page](https://ai.google.dev/gemini-api/docs/models/gemini-v2). To start experimenting with the model now, head to [Google AI Studio](https://aistudio.google.com/app/live).
-
+To learn about what’s new in the 2.0 model release and the new [Google GenAI SDKs](https://github.com/googleapis/python-genai), check out the [Gemini 2.0 model page](https://ai.google.dev/gemini-api/docs/models/gemini-v2). To start experimenting with the model now, head to [Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.0-flash-exp) for prompting or to the [Multimodal Live API demo](https://aistudio.google.com/live) to try the new Live capabilities.
 ## Contents
 
 Explore Gemini 2.0’s capabilities on your own local machine.

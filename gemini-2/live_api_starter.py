@@ -36,7 +36,7 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 SEND_SAMPLE_RATE = 16000
 RECEIVE_SAMPLE_RATE = 24000
-CHUNK_SIZE = 512
+CHUNK_SIZE = 1024
 
 MODEL = "models/gemini-2.0-flash-exp"
 
@@ -50,7 +50,7 @@ pya = pyaudio.PyAudio()
 class AudioLoop:
     def __init__(self):
         self.audio_in_queue = asyncio.Queue()
-        self.out_queue = asyncio.Queue()
+        self.out_queue = asyncio.Queue(maxsize=5)
 
         self.session = None
 
@@ -67,8 +67,11 @@ class AudioLoop:
         # Check if the frame was read successfully
         if not ret:
             return None
-
-        img = PIL.Image.fromarray(frame)
+        # Fix: Convert BGR to RGB color space
+        # OpenCV captures in BGR but PIL expects RGB format
+        # This prevents the blue tint in the video feed
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        img = PIL.Image.fromarray(frame_rgb)  # Now using RGB frame
         img.thumbnail([1024, 1024])
 
         image_io = io.BytesIO()
@@ -93,7 +96,7 @@ class AudioLoop:
 
             await asyncio.sleep(1.0)
 
-            self.out_queue.put_nowait(frame)
+            await self.out_queue.put(frame)
 
         # Release the VideoCapture object
         cap.release()
@@ -116,9 +119,13 @@ class AudioLoop:
             input_device_index=mic_info["index"],
             frames_per_buffer=CHUNK_SIZE,
         )
+        if __debug__:
+            kwargs={'exception_on_overflow':False}
+        else:
+            kwargs={}
         while True:
-            data = await asyncio.to_thread(stream.read, CHUNK_SIZE)
-            self.out_queue.put_nowait({"data": data, "mime_type": "audio/pcm"})
+            data = await asyncio.to_thread(stream.read, CHUNK_SIZE, **kwargs)
+            await self.out_queue.put({"data": data, "mime_type": "audio/pcm"})
 
     async def receive_audio(self):
         "Background task to reads from the websocket and write pcm chunks to the output queue"

@@ -18,6 +18,6 @@ Explore Gemini 2.0’s capabilities through the following notebooks using Google
 
 Or explore on your own local machine.
 
-* [Live API starter script](./live_api_starter.py) \- A locally runnable Python script using GenAI SDK that supports streaming audio in and out from your machine
+* [Live API starter script](./live_api_starter.py) \- A locally runnable Python script using GenAI SDK that supports streaming audio in and audio + video out from your machine
 
 Also find websocket-specific examples in the [`websockets`](./websockets/) directory.

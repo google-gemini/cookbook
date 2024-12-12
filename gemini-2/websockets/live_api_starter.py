@@ -83,7 +83,11 @@ class AudioLoop:
         if not ret:
             return None
 
-        img = PIL.Image.fromarray(frame)
+        # Fix: Convert BGR to RGB color space
+        # OpenCV captures in BGR but PIL expects RGB format
+        # This prevents the blue tint in the video feed
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        img = PIL.Image.fromarray(frame_rgb)  # Now using RGB frame
         img.thumbnail([1024, 1024])
 
         image_io = io.BytesIO()

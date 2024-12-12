@@ -120,9 +120,9 @@ class AudioLoop:
             frames_per_buffer=CHUNK_SIZE,
         )
         if __debug__:
-            kwargs={'exception_on_overflow':False}
+            kwargs = {"exception_on_overflow": False}
         else:
-            kwargs={}
+            kwargs = {}
         while True:
             data = await asyncio.to_thread(stream.read, CHUNK_SIZE, **kwargs)
             await self.out_queue.put({"data": data, "mime_type": "audio/pcm"})

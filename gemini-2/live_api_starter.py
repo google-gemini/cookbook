@@ -13,6 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# To install the dependencies for this script, run:
+#  pip install google-genai opencv-python pyaudio pillow
+# And to run this script, ensure the GOOGLE_API_KEY environment
+# variable is set to the key you obtained from Google AI Studio.
+
 import asyncio
 import base64
 import io

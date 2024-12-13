@@ -16,7 +16,6 @@
 import asyncio
 import base64
 import io
-import os
 import sys
 import traceback
 
@@ -56,7 +55,10 @@ class AudioLoop:
 
     async def send_text(self):
         while True:
-            text = await asyncio.to_thread(input, "message > ")
+            text = await asyncio.to_thread(
+                input,
+                "message > ",
+            )
             if text.lower() == "q":
                 break
             await self.session.send(text or ".", end_of_turn=True)
@@ -103,14 +105,12 @@ class AudioLoop:
 
     async def send_realtime(self):
         while True:
-            frame = await self.out_queue.get()
-            await self.session.send(frame)
+            msg = await self.out_queue.get()
+            await self.session.send(msg)
 
     async def listen_audio(self):
-        pya = pyaudio.PyAudio()
-
         mic_info = pya.get_default_input_device_info()
-        stream = await asyncio.to_thread(
+        self.audio_stream = await asyncio.to_thread(
             pya.open,
             format=FORMAT,
             channels=CHANNELS,
@@ -124,7 +124,7 @@ class AudioLoop:
         else:
             kwargs = {}
         while True:
-            data = await asyncio.to_thread(stream.read, CHUNK_SIZE, **kwargs)
+            data = await asyncio.to_thread(self.audio_stream.read, CHUNK_SIZE, **kwargs)
             await self.out_queue.put({"data": data, "mime_type": "audio/pcm"})
 
     async def receive_audio(self):
@@ -146,7 +146,6 @@ class AudioLoop:
                 self.audio_in_queue.get_nowait()
 
     async def play_audio(self):
-        pya = pyaudio.PyAudio()
         stream = await asyncio.to_thread(
             pya.open,
             format=FORMAT,
@@ -159,43 +158,28 @@ class AudioLoop:
             await asyncio.to_thread(stream.write, bytestream)
 
     async def run(self):
-        """Takes audio chunks off the input queue, and writes them to files.
+        try:
+            async with (
+                client.aio.live.connect(model=MODEL, config=CONFIG) as session,
+                asyncio.TaskGroup() as tg,
+            ):
+                self.session = session
 
-        Splits and displays files if the queue pauses for more than `max_pause`.
-        """
-        async with (
-            client.aio.live.connect(model=MODEL, config=CONFIG) as session,
-            asyncio.TaskGroup() as tg,
-        ):
-            self.session = session
+                send_text_task = tg.create_task(self.send_text())
+                tg.create_task(self.send_realtime())
+                tg.create_task(self.listen_audio())
+                tg.create_task(self.get_frames())
+                tg.create_task(self.receive_audio())
+                tg.create_task(self.play_audio())
 
-            send_text_task = tg.create_task(self.send_text())
+                await send_text_task
+                raise asyncio.CancelledError("User requested exit")
 
-            def cleanup(task):
-                for t in tg._tasks:
-                    t.cancel()
-
-            send_text_task.add_done_callback(cleanup)
-
-            tg.create_task(self.send_realtime())
-            tg.create_task(self.listen_audio())
-            tg.create_task(self.get_frames())
-            tg.create_task(self.receive_audio())
-            tg.create_task(self.play_audio())
-
-            def check_error(task):
-                if task.cancelled():
-                    return
-
-                if task.exception() is None:
-                    return
-
-                e = task.exception()
-                traceback.print_exception(None, e, e.__traceback__)
-                sys.exit(1)
-
-            for task in tg._tasks:
-                task.add_done_callback(check_error)
+        except asyncio.CancelledError:
+            pass
+        except ExceptionGroup as EG:
+            self.audio_stream.close()
+            traceback.print_exception(EG)
 
 
 if __name__ == "__main__":

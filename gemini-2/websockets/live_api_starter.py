@@ -28,10 +28,7 @@ import PIL.Image
 from websockets.asyncio.client import connect
 
 if sys.version_info < (3, 11, 0):
-    import taskgroup, exceptiongroup
-
-    asyncio.TaskGroup = taskgroup.TaskGroup
-    asyncio.ExceptionGroup = exceptiongroup.ExceptionGroup
+    raise EnvironmentError("This script requires python 3.11+")
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1

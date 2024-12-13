@@ -49,7 +49,7 @@ uri = f"wss://{host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.B
 class AudioLoop:
     def __init__(self):
         self.audio_in_queue = asyncio.Queue()
-        self.out_queue = asyncio.Queue()
+        self.out_queue = asyncio.Queue(maxsize=5)
 
         self.ws = None
         self.audio_stream = None

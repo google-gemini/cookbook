@@ -34,7 +34,7 @@ You can find lots more in the [quickstarts folder](https://github.com/google-gem
 
 ## Official SDKs
 The Gemini API is a REST API. You can call the API using a command line tool like `curl` (and you can find REST examples [here](https://github.com/google-gemini/cookbook/tree/main/quickstarts/rest)), or by using one of our [official SDKs](https://ai.google.dev/gemini-api/docs/downloads):
-* [Python](https://github.com/google/generative-ai-python)
+* Python: [Google GenAI SDKs](https://github.com/googleapis/python-genai) replacing the former [Developer SDK](https://github.com/google/generative-ai-python) one
 * [Node.js](https://github.com/google/generative-ai-js)
 * [Dart (Flutter)](https://github.com/google/generative-ai-dart)
 * [Android](https://github.com/google/generative-ai-android)

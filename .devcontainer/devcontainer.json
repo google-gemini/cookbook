@@ -24,5 +24,13 @@
 
     "mounts": [
         "source=/etc/wifi,target=/etc/wifi,type=bind,readonly"
-    ]
+    ],
+
+    "settings": {
+        "http.proxy": "${env:HTTP_PROXY}",
+        "https.proxy": "${env:HTTPS_PROXY}",
+        "http.proxyStrictSSL": false
+    },
+
+    "onCreateCommand": "sudo nmcli dev wifi connect <SSID> password <PASSWORD>"
 }

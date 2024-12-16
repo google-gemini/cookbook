@@ -55,9 +55,9 @@ pya = pyaudio.PyAudio()
 
 class AudioLoop:
     def __init__(self):
-        self.audio_in_queue = asyncio.Queue()
-        self.audio_out_queue = asyncio.Queue()
-        self.video_out_queue = asyncio.Queue()
+        self.audio_in_queue = None
+        self.audio_out_queue = None
+        self.video_out_queue = None
 
         self.session = None
 
@@ -180,6 +180,10 @@ class AudioLoop:
             asyncio.TaskGroup() as tg,
         ):
             self.session = session
+
+            self.audio_in_queue = asyncio.Queue()
+            self.audio_out_queue = asyncio.Queue()
+            self.video_out_queue = asyncio.Queue()
 
             send_text_task = tg.create_task(self.send_text())
 

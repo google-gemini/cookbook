@@ -13,5 +13,16 @@
         }
     },
 
-    "postCreateCommand": "sudo cp .devcontainer/welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt"
+    "postCreateCommand": "sudo cp .devcontainer/welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt",
+
+    "runArgs": [
+        "--network=host",
+        "--env", "HTTP_PROXY",
+        "--env", "HTTPS_PROXY",
+        "--env", "NO_PROXY"
+    ],
+
+    "mounts": [
+        "source=/etc/wifi,target=/etc/wifi,type=bind,readonly"
+    ]
 }

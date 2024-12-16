@@ -46,3 +46,37 @@ It is not crucial for a submission to be strong along all of these dimensions, b
 
 ## Attribution
 If you have authored a new guide from scratch, you are welcome to include a byline at the top of the document with your name and GitHub username.
+
+## Handling WiFi and Proxy Issues
+
+### Troubleshooting Common WiFi Problems
+
+1. **Check your WiFi connection**: Ensure that your device is connected to the correct WiFi network and that the signal strength is strong.
+2. **Restart your router**: Sometimes, simply restarting your router can resolve connectivity issues.
+3. **Check for interference**: Other electronic devices can interfere with your WiFi signal. Try moving your router to a different location.
+4. **Update your router firmware**: Check if there are any firmware updates available for your router and install them.
+5. **Contact your ISP**: If you are still experiencing issues, contact your Internet Service Provider for assistance.
+
+### Configuring Proxy Settings
+
+1. **Identify your proxy server**: Obtain the proxy server address and port number from your network administrator or ISP.
+2. **Configure your operating system**:
+   - **Windows**: Go to Settings > Network & Internet > Proxy. Enter the proxy server address and port number.
+   - **Mac**: Go to System Preferences > Network > Advanced > Proxies. Enter the proxy server address and port number.
+   - **Linux**: The steps may vary depending on your distribution. Generally, you can configure the proxy settings in the network settings or by editing the `/etc/environment` file.
+3. **Configure your browser**: Most browsers have their own proxy settings. Refer to the documentation for your specific browser to configure the proxy settings.
+4. **Test your connection**: After configuring the proxy settings, test your connection to ensure that it is working correctly.
+
+### Reporting WiFi and Proxy-Related Bugs
+
+If you encounter any issues related to WiFi or proxy settings while using the Gemini API, please follow these steps to report the bug:
+
+1. **Check existing issues**: Before reporting a new bug, check the [issue tracker](https://github.com/google-gemini/cookbook/issues) to see if the issue has already been reported.
+2. **Create a new issue**: If the issue has not been reported, create a new issue in the [issue tracker](https://github.com/google-gemini/cookbook/issues/new).
+3. **Provide detailed information**: Include as much information as possible about the issue, including:
+   - A description of the problem
+   - Steps to reproduce the issue
+   - Any error messages or logs
+   - Your operating system and browser version
+   - Any other relevant information
+4. **Follow up**: Monitor the issue tracker for any updates or requests for additional information from the maintainers.

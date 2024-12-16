@@ -51,3 +51,23 @@ If you're an enterprise developer looking to build on a fully managed platform, 
 Contributions are welcome. See [contributing](https://github.com/google-gemini/cookbook/blob/main/CONTRIBUTING.md) to learn more.
 
 Thank you for developing with the Gemini API! We’re excited to see what you create.
+
+## WiFi and Proxy Issues
+
+### Troubleshooting Common WiFi Problems
+
+1. **Check your WiFi connection**: Ensure that your device is connected to the correct WiFi network and that the signal strength is strong.
+2. **Restart your router**: Sometimes, simply restarting your router can resolve connectivity issues.
+3. **Check for interference**: Other electronic devices can interfere with your WiFi signal. Try moving your router to a different location.
+4. **Update your router firmware**: Check if there are any firmware updates available for your router and install them.
+5. **Contact your ISP**: If you are still experiencing issues, contact your Internet Service Provider for assistance.
+
+### Configuring Proxy Settings
+
+1. **Identify your proxy server**: Obtain the proxy server address and port number from your network administrator or ISP.
+2. **Configure your operating system**:
+   - **Windows**: Go to Settings > Network & Internet > Proxy. Enter the proxy server address and port number.
+   - **Mac**: Go to System Preferences > Network > Advanced > Proxies. Enter the proxy server address and port number.
+   - **Linux**: The steps may vary depending on your distribution. Generally, you can configure the proxy settings in the network settings or by editing the `/etc/environment` file.
+3. **Configure your browser**: Most browsers have their own proxy settings. Refer to the documentation for your specific browser to configure the proxy settings.
+4. **Test your connection**: After configuring the proxy settings, test your connection to ensure that it is working correctly.

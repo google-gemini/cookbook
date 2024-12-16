@@ -13,6 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# To install the dependencies for this script, run:
+#  pip install opencv-python pyaudio pillow websockets
+# And to run this script, ensure the GOOGLE_API_KEY environment
+# variable is set to the key you obtained from Google AI Studio.
+
 import asyncio
 import base64
 import json
@@ -28,7 +33,9 @@ import PIL.Image
 from websockets.asyncio.client import connect
 
 if sys.version_info < (3, 11, 0):
-    raise EnvironmentError("This script requires python 3.11+")
+    import taskgroup, exceptiongroup
+    asyncio.TaskGroup = taskgroup.TaskGroup
+    asyncio.ExceptionGroup = exceptiongroup.ExceptionGroup
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
@@ -45,8 +52,8 @@ uri = f"wss://{host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.B
 
 class AudioLoop:
     def __init__(self):
-        self.audio_in_queue = asyncio.Queue()
-        self.out_queue = asyncio.Queue(maxsize=5)
+        self.audio_in_queue = None
+        self.out_queue = None
 
         self.ws = None
         self.audio_stream = None
@@ -195,6 +202,9 @@ class AudioLoop:
             ):
                 self.ws = ws
                 await self.startup()
+
+                self.audio_in_queue = asyncio.Queue()
+                self.out_queue = asyncio.Queue(maxsize=5)
 
                 send_text_task = tg.create_task(self.send_text())
 

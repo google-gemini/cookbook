@@ -13,9 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# To install the dependencies for this script, run:
+#  pip install google-genai opencv-python pyaudio pillow
+# And to run this script, ensure the GOOGLE_API_KEY environment
+# variable is set to the key you obtained from Google AI Studio.
+
 import asyncio
 import base64
 import io
+import os
 import sys
 import traceback
 
@@ -26,7 +32,9 @@ import PIL.Image
 from google import genai
 
 if sys.version_info < (3, 11, 0):
-    raise EnvironmentError("This script requires python 3.11+")
+    import taskgroup, exceptiongroup
+    asyncio.TaskGroup = taskgroup.TaskGroup
+    asyncio.ExceptionGroup = exceptiongroup.ExceptionGroup
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
@@ -45,10 +53,15 @@ pya = pyaudio.PyAudio()
 
 class AudioLoop:
     def __init__(self):
-        self.audio_in_queue = asyncio.Queue()
-        self.out_queue = asyncio.Queue(maxsize=5)
+        self.audio_in_queue = None
+        self.audio_out_queue = None
+        self.video_out_queue = None
 
         self.session = None
+
+        self.send_text_task = None
+        self.receive_audio_task = None
+        self.play_audio_task = None
 
     async def send_text(self):
         while True:
@@ -161,6 +174,9 @@ class AudioLoop:
                 asyncio.TaskGroup() as tg,
             ):
                 self.session = session
+
+                self.audio_in_queue = asyncio.Queue()
+                self.out_queue = asyncio.Queue(maxsize=5)
 
                 send_text_task = tg.create_task(self.send_text())
                 tg.create_task(self.send_realtime())

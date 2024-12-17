@@ -43,23 +43,20 @@ SEND_SAMPLE_RATE = 16000
 RECEIVE_SAMPLE_RATE = 24000
 CHUNK_SIZE = 512
 
-host='generativelanguage.googleapis.com'
+host = "generativelanguage.googleapis.com"
 model = "gemini-2.0-flash-exp"
 
-api_key = os.environ['GOOGLE_API_KEY']
+api_key = os.environ["GOOGLE_API_KEY"]
 uri = f"wss://{host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key={api_key}"
+
 
 class AudioLoop:
     def __init__(self):
-        self.audio_in_queue = asyncio.Queue()
-        self.audio_out_queue = asyncio.Queue()
-        self.video_out_queue = asyncio.Queue()
+        self.audio_in_queue = None
+        self.out_queue = None
 
         self.ws = None
-
-        self.send_text_task = None
-        self.receive_audio_task = None
-        self.play_audio_task = None
+        self.audio_stream = None
 
     async def startup(self):
         setup_msg = {"setup": {"model": f"models/{model}"}}
@@ -101,12 +98,14 @@ class AudioLoop:
 
         mime_type = "image/jpeg"
         image_bytes = image_io.read()
-        return {'mime_type': mime_type, 'data': base64.b64encode(image_bytes).decode()}
+        return {"mime_type": mime_type, "data": base64.b64encode(image_bytes).decode()}
 
     async def get_frames(self):
         # This takes about a second, and will block the whole program
         # causing the audio pipeline to overflow if you don't to_thread it.
-        cap = await asyncio.to_thread(cv2.VideoCapture,0)  # 0 represents the default camera
+        cap = await asyncio.to_thread(
+            cv2.VideoCapture, 0
+        )  # 0 represents the default camera
 
         while True:
             frame = await asyncio.to_thread(self._get_frame, cap)
@@ -114,30 +113,22 @@ class AudioLoop:
                 break
             await asyncio.sleep(1.0)
 
-            self.video_out_queue.put_nowait(frame)
+            msg = {"realtime_input": {"media_chunks": [frame]}}
+            await self.out_queue.put(msg)
 
         # Release the VideoCapture object
         cap.release()
 
-    async def send_frames(self):
+    async def send_realtime(self):
         while True:
-            frame = await self.video_out_queue.get()
-            msg = {
-                "realtime_input": {
-                    "media_chunks": [
-                        frame
-                    ]
-                }
-            }
-            msg = json.dumps(msg)
-            await self.ws.send(msg)
-
+            msg = await self.out_queue.get()
+            await self.ws.send(json.dumps(msg))
 
     async def listen_audio(self):
         pya = pyaudio.PyAudio()
 
         mic_info = pya.get_default_input_device_info()
-        stream = pya.open(
+        self.audio_stream = pya.open(
             format=FORMAT,
             channels=CHANNELS,
             rate=SEND_SAMPLE_RATE,
@@ -146,21 +137,18 @@ class AudioLoop:
             frames_per_buffer=CHUNK_SIZE,
         )
         while True:
-            data = await asyncio.to_thread(stream.read, CHUNK_SIZE)
-            self.audio_out_queue.put_nowait(data)
-
-    async def send_audio(self):
-        while True:
-            chunk = await self.audio_out_queue.get()
+            data = await asyncio.to_thread(self.audio_stream.read, CHUNK_SIZE)
             msg = {
                 "realtime_input": {
                     "media_chunks": [
-                        {"data": base64.b64encode(chunk).decode(), "mime_type": "audio/pcm"}
+                        {
+                            "data": base64.b64encode(data).decode(),
+                            "mime_type": "audio/pcm",
+                        }
                     ]
                 }
             }
-            msg = json.dumps(msg)
-            await self.ws.send(msg)
+            await self.out_queue.put(msg)
 
     async def receive_audio(self):
         "Background task to reads from the websocket and write pcm chunks to the output queue"
@@ -169,7 +157,9 @@ class AudioLoop:
             response = json.loads(raw_response.decode("ascii"))
 
             try:
-                b64data = response["serverContent"]["modelTurn"]["parts"][0]["inlineData"]["data"]
+                b64data = response["serverContent"]["modelTurn"]["parts"][0][
+                    "inlineData"
+                ]["data"]
             except KeyError:
                 pass
             else:
@@ -191,7 +181,9 @@ class AudioLoop:
 
     async def play_audio(self):
         pya = pyaudio.PyAudio()
-        stream = pya.open(format=FORMAT, channels=CHANNELS, rate=RECEIVE_SAMPLE_RATE, output=True)
+        stream = pya.open(
+            format=FORMAT, channels=CHANNELS, rate=RECEIVE_SAMPLE_RATE, output=True
+        )
         while True:
             bytestream = await self.audio_in_queue.get()
             await asyncio.to_thread(stream.write, bytestream)
@@ -201,42 +193,35 @@ class AudioLoop:
 
         Splits and displays files if the queue pauses for more than `max_pause`.
         """
-        async with await connect(
-            uri, additional_headers={"Content-Type": "application/json"}
-        ) as ws:
-            self.ws = ws
+        try:
+            async with (
+                await connect(
+                    uri, additional_headers={"Content-Type": "application/json"}
+                ) as ws,
+                asyncio.TaskGroup() as tg,
+            ):
+                self.ws = ws
+                await self.startup()
 
-            await self.startup()
+                self.audio_in_queue = asyncio.Queue()
+                self.out_queue = asyncio.Queue(maxsize=5)
 
-            async with asyncio.TaskGroup() as tg:
                 send_text_task = tg.create_task(self.send_text())
 
-                def cleanup(task):
-                    for t in tg._tasks:
-                        t.cancel()
-
-                send_text_task.add_done_callback(cleanup)
-
+                tg.create_task(self.send_realtime())
                 tg.create_task(self.listen_audio())
-                tg.create_task(self.send_audio())
                 tg.create_task(self.get_frames())
-                tg.create_task(self.send_frames())
                 tg.create_task(self.receive_audio())
                 tg.create_task(self.play_audio())
 
-                def check_error(task):
-                    if task.cancelled():
-                        return
+                await send_text_task
+                raise asyncio.CancelledError("User requested exit")
 
-                    if task.exception() is None:
-                        return
-
-                    e = task.exception()
-                    traceback.print_exception(None, e, e.__traceback__)
-                    sys.exit(1)
-
-                for task in tg._tasks:
-                    task.add_done_callback(check_error)
+        except asyncio.CancelledError:
+            pass
+        except ExceptionGroup as EG:
+            self.audio_stream.close()
+            traceback.print_exception(EG)
 
 
 if __name__ == "__main__":

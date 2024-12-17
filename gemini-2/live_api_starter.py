@@ -30,6 +30,12 @@ import pyaudio
 import PIL.Image
 import mss
 
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--mode', type=str, default='camera', help='pixels to stream from', choices=['camera', 'screen'])
+args = parser.parse_args()
+
 from google import genai
 
 if sys.version_info < (3, 11, 0):
@@ -45,8 +51,7 @@ CHUNK_SIZE = 1024
 
 MODEL = "models/gemini-2.0-flash-exp"
 
-MODE = "camera"
-#MODE = "screen"
+MODE = args.mode
 
 client = genai.Client(http_options={"api_version": "v1alpha"})
 

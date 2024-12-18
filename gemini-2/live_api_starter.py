@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # To install the dependencies for this script, run:
-#  pip install google-genai opencv-python pyaudio pillow
+#  pip install google-genai opencv-python pyaudio pillow mss
 # And to run this script, ensure the GOOGLE_API_KEY environment
 # variable is set to the key you obtained from Google AI Studio.
 
@@ -28,6 +28,13 @@ import traceback
 import cv2
 import pyaudio
 import PIL.Image
+import mss
+
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--mode', type=str, default='camera', help='pixels to stream from', choices=['camera', 'screen'])
+args = parser.parse_args()
 
 from google import genai
 
@@ -43,6 +50,8 @@ RECEIVE_SAMPLE_RATE = 24000
 CHUNK_SIZE = 1024
 
 MODEL = "models/gemini-2.0-flash-exp"
+
+MODE = args.mode
 
 client = genai.Client(http_options={"api_version": "v1alpha"})
 
@@ -113,6 +122,34 @@ class AudioLoop:
         # Release the VideoCapture object
         cap.release()
 
+    def _get_screen(self):
+        sct = mss.mss()
+        monitor = sct.monitors[0]
+
+        i = sct.grab(monitor)
+
+        mime_type = "image/jpeg"
+        image_bytes = mss.tools.to_png(i.rgb, i.size)
+        img = PIL.Image.open(io.BytesIO(image_bytes))
+
+        image_io = io.BytesIO()
+        img.save(image_io, format="jpeg")
+        image_io.seek(0)
+
+        image_bytes = image_io.read()
+        return {"mime_type": mime_type, "data": base64.b64encode(image_bytes).decode()}
+
+    async def get_screen(self):
+
+        while True:
+            frame = await asyncio.to_thread(self._get_screen)
+            if frame is None:
+                break
+
+            await asyncio.sleep(1.0)
+
+            await self.out_queue.put(frame)
+
     async def send_realtime(self):
         while True:
             msg = await self.out_queue.get()
@@ -181,7 +218,10 @@ class AudioLoop:
                 send_text_task = tg.create_task(self.send_text())
                 tg.create_task(self.send_realtime())
                 tg.create_task(self.listen_audio())
-                tg.create_task(self.get_frames())
+                if MODE == "camera":
+                    tg.create_task(self.get_frames())
+                elif MODE == "screen":
+                    tg.create_task(self.get_screen())
                 tg.create_task(self.receive_audio())
                 tg.create_task(self.play_audio())
 

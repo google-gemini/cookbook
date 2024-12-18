@@ -122,7 +122,10 @@ class AudioLoop:
         # Release the VideoCapture object
         cap.release()
 
-    def _get_screen(self, sct, monitor):
+    def _get_screen(self):
+        sct = mss.mss()
+        monitor = sct.monitors[0]
+
         i = sct.grab(monitor)
 
         mime_type = "image/jpeg"
@@ -137,11 +140,9 @@ class AudioLoop:
         return {"mime_type": mime_type, "data": base64.b64encode(image_bytes).decode()}
 
     async def get_screen(self):
-        sct = mss.mss()
-        monitor = sct.monitors[0]
 
         while True:
-            frame = await asyncio.to_thread(self._get_screen, sct, monitor)
+            frame = await asyncio.to_thread(self._get_screen)
             if frame is None:
                 break
 

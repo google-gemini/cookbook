@@ -18,6 +18,9 @@
 # And to run this script, ensure the GOOGLE_API_KEY environment
 # variable is set to the key you obtained from Google AI Studio.
 
+# Add the "--mode screen" if you want to share your screen to the model 
+# instead of your camera stream
+
 import asyncio
 import base64
 import json
@@ -34,6 +37,7 @@ from websockets.asyncio.client import connect
 
 if sys.version_info < (3, 11, 0):
     import taskgroup, exceptiongroup
+
     asyncio.TaskGroup = taskgroup.TaskGroup
     asyncio.ExceptionGroup = exceptiongroup.ExceptionGroup
 

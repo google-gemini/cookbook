@@ -18,6 +18,9 @@
 # And to run this script, ensure the GOOGLE_API_KEY environment
 # variable is set to the key you obtained from Google AI Studio.
 
+# Add the "--mode screen" if you want to share your screen to the model
+# instead of your camera stream
+
 import asyncio
 import base64
 import io
@@ -33,13 +36,20 @@ import mss
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--mode', type=str, default='camera', help='pixels to stream from', choices=['camera', 'screen'])
+parser.add_argument(
+    "--mode",
+    type=str,
+    default="camera",
+    help="pixels to stream from",
+    choices=["camera", "screen"],
+)
 args = parser.parse_args()
 
 from google import genai
 
 if sys.version_info < (3, 11, 0):
     import taskgroup, exceptiongroup
+
     asyncio.TaskGroup = taskgroup.TaskGroup
     asyncio.ExceptionGroup = exceptiongroup.ExceptionGroup
 

@@ -15,9 +15,10 @@ Explore Gemini 2.0’s capabilities through the following notebooks using Google
 * [Search tool](./search_tool.ipynb) \- Quick start using the Search tool with the unary and Live APIs in the GenAI SDK
 * [Spatial understanding](./spatial_understanding.ipynb) \- Comprehensive overview of 2D spatial understanding capabilities with the GenAI SDK
 * [Spatial understanding (3D)](./spatial_understanding_3d.ipynb) \- Comprehensive overview of 3D spatial understanding capabilities with the GenAI SDK
+* [Video understanding](./video_understanding.ipynb) \- Comprehensive overview Gemini 2.0 video understanding capabilities with the GenAI SDK
 
 Or explore on your own local machine.
 
-* [Live API starter script](./live_api_starter.py) \- A locally runnable Python script using GenAI SDK that supports streaming audio in and audio + video out from your machine
+* [Live API starter script](./live_api_starter.py) \- A locally runnable Python script using GenAI SDK that supports streaming audio + video (camera or screen) in and audio from your machine
 
 Also find websocket-specific examples in the [`websockets`](./websockets/) directory.

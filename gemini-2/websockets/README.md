@@ -9,7 +9,7 @@ To learn about what’s new in the 2.0 model release and the new [Google GenAI S
 
 Explore Gemini 2.0’s capabilities on your own local machine.
 
-* [Live API starter script](./live_api_starter.py) \- A locally runnable Python script using websockets that supports streaming audio in and out from your machine
+* [Live API starter script](./live_api_starter.py) \- A locally runnable Python script using websockets that supports streaming audio in and audio + video out from your machine
 * [Bash Websocket example](./shell_websockets.sh) \- A bash script using [`websocat`](https://github.com/vi/websocat) to interact with the Live API in a shell context
 
 Explore Gemini 2.0’s capabilities through the following notebooks you can run through Google Colab.

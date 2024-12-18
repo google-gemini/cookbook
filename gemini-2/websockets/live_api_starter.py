@@ -140,16 +140,16 @@ class AudioLoop:
     def _get_screen(self):
         sct = mss.mss()
         monitor = sct.monitors[0]
-        
+
         i = sct.grab(monitor)
         mime_type = "image/jpeg"
         image_bytes = mss.tools.to_png(i.rgb, i.size)
         img = PIL.Image.open(io.BytesIO(image_bytes))
-        
+
         image_io = io.BytesIO()
         img.save(image_io, format="jpeg")
         image_io.seek(0)
-        
+
         image_bytes = image_io.read()
         return {"mime_type": mime_type, "data": base64.b64encode(image_bytes).decode()}
 
@@ -158,10 +158,11 @@ class AudioLoop:
             frame = await asyncio.to_thread(self._get_screen)
             if frame is None:
                 break
-            
+
             await asyncio.sleep(1.0)
-            
-            await self.out_queue.put(frame)
+
+            msg = {"realtime_input": {"media_chunks": [frame]}}
+            await self.out_queue.put(msg)
 
     async def send_realtime(self):
         while True:

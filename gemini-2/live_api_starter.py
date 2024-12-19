@@ -51,17 +51,6 @@ import mss
 
 import argparse
 
-DEFAULT_MODE = "camera"
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--mode",
-    type=str,
-    default=DEFAULT_MODE,
-    help="pixels to stream from",
-    choices=["camera", "screen"],
-)
-args = parser.parse_args()
-
 from google import genai
 
 if sys.version_info < (3, 11, 0):
@@ -78,7 +67,7 @@ CHUNK_SIZE = 1024
 
 MODEL = "models/gemini-2.0-flash-exp"
 
-MODE = args.mode
+DEFAULT_MODE = "camera"
 
 client = genai.Client(http_options={"api_version": "v1alpha"})
 
@@ -266,5 +255,14 @@ class AudioLoop:
 
 
 if __name__ == "__main__":
-    main = AudioLoop()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--mode",
+        type=str,
+        default=DEFAULT_MODE,
+        help="pixels to stream from",
+        choices=["camera", "screen"],
+    )
+    args = parser.parse_args()
+    main = AudioLoop(video_mode=args.mode)
     asyncio.run(main.run())

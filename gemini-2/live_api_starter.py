@@ -13,13 +13,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# To install the dependencies for this script, run:
-#  pip install google-genai opencv-python pyaudio pillow mss
-# And to run this script, ensure the GOOGLE_API_KEY environment
-# variable is set to the key you obtained from Google AI Studio.
+"""
+To install the dependencies for this script, run:
 
-# Add the "--mode screen" if you want to share your screen to the model
-# instead of your camera stream
+``` 
+pip install google-genai opencv-python pyaudio pillow mss
+```
+
+Before running this script, ensure the `GOOGLE_API_KEY` environment
+variable is set to the api-key you obtained from Google AI Studio.
+
+To run the script:
+
+```
+python live_api_starter.py
+```
+
+The script takes a video-mode flag `--mode`, this can be "camera", "screen", or "none".
+The default is "camera"
+
+```
+python live_api_starter.py --mode screen
+```
+"""
 
 import asyncio
 import base64
@@ -35,11 +51,12 @@ import mss
 
 import argparse
 
+DEFAULT_MODE = "camera"
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "--mode",
     type=str,
-    default="camera",
+    default=DEFAULT_MODE,
     help="pixels to stream from",
     choices=["camera", "screen"],
 )
@@ -71,11 +88,13 @@ pya = pyaudio.PyAudio()
 
 
 class AudioLoop:
-    def __init__(self):
+    def __init__(self, video_mode=DEFAULT_MODE):
+        self.video_mode = video_mode
+        
         self.audio_in_queue = None
-        self.audio_out_queue = None
-        self.video_out_queue = None
+        self.out_queue = None
 
+        
         self.session = None
 
         self.send_text_task = None
@@ -228,10 +247,11 @@ class AudioLoop:
                 send_text_task = tg.create_task(self.send_text())
                 tg.create_task(self.send_realtime())
                 tg.create_task(self.listen_audio())
-                if MODE == "camera":
+                if self.MODE == "camera":
                     tg.create_task(self.get_frames())
-                elif MODE == "screen":
+                elif self.MODE == "screen":
                     tg.create_task(self.get_screen())
+                
                 tg.create_task(self.receive_audio())
                 tg.create_task(self.play_audio())
 

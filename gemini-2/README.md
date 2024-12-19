@@ -16,6 +16,7 @@ Explore Gemini 2.0’s capabilities through the following notebooks using Google
 * [Spatial understanding](./spatial_understanding.ipynb) \- Comprehensive overview of 2D spatial understanding capabilities with the GenAI SDK
 * [Spatial understanding (3D)](./spatial_understanding_3d.ipynb) \- Comprehensive overview of 3D spatial understanding capabilities with the GenAI SDK
 * [Video understanding](./video_understanding.ipynb) \- Comprehensive overview Gemini 2.0 video understanding capabilities with the GenAI SDK
+* [Gemini 2.0 Flash Thinking](./thinking.ipynb) \- Introduction to the experimental Gemini 2.0 Flash Thinking model with the GenAI SDK
 
 Or explore on your own local machine.
 

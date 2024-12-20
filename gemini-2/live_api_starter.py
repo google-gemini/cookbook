@@ -244,9 +244,9 @@ class AudioLoop:
                 send_text_task = tg.create_task(self.send_text())
                 tg.create_task(self.send_realtime())
                 tg.create_task(self.listen_audio())
-                if self.MODE == "camera":
+                if self.video_mode == "camera":
                     tg.create_task(self.get_frames())
-                elif self.MODE == "screen":
+                elif self.video_mode == "screen":
                     tg.create_task(self.get_screen())
                 
                 tg.create_task(self.receive_audio())
@@ -269,7 +269,7 @@ if __name__ == "__main__":
         type=str,
         default=DEFAULT_MODE,
         help="pixels to stream from",
-        choices=["camera", "screen"],
+        choices=["camera", "screen", "none"],
     )
     args = parser.parse_args()
     main = AudioLoop(video_mode=args.mode)

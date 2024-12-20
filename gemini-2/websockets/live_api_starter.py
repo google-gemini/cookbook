@@ -84,6 +84,7 @@ uri = f"wss://{host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.B
 
 class AudioLoop:
     def __init__(self, video_mode=DEFAULT_MODE):
+        self.video_mode=video_mode
         self.audio_in_queue = None
         self.out_queue = None
 
@@ -174,8 +175,9 @@ class AudioLoop:
                 break
             
             await asyncio.sleep(1.0)
-            
-            await self.out_queue.put(frame)
+
+            msg = {"realtime_input": {"media_chunks": frame}}
+            await self.out_queue.put(msg)
 
     async def send_realtime(self):
         while True:
@@ -268,9 +270,9 @@ class AudioLoop:
 
                 tg.create_task(self.send_realtime())
                 tg.create_task(self.listen_audio())
-                if MODE == "camera":
+                if self.video_mode == "camera":
                     tg.create_task(self.get_frames())
-                elif MODE == "screen":
+                elif self.video_mode == "screen":
                     tg.create_task(self.get_screen())
                 tg.create_task(self.receive_audio())
                 tg.create_task(self.play_audio())

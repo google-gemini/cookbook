@@ -34,21 +34,13 @@ from gradio_webrtc import (
     AsyncStreamHandler,
     WebRTC,
     async_aggregate_bytes_to_16bit,
-    get_twilio_turn_credentials,
 )
 
 try:
     from dotenv import load_dotenv
-
     load_dotenv()
 except (ImportError, ModuleNotFoundError):
     pass
-
-
-def encode_audio(data: np.ndarray, sample_rate: int) -> str:
-    """Encode Audio data to send to the server"""
-    return base64.b64encode(data.tobytes()).decode("UTF-8")
-
 
 class GeminiHandler(AsyncStreamHandler):
     def __init__(
@@ -92,7 +84,7 @@ class GeminiHandler(AsyncStreamHandler):
     async def receive(self, frame: tuple[int, np.ndarray]) -> None:
         _, array = frame
         array = array.squeeze()
-        audio_message = encode_audio(array, self.output_sample_rate)
+        audio_message = base64.b64encode(array.tobytes()).decode("UTF-8")
         self.input_queue.put_nowait(audio_message)
 
     async def generator(self):
@@ -138,7 +130,6 @@ with gr.Blocks() as demo:
             label="Audio",
             modality="audio",
             mode="send-receive",
-            rtc_configuration=get_twilio_turn_credentials(),
             pulse_color="rgb(35, 157, 225)",
             icon_button_color="rgb(35, 157, 225)",
             icon="https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png",

@@ -6,7 +6,7 @@ This script launches a pure-python web-based UI for the Gen AI SDK Voice Chat.
 To install the dependencies for this script, run:
 
 ``` 
-pip install gradio-webrtc>=0.0.25 google-genai
+pip install gradio-webrtc>=0.0.27 google-genai
 ```
 
 If the `GOOGLE_API_KEY` environment variable is set,
@@ -95,9 +95,6 @@ class GeminiHandler(AsyncStreamHandler):
 
     async def emit(self):
         if not self.args_set.is_set():
-            if not self.channel:
-                await asyncio.sleep(0.1)
-                return
             await self.wait_for_args()
             asyncio.create_task(self.generator())
 

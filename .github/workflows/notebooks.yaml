@@ -17,12 +17,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        # Check out the pull request branch
+        ref: ${{ github.event.pull_request.head.ref }}
     - uses: actions/setup-python@v4
     - name: Install tensorflow-docs
       run: python3 -m pip install -U git+https://github.com/tensorflow/docs
     - name: Fetch main branch
       run: git fetch -u origin main:main
-    - name: Check notebook formatting
+    - name: Format notebooks
       run: |
         if [ "${{ github.event_name }}" == "pull_request" ]; then
           # Only check notebooks modified in this pull request
@@ -33,17 +36,25 @@ jobs:
         fi
         if [[ ${#changed_notebooks[@]} == 0 ]]; then
           echo "No notebooks modified in this pull request."
-          exit 0
         else
-          echo "Check formatting with nbfmt:"
-          python3 -m tensorflow_docs.tools.nbfmt --test "${changed_notebooks[@]}"
+          echo "Formatting notebooks with nbfmt:"
+          python3 -m tensorflow_docs.tools.nbfmt "${changed_notebooks[@]}"
         fi
+    - name: Commit and push changes (if any)
+      if: ${{ success() }} # Only run if previous steps were successful
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git diff --quiet && git diff --staged --quiet || (git commit -a -m "Format notebooks" && git push)
 
   nblint:
     name: Notebook lint
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        # Check out the pull request branch to reflect changes from nbfmt
+        ref: ${{ github.event.pull_request.head.ref }}
     - uses: actions/setup-python@v4
     - name: Install tensorflow-docs
       run: python3 -m pip install -U git+https://github.com/tensorflow/docs
@@ -76,4 +87,3 @@ jobs:
             --exclude_lint=tensorflow::button_github \
             "${changed_notebooks[@]}"
         fi
-

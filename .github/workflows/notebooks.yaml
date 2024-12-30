@@ -15,11 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        # Checkout PR branch for PR events, main branch for manual runs
+        ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || 'main' }}
+        fetch-depth: 0  # Fetch all history to avoid issues with rebasing
     - uses: actions/setup-python@v4
     - name: Install tensorflow-docs
       run: python3 -m pip install -U git+https://github.com/tensorflow/docs
     - name: Fetch main branch
-      if: ${{ github.event_name == 'pull_request' }} # Only need to fetch main on PRs
+      if: ${{ github.event_name == 'pull_request' }}
       run: git fetch -u origin main:main
     - name: Get changed notebooks
       id: changed-notebooks
@@ -40,18 +44,26 @@ jobs:
         else
           echo "No notebooks to format."
         fi
-
     - name: Commit and push changes (if any)
       if: ${{ success() }}
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git diff --quiet && git diff --staged --quiet || (git commit -a -m "Format notebooks" && git push)
+        # Check if there are changes
+        if ! git diff --quiet; then
+          # Commit on the current branch
+          git add .
+          git commit -m "Format notebooks"
+          # Push directly to the PR branch
+          git push origin ${{ github.event.pull_request.head.ref }}
+        else
+          echo "No changes to commit."
+        fi
 
   nblint:
     name: Notebook lint
     runs-on: ubuntu-latest
-    needs: nbfmt # Ensure nblint runs after nbfmt
+    needs: nbfmt
     steps:
     - uses: actions/checkout@v3
       with:
@@ -61,7 +73,7 @@ jobs:
     - name: Install tensorflow-docs
       run: python3 -m pip install -U git+https://github.com/tensorflow/docs
     - name: Fetch main branch
-      if: ${{ github.event_name == 'pull_request' }} # Only need to fetch main on PRs
+      if: ${{ github.event_name == 'pull_request' }}
       run: git fetch -u origin main:main
     - name: Get changed notebooks
       id: changed-notebooks

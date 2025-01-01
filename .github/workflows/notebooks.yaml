@@ -19,8 +19,7 @@ jobs:
         # Checkout PR branch for PR events, main branch for manual runs
         ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || 'main' }}
         fetch-depth: 0  # Fetch all history to avoid issues with rebasing
-    - uses: actions/setup
-        - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v4
     - name: Install tensorflow-docs
       run: python3 -m pip install -U git+https://github.com/tensorflow/docs
     - name: Fetch main branch

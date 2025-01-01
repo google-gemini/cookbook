@@ -24,6 +24,40 @@ jobs:
       run: python3 -m pip install -U git+https://github.com/tensorflow/docs
     - name: Fetch main branch
       run: git fetch -u origin main:main
+    - name: Get changed notebooks
+      id: changed-notebooks
+      run: |
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
+          # Only check notebooks modified in this pull request
+          git diff --name-only origin/main | grep '\.ipynb$' > changed_notebooks.txt
+        else
+          # Manual run, check everything
+          find . -name '*.ipynb' > changed_notebooks.txt
+        fi
+        echo "changed_notebooks=$(cat changed_notebooks.txt)" >> $GITHUB_OUTPUT
+    - name: Format notebooks
+      run: |
+        if [ -s "${{ steps.changed-notebooks.outputs.changed_notebooks }}" ]; then
+          echo "Formatting notebooks with nbfmt:"
+          python3 -m tensorflow_docs.tools.nbfmt ${{ steps.changed-notebooks.outputs.changed_notebooks }}
+        else
+          echo "No notebooks to format."
+        fi
+    - name: Commit and push changes (if any)
+      if: ${{ success() }}
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        # Check if there are changes
+        if ! git diff --quiet; then
+          # Commit on the current branch
+          git add .
+          git commit -m "Format notebooks"
+          # Push directly to the PR branch
+          git push origin ${{ github.event.pull_request.head.ref }}
+        else
+          echo "No changes to commit."
+        fi
     - name: Check notebook formatting
       run: |
         if [ "${{ github.event_name }}" == "pull_request" ]; then

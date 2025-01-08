@@ -13,13 +13,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# To install the dependencies for this script, run:
-#  pip install opencv-python pyaudio pillow websockets
-# And to run this script, ensure the GOOGLE_API_KEY environment
-# variable is set to the key you obtained from Google AI Studio.
+"""
+## Setup
 
-# Add the "--mode screen" if you want to share your screen to the model
-# instead of your camera stream
+To install the dependencies for this script, run:
+
+``` 
+pip install google-genai opencv-python pyaudio pillow mss
+```
+
+Before running this script, ensure the `GOOGLE_API_KEY` environment
+variable is set to the api-key you obtained from Google AI Studio.
+
+Important: **Use headphones**. This script uses the system default audio
+input and output, which often won't include echo cancellation. So to prevent
+the model from interrupting itself it is important that you use headphones. 
+
+## Run
+
+To run the script:
+
+```
+python live_api_starter.py
+```
+
+The script takes a video-mode flag `--mode`, this can be "camera", "screen", or "none".
+The default is "camera". To share your screen run:
+
+```
+python live_api_starter.py --mode screen
+```
+"""
 
 import asyncio
 import base64
@@ -34,16 +58,6 @@ import pyaudio
 import PIL.Image
 import mss
 import argparse
-
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--mode",
-    type=str,
-    default="camera",
-    help="pixels to stream from",
-    choices=["camera", "screen"],
-)
-args = parser.parse_args()
 
 from websockets.asyncio.client import connect
 
@@ -61,15 +75,16 @@ CHUNK_SIZE = 512
 
 host = "generativelanguage.googleapis.com"
 model = "gemini-2.0-flash-exp"
+DEFAULT_MODE="camera"
 
-MODE = args.mode
 
 api_key = os.environ["GOOGLE_API_KEY"]
 uri = f"wss://{host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key={api_key}"
 
 
 class AudioLoop:
-    def __init__(self):
+    def __init__(self, video_mode=DEFAULT_MODE):
+        self.video_mode=video_mode
         self.audio_in_queue = None
         self.out_queue = None
 
@@ -162,6 +177,7 @@ class AudioLoop:
             await asyncio.sleep(1.0)
 
             msg = {"realtime_input": {"media_chunks": [frame]}}
+
             await self.out_queue.put(msg)
 
     async def send_realtime(self):
@@ -255,9 +271,9 @@ class AudioLoop:
 
                 tg.create_task(self.send_realtime())
                 tg.create_task(self.listen_audio())
-                if MODE == "camera":
+                if self.video_mode == "camera":
                     tg.create_task(self.get_frames())
-                elif MODE == "screen":
+                elif self.video_mode == "screen":
                     tg.create_task(self.get_screen())
                 tg.create_task(self.receive_audio())
                 tg.create_task(self.play_audio())
@@ -273,5 +289,15 @@ class AudioLoop:
 
 
 if __name__ == "__main__":
-    main = AudioLoop()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--mode",
+        type=str,
+        default=DEFAULT_MODE,
+        help="pixels to stream from",
+        choices=["camera", "screen", "none"],
+    )
+    args = parser.parse_args()
+
+    main = AudioLoop(video_mode=args.mode)
     asyncio.run(main.run())

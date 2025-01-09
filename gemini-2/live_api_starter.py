@@ -87,11 +87,10 @@ pya = pyaudio.PyAudio()
 class AudioLoop:
     def __init__(self, video_mode=DEFAULT_MODE):
         self.video_mode = video_mode
-        
+
         self.audio_in_queue = None
         self.out_queue = None
 
-        
         self.session = None
 
         self.send_text_task = None
@@ -106,7 +105,7 @@ class AudioLoop:
             )
             if text.lower() == "q":
                 break
-            await self.session.send(text or ".", end_of_turn=True)
+            await self.session.send(input=text or ".", end_of_turn=True)
 
     def _get_frame(self, cap):
         # Read the frameq
@@ -179,7 +178,7 @@ class AudioLoop:
     async def send_realtime(self):
         while True:
             msg = await self.out_queue.get()
-            await self.session.send(msg)
+            await self.session.send(input=msg)
 
     async def listen_audio(self):
         mic_info = pya.get_default_input_device_info()
@@ -248,7 +247,7 @@ class AudioLoop:
                     tg.create_task(self.get_frames())
                 elif self.video_mode == "screen":
                     tg.create_task(self.get_screen())
-                
+
                 tg.create_task(self.receive_audio())
                 tg.create_task(self.play_audio())
 

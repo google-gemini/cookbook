@@ -23,7 +23,7 @@ Before writing anything, [file an issue](https://github.com/google-gemini/cookbo
   * For example, if you are worried that your English is not good enough, please call that out here. We are an inclusive community and will work with you to meet our high publication standards if your proposal is otherwise accepted.
 
 When you're ready to start writing, make a copy of the [notebook
-template](./quickstarts/Template.ipynb) and follow the guidance within.
+template](../quickstarts/Template.ipynb) and follow the guidance within.
 
 All contributions must also adhere to the Gemini API's [terms of service](https://ai.google.dev/gemini-api/terms).
 

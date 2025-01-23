@@ -83,6 +83,32 @@ CONFIG = {"generation_config": {"response_modalities": ["AUDIO"]}}
 
 pya = pyaudio.PyAudio()
 
+def validate_config(config):
+    """
+    Validate the generation config, specifically checking response modalities.
+    
+    Note: Currently only one response modality is supported at a time.
+    AUDIO is supported in Live API, TEXT is supported in classic API.
+    Multimodal output (AUDIO + TEXT) is not yet publicly available.
+    """
+    if "generation_config" in config:
+        modalities = config["generation_config"].get("response_modalities", [])
+        if len(modalities) > 1:
+            raise ValueError(
+                "Currently only one response modality is supported at a time. "
+                "Please choose either 'AUDIO' or 'TEXT'. "
+                "Multimodal output (AUDIO + TEXT) is not yet publicly available."
+            )
+        if modalities and modalities[0] not in ["AUDIO", "TEXT"]:
+            raise ValueError(
+                f"Invalid response modality: {modalities[0]}. "
+                "Supported modalities are 'AUDIO' and 'TEXT'"
+            )
+        if modalities and modalities[0] == "TEXT":
+            print(
+                "Warning: TEXT modality is not supported in Live API. "
+                "Please use the classic API for TEXT responses."
+            )
 
 class AudioLoop:
     def __init__(self, video_mode=DEFAULT_MODE):
@@ -231,6 +257,7 @@ class AudioLoop:
 
     async def run(self):
         try:
+            validate_config(CONFIG)  # Validate config before starting the session
             async with (
                 client.aio.live.connect(model=MODEL, config=CONFIG) as session,
                 asyncio.TaskGroup() as tg,
@@ -254,6 +281,8 @@ class AudioLoop:
                 await send_text_task
                 raise asyncio.CancelledError("User requested exit")
 
+        except ValueError as e:
+            print(f"Configuration Error: {str(e)}")
         except asyncio.CancelledError:
             pass
         except ExceptionGroup as EG:

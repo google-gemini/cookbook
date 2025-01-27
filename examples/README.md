@@ -9,7 +9,7 @@ This is a collection of fun examples for the Gemini API.
 * [Anomaly Detection](./Anomaly_detection_with_embeddings.ipynb): Use embeddings to detect anomalies in your datasets.
 * [Analyze a Video with Summarization](./Analyze_a_Video_Summarization.ipynb): This notebook shows how you can use Gemini API's multimodal capabilities for video summarization.
 * [Apollo 11 - long context example](./Apollo_11.ipynb): Search a 400 page transcript from Apollo 11.
-* [Clasify text with emeddings](./Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.
+* [Classify text with emeddings](./Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.
 * [Guess the shape](./Guess_the_shape.ipynb): A simple example of using images in prompts.
 * [Market a Jet Backpack](./Market_a_Jet_Backpack.ipynb): Create a marketing campaign from a product sketch.
 * [Object detection](./Object_detection.ipynb): Extensive examples with object detection, including with multiple classes, OCR, visual question answering, and even an interactive demo.  

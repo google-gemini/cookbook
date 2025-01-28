@@ -232,7 +232,7 @@ def registry(
     api_key = token or os.environ.get(KEY_NAME)
     if not api_key:
         raise ValueError(f"{KEY_NAME} environment variable is not set.")
-    
+
     interface = gr.Blocks()
     with interface:
         with gr.Tabs():
@@ -240,7 +240,7 @@ def registry(
                 gr.HTML(
                     """
                     <div style='text-align: left'>
-                        <h1>Gemini Voice Chat</h1>
+                        <h1>Gemini API Voice Chat</h1>
                     </div>
                     """
                 )

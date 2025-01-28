@@ -14,7 +14,7 @@ The Gemini API gives you access to Gemini [models](https://ai.google.dev/models/
 
 ## What's New?
 We're excited to show you the latest additions to the Gemini API, and new notebooks.
-* [Gemini 2.0](./gemini-2/): Explore the capabilities of the new Gemini 2.0 model, including [multimodal Live API](./gemini-2/live_api_starter.ipynb), [audio streaming applications with tool use](./gemini-2/live_api_tool_use.ipynb) and [Spatial understanding](./gemini-2/spatial_understanding.ipynb). 
+* [Gemini 2.0](./gemini-2/): Explore the capabilities of the new Gemini 2.0 model, including [multimodal Live API](./gemini-2/live_api_starter.ipynb), [audio streaming applications with tool use](./gemini-2/live_api_tool_use.ipynb) and [Spatial understanding](./quickstarts/Spatial_understanding.ipynb). 
 
 ## Table of contents
 

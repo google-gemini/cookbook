@@ -43,7 +43,6 @@ We recommend starting with the following:
 
 Then, explore the other quickstarts tutorials to learn about individual features:
 *  [Get started with Live API](./quickstarts/Get_started_LiveAPI.ipynb): Get started with the live API with this comprehensive overview of its capabilities
-*  [Chat mode](./quickstarts/Get_started_chat.ipynb): multi-turn conversation
 *  [Grounding](./quickstarts/Search_Grounding.ipynb): use Google Search for grounded responses
 *  [Code execution](./quickstarts/Code_Execution.ipynb): SGenerating and running Python code to solve complex tasks
 *  And [many more](./quickstarts/)

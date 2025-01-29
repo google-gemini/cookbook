@@ -19,10 +19,10 @@ We also showcase **Demos** in separate repositories, illustrating end-to-end app
 
 Here are the recent additions and updates to the Gemini API and the Cookbook: 
 
-* **Gemini 2.0 Flash experimental:** Explore the capabilities of the latest Gemini 2.0 Flash experimental model! See the [Get Started Guide](../quickstarts/Get_started.ipynb).
+* **Gemini 2.0 Flash experimental:** Explore the capabilities of the latest Gemini 2.0 Flash experimental model! See the [Get Started Guide](./quickstarts/Get_started.ipynb).
 * **Recently Added Guides:**.
-  * [Thinking model](../quickstarts/Get_started_thinking.ipynb): Discover the thinking model capabilities.
-  * [Gradio and Live API](../examples/Code_.ipynb): Start working with Gradio to set-up your own live instance.
+  * [Thinking model](./quickstarts/Get_started_thinking.ipynb): Discover the thinking model capabilities.
+  * [Gradio and Live API](./examples/Code_.ipynb): Start working with Gradio to set-up your own live instance.
 <br><br>
 
 ## 1. Quick Starts
@@ -69,7 +69,7 @@ These fully functional, end-to-end applications showcase the power of Gemini in 
 
 ## Official SDKs
 
-The Gemini API is a REST API. You can call it directly using tools like `curl` (see [REST examples](../quickstarts/rest/)), or use one of our official SDKs:
+The Gemini API is a REST API. You can call it directly using tools like `curl` (see [REST examples](./quickstarts/rest/)), or use one of our official SDKs:
 * [Python](https://github.com/googleapis/python-genai)
 * [Go](https://github.com/google/generative-ai-go)
 * [Node.js](https://github.com/google/generative-ai-js)

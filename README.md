@@ -19,10 +19,10 @@ We also showcase **Demos** in separate repositories, illustrating end-to-end app
 
 Here are the recent additions and updates to the Gemini API and the Cookbook: 
 
-* **Gemini 2.0 Flash experimental:** Explore the capabilities of the latest Gemini 2.0 Flash experimental model! See the [Get Started Guide](../quickstarts/Get_started.ipynb).
+* **Gemini 2.0 Flash experimental:** Explore the capabilities of the latest Gemini 2.0 Flash experimental model! See the [Get Started Guide](./quickstarts/Get_started.ipynb) and the [Live API tutorial](./quickstarts/Get_started_LiveAPI.ipyb).
 * **Recently Added Guides:**.
-  * [Thinking model](../quickstarts/Get_started_thinking.ipynb): Discover the thinking model capabilities.
-  * [Gradio and Live API](../examples/Code_.ipynb): Start working with Gradio to set-up your own live instance.
+  * [Thinking model](./quickstarts/Get_started_thinking.ipynb): Discover the thinking model capabilities.
+  * [Gradio and Live API](./examples/Code_.ipynb): Start working with Gradio to set-up your own live instance.
 <br><br>
 
 ## 1. Quick Starts
@@ -41,7 +41,8 @@ We recommend starting with the following:
 *   [**Get started**](./quickstarts/Get_started.ipynb): Get started with Gemini models and the Gemini API, covering basic prompting and multimodal input.
 <br><br>
 
-Then, explore the other Quick Starts to learn about individual features:
+Then, explore the other quickstarts tutorials to learn about individual features:
+*  [Get started with Live API](./quickstarts/Get_started_LiveAPI.ipynb): Get started with the live API with this comprehensive overview of its capabilities
 *  [Chat mode](./quickstarts/Get_started_chat.ipynb): multi-turn conversation
 *  [Grounding](./quickstarts/Search_Grounding.ipynb): use Google Search for grounded responses
 *  [Code execution](./quickstarts/Code_Execution.ipynb): SGenerating and running Python code to solve complex tasks

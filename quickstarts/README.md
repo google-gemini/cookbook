@@ -18,6 +18,7 @@ Then learn about how to **get started** with the other models that you can use w
 <br/><br/>
 
 There are multiples way to call the models using the Gemini API, these other **get started** guides will then show you the other ways to call the model:
+* [Get started with Live API](./Get_started_LiveAPI.ipynb): Get started with the live API with this comprehensive overview of its capabilities
 * [Get Started with Chat mode](./Get_started_chat.ipynb): Learn how to use the Gemini API in chat mode so that it remembers the whole discussion.
 * More to come...
 <br/><br/>

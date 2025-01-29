@@ -70,7 +70,7 @@ These fully functional, end-to-end applications showcase the power of Gemini in 
 
 ## Official SDKs
 
-The Gemini API is a REST API. You can call it directly using tools like `curl` (see [REST examples](../quickstarts/rest/)), or use one of our official SDKs:
+The Gemini API is a REST API. You can call it directly using tools like `curl` (see [REST examples](./quickstarts/rest/)), or use one of our official SDKs:
 * [Python](https://github.com/googleapis/python-genai)
 * [Go](https://github.com/google/generative-ai-go)
 * [Node.js](https://github.com/google/generative-ai-js)

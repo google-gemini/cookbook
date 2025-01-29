@@ -42,7 +42,6 @@ We recommend starting with the following:
 <br><br>
 
 Then, explore the other Quick Starts to learn about individual features:
-*  [Chat mode](./quickstarts/Get_started_chat.ipynb): multi-turn conversation
 *  [Grounding](./quickstarts/Search_Grounding.ipynb): use Google Search for grounded responses
 *  [Code execution](./quickstarts/Code_Execution.ipynb): SGenerating and running Python code to solve complex tasks
 *  And [many more](./quickstarts/)

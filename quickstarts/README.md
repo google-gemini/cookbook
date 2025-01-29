@@ -1,9 +1,31 @@
 # Gemini API Tutorials
 
+This folder contains guides about all the Gemini API features so that you can get to know how to use them with complete end to end code.
+
+When you'll be confident is your Gemini capabilities, the [examples](../examples/) folder will be an endless source of inspiration on how to mix those capabilities together.
+<br><br>
+
 ## Table of contents
-Learn about the capabilities of the Gemini API by checking out these quickstarts. They walk you through how to use a feature of the Gemini API with complete end to end code.
+
+If you are new to Gemini API, you should start with those two guides:
+* [Authentication](./Authentication.ipynb): Start here to learn how you can set up your API key so you can get access to the Gemini API.
+* [Get Started](./Get_Started.ipynb): Learn how to make your first calls to the Gemini API and get a quick overview of everything it can do.
+<br/><br/>
+
+Then learn about how to **get started** with the other models that you can use with the API:
+* [Thinking model](./Get_started_thinking.ipynb): The thinking models are, as their names implies, capable of deeper chains of thoughts than the classical models, this guide will show you how to use those thinking cpabilities to solve complex problems. 
+* More to come very soon...
+<br/><br/>
+
+Finally, these guides will deep-dive into specific capabilities of the Gemini models and API:
+* [Grounding](./Search_Grounding.ipynb): Learn how to use Google Search to ground your answers with external sources.
+* [Spatial understanding](./Spatial_understanding.ipynb): Learn how to use Gemini's spatial understanding capabilities to detect what's in your images, and reason about them
+* [Video understanding](./Video_understanding.ipynb): Learn how to use Gemini's video understanding capabilities to analyze what's in your videos
+<br/><br/>
+
+---
+Those guides are using the legacy SDK and haven't been updated yet, still they are worth checking as even if the SDK is not the same, the underlying logic of the feature stays the same. They will be converted to the SDK soon:
 * [Asynchronous requests](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Asynchronous_requests.ipynb): Learn how to use Python's async/await API with the Gemini SDK to parallelize calls.
-* [Authentication](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Authentication.ipynb): Start here to learn how you can set up your API key so you can get access to the Gemini API.
 * [Counting Tokens](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Counting_Tokens.ipynb) Tokens are the basic inputs to the Gemini models. Through this notebook, you will gain a better understanding of tokens through an interactive experience.
 * [Gemini Flash Introduction](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Gemini_Flash_Introduction.ipynb): Get started with Gemini Flash 1.5.
 * [Models](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Models.ipynb): Learn about the different models and parameters available in the Gemini API.
@@ -18,5 +40,3 @@ Learn about the capabilities of the Gemini API by checking out these quickstarts
 * [Embeddings](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Embeddings.ipynb): Create high quality and task-specific embeddings.
 * [Tuning](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Tuning.ipynb): Learn how to improve model performance on a specific task through tuning.
 * [Video](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video.ipynb): Upload a video to the Gemini API and use it in your prompt.
-
-When you're finished here, check out the [examples folder](https://github.com/google-gemini/cookbook/tree/main/examples) or the [Awesome Gemini page](../Awesome_gemini.md) for more fun examples.

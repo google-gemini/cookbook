@@ -1,0 +1,20 @@
+data: {"candidates": [{"content": {"parts": [{"text": "This"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 83557,"totalTokenCount": 83557},"modelVersion": "gemini-1.5-flash-002"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " is a recording of John F. Kennedy's State of the Union address to"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 83557,"totalTokenCount": 83557},"modelVersion": "gemini-1.5-flash-002"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " a joint session of Congress on January 30th, 196"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 83557,"totalTokenCount": 83557},"modelVersion": "gemini-1.5-flash-002"}
+
+data: {"candidates": [{"content": {"parts": [{"text": "1.  The address covers a wide range of topics, including:\n\n* **The state of the US economy:** Kennedy details the economic challenges facing the nation"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 83557,"totalTokenCount": 83557},"modelVersion": "gemini-1.5-flash-002"}
+
+data: {"candidates": [{"content": {"parts": [{"text": ", including high unemployment, business bankruptcies, and falling farm income. He outlines plans to address these issues through legislative action.\n\n* **International balance of payments"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 83557,"totalTokenCount": 83557},"modelVersion": "gemini-1.5-flash-002"}
+
+data: {"candidates": [{"content": {"parts": [{"text": ":** He discusses the deficit in the US balance of payments and the outflow of gold reserves.  He reassures the audience that the US will not devalue the dollar.\n\n* **Foreign policy and global challenges:** Kennedy addresses major global issues"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 83557,"totalTokenCount": 83557},"modelVersion": "gemini-1.5-flash-002"}
+
+data: {"candidates": [{"content": {"parts": [{"text": ", including the Cold War, the situation in Laos, the Congo, and Cuba. He emphasizes the need for strong military and diplomatic tools to deter aggression while also pursuing peaceful cooperation.  He calls for a new approach to foreign aid, focusing"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 83557,"totalTokenCount": 83557},"modelVersion": "gemini-1.5-flash-002"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " on long-term development and increased collaboration with allies.\n\n* **Domestic policy:** He touches upon several domestic issues, including housing, education, medical care for the elderly, and the need to address racial injustice.\n\n* **Strengthening the executive branch:** Kennedy expresses concern about inefficiencies in the executive branch and vows"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 83557,"totalTokenCount": 83557},"modelVersion": "gemini-1.5-flash-002"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " to improve decision-making and reduce wasteful duplication.\n\n* **A call for national unity and purpose:**  The address concludes with a plea for national unity and a call to meet the challenges of the time with both strength and diplomacy.  He invokes the spirit of a previous president and stresses the importance of perseverance and dedication"}],"role": "model"}}],"usageMetadata": {"promptTokenCount": 83557,"totalTokenCount": 83557},"modelVersion": "gemini-1.5-flash-002"}
+
+data: {"candidates": [{"content": {"parts": [{"text": " to the national interest.\n\n\nThe audio is a historical document providing insight into the priorities and concerns of the early Kennedy administration.\n"}],"role": "model"},"finishReason": "STOP"}],"usageMetadata": {"promptTokenCount": 83557,"candidatesTokenCount": 347,"totalTokenCount": 83904},"modelVersion": "gemini-1.5-flash-002"}
+

@@ -1,0 +1,8 @@
+{
+  "name": "tunedModels/number-generator-model-eoykb5s4p15s/operations/par9t60is0wo",
+  "metadata": {
+    "@type": "type.googleapis.com/google.ai.generativelanguage.v1beta.CreateTunedModelMetadata",
+    "totalSteps": 38,
+    "tunedModel": "tunedModels/number-generator-model-eoykb5s4p15s"
+  }
+}

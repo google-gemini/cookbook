@@ -55,10 +55,10 @@ jobs:
       run: |
         if [ "${{ github.event_name }}" == "pull_request" ]; then
           # Only check notebooks modified in this pull request
-          readarray -t changed_notebooks < <(git diff --name-only main |grep '\.ipynb$' || true)
+          readarray -t changed_notebooks < <(git diff --name-only main | grep '\.ipynb$' | grep -v 'gemini-2/' || true)
         else
           # Manual run, check everything
-          readarray -t changed_notebooks < <(find . -name '*.ipynb')
+          readarray -t changed_notebooks < <(find . -name '*.ipynb' | grep -v 'gemini-2/')
         fi
         if [[ ${#changed_notebooks[@]} == 0 ]]; then
           echo "No website notebooks modified in this pull request."

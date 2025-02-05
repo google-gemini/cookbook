@@ -34,14 +34,14 @@ the model from interrupting itself it is important that you use headphones.
 To run the script:
 
 ```
-python live_api_starter.py
+python Get_started_LiveAPI.py
 ```
 
 The script takes a video-mode flag `--mode`, this can be "camera", "screen", or "none".
 The default is "camera". To share your screen run:
 
 ```
-python live_api_starter.py --mode screen
+python Get_started_LiveAPI.py --mode screen
 ```
 """
 

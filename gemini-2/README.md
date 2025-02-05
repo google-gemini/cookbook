@@ -10,7 +10,7 @@ Explore Gemini 2.0’s capabilities through the following notebooks using Google
 
 * [Getting Started](../quickstarts/Get_started.ipynb) \- A comprehensive overview using the GenAI SDK
 * [Live API starter](../quickstarts/Get_started_LiveAPI.ipynb) \- Overview of the Multimodal Live API using the GenAI SDK
-* [Live API tool use](./live_api_tool_use.ipynb) \- Overview of tool use in the Live API with the GenAI SDK
+* [Live API tool use](../quickstarts/Get_started_LiveAPI_tools.ipynb) \- Overview of tool use in the Live API with the GenAI SDK
 * [Plotting and mapping](../examples/LiveAPI_plotting_and_mapping.ipynb) \- Demo showing search, code and function calling with the Live API
 * [Search tool](../quickstarts/Search_Grounding.ipynb) \- Quick start using the Search tool with the unary and Live APIs in the GenAI SDK
 * [Search tool for research report](../examples/Search_grounding_for_research_report.ipynb) \- Demo showing generation of a research report using the search tool with the unary API in the GenAI SDK

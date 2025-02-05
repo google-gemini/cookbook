@@ -28,14 +28,14 @@ Some old examples are still using the legacy SDK, they should still work and are
 * [Market a Jet Backpack](./Market_a_Jet_Backpack.ipynb): Create a marketing campaign from a product sketch.
 * [Object detection](./Object_detection.ipynb): Extensive examples with object detection, including with multiple classes, OCR, visual question answering, and even an interactive demo.  
 * [Opossum search](./Opossum_search.ipynb): Code generation with the Gemini API. Just for fun, you'll prompt the model to create a web app called "Opossum Search" that searches Google with "opossum" appended to the query.
-* [Search Wikipedia with ReAct](./Search_Wikipedia_using_ReAct.ipynb): Use ReAct prompting with Gemini 1.5 Flash to search Wikipedia interactively.
+* [Search Wikipedia with ReAct](./Search_Wikipedia_using_ReAct.ipynb): Use ReAct prompting with Gemini Flash to search Wikipedia interactively.
 * [Search Re-ranking with Embeddings](./Search_reranking_using_embeddings.ipynb): Use embeddings to re-rank search results.
 * [Story writing with prompt chaining.ipynb](./Story_Writing_with_Prompt_Chaining.ipynb): Write a story using two powerful tools: prompt chaining and iterative generation.
 * [Talk to documents](./Talk_to_documents_with_embeddings.ipynb): This is a basic intro to Retrieval Augmented Generation (RAG). Use embeddings to search through a custom database.
 * [Upload files to Colab](./Upload_files_to_Colab.ipynb): This is a helper notebook that shows how to upload files from your local computer to Colab. Note: to upload files to the Gemini API (text, code, images, audio, video), check out the [Files quickstart](https://github.com/google-gemini/cookbook/blob/main/quickstarts/File_API.ipynb).
 * [Voice Memos](./Voice_memos.ipynb): You'll use the Gemini API to help you generate ideas for your next blog post, based on voice memos you recorded on your phone, and previous articles you've written.
 * [Translate a public domain](./Translate_a_Public_Domain_Book.ipynb): In this notebook, you will explore Gemini model as a translation tool, demonstrating how to prepare data, create effective prompts, and save results into a `.txt` file.
-* [Working with Charts, Graphs, and Slide Decks](./Working_with_Charts_Graphs_and_Slide_Decks.ipynb): Gemini models are powerful multimodal LLMs that can process both text and image inputs. This notebook shows how Gemini 1.5 Flash model is capable of extracting data from various images.
+* [Working with Charts, Graphs, and Slide Decks](./Working_with_Charts_Graphs_and_Slide_Decks.ipynb): Gemini models are powerful multimodal LLMs that can process both text and image inputs. This notebook shows how Gemini Flash model is capable of extracting data from various images.
 * [Entity extraction](./Entity_Extraction.ipynb): Use Gemini API to speed up some of your tasks, such as searching through text to extract needed information. Entity extraction with a Gemini model is a simple query, and you can ask it to retrieve its answer in the form that you prefer.
 <br><br>
 

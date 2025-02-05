@@ -7,26 +7,27 @@ For introductions to those features it is recommended to start with the [Quickst
 
 ## Table of contents
 
-This is a collection of fun examples for the Gemini API. 
+This is a collection of examples for the Gemini API.
 
+* [3D Spatial understanding](./Spatial_understanding_3d.ipynb): Use Gemini 3D spatial abilities to understand 3D scenes and answer questions about them (Uses **Multimodal** and **Spatial understanding**)
+* [Browser as a tool](./Browser_as_a_tool.ipynb): Demonstrates 3 ways to use a web browser as a tool with the Gemini API.
+* [Gradio and Live API](./gradio_audio.py): Use gradio to deploy your own instance of the Live API (Uses **Live API**)
 * [Plotting and mapping Live](./LiveAPI_plotting_and_mapping.ipynb): Ask Gemini for complex graphs live (Uses **Live API** and **Code execution**)
 * [Search grounding for research report](./Search_grounding_for_research_report.ipynb): Use grounding to improve the quality of your research report (Uses **Grounding**)
-* [3D Spatial understanding](./Spatial_understanding_3d.ipynb): Use Gemini 3D spatial abilities to understand 3D scenes and answer questions about them (Uses **Multimodal** and **Spatial understanding**)
-* [Gradio and live API](./gradio_audio.py): Use gradio to deploy your own instance of the Live API (Uses **Live API**)
 <br><br>
 
 ---
 Some old examples are still using the legacy SDK, they should still work and are still worth checking to get ideas:
 
-* [Agents and Automatic Function Calling](./Agents_Function_Calling_Barista_Bot.ipynb): Create an agent (Barrista-bot) to take your coffee order. 
-* Video Analysis: Three notebooks using multimodal capabilities of the Gemini model to [classify the species of animals](./Analyze_a_Video_Classification.ipynb) for a video, [summarize one](./Analyze_a_Video_Summarization.ipynb) or [recognizing when it happened](./Analyze_a_Video_Historic_Event_Recognition.ipynb), 
+* [Agents and Automatic Function Calling](./Agents_Function_Calling_Barista_Bot.ipynb): Create an agent (Barrista-bot) to take your coffee order.
+* Video Analysis: Three notebooks using multimodal capabilities of the Gemini model to [classify the species of animals](./Analyze_a_Video_Classification.ipynb) for a video, [summarize one](./Analyze_a_Video_Summarization.ipynb) or [recognizing when it happened](./Analyze_a_Video_Historic_Event_Recognition.ipynb),
 * [Anomaly Detection](./Anomaly_detection_with_embeddings.ipynb): Use embeddings to detect anomalies in your datasets.
 * [Analyze a Video with Summarization](./Analyze_a_Video_Summarization.ipynb): This notebook shows how you can use Gemini API's multimodal capabilities for video summarization.
 * [Apollo 11 - long context example](./Apollo_11.ipynb): Search a 400 page transcript from Apollo 11.
 * [Classify text with emeddings](./Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.
 * [Guess the shape](./Guess_the_shape.ipynb): A simple example of using images in prompts.
 * [Market a Jet Backpack](./Market_a_Jet_Backpack.ipynb): Create a marketing campaign from a product sketch.
-* [Object detection](./Object_detection.ipynb): Extensive examples with object detection, including with multiple classes, OCR, visual question answering, and even an interactive demo.  
+* [Object detection](./Object_detection.ipynb): Extensive examples with object detection, including with multiple classes, OCR, visual question answering, and even an interactive demo.
 * [Opossum search](./Opossum_search.ipynb): Code generation with the Gemini API. Just for fun, you'll prompt the model to create a web app called "Opossum Search" that searches Google with "opossum" appended to the query.
 * [Search Wikipedia with ReAct](./Search_Wikipedia_using_ReAct.ipynb): Use ReAct prompting with Gemini 1.5 Flash to search Wikipedia interactively.
 * [Search Re-ranking with Embeddings](./Search_reranking_using_embeddings.ipynb): Use embeddings to re-rank search results.
@@ -46,7 +47,7 @@ Some old examples are still using the legacy SDK, they should still work and are
 
 ### Folders
 
-* [Prompting examples](./prompting): A directory with examples of various prompting techniques. 
+* [Prompting examples](./prompting): A directory with examples of various prompting techniques.
 * [JSON Capabilities](./json-capabilities): A directory with guides containing different types of tasks you can do with JSON schemas.
 * [Automate Google Workspace tasks with the Gemini API](./Apps_script_and_Workspace_codelab): This codelabs shows you how to connect to the Gemini API using Apps Script, and uses the function calling, vision and text capabilities to automate Google Workspace tasks - summarizing a document, analyzing a chart, sending an email and generating some slides directly. All of this is done from a free text input.
 * [Langchain examples](./langchain): A directory with multiple examples using Gemini with Langchain.

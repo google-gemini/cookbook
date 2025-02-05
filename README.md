@@ -22,7 +22,7 @@ Here are the recent additions and updates to the Gemini API and the Cookbook:
 * **Gemini 2.0 Flash experimental:** Explore the capabilities of the latest Gemini 2.0 Flash experimental model! See the [Get Started Guide](./quickstarts/Get_started.ipynb) and the [Live API tutorial](./quickstarts/Get_started_LiveAPI.ipynb).
 * **Recently Added Guides:**.
   * [Thinking model](./quickstarts/Get_started_thinking.ipynb): Discover the thinking model capabilities.
-  * [Gradio and Live API](./examples/Gradio_LiveAPI.py): Start working with Gradio to set-up your own live instance.
+  * [Gradio and Live API](./examples/gradio_audio.py): Start working with Gradio to set-up your own live instance.
   * [Code execution](./quickstarts/Code_Execution.ipynb): Generating and running Python code to solve complex tasks and even ouput graphs
 <br><br>
 

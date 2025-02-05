@@ -9,10 +9,12 @@ For introductions to those features it is recommended to start with the [Quickst
 
 This is a collection of fun examples for the Gemini API. 
 
-* [Plotting and mapping Live](./LiveAPI_plotting_and_mapping.ipynb): Ask Gemini for complex graphs live (Uses **Live API** and **Code execution**)
-* [Search grounding for research report](./Search_grounding_for_research_report.ipynb): Use grounding to improve the quality of your research report (Uses **Grounding**)
-* [3D Spatial understanding](./Spatial_understanding_3d.ipynb): Use Gemini 3D spatial abilities to understand 3D scenes and answer questions about them (Uses **Multimodal** and **Spatial understanding**)
-* [Gradio and live API](./gradio_audio.py): Use gradio to deploy your own instance of the Live API (Uses **Live API**)
+| Cookbook | Description | Features | Open |
+| -------- | ----------- | -------- | ---- |
+| [Plotting and mapping Live](./LiveAPI_plotting_and_mapping.ipynb) | Ask Gemini for complex graphs live | Live API, Code execution | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/LiveAPI_plotting_and_mapping.ipynb) |
+| [Search grounding for research report](./Search_grounding_for_research_report.ipynb) | Use grounding to improve the quality of your research report | Grounding | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Search_grounding_for_research_report.ipynb) |
+| [3D Spatial understanding](./Spatial_understanding_3d.ipynb) | Use Gemini 3D spatial abilities to understand 3D scenes and answer questions about them | Multimodal, Spatial understanding | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Spatial_understanding_3d.ipynb) |
+| [Gradio and live API](./gradio_audio.py) | Use gradio to deploy your own instance of the Live API | Live API | [Code](./gradio_audio.py) |
 <br><br>
 
 ---

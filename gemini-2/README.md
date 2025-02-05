@@ -16,8 +16,8 @@ Explore Gemini 2.0’s capabilities through the following notebooks using Google
 * [Search tool for research report](../examples/Search_grounding_for_research_report.ipynb) \- Demo showing generation of a research report using the search tool with the unary API in the GenAI SDK
 * [Spatial understanding](../quickstarts/Spatial_understanding.ipynb) \- Comprehensive overview of 2D spatial understanding capabilities with the GenAI SDK
 * [Spatial understanding (3D)](../examples/Spatial_understanding_3d.ipynb) \- Comprehensive overview of 3D spatial understanding capabilities with the GenAI SDK
-* [Video understanding](../examples/Video_understanding.ipynb) \- Comprehensive overview Gemini 2.0 video understanding capabilities with the GenAI SDK
-* [Gemini 2.0 Flash Thinking](../Get_started_thinking.ipynb) \- Introduction to the experimental Gemini 2.0 Flash Thinking model with the GenAI SDK
+* [Video understanding](../quickstarts/Video_understanding.ipynb) \- Comprehensive overview Gemini 2.0 video understanding capabilities with the GenAI SDK
+* [Gemini 2.0 Flash Thinking](../quickstarts/Get_started_thinking.ipynb) \- Introduction to the experimental Gemini 2.0 Flash Thinking model with the GenAI SDK
 
 Or explore on your own local machine.
 

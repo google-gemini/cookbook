@@ -31,8 +31,9 @@ Some old examples are still using the legacy SDK, they should still work and are
 * [Search Wikipedia with ReAct](./Search_Wikipedia_using_ReAct.ipynb): Use ReAct prompting with Gemini Flash to search Wikipedia interactively.
 * [Search Re-ranking with Embeddings](./Search_reranking_using_embeddings.ipynb): Use embeddings to re-rank search results.
 * [Story writing with prompt chaining.ipynb](./Story_Writing_with_Prompt_Chaining.ipynb): Write a story using two powerful tools: prompt chaining and iterative generation.
+* [Tag and Caption images](./Tag_and_caption_images.ipynb): Use the Gemini model's vision capabilities and the embedding model to add tags and captions to images of pieces of clothing.
 * [Talk to documents](./Talk_to_documents_with_embeddings.ipynb): This is a basic intro to Retrieval Augmented Generation (RAG). Use embeddings to search through a custom database.
-* [Upload files to Colab](./Upload_files_to_Colab.ipynb): This is a helper notebook that shows how to upload files from your local computer to Colab. Note: to upload files to the Gemini API (text, code, images, audio, video), check out the [Files quickstart](https://github.com/google-gemini/cookbook/blob/main/quickstarts/File_API.ipynb).
+* [Upload files to Colab](./Upload_files_to_Colab.ipynb): This is a helper notebook that shows how to upload files from your local computer to Colab. Note: to upload files to the Gemini API (text, code, images, audio, video), check out the [Files quickstart](../quickstarts/File_API.ipynb).
 * [Voice Memos](./Voice_memos.ipynb): You'll use the Gemini API to help you generate ideas for your next blog post, based on voice memos you recorded on your phone, and previous articles you've written.
 * [Translate a public domain](./Translate_a_Public_Domain_Book.ipynb): In this notebook, you will explore Gemini model as a translation tool, demonstrating how to prepare data, create effective prompts, and save results into a `.txt` file.
 * [Working with Charts, Graphs, and Slide Decks](./Working_with_Charts_Graphs_and_Slide_Decks.ipynb): Gemini models are powerful multimodal LLMs that can process both text and image inputs. This notebook shows how Gemini Flash model is capable of extracting data from various images.
@@ -41,7 +42,7 @@ Some old examples are still using the legacy SDK, they should still work and are
 
 ### Integrations
 
-* [Personalized Product Descriptions with Weaviate](weaviate/personalized_description_with_weaviate_and_gemini_api.ipynb): Load data into a Weaviate vector DB, build a semantic search system using embeddings from the Gemini API, create a knowledge graph and generate unique product descriptions for personas using the Gemini API and Weaviate.
+* [Personalized Product Descriptions with Weaviate](./weaviate/personalized_description_with_weaviate_and_gemini_api.ipynb): Load data into a Weaviate vector DB, build a semantic search system using embeddings from the Gemini API, create a knowledge graph and generate unique product descriptions for personas using the Gemini API and Weaviate.
 <br><br>
 
 ### Folders

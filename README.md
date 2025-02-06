@@ -5,6 +5,16 @@ This cookbook provides a structured learning path for using the Gemini API, focu
 **For comprehensive API documentation, visit [ai.google.dev](https://ai.google.dev/gemini-api/docs).**
 <br><br>
 
+## Important: Migration
+
+There are currently two different python SDKs for the Gemini API.
+This repository is in the process of converting from the old one (`google-generativeai`) to
+the new one (`google-genai`). See the
+[Migration guide](https://ai.google.dev/gemini-api/docs/migrate) for details.
+
+Prefer the `google-genai` for any new code going forward.
+<br><br>
+
 ## Navigating the Cookbook
 
 This cookbook is organized into two main categories:

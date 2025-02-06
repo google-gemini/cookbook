@@ -1,8 +1,0 @@
-[existing link](https://www.google.com)
-[existing link without https](www.google.com)
-[non existing link](https://not.working.link)
-[non existing link without https](www.not.working.no.httpa)
-[relative link](README.md)
-[relative link to a notebook](./examples/Guess_the_shape.ipynb)
-[not working relative link](IDontExist.md)
-[not working relative link](./folder/IDontExist.md)

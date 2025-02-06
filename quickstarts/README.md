@@ -9,7 +9,7 @@ When you'll be confident is your Gemini capabilities, the [examples](https://git
 
 If you are new to Gemini API, you should start with those two guides:
 * [Authentication](./Authentication.ipynb): Start here to learn how you can set up your API key so you can get access to the Gemini API.
-* [Get Started](./Get_Started.ipynb): Learn how to make your first calls to the Gemini API and get a quick overview of everything it can do.
+* [Get Started](./Get_started.ipynb): Learn how to make your first calls to the Gemini API and get a quick overview of everything it can do.
 <br/><br/>
 
 Then learn about how to **get started** with the other models that you can use with the API:
@@ -19,7 +19,6 @@ Then learn about how to **get started** with the other models that you can use w
 
 There are multiples way to call the models using the Gemini API, these other **get started** guides will then show you the other ways to call the model:
 * [Get started with Live API](./Get_started_LiveAPI.ipynb): Get started with the live API with this comprehensive overview of its capabilities
-* [Get Started with Chat mode](./Get_started_chat.ipynb): Learn how to use the Gemini API in chat mode so that it remembers the whole discussion.
 * More to come...
 <br/><br/>
 

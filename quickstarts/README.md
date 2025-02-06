@@ -2,7 +2,7 @@
 
 This folder contains guides about all the Gemini API features so that you can get to know how to use them with complete end to end code.
 
-When you'll be confident is your Gemini capabilities, the [examples](../examples/) folder will be an endless source of inspiration on how to mix those capabilities together.
+When you'll be confident is your Gemini capabilities, the [examples](https://github.com/google-gemini/cookbook/tree/main/examples/) folder will be an endless source of inspiration on how to mix those capabilities together.
 <br><br>
 
 ## Table of contents
@@ -18,10 +18,16 @@ Then learn about how to **get started** with the other models that you can use w
 * More to come very soon...
 <br/><br/>
 
+There are multiples way to call the models using the Gemini API, these other **get started** guides will then show you the other ways to call the model:
+* [Get started with Live API](./Get_started_LiveAPI.ipynb): Get started with the live API with this comprehensive overview of its capabilities
+* More to come...
+<br/><br/>
+
 Finally, these guides will deep-dive into specific capabilities of the Gemini models and API:
 * [Grounding](./Search_Grounding.ipynb): Learn how to use Google Search to ground your answers with external sources.
 * [Spatial understanding](./Spatial_understanding.ipynb): Learn how to use Gemini's spatial understanding capabilities to detect what's in your images, and reason about them
 * [Video understanding](./Video_understanding.ipynb): Learn how to use Gemini's video understanding capabilities to analyze what's in your videos
+* [Get started with Live API tools](./Get_started_LiveAPI_tools.ipynb): Now you know everything about the Live API, go to the next level and learn how to use tools with it!
 <br/><br/>
 
 ---

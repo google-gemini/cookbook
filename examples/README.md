@@ -9,14 +9,17 @@ For introductions to those features it is recommended to start with the [Quickst
 
 This is a collection of fun and helpful examples for the Gemini API. 
 
-* [Plotting and mapping Live](./LiveAPI_plotting_and_mapping.ipynb): Ask Gemini for complex graphs live (Uses **Live API** and **Code execution**)
-* [Search grounding for research report](./Search_grounding_for_research_report.ipynb): Use grounding to improve the quality of your research report (Uses **Grounding**)
-* [3D Spatial understanding](./Spatial_understanding_3d.ipynb): Use Gemini 3D spatial abilities to understand 3D scenes and answer questions about them (Uses **Multimodal** and **Spatial understanding**)
-* [Gradio and live API](./gradio_audio.py): Use gradio to deploy your own instance of the Live API (Uses **Live API**)
-* [Automated Invoice and Form Data Extraction with Gemini API & Pydantic](./Pdf_structured_outputs_on_invoices_and_forms.ipynb): Use the Gemini API to extract information from PDFs (Uses **File API** and **Structured Outputs**)
-<br><br>
+| Cookbook | Description | Features | Open |
+| -------- | ----------- | -------- | ---- |
+| [Plotting and mapping Live](./LiveAPI_plotting_and_mapping.ipynb) | Ask Gemini for complex graphs live | Live API, Code execution | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/LiveAPI_plotting_and_mapping.ipynb) |
+| [Search grounding for research report](./Search_grounding_for_research_report.ipynb) | Use grounding to improve the quality of your research report | Grounding | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Search_grounding_for_research_report.ipynb) |
+| [3D Spatial understanding](./Spatial_understanding_3d.ipynb) | Use Gemini 3D spatial abilities to understand 3D scenes and answer questions about them | Multimodal, Spatial understanding | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Spatial_understanding_3d.ipynb) |
+| [Gradio and live API](./gradio_audio.py) | Use gradio to deploy your own instance of the Live API | Live API | [Python Code](./gradio_audio.py) |
+| [Invoice and Form Data Extraction](./Pdf_structured_outputs_on_invoices_and_forms.ipynb) | Use the Gemini API to extract information from PDFs | File API, Structured Outputs | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Pdf_structured_outputs_on_invoices_and_forms.ipynb) |
+
 
 ---
+<br>
 Some old examples are still using the legacy SDK, they should still work and are still worth checking to get ideas:
 
 * [Agents and Automatic Function Calling](./Agents_Function_Calling_Barista_Bot.ipynb): Create an agent (Barrista-bot) to take your coffee order. 
@@ -48,7 +51,7 @@ Some old examples are still using the legacy SDK, they should still work and are
 
 ### Folders
 
-* [Prompting examples](./prompting): A directory with examples of various prompting techniques. 
-* [JSON Capabilities](./json-capabilities): A directory with guides containing different types of tasks you can do with JSON schemas.
-* [Automate Google Workspace tasks with the Gemini API](./Apps_script_and_Workspace_codelab): This codelabs shows you how to connect to the Gemini API using Apps Script, and uses the function calling, vision and text capabilities to automate Google Workspace tasks - summarizing a document, analyzing a chart, sending an email and generating some slides directly. All of this is done from a free text input.
-* [Langchain examples](./langchain): A directory with multiple examples using Gemini with Langchain.
+* [Prompting examples](./prompting/): A directory with examples of various prompting techniques. 
+* [JSON Capabilities](./json_capabilities/): A directory with guides containing different types of tasks you can do with JSON schemas.
+* [Automate Google Workspace tasks with the Gemini API](./Apps_script_and_Workspace_codelab/): This codelabs shows you how to connect to the Gemini API using Apps Script, and uses the function calling, vision and text capabilities to automate Google Workspace tasks - summarizing a document, analyzing a chart, sending an email and generating some slides directly. All of this is done from a free text input.
+* [Langchain examples](./langchain/): A directory with multiple examples using Gemini with Langchain.

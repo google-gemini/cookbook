@@ -13,7 +13,7 @@ the new one (`google-genai`). See the
 [Migration guide](https://ai.google.dev/gemini-api/docs/migrate) for details.
 
 Prefer the `google-genai` for any new code going forward.
-
+<br><br>
 
 ## Navigating the Cookbook
 

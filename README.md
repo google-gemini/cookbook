@@ -33,6 +33,7 @@ Here are the recent additions and updates to the Gemini API and the Cookbook:
 * **Imagen**: Get started with our image generation model with this brand new [Imagen guide](./quickstarts/Get_started_imagen.ipynb)!
 * **Recently Added Guides:**.
   * [Thinking model](./quickstarts/Get_started_thinking.ipynb): Discover the thinking model capabilities.
+  * [Invoice and Form Data Extraction](./examples/Pdf_structured_outputs_on_invoices_and_forms.ipynb): Analyze PDFs with structured outputs.
   * [Gradio and Live API](./examples/Code_.ipynb): Start working with Gradio to set-up your own live instance.
 <br><br>
 

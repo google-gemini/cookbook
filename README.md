@@ -29,7 +29,7 @@ We also showcase **Demos** in separate repositories, illustrating end-to-end app
 
 Here are the recent additions and updates to the Gemini API and the Cookbook: 
 
-* **Gemini 2.0 Flash experimental:** Explore the capabilities of the latest Gemini 2.0 Flash experimental model! See the [Get Started Guide](./quickstarts/Get_started.ipynb).
+* **Gemini 2.0 models:** Explore the capabilities of the latest Gemini 2.0 models! See the [Get Started Guide](./quickstarts/Get_started.ipynb).
 * **Imagen**: Get started with our image generation model with this brand new [Imagen guide](./quickstarts/Get_started_imagen.ipynb)!
 * **Recently Added Guides:**.
   * [Thinking model](./quickstarts/Get_started_thinking.ipynb): Discover the thinking model capabilities.

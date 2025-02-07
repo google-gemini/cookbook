@@ -7,20 +7,34 @@ This cookbook provides a structured learning path for using the Gemini API, focu
 
 ## Important: Migration
 
-There are currently two different python SDKs for the Gemini API.
-This repository is in the process of converting from the old one (`google-generativeai`) to
-the new one (`google-genai`). See the
-[Migration guide](https://ai.google.dev/gemini-api/docs/migrate) for details.
+With Gemini 2 we are offering a [new SDK](https://github.com/googleapis/python-genai)
+(<code>[google-genai](https://pypi.org/project/google-genai/)</code>,
+<code>v1.0</code>). The updated SDK is fully compatible with all Gemini API
+models and features, including recent additions like the
+[live API](https://aistudio.google.com/live) (audio + video streaming),
+improved tool usage (
+[code execution](https://ai.google.dev/gemini-api/docs/code-execution?lang=python),
+[function calling](https://ai.google.dev/gemini-api/docs/function-calling/tutorial?lang=python) and integrated
+[Google search grounding](https://ai.google.dev/gemini-api/docs/grounding?lang=python)),
+and media generation ([Imagen](https://ai.google.dev/gemini-api/docs/imagen)).
+This SDK allows you to connect to the Gemini API through either
+[Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.0-flash-exp) or
+[Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/gemini-v2).
 
-Prefer the `google-genai` for any new code going forward.
+The <code>[google-generativeai](https://pypi.org/project/google-generativeai)</code>
+package will continue to support the original Gemini models.
+It <em>can</em> also be used with Gemini 2 models, just with a limited feature
+set. All new features will be developed in the new Google GenAI SDK.
+
+See the [migration guide](https://ai.google.dev/gemini-api/docs/migrate) for details.
 <br><br>
 
 ## Navigating the Cookbook
 
 This cookbook is organized into two main categories:
 
-1.  **[Quick Starts](./quickstarts/):**  Step-by-step guides covering both introductory topics ("[Get Started](./quickstarts/Get_started.ipynb)") and specific API features.
-2.  **[Examples](./examples/):** Practical use cases demonstrating how to combine multiple features.
+1.  **[Quick Starts](https://github.com/google-gemini/cookbook/tree/main/quickstarts/):**  Step-by-step guides covering both introductory topics ("[Get Started](./quickstarts/Get_started.ipynb)") and specific API features.
+2.  **[Examples](https://github.com/google-gemini/cookbook/tree/main/examples/):** Practical use cases demonstrating how to combine multiple features.
 
 We also showcase **Demos** in separate repositories, illustrating end-to-end applications of the Gemini API.
 <br><br>
@@ -29,16 +43,18 @@ We also showcase **Demos** in separate repositories, illustrating end-to-end app
 
 Here are the recent additions and updates to the Gemini API and the Cookbook: 
 
-* **Gemini 2.0 Flash experimental:** Explore the capabilities of the latest Gemini 2.0 Flash experimental model! See the [Get Started Guide](./quickstarts/Get_started.ipynb).
+* **Gemini 2.0 models:** Explore the capabilities of the latest Gemini 2.0 models! See the [Get Started Guide](./quickstarts/Get_started.ipynb).
 * **Imagen**: Get started with our image generation model with this brand new [Imagen guide](./quickstarts/Get_started_imagen.ipynb)!
 * **Recently Added Guides:**.
   * [Thinking model](./quickstarts/Get_started_thinking.ipynb): Discover the thinking model capabilities.
-  * [Gradio and Live API](./examples/Code_.ipynb): Start working with Gradio to set-up your own live instance.
+  * [Invoice and Form Data Extraction](./examples/Pdf_structured_outputs_on_invoices_and_forms.ipynb): Analyze PDFs with structured outputs.
+  * [Code execution](./quickstarts/Code_Execution.ipynb): Generating and running Python code to solve complex tasks and even ouput graphs
+
 <br><br>
 
 ## 1. Quick Starts
 
-The [quickstarts section](./quickstarts/) contains step-by-step tutorials to get you started with Gemini and learn about its specific features.
+The [quickstarts section](https://github.com/google-gemini/cookbook/tree/main/quickstarts/) contains step-by-step tutorials to get you started with Gemini and learn about its specific features.
 
 **To begin, you'll need:**
 
@@ -52,20 +68,21 @@ We recommend starting with the following:
 *   [**Get started**](./quickstarts/Get_started.ipynb): Get started with Gemini models and the Gemini API, covering basic prompting and multimodal input.
 <br><br>
 
-Then, explore the other Quick Starts to learn about individual features:
+Then, explore the other quickstarts tutorials to learn about individual features:
+*  [Get started with Live API](./quickstarts/Get_started_LiveAPI.ipynb): Get started with the live API with this comprehensive overview of its capabilities
 *  [Grounding](./quickstarts/Search_Grounding.ipynb): use Google Search for grounded responses
-*  [Code execution](./quickstarts/Code_Execution.ipynb): SGenerating and running Python code to solve complex tasks
-*  And [many more](./quickstarts/)
+*  [Code execution](./quickstarts/Code_Execution.ipynb): Generating and running Python code to solve complex tasks and even ouput graphs
+*  And [many more](https://github.com/google-gemini/cookbook/tree/main/quickstarts/)
 <br><br>
 
 ## 2. Examples (Practical Use Cases)
 
 These examples demonstrate how to combine multiple Gemini API features or 3rd-party tools to build more complex applications.
-*  [Plotting and mapping Live](./LiveAPI_plotting_and_mapping.ipynb): Mix *Live API* and *Code execution* to solve complex tasks live.
-*  [Search grounding for research report](./Search_grounding_for_research_report.ipynb): Use *Grounding* to improve the quality of your research report
-*  [3D Spatial understanding](./Spatial_understanding_3d.ipynb): Use Gemini *3D spatial* abilities to understand 3D scenes
-*  [Gradio and live API](./gradio_audio.py): Use gradio to deploy your own instance of the *Live API*
-*  And [many many more](./examples/)
+*  [Plotting and mapping Live](./examples/LiveAPI_plotting_and_mapping.ipynb): Mix *Live API* and *Code execution* to solve complex tasks live.
+*  [Search grounding for research report](./examples/Search_grounding_for_research_report.ipynb): Use *Grounding* to improve the quality of your research report
+*  [3D Spatial understanding](./examples/Spatial_understanding_3d.ipynb): Use Gemini *3D spatial* abilities to understand 3D scenes
+*  [Gradio and live API](./examples/gradio_audio.py): Use gradio to deploy your own instance of the *Live API*
+*  And [many many more](https://github.com/google-gemini/cookbook/tree/main/examples/)
 <br><br>
 
 ## 3. Demos (End-to-End Applications)
@@ -80,7 +97,7 @@ These fully functional, end-to-end applications showcase the power of Gemini in 
 
 ## Official SDKs
 
-The Gemini API is a REST API. You can call it directly using tools like `curl` (see [REST examples](./quickstarts/rest/)), or use one of our official SDKs:
+The Gemini API is a REST API. You can call it directly using tools like `curl` (see [REST examples](https://github.com/google-gemini/cookbook/tree/main/quickstarts/rest/)), or use one of our official SDKs:
 * [Python](https://github.com/googleapis/python-genai)
 * [Go](https://github.com/google/generative-ai-go)
 * [Node.js](https://github.com/google/generative-ai-js)

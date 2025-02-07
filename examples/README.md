@@ -12,11 +12,13 @@ This is a collection of examples for the Gemini API.
 * [3D Spatial understanding](./Spatial_understanding_3d.ipynb): Use Gemini 3D spatial abilities to understand 3D scenes and answer questions about them (Uses **Multimodal** and **Spatial understanding**)
 * [Browser as a tool](./Browser_as_a_tool.ipynb): Demonstrates 3 ways to use a web browser as a tool with the Gemini API.
 * [Gradio and Live API](./gradio_audio.py): Use gradio to deploy your own instance of the Live API (Uses **Live API**)
+* [Invoice and Form Data Extraction](./Pdf_structured_outputs_on_invoices_and_forms.ipynb) | Use the Gemini API to extract information from PDFs | File API, Structured Outputs | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Pdf_structured_outputs_on_invoices_and_forms.ipynb) |
 * [Plotting and mapping Live](./LiveAPI_plotting_and_mapping.ipynb): Ask Gemini for complex graphs live (Uses **Live API** and **Code execution**)
 * [Search grounding for research report](./Search_grounding_for_research_report.ipynb): Use grounding to improve the quality of your research report (Uses **Grounding**)
-<br><br>
+
 
 ---
+<br>
 Some old examples are still using the legacy SDK, they should still work and are still worth checking to get ideas:
 
 * [Agents and Automatic Function Calling](./Agents_Function_Calling_Barista_Bot.ipynb): Create an agent (Barrista-bot) to take your coffee order.
@@ -29,25 +31,26 @@ Some old examples are still using the legacy SDK, they should still work and are
 * [Market a Jet Backpack](./Market_a_Jet_Backpack.ipynb): Create a marketing campaign from a product sketch.
 * [Object detection](./Object_detection.ipynb): Extensive examples with object detection, including with multiple classes, OCR, visual question answering, and even an interactive demo.
 * [Opossum search](./Opossum_search.ipynb): Code generation with the Gemini API. Just for fun, you'll prompt the model to create a web app called "Opossum Search" that searches Google with "opossum" appended to the query.
-* [Search Wikipedia with ReAct](./Search_Wikipedia_using_ReAct.ipynb): Use ReAct prompting with Gemini 1.5 Flash to search Wikipedia interactively.
+* [Search Wikipedia with ReAct](./Search_Wikipedia_using_ReAct.ipynb): Use ReAct prompting with Gemini Flash to search Wikipedia interactively.
 * [Search Re-ranking with Embeddings](./Search_reranking_using_embeddings.ipynb): Use embeddings to re-rank search results.
 * [Story writing with prompt chaining.ipynb](./Story_Writing_with_Prompt_Chaining.ipynb): Write a story using two powerful tools: prompt chaining and iterative generation.
+* [Tag and Caption images](./Tag_and_caption_images.ipynb): Use the Gemini model's vision capabilities and the embedding model to add tags and captions to images of pieces of clothing.
 * [Talk to documents](./Talk_to_documents_with_embeddings.ipynb): This is a basic intro to Retrieval Augmented Generation (RAG). Use embeddings to search through a custom database.
-* [Upload files to Colab](./Upload_files_to_Colab.ipynb): This is a helper notebook that shows how to upload files from your local computer to Colab. Note: to upload files to the Gemini API (text, code, images, audio, video), check out the [Files quickstart](https://github.com/google-gemini/cookbook/blob/main/quickstarts/File_API.ipynb).
+* [Upload files to Colab](./Upload_files_to_Colab.ipynb): This is a helper notebook that shows how to upload files from your local computer to Colab. Note: to upload files to the Gemini API (text, code, images, audio, video), check out the [Files quickstart](../quickstarts/File_API.ipynb).
 * [Voice Memos](./Voice_memos.ipynb): You'll use the Gemini API to help you generate ideas for your next blog post, based on voice memos you recorded on your phone, and previous articles you've written.
 * [Translate a public domain](./Translate_a_Public_Domain_Book.ipynb): In this notebook, you will explore Gemini model as a translation tool, demonstrating how to prepare data, create effective prompts, and save results into a `.txt` file.
-* [Working with Charts, Graphs, and Slide Decks](./Working_with_Charts_Graphs_and_Slide_Decks.ipynb): Gemini models are powerful multimodal LLMs that can process both text and image inputs. This notebook shows how Gemini 1.5 Flash model is capable of extracting data from various images.
+* [Working with Charts, Graphs, and Slide Decks](./Working_with_Charts_Graphs_and_Slide_Decks.ipynb): Gemini models are powerful multimodal LLMs that can process both text and image inputs. This notebook shows how Gemini Flash model is capable of extracting data from various images.
 * [Entity extraction](./Entity_Extraction.ipynb): Use Gemini API to speed up some of your tasks, such as searching through text to extract needed information. Entity extraction with a Gemini model is a simple query, and you can ask it to retrieve its answer in the form that you prefer.
 <br><br>
 
 ### Integrations
 
-* [Personalized Product Descriptions with Weaviate](weaviate/personalized_description_with_weaviate_and_gemini_api.ipynb): Load data into a Weaviate vector DB, build a semantic search system using embeddings from the Gemini API, create a knowledge graph and generate unique product descriptions for personas using the Gemini API and Weaviate.
+* [Personalized Product Descriptions with Weaviate](../examples/weaviate/personalized_description_with_weaviate_and_gemini_api.ipynb): Load data into a Weaviate vector DB, build a semantic search system using embeddings from the Gemini API, create a knowledge graph and generate unique product descriptions for personas using the Gemini API and Weaviate.
 <br><br>
 
 ### Folders
 
-* [Prompting examples](./prompting): A directory with examples of various prompting techniques.
-* [JSON Capabilities](./json-capabilities): A directory with guides containing different types of tasks you can do with JSON schemas.
-* [Automate Google Workspace tasks with the Gemini API](./Apps_script_and_Workspace_codelab): This codelabs shows you how to connect to the Gemini API using Apps Script, and uses the function calling, vision and text capabilities to automate Google Workspace tasks - summarizing a document, analyzing a chart, sending an email and generating some slides directly. All of this is done from a free text input.
-* [Langchain examples](./langchain): A directory with multiple examples using Gemini with Langchain.
+* [Prompting examples](./prompting/): A directory with examples of various prompting techniques. 
+* [JSON Capabilities](./json_capabilities/): A directory with guides containing different types of tasks you can do with JSON schemas.
+* [Automate Google Workspace tasks with the Gemini API](./Apps_script_and_Workspace_codelab/): This codelabs shows you how to connect to the Gemini API using Apps Script, and uses the function calling, vision and text capabilities to automate Google Workspace tasks - summarizing a document, analyzing a chart, sending an email and generating some slides directly. All of this is done from a free text input.
+* [Langchain examples](./langchain/): A directory with multiple examples using Gemini with Langchain.

@@ -35,7 +35,7 @@ print(f"Retrieved file {get_file.display_name} as: {get_file.uri}")
 
 # Make Gemini 1.5 API LLM call
 prompt = "Describe the image with a creative description"
-model_name = "models/gemini-1.5-pro-latest"
+model_name = "models/gemini-2.0-flash"
 model = genai.GenerativeModel(model_name=model_name)
 response = model.generate_content([prompt, file_response])
 print(response)

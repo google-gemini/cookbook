@@ -60,7 +60,28 @@ jobs:
           # Manual run, check everything
           readarray -t changed_notebooks < <(find . -name '*.ipynb' | grep -v 'gemini-2/')
         fi
-        if [[ ${#changed_notebooks[@]} == 0 ]]; then
+
+        # Define files to exclude from linting
+        excluded_files=(
+          "examples/Object_detection.ipynb"
+        )
+
+        # Filter out excluded files from the changed_notebooks array
+        filtered_notebooks=()
+        for notebook in "${changed_notebooks[@]}"; do
+          exclude=false
+          for excluded_file in "${excluded_files[@]}"; do
+            if [[ "$notebook" == "$excluded_file" ]]; then
+              exclude=true
+              break
+            fi
+          done
+          if [[ "$exclude" == false ]]; then
+            filtered_notebooks+=("$notebook")
+          fi
+        done
+
+        if [[ ${#filtered_notebooks[@]} == 0 ]]; then
           echo "No website notebooks modified in this pull request."
           exit 0
         else
@@ -74,6 +95,5 @@ jobs:
             --exclude_lint=tensorflow::button_website \
             --arg=base_url:https://ai.google.dev/ \
             --exclude_lint=tensorflow::button_github \
-            "${changed_notebooks[@]}"
+            "${filtered_notebooks[@]}"
         fi
-

@@ -7,12 +7,26 @@ This cookbook provides a structured learning path for using the Gemini API, focu
 
 ## Important: Migration
 
-There are currently two different python SDKs for the Gemini API.
-This repository is in the process of converting from the old one (`google-generativeai`) to
-the new one (`google-genai`). See the
-[Migration guide](https://ai.google.dev/gemini-api/docs/migrate) for details.
+With Gemini 2 we are offering a [new SDK](https://github.com/googleapis/python-genai)
+(<code>[google-genai](https://pypi.org/project/google-genai/)</code>,
+<code>v1.0</code>). The updated SDK is fully compatible with all Gemini API
+models and features, including recent additions like the
+[live API](https://aistudio.google.com/live) (audio + video streaming),
+improved tool usage (
+[code execution](https://ai.google.dev/gemini-api/docs/code-execution?lang=python),
+[function calling](https://ai.google.dev/gemini-api/docs/function-calling/tutorial?lang=python) and integrated
+[Google search grounding](https://ai.google.dev/gemini-api/docs/grounding?lang=python)),
+and media generation ([Imagen](https://ai.google.dev/gemini-api/docs/imagen)).
+This SDK allows you to connect to the Gemini API through either
+[Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.0-flash-exp) or
+[Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/gemini-v2).
 
-Prefer the `google-genai` for any new code going forward.
+The <code>[google-generativeai](https://pypi.org/project/google-generativeai)</code>
+package will continue to support the original Gemini models.
+It <em>can</em> also be used with Gemini 2 models, just with a limited feature
+set. All new features will be developed in the new Google GenAI SDK.
+
+See the [migration guide](https://ai.google.dev/gemini-api/docs/migrate) for details.
 <br><br>
 
 ## Navigating the Cookbook

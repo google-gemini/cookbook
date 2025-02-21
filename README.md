@@ -70,6 +70,7 @@ We recommend starting with the following:
 
 Then, explore the other quickstarts tutorials to learn about individual features:
 *  [Get started with Live API](./quickstarts/Get_started_LiveAPI.ipynb): Get started with the live API with this comprehensive overview of its capabilities
+*  [Get started with Imagen](./quickstarts/Get_started_imagen.ipynb): Get started with our image generation model 
 *  [Grounding](./quickstarts/Search_Grounding.ipynb): use Google Search for grounded responses
 *  [Code execution](./quickstarts/Code_Execution.ipynb): Generating and running Python code to solve complex tasks and even ouput graphs
 *  And [many more](https://github.com/google-gemini/cookbook/tree/main/quickstarts/)
@@ -78,8 +79,8 @@ Then, explore the other quickstarts tutorials to learn about individual features
 ## 2. Examples (Practical Use Cases)
 
 These examples demonstrate how to combine multiple Gemini API features or 3rd-party tools to build more complex applications.
+*  [Illustrate a book](./examples/Book_illustration.ipynb): Use Gemini and Imagen to create illustration for an open-source book
 *  [Plotting and mapping Live](./examples/LiveAPI_plotting_and_mapping.ipynb): Mix *Live API* and *Code execution* to solve complex tasks live.
-*  [Search grounding for research report](./examples/Search_grounding_for_research_report.ipynb): Use *Grounding* to improve the quality of your research report
 *  [3D Spatial understanding](./examples/Spatial_understanding_3d.ipynb): Use Gemini *3D spatial* abilities to understand 3D scenes
 *  [Gradio and live API](./examples/gradio_audio.py): Use gradio to deploy your own instance of the *Live API*
 *  And [many many more](https://github.com/google-gemini/cookbook/tree/main/examples/)

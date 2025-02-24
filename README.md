@@ -80,7 +80,8 @@ Then, explore the other quickstarts tutorials to learn about individual features
 
 These examples demonstrate how to combine multiple Gemini API features or 3rd-party tools to build more complex applications.
 *  [Illustrate a book](./examples/Book_illustration.ipynb): Use Gemini and Imagen to create illustration for an open-source book
-*  [Plotting and mapping Live](./examples/LiveAPI_plotting_and_mapping.ipynb): Mix *Live API* and *Code execution* to solve complex tasks live.
+*  [Animated Story Generation](./examples/Animated_Story_Video_Generation_gemini.ipynb): Create animated videos by combining Gemini's story generation, Imagen, and audio synthesis
+*  [Plotting and mapping Live](./examples/LiveAPI_plotting_and_mapping.ipynb): Mix *Live API* and *Code execution* to solve complex tasks live
 *  [3D Spatial understanding](./examples/Spatial_understanding_3d.ipynb): Use Gemini *3D spatial* abilities to understand 3D scenes
 *  [Gradio and live API](./examples/gradio_audio.py): Use gradio to deploy your own instance of the *Live API*
 *  And [many many more](https://github.com/google-gemini/cookbook/tree/main/examples/)
@@ -120,4 +121,4 @@ For enterprise developers, the Gemini API is also available on Google Cloud Vert
 
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
-Thank you for developing with the Gemini API! We’re excited to see what you create.
+Thank you for developing with the Gemini API! We're excited to see what you create.

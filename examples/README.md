@@ -7,10 +7,11 @@ For introductions to those features it is recommended to start with the [Quickst
 
 ## Table of contents
 
-This is a collection of fun and helpful examples for the Gemini API. 
+This is a collection of fun and helpful examples for the Gemini API.
 
 | Cookbook | Description | Features | Open |
 | -------- | ----------- | -------- | ---- |
+| [Browser as a tool](./Browser_as_a_tool.ipynb) | Demonstrates 3 ways to use a web browser as a tool with the Gemini API | Tools, Live API | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Browser_as_a_tool.ipynb) |
 | [Illustrate a book](./Book_illustration.ipynb) | Use Gemini and Imagen to create illustration for an open-source book | Imagen, structured output | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Book_illustration.ipynb) |
 | [Animated Story Generation](./Animated_Story_Video_Generation_gemini.ipynb) | Create animated videos by combining story generation, images, and audio | Imagen, Live API, structured output | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Animated_Story_Video_Generation_gemini.ipynb) |
 | [Plotting and mapping Live](./LiveAPI_plotting_and_mapping.ipynb) | Ask Gemini for complex graphs live | Live API, Code execution | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/LiveAPI_plotting_and_mapping.ipynb) |
@@ -19,20 +20,19 @@ This is a collection of fun and helpful examples for the Gemini API.
 | [Gradio and live API](./gradio_audio.py) | Use gradio to deploy your own instance of the Live API | Live API | [Python Code](./gradio_audio.py) |
 | [Invoice and Form Data Extraction](./Pdf_structured_outputs_on_invoices_and_forms.ipynb) | Use the Gemini API to extract information from PDFs | File API, Structured Outputs | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Pdf_structured_outputs_on_invoices_and_forms.ipynb) |
 
-
 ---
 <br>
 Some old examples are still using the legacy SDK, they should still work and are still worth checking to get ideas:
 
-* [Agents and Automatic Function Calling](./Agents_Function_Calling_Barista_Bot.ipynb): Create an agent (Barrista-bot) to take your coffee order. 
-* Video Analysis: Three notebooks using multimodal capabilities of the Gemini model to [classify the species of animals](./Analyze_a_Video_Classification.ipynb) for a video, [summarize one](./Analyze_a_Video_Summarization.ipynb) or [recognizing when it happened](./Analyze_a_Video_Historic_Event_Recognition.ipynb), 
+* [Agents and Automatic Function Calling](./Agents_Function_Calling_Barista_Bot.ipynb): Create an agent (Barrista-bot) to take your coffee order.
+* Video Analysis: Three notebooks using multimodal capabilities of the Gemini model to [classify the species of animals](./Analyze_a_Video_Classification.ipynb) for a video, [summarize one](./Analyze_a_Video_Summarization.ipynb) or [recognizing when it happened](./Analyze_a_Video_Historic_Event_Recognition.ipynb),
 * [Anomaly Detection](./Anomaly_detection_with_embeddings.ipynb): Use embeddings to detect anomalies in your datasets.
 * [Analyze a Video with Summarization](./Analyze_a_Video_Summarization.ipynb): This notebook shows how you can use Gemini API's multimodal capabilities for video summarization.
 * [Apollo 11 - long context example](./Apollo_11.ipynb): Search a 400 page transcript from Apollo 11.
 * [Classify text with emeddings](./Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.
 * [Guess the shape](./Guess_the_shape.ipynb): A simple example of using images in prompts.
 * [Market a Jet Backpack](./Market_a_Jet_Backpack.ipynb): Create a marketing campaign from a product sketch.
-* [Object detection](./Object_detection.ipynb): Extensive examples with object detection, including with multiple classes, OCR, visual question answering, and even an interactive demo.  
+* [Object detection](./Object_detection.ipynb): Extensive examples with object detection, including with multiple classes, OCR, visual question answering, and even an interactive demo.
 * [Opossum search](./Opossum_search.ipynb): Code generation with the Gemini API. Just for fun, you'll prompt the model to create a web app called "Opossum Search" that searches Google with "opossum" appended to the query.
 * [Search Wikipedia with ReAct](./Search_Wikipedia_using_ReAct.ipynb): Use ReAct prompting with Gemini Flash to search Wikipedia interactively.
 * [Search Re-ranking with Embeddings](./Search_reranking_using_embeddings.ipynb): Use embeddings to re-rank search results.

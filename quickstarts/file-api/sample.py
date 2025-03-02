@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import google.generativeai as genai
+from google import genai
 import os
 from dotenv import load_dotenv
 

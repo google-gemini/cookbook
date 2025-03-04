@@ -19,7 +19,7 @@ This is a collection of fun and helpful examples for the Gemini API.
 | [3D Spatial understanding](./Spatial_understanding_3d.ipynb) | Use Gemini 3D spatial abilities to understand 3D scenes and answer questions about them | Multimodal, Spatial understanding | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Spatial_understanding_3d.ipynb) |
 | [Gradio and live API](./gradio_audio.py) | Use gradio to deploy your own instance of the Live API | Live API | [Python Code](./gradio_audio.py) |
 | [Invoice and Form Data Extraction](./Pdf_structured_outputs_on_invoices_and_forms.ipynb) | Use the Gemini API to extract information from PDFs | File API, Structured Outputs | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Pdf_structured_outputs_on_invoices_and_forms.ipynb) |
-| [Classify text with emeddings](./Classify_text_with_embeddings.ipynb) | Use embeddings from the Gemini API with Keras. | Embeddings | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Classify_text_with_embeddings.ipynb) |
+| [Classify text with embeddings](./Classify_text_with_embeddings.ipynb) | Use embeddings from the Gemini API with Keras. | Embeddings | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Classify_text_with_embeddings.ipynb) |
 ---
 <br>
 Some old examples are still using the legacy SDK, they should still work and are still worth checking to get ideas:

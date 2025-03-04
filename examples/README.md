@@ -18,6 +18,7 @@ This is a collection of fun and helpful examples for the Gemini API.
 | [Search grounding for research report](./Search_grounding_for_research_report.ipynb) | Use grounding to improve the quality of your research report | Grounding | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Search_grounding_for_research_report.ipynb) |
 | [3D Spatial understanding](./Spatial_understanding_3d.ipynb) | Use Gemini 3D spatial abilities to understand 3D scenes and answer questions about them | Multimodal, Spatial understanding | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Spatial_understanding_3d.ipynb) |
 | [Gradio and live API](./gradio_audio.py) | Use gradio to deploy your own instance of the Live API | Live API | [Python Code](./gradio_audio.py) |
+| [Apollo 11 - long context example](./Apollo_11.ipynb) | Search a 400 page transcript from Apollo 11. | File API | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Apollo_11.ipynb) |
 | [Invoice and Form Data Extraction](./Pdf_structured_outputs_on_invoices_and_forms.ipynb) | Use the Gemini API to extract information from PDFs | File API, Structured Outputs | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Pdf_structured_outputs_on_invoices_and_forms.ipynb) |
 
 ---
@@ -28,7 +29,6 @@ Some old examples are still using the legacy SDK, they should still work and are
 * Video Analysis: Three notebooks using multimodal capabilities of the Gemini model to [classify the species of animals](./Analyze_a_Video_Classification.ipynb) for a video, [summarize one](./Analyze_a_Video_Summarization.ipynb) or [recognizing when it happened](./Analyze_a_Video_Historic_Event_Recognition.ipynb),
 * [Anomaly Detection](./Anomaly_detection_with_embeddings.ipynb): Use embeddings to detect anomalies in your datasets.
 * [Analyze a Video with Summarization](./Analyze_a_Video_Summarization.ipynb): This notebook shows how you can use Gemini API's multimodal capabilities for video summarization.
-* [Apollo 11 - long context example](./Apollo_11.ipynb): Search a 400 page transcript from Apollo 11.
 * [Classify text with emeddings](./Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.
 * [Guess the shape](./Guess_the_shape.ipynb): A simple example of using images in prompts.
 * [Market a Jet Backpack](./Market_a_Jet_Backpack.ipynb): Create a marketing campaign from a product sketch.

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import google.generativeai as genai
+from google import genai
 import os
 from dotenv import load_dotenv
 
@@ -21,25 +21,36 @@ load_dotenv()
 api_key = os.environ["GOOGLE_API_KEY"]
 
 # Initialize Google API Client
-genai.configure(api_key=api_key)
+client=genai.Client(api_key=api_key)
 
-# Prepare file to upload to GenAI File API
-file_path = "sample_data/gemini_logo.png"
+# Upload a sample file to the client.files API
+file_path = "/content/image.png"
 display_name = "Gemini Logo"
-file_response = genai.upload_file(path=file_path, display_name=display_name)
+file_response = client.files.upload(
+    file=open(file_path, "rb"),
+    config={
+        "mime_type":"image/png",
+        "display_name":display_name
+    }
+)
 print(f"Uploaded file {file_response.display_name} as: {file_response.uri}")
 
-# Verify the file is uploaded to the API
-get_file = genai.get_file(name=file_response.name)
+# Retrieve the uploaded file from the client.files.get
+get_file =client.files.get(name=file_response.name)
 print(f"Retrieved file {get_file.display_name} as: {get_file.uri}")
 
-# Make Gemini 1.5 API LLM call
+# Generate content using the client.models API
 prompt = "Describe the image with a creative description"
-model_name = "models/gemini-2.0-flash"
-model = genai.GenerativeModel(model_name=model_name)
-response = model.generate_content([prompt, file_response])
-print(response)
+model_name = "gemini-2.0-flash"
+response = client.models.generate_content(
+    model=model_name,
+    contents=[
+      prompt,
+      file_response
+    ]
+)
+print(response.text)
 
 # Delete the sample file
-genai.delete_file(name=file_response.name)
+client.files.delete(name=file_response.name)
 print(f"Deleted file {file_response.display_name}")

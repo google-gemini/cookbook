@@ -69,6 +69,8 @@ class GeminiConfig:
     """Configuration settings for Gemini API."""
     def __init__(self):
         self.api_key = os.getenv(KEY_NAME)
+        if not self.api_key or not isinstance(self.api_key, str) or self.api_key.strip() == "":
+            raise ValueError(f"{KEY_NAME} environment variable is not set or invalid.")
         self.host = "generativelanguage.googleapis.com"
         self.model = "models/gemini-2.0-flash-exp"
         self.ws_url = f"wss://{self.host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key={self.api_key}"

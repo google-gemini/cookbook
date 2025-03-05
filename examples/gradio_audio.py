@@ -133,30 +133,33 @@ class GeminiHandler(StreamHandler):
             print(f"Setup failed: {str(e)}")
             self.ws = None
 
-    def receive(self, frame: tuple[int, np.ndarray]) -> None:
-        """Receives audio/video data, encodes it, and sends it to the Gemini API."""
-        try:
+def receive(self, frame: tuple[int, np.ndarray]) -> None:
+    """Receives audio/video data, encodes it, and sends it to the Gemini API."""
+    try:
+        if not self.ws or self.ws.closed:
+            self._initialize_websocket()
             if not self.ws:
-                self._initialize_websocket()
+                raise RuntimeError("Failed to establish WebSocket connection.")
 
-            sample_rate, array = frame
-            message = {"realtimeInput": {"mediaChunks": []}}
+        sample_rate, array = frame
+        message = {"realtimeInput": {"mediaChunks": []}}
 
-            if sample_rate > 0 and array is not None:
-                array = array.squeeze()
-                audio_data = self.audio_processor.encode_audio(array, self.output_sample_rate)
-                message["realtimeInput"]["mediaChunks"].append({
-                    "mimeType": f"audio/pcm;rate={self.output_sample_rate}",
-                    "data": audio_data["realtimeInput"]["mediaChunks"][0]["data"],
-                })
+        if sample_rate > 0 and array is not None:
+            array = array.squeeze()
+            audio_data = self.audio_processor.encode_audio(array, self.output_sample_rate)
+            message["realtimeInput"]["mediaChunks"].append({
+                "mimeType": f"audio/pcm;rate={self.output_sample_rate}",
+                "data": audio_data["realtimeInput"]["mediaChunks"][0]["data"],
+            })
 
-            if message["realtimeInput"]["mediaChunks"]:
-                self.ws.send(json.dumps(message))
-        except Exception as e:
-            print(f"Error in receive: {str(e)}")
-            if self.ws:
-                self.ws.close()
-            self.ws = None
+        if message["realtimeInput"]["mediaChunks"]:
+            self.ws.send(json.dumps(message))
+    except Exception as e:
+        print(f"Error in receive: {str(e)}")
+        if self.ws:
+            self.ws.close()
+        self.ws = None
+        raise
 
     def _process_server_content(self, content):
         """Processes audio output data from the WebSocket response."""
@@ -173,25 +176,26 @@ class GeminiHandler(StreamHandler):
                     yield (self.output_sample_rate, self.all_output_data[: self.output_frame_size].reshape(1, -1))
                     self.all_output_data = self.all_output_data[self.output_frame_size :]
 
-    def generator(self):
-        """Generates audio output from the WebSocket stream."""
-        while True:
-            if not self.ws:
-                print("WebSocket not connected")
-                yield None
-                continue
+def generator(self):
+    """Generates audio output from the WebSocket stream."""
+    while True:
+        if not self.ws:
+            print("WebSocket not connected")
+            yield (-1, None) 
+            continue
 
-            try:
-                message = self.ws.recv(timeout=30)
-                msg = json.loads(message)
-                if "serverContent" in msg:
-                    content = msg["serverContent"].get("modelTurn", {})
-                    yield from self._process_server_content(content)
-            except TimeoutError:
-                print("Timeout waiting for server response")
-                yield None
-            except Exception as e:
-                yield None
+        try:
+            message = self.ws.recv(timeout=30)
+            msg = json.loads(message)
+            if "serverContent" in msg:
+                content = msg["serverContent"].get("modelTurn", {})
+                yield from self._process_server_content(content)
+        except TimeoutError:
+            print("Timeout waiting for server response")
+            yield (-1, None)
+        except Exception as e:
+            print(f"Generator error: {str(e)}")
+            yield (-1, None)
 
     def emit(self) -> tuple[int, np.ndarray] | None:
         """Emits the next audio chunk from the generator."""

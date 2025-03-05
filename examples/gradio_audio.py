@@ -80,6 +80,8 @@ class AudioProcessor:
     @staticmethod
     def encode_audio(data, sample_rate):
         """Encodes audio data to base64."""
+        if not isinstance(data, np.ndarray) or data.size == 0:
+            raise ValueError("Audio data must be a non-empty NumPy array.")
         encoded = base64.b64encode(data.tobytes()).decode("UTF-8")
         return {
             "realtimeInput": {
@@ -94,7 +96,7 @@ class AudioProcessor:
 
     @staticmethod
     def process_audio_response(data):
-        """Decodes audio data from base64."""
+        """Decodes audio data from base64. Assumes int16 format."""
         audio_data = base64.b64decode(data)
         return np.frombuffer(audio_data, dtype=np.int16)
 

@@ -81,7 +81,7 @@ client = genai.Client(http_options={"api_version": "v1alpha"})
 
 # While Gemini 2.0 Flash is in experimental preview mode, only one of AUDIO or
 # TEXT may be passed here.
-CONFIG = {"generation_config": {"response_modalities": ["AUDIO"]}}
+CONFIG = {"response_modalities": ["AUDIO"]}
 
 pya = pyaudio.PyAudio()
 

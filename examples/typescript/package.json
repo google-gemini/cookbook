@@ -1,0 +1,21 @@
+{
+    "name": "gemini-ts-examples",
+    "version": "1.0.0",
+    "description": "Usage examples for the Gemini Node.js/TypeScript SDK.",
+    "scripts": {
+      "build": "tsc",
+      "start": "ts-node"
+    },
+    "dependencies": {
+      "@google/generative-ai": "^0.24.0"
+    },
+    "devDependencies": {
+      "@types/node": "^20.0.0",
+      "tsx": "^4.19.3",
+      "typescript": "^5.3.0"
+    },
+    "license": "Apache-2.0",
+    "engines": {
+      "node": ">=18.0.0"
+    }
+  }

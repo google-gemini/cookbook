@@ -12,17 +12,17 @@ This Arduino-based application demonstrates how to capture audio from a micropho
 * Adafruit NeoPixel ring (connected to `NEOPIXEL_PIN`)
 * SD card module (connected to `SD_CS`)
 * WiFi network
-* Google Gemini API key
+* [Google Gemini API key](http://aistudio.google.com/app/apikey)
 
 ## Hardware Setup
 
-![Wiring Diagram](wiring_diagram.png)
+![Wiring Diagram](wiring-diagram.png)
 
 * **MAX9814 Microphone Module -> ESP32**
     * GND -> GND
     * VDD + GAIN (connected together) -> 3.3V
     * OUT -> IO34
-    
+
 * **SD Card Adapter -> ESP32**
     * CS -> IO5
     * SCK -> IO18
@@ -30,7 +30,7 @@ This Arduino-based application demonstrates how to capture audio from a micropho
     * MISO -> IO19
     * VCC -> 3.3V
     * GND -> GND
-    
+
 * **Button -> ESP32**
     * One end to GND
     * One end split with 10k resistor to 3.3V and IO32
@@ -38,12 +38,12 @@ This Arduino-based application demonstrates how to capture audio from a micropho
 * **LED -> ESP32**
     * Connect the LED's anode (longer leg) to IO33 via a current-limiting resistor (e.g., 10k ohms).
     * Connect the LED's cathode (shorter leg) to GND.
-    
+
 * **Adafruit NeoPixel ring -> ESP32**
     * Connect the NeoPixel's data input pin to IO15.
     * Connect the NeoPixel's VCC pin to 5V.
     * Connect the NeoPixel's GND pin to GND.
-    
+
 * **ESP32 Power:** Ensure the ESP32 is powered via USB or an external 5V source.
 
 ## Software Setup

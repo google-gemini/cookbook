@@ -1,0 +1,14 @@
+{
+    "name": "file-api-client-samples",
+    "version": "1.0.0",
+    "description": "Sample code to use the File API and make Gemini API requests.",
+    "private": true,
+    "scripts": {
+        "start": "node sample.js"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.5",
+        "googleapis": "^134.0.0",
+        "mime-types": "^2.1.35"
+    }
+}

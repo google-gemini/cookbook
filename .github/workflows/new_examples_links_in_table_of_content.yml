@@ -1,0 +1,55 @@
+name: All new examples are linked in the README
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  new-example-links-in-examples-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Get Changed Files
+        id: changed-files
+        uses: tj-actions/changed-files@v45
+        with:
+          files:  |
+            examples/**/*.ipynb
+      - name: Check README links
+        env:
+          # We only want the added file so that if we do an exception we dop not have to make an exception again each time qu're editing the file
+          NEW_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+          README: examples/README.md
+        run: |
+          all_linked=true
+          for file in ${NEW_FILES}; do
+            echo "$file was added"
+            # Get the directory of the new notebook file
+            notebook_dir=$(dirname "$file")
+            # Get the filename without the directory path
+            filename=$(basename "$file")
+
+            # Check if link exists in $README 
+            if ! grep -q "$file" "$README" && ! grep -q "${file/examples\//](}" "$README"; then
+              # Check if a README.md exists in the sub-folder, and if so, check for the link there
+              if [[ -f "$notebook_dir/README.md" ]]; then
+                if ! grep -q "$filename" "$notebook_dir/README.md"; then
+                  all_linked=false
+                  echo "  Link to '$file' not found in "$README".md or $notebook_dir/README.md"
+                  echo "::warning file=$file::Link to '$file' not found in a README.md, please add one"
+                else
+                  echo "  Link to '$file' found in $notebook_dir/README.md"
+                fi
+              else
+                all_linked=false
+                echo "  Link to '$file' not found in $README, and no README.md found in $notebook_dir"
+                echo "::warning file=$file::Link to '$file' not found in $README, please add one (or create a README.md in the sub-folder)"
+              fi
+            else
+              echo "  Link to '$file' found in $README"
+            fi
+          done
+          if ! $all_linked; then
+            exit 1
+          fi

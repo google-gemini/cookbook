@@ -23,3 +23,27 @@ Each notebook provides step-by-step instructions and runnable code examples. Sim
 *   **Simplified Data Processing:** Streamline data extraction and analysis by working with structured data instead of raw text.
 
 This cookbook is designed to help you unlock the full potential of the Gemini API's JSON capabilities and build powerful text processing solutions. Happy coding!
+
+**Using `google.golang.org/genai` for JSON Capabilities:**
+
+To use `google.golang.org/genai` for JSON capabilities in your project, follow these steps:
+
+1. Install the `google.golang.org/genai` package.
+2. Import the package in your code.
+3. Use the package's functions to interact with the Gemini API and process JSON data.
+
+**Example:**
+
+```go
+package main
+
+import (
+    "fmt"
+    "google.golang.org/genai"
+)
+
+func main() {
+    // Your code to interact with the Gemini API and process JSON data
+    fmt.Println("Using google.golang.org/genai for JSON capabilities")
+}
+```

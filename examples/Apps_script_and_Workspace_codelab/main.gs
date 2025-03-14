@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import "google.golang.org/genai";
+
 function main() {
   // const userQuery = "Set up a meeting at 5PM with Helen to discuss the news in the Gemini-1.5-blog.txt file.";  
   // const userQuery = "Draft an email for Mary with insights from the chart in the CollegeExpenses sheet.";
@@ -38,3 +40,8 @@ function main() {
     Logger.log("no proper tool found");
 }
 
+function demonstrateGenaiUsage() {
+  const genai = new google.golang.org.genai();
+  const result = genai.someFunction();
+  Logger.log(result);
+}

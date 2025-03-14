@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import "google.golang.org/genai";
+
 const properties = PropertiesService.getScriptProperties().getProperties();
 const geminiApiKey = properties['GOOGLE_API_KEY'];
 const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`;
@@ -320,3 +322,128 @@ function createDeck(topic) {
   return presentation.getUrl();
 }
 
+function callGenai(prompt, temperature=0) {
+  const genai = new google.golang.org.genai();
+  const payload = {
+    "contents": [
+      {
+        "parts": [
+          {
+            "text": prompt
+          },
+        ]
+      }
+    ], 
+    "generationConfig":  {
+      "temperature": temperature,
+    },
+  };
+
+  const options = { 
+    'method' : 'post',
+    'contentType': 'application/json',
+    'payload': JSON.stringify(payload)
+  };
+
+  const response = UrlFetchApp.fetch(genaiEndpoint, options);
+  const data = JSON.parse(response);
+  const content = data["candidates"][0]["content"]["parts"][0]["text"];
+  return content;
+}
+
+function testGenai() {
+  const prompt = "The best thing since sliced bread is";
+  const output = callGenai(prompt);
+  console.log(prompt, output);
+}
+
+function callGenaiProVision(prompt, image, temperature=0) {
+  const genai = new google.golang.org.genai();
+  const imageData = Utilities.base64Encode(image.getAs('image/png').getBytes());
+
+  const payload = {
+    "contents": [
+      {
+        "parts": [
+          {
+            "text": prompt
+          },
+          {
+            "inlineData": {
+              "mimeType": "image/png",
+              "data": imageData
+            }
+          }          
+        ]
+      }
+    ], 
+    "generationConfig":  {
+      "temperature": temperature,
+    },
+  };
+
+  const options = { 
+    'method' : 'post',
+    'contentType': 'application/json',
+    'payload': JSON.stringify(payload)
+  };
+
+  const response = UrlFetchApp.fetch(genaiEndpoint, options);
+  const data = JSON.parse(response);
+  const content = data["candidates"][0]["content"]["parts"][0]["text"];
+  return content;
+}
+
+function testGenaiVision() {
+  const prompt = "Provide a fun fact about this object.";
+  const image = UrlFetchApp.fetch('https://storage.googleapis.com/generativeai-downloads/images/instrument.jpg').getBlob();
+  const output = callGenaiProVision(prompt, image);
+  console.log(prompt, output);
+}
+
+function callGenaiWithTools(prompt, tools, temperature=0) {
+  const genai = new google.golang.org.genai();
+  const payload = {
+    "contents": [
+      {
+        "parts": [
+          {
+            "text": prompt
+          },
+        ]
+      }
+    ], 
+    "tools" : tools,
+    "generationConfig":  {
+      "temperature": temperature,
+    },    
+  };
+
+  const options = { 
+    'method' : 'post',
+    'contentType': 'application/json',
+    'payload': JSON.stringify(payload)
+  };
+
+  const response = UrlFetchApp.fetch(genaiEndpoint, options);
+  const data = JSON.parse(response);
+  const content = data["candidates"][0]["content"]["parts"][0]["functionCall"];
+  return content;
+}
+
+function testGenaiTools() {
+  const prompt = "Tell me how many days there are left in this month.";
+  const tools = {
+    "function_declarations": [
+      {
+        "name": "datetime",
+        "description": "Returns the current date and time as a formatted string.",
+        "parameters": {
+          "type": "string"
+        }
+      }
+    ]
+  };
+  const output = callGenaiWithTools(prompt, tools);
+  console.log(prompt, output);
+}

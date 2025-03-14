@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Written by Freddy Boulton (https://github.com/freddyaboulton)
+# Copyright 2025 Freddy Boulton (https://github.com/freddyaboulton)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

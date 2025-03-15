@@ -95,6 +95,11 @@ function callGemini(prompt, temperature=0) {
     "contents": [
       {
         "parts": [
+          {function callGemini(prompt, temperature=0) {
+  const payload = {
+    "contents": [
+      {
+        "parts": [
           {
             "text": prompt
           },
@@ -112,10 +117,15 @@ function callGemini(prompt, temperature=0) {
     'payload': JSON.stringify(payload)
   };
 
-  const response = UrlFetchApp.fetch(geminiEndpoint, options);
-  const data = JSON.parse(response);
-  const content = data["candidates"][0]["content"]["parts"][0]["text"];
-  return content;
+  try {
+    const response = UrlFetchApp.fetch(geminiEndpoint, options);
+    const data = JSON.parse(response.getContentText());
+    const content = data["candidates"][0]["content"]["parts"][0]["text"];
+    return content;
+  } catch (error) {
+    Logger.log(`Error fetching data from Gemini API: ${error}`);
+    return `Error: ${error.message}`;
+  }
 }
 
 function testGemini() {

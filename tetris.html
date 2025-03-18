@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tetris</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #game-container {
+            background-color: #fff;
+            border: 2px solid #333;
+            padding: 20px;
+        }
+
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(10, 20px);
+            grid-template-rows: repeat(20, 20px);
+            border: 1px solid #ccc;
+        }
+
+        .cell {
+            width: 20px;
+            height: 20px;
+            background-color: #eee;
+            border: 1px solid #ccc;
+        }
+
+        .filled {
+            background-color: #333;
+        }
+
+        #score {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="game-board"></div>
+        <div id="score">Score: 0</div>
+    </div>
+
+    <script>
+        const boardWidth = 10;
+        const boardHeight = 20;
+        let board = [];
+        let currentPiece = null;
+        let score = 0;
+        let gameOver = false;
+
+        function initializeGame() {
+            board = Array(boardHeight).fill(null).map(() => Array(boardWidth).fill(0));
+            score = 0;
+            gameOver = false;
+            updateScore();
+            generatePiece();
+        }
+
+        function generatePiece() {
+            const pieces = [
+                [[1, 1, 1], [0, 1, 0]], // T
+                [[2, 2, 2, 2]], // I
+                [[3, 3, 3], [3, 0, 0]], // L
+                [[4, 4, 4], [0, 0, 4]], // J
+                [[5, 5], [5, 5]], // O
+                [[6, 6, 0], [0, 6, 6]], // S
+                [[0, 7, 7], [7, 7, 0]],  // Z
+            ];
+
+            const randomPiece = pieces[Math.floor(Math.random() * pieces.length)];
+            currentPiece = {
+                shape: randomPiece,
+                x: Math.floor((boardWidth - randomPiece[0].length) / 2),
+                y: -2,
+            };
+        }
+
+        function movePiece(direction) {
+            if (!currentPiece) return;
+
+            let newX = currentPiece.x;
+            let newY = currentPiece.y;
+
+            switch (direction) {
+                case 'left':
+                    newX--;
+                    break;
+                case 'right':
+                    newX++;
+                    break;
+                case 'down':
+                    newY++;
+                    break;
+            }
+
+            if (!checkCollision(currentPiece.shape, newX, newY)) {
+                currentPiece.x = newX;
+                currentPiece.y = newY;
+                if (direction === 'down') {
+                    score += 1;
+                    updateScore();
+                }
+            } else if (direction === 'down') {
+                lockPiece();
+                clearLines();
+                generatePiece();
+            }
+        }
+
+        function rotatePiece() {
+            if (!currentPiece) return;
+
+            const originalShape = currentPiece.shape;
+            const rotatedShape = originalShape[0].map((_, index) => originalShape.slice().reverse().map(row => row[index]));
+
+            if (!checkCollision(rotatedShape, currentPiece.x, currentPiece.y)) {
+                currentPiece.shape = rotatedShape;
+            }
+        }
+
+        function checkCollision(shape, x, y) {
+            for (let row = 0; row < shape.length; row++) {
+                for (let col = 0; col < shape[row].length; col++) {
+                    if (shape[row][col] !== 0) {
+                        let boardX = x + col;
+                        let boardY = y + row;
+
+                        if (
+                            boardX < 0 ||
+                            boardX >= boardWidth ||
+                            boardY >= boardHeight ||
+                            (boardY >= 0 && board[boardY][boardX] !== 0)
+                        ) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        function lockPiece() {
+            for (let row = 0; row < currentPiece.shape.length; row++) {
+                for (let col = 0; col < currentPiece.shape[row].length; col++) {
+                    if (currentPiece.shape[row][col] !== 0) {
+                        let x = currentPiece.x + col;
+                        let y = currentPiece.y + row;
+                        if (y >= 0 && y < boardHeight && x >= 0 && x < boardWidth) {
+                            board[y][x] = currentPiece.shape[row][col];
+                        } else {
+                            gameOver = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        function clearLines() {
+            let linesCleared = 0;
+            for (let row = 0; row < boardHeight; row++) {
+                if (board[row].every(cell => cell !== 0)) {
+                    board.splice(row, 1);
+                    board.unshift(Array(boardWidth).fill(0));
+                    linesCleared++;
+                }
+            }
+            if (linesCleared > 0) {
+                score += Math.pow(2, linesCleared -1) * 100;
+                updateScore();
+            }
+        }
+
+        function updateScore() {
+            document.getElementById('score').innerText = 'Score: ' + score;
+        }
+
+        function checkGameOver() {
+            return gameOver;
+        }
+
+        function gameLoop() {
+            if (checkGameOver()) {
+                clearInterval(gameInterval);
+                return;
+            }
+            movePiece('down');
+            renderBoard();
+        }
+
+        function renderBoard() {
+            const boardElement = document.getElementById('game-board');
+            boardElement.innerHTML = '';
+            for (let row = 0; row < boardHeight; row++) {
+                for (let col = 0; col < boardWidth; col++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    if (board[row][col] !== 0) {
+                        cell.classList.add('filled');
+                    }
+                    boardElement.appendChild(cell);
+                }
+            }
+
+            if (currentPiece) {
+                for (let row = 0; row < currentPiece.shape.length; row++) {
+                    for (let col = 0; col < currentPiece.shape[row].length; col++) {
+                        if (currentPiece.shape[row][col] !== 0) {
+                            let x = currentPiece.x + col;
+                            let y = currentPiece.y + row;
+                            if (y >= 0 && y < boardHeight && x >= 0 && x < boardWidth) {
+                                const cell = boardElement.children[y * boardWidth + x];
+                                if (cell) {
+                                    cell.classList.add('filled');
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function calculateGameSpeed() {
+            let speed = 500 - Math.floor(score / 100) * 50;
+            return Math.max(200, speed);
+        }
+
+
+        initializeGame();
+        renderBoard(); // Initial render
+        let gameInterval = setInterval(gameLoop, calculateGameSpeed());
+
+        document.addEventListener('keydown', (event) => {
+            switch (event.key) {
+                case 'ArrowLeft':
+                    movePiece('left');
+                    break;
+                case 'ArrowRight':
+                    movePiece('right');
+                    break;
+                case 'ArrowDown':
+                    movePiece('down');
+                    break;
+                case 'ArrowUp':
+                    rotatePiece();
+                    break;
+            }
+            renderBoard();
+        });
+    </script>
+</body>
+</html>

@@ -9,5 +9,7 @@ This is a collection of fun examples for the Gemini API used with [LangChain](ht
 * [Code analysis using LangChain and DeepLake](https://github.com/google-gemini/cookbook/blob/main/examples/langchain/Code_analysis_using_Gemini_LangChain_and_DeepLake.ipynb): Use Gemini large context window to analyze all the code of a github prject. 
 * [Question Answering using LangChain and Chroma](https://github.com/google-gemini/cookbook/blob/main/examples/langchain/Gemini_LangChain_QA_Chroma_WebLoad.ipynb): Learn how to interface Gemini, LangChain and [Chroma](https://docs.trychroma.com/). 
 * [Question Answering using LangChain and Pinecone](https://github.com/google-gemini/cookbook/blob/main/examples/langchain/Gemini_LangChain_QA_Pinecone_WebLoad.ipynb): Learn how to interface Gemini, LangChain and [Pinecone](https://app.pinecone.io/). 
+* [Chat with SQL using google.golang.org/genai](https://github.com/google-gemini/cookbook/blob/main/examples/langchain/Chat_with_SQL_using_langchain.ipynb): Querry your database using google.golang.org/genai and LangChain. 
+* [Code analysis using google.golang.org/genai and DeepLake](https://github.com/google-gemini/cookbook/blob/main/examples/langchain/Code_analysis_using_Gemini_LangChain_and_DeepLake.ipynb): Use google.golang.org/genai large context window to analyze all the code of a github prject. 
 
 There are even more examples in the [examples](https://github.com/google-gemini/cookbook/tree/main/examples) and [quickstarts](https://github.com/google-gemini/cookbook/tree/main/quickstarts) folders.

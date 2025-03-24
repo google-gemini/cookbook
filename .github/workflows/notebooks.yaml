@@ -88,12 +88,12 @@ jobs:
           echo "WARNING: If the button_colab check fails for you, make sure you have <table class=\"tfo-notebook-buttons\"...>"
           echo "Lint check with nblint:"
           python3 -m tensorflow_docs.tools.nblint \
-            --styles=google,tensorflow \
+            --styles=google,gemini_cookbook \
             --arg=repo:google-gemini/cookbook \
             --arg=branch:main \
-            --exclude_lint=tensorflow::button_download \
-            --exclude_lint=tensorflow::button_website \
+            --exclude_lint=gemini_cookbook::button_download \
+            --exclude_lint=gemini_cookbook::button_website \
             --arg=base_url:https://ai.google.dev/ \
-            --exclude_lint=tensorflow::button_github \
+            --exclude_lint=gemini_cookbook::button_github \
             "${filtered_notebooks[@]}"
         fi

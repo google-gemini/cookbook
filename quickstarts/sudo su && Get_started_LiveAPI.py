@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+sudo su && git clone # -*- coding: utf-8 -*-
 # Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");

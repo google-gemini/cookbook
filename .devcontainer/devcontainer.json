@@ -8,7 +8,11 @@
             "extensions": [
                 "ms-toolsai.jupyter",
                 "ms-python.python",
-                "eamodio.gitlens"
+                "eamodio.gitlens",
+                "congyiwu.vscode-jupytext",
+                "donjayamanne.vscode-jupytext",
+                "EricSia.pythonsnippets3",
+                "formulahendry.code-runner"
             ]
         }
     },

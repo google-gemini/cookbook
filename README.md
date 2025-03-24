@@ -45,9 +45,9 @@ Here are the recent additions and updates to the Gemini API and the Cookbook:
 
 * **Gemini 2.0 models:** Explore the capabilities of the latest Gemini 2.0 models! See the [Get Started Guide](./quickstarts/Get_started.ipynb).
 * **Imagen**: Get started with our image generation model with this brand new [Imagen guide](./quickstarts/Get_started_imagen.ipynb)!
-* **Recently Added Guides:**.
+* **Recently Added Guides:**
   * [Browser as a tool](./examples/Browser_as_a_tool.ipynb): Use a web browser for live and internal (intranet) web interactions
-  * [Code execution](./quickstarts/Code_Execution.ipynb): Generating and running Python code to solve complex tasks and even ouput graphs
+  * [Code execution](./quickstarts/Code_Execution.ipynb): Generating and running Python code to solve complex tasks and even output graphs
   * [Thinking model](./quickstarts/Get_started_thinking.ipynb): Discover the thinking model capabilities.
   
 <br><br>
@@ -70,7 +70,7 @@ We recommend starting with the following:
 
 Then, explore the other quickstarts tutorials to learn about individual features:
 *  [Get started with Live API](./quickstarts/Get_started_LiveAPI.ipynb): Get started with the live API with this comprehensive overview of its capabilities
-*  [Get started with Imagen](./quickstarts/Get_started_imagen.ipynb): Get started with our image generation model 
+*  [Get started with Imagen](./quickstarts/Get_started_imagen.ipynb) and [Image-out](./quickstarts/Image_out.ipynb): Get started with our image generation capabilities 
 *  [Grounding](./quickstarts/Search_Grounding.ipynb): use Google Search for grounded responses
 *  [Code execution](./quickstarts/Code_Execution.ipynb): Generating and running Python code to solve complex tasks and even ouput graphs
 *  And [many more](https://github.com/google-gemini/cookbook/tree/main/quickstarts/)

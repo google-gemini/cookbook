@@ -25,7 +25,7 @@ There are multiples way to call the models using the Gemini API, these other **g
 
 Finally, these guides will deep-dive into specific capabilities of the Gemini models and API:
 * [Grounding](./Search_Grounding.ipynb): Learn how to use Google Search to ground your answers with external sources.
-* [Image-out](./Image_out.ipynb): Get to know hoa the Gemini model can directly output images and edit them through multi-turn discussion.
+* [Image-out](./Image_out.ipynb): Get to know how the Gemini model can directly output images and edit them through multi-turn discussion.
 * [Spatial understanding](./Spatial_understanding.ipynb): Learn how to use Gemini's spatial understanding capabilities to detect what's in your images, and reason about them
 * [Video understanding](./Video_understanding.ipynb): Learn how to use Gemini's video understanding capabilities to analyze what's in your videos
 * [Get started with Live API tools](./Get_started_LiveAPI_tools.ipynb): Now you know everything about the Live API, go to the next level and learn how to use tools with it!

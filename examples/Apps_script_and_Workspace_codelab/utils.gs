@@ -91,232 +91,463 @@ const WORKSPACE_TOOLS = {
 };
 
 function callGemini(prompt, temperature=0) {
-  const payload = {
-    "contents": [
-      {
-        "parts": [
-          {
-            "text": prompt
-          },
-        ]
-      }
-    ], 
-    "generationConfig":  {
-      "temperature": temperature,
-    },
-  };
+  try {
+    const payload = {
+      "contents": [
+        {
+          "parts": [
+            {
+              "text": prompt
+            },
+          ]
+        }
+      ], 
+      "generationConfig":  {
+        "temperature": temperature,
+      },
+    };
 
-  const options = { 
-    'method' : 'post',
-    'contentType': 'application/json',
-    'payload': JSON.stringify(payload)
-  };
+    const options = { 
+      'method' : 'post',
+      'contentType': 'application/json',
+      'payload': JSON.stringify(payload),
+      'muteHttpExceptions': true,
+      'timeoutInSeconds': 0.0 
+    };
 
-  const response = UrlFetchApp.fetch(geminiEndpoint, options);
-  const data = JSON.parse(response);
-  const content = data["candidates"][0]["content"]["parts"][0]["text"];
-  return content;
+    const response = UrlFetchApp.fetch(geminiEndpoint, options);
+    const statusCode = response.getResponseCode();
+    
+    if (statusCode !== 200) {
+      console.error(`Gemini API request failed with status code: ${statusCode}`);
+      return `Error: API request failed with status code ${statusCode}`;
+    }
+    
+    const responseText = response.getContentText();
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error("Failed to parse API response:", parseError);
+      return "Error: Failed to parse API response";
+    }
+    
+    if (!data.candidates || !data.candidates[0] || 
+        !data.candidates[0].content || !data.candidates[0].content.parts || 
+        !data.candidates[0].content.parts[0]) {
+      console.error("Unexpected API response format:", responseText);
+      return "Error: Unexpected API response format";
+    }
+    
+    const content = data.candidates[0].content.parts[0].text;
+    return content;
+  } catch (error) {
+    console.error("Error in callGemini:", error);
+    return `Error: ${error.message}`;
+  }
 }
 
 function testGemini() {
-  const prompt = "The best thing since sliced bread is";
-  const output = callGemini(prompt);
-  console.log(prompt, output);
+  try {
+    const prompt = "The best thing since sliced bread is";
+    const output = callGemini(prompt);
+    
+    if (typeof output === 'string' && output.startsWith("Error:")) {
+      console.error("Gemini API test failed:", output);
+    } else {
+      console.log(prompt, output);
+    }
+  } catch (error) {
+    console.error("Error in testGemini:", error);
+  }
 }
 
 
 function callGeminiProVision(prompt, image, temperature=0) {
-  const imageData = Utilities.base64Encode(image.getAs('image/png').getBytes());
+  try {
+    let imageData;
+    try {
+      imageData = Utilities.base64Encode(image.getAs('image/png').getBytes());
+    } catch (imgError) {
+      console.error("Error encoding image:", imgError);
+      return "Error: Failed to encode image data";
+    }
 
-  const payload = {
-    "contents": [
-      {
-        "parts": [
-          {
-            "text": prompt
-          },
-          {
-            "inlineData": {
-              "mimeType": "image/png",
-              "data": imageData
-            }
-          }          
-        ]
-      }
-    ], 
-    "generationConfig":  {
-      "temperature": temperature,
-    },
-  };
+    const payload = {
+      "contents": [
+        {
+          "parts": [
+            {
+              "text": prompt
+            },
+            {
+              "inlineData": {
+                "mimeType": "image/png",
+                "data": imageData
+              }
+            }          
+          ]
+        }
+      ], 
+      "generationConfig":  {
+        "temperature": temperature,
+      },
+    };
 
-  const options = { 
-    'method' : 'post',
-    'contentType': 'application/json',
-    'payload': JSON.stringify(payload)
-  };
+    const options = { 
+      'method' : 'post',
+      'contentType': 'application/json',
+      'payload': JSON.stringify(payload),
+      'muteHttpExceptions': true
+    };
 
-  const response = UrlFetchApp.fetch(geminiEndpoint, options);
-  const data = JSON.parse(response);
-  const content = data["candidates"][0]["content"]["parts"][0]["text"];
-  return content;
+    const response = UrlFetchApp.fetch(geminiEndpoint, options);
+    const statusCode = response.getResponseCode();
+    
+    if (statusCode !== 200) {
+      console.error(`Gemini Vision API request failed with status code: ${statusCode}`);
+      return `Error: API request failed with status code ${statusCode}`;
+    }
+    
+    const responseText = response.getContentText();
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error("Failed to parse API response:", parseError);
+      return "Error: Failed to parse API response";
+    }
+    
+    if (!data.candidates || !data.candidates[0] || 
+        !data.candidates[0].content || !data.candidates[0].content.parts || 
+        !data.candidates[0].content.parts[0]) {
+      console.error("Unexpected API response format:", responseText);
+      return "Error: Unexpected API response format";
+    }
+    
+    const content = data.candidates[0].content.parts[0].text;
+    return content;
+  } catch (error) {
+    console.error("Error in callGeminiProVision:", error);
+    return `Error: ${error.message}`;
+  }
 }
 
 
 function testGeminiVision() {
-  const prompt = "Provide a fun fact about this object.";
-  const image = UrlFetchApp.fetch('https://storage.googleapis.com/generativeai-downloads/images/instrument.jpg').getBlob();
-  const output = callGeminiProVision(prompt, image);
-  console.log(prompt, output);
+  try {
+    const prompt = "Provide a fun fact about this object.";
+    
+    let image;
+    try {
+      image = UrlFetchApp.fetch('https://storage.googleapis.com/generativeai-downloads/images/instrument.jpg').getBlob();
+    } catch (fetchError) {
+      console.error("Failed to fetch test image:", fetchError);
+      return;
+    }
+    
+    const output = callGeminiProVision(prompt, image);
+    
+    if (typeof output === 'string' && output.startsWith("Error:")) {
+      console.error("Gemini Vision API test failed:", output);
+    } else {
+      console.log(prompt, output);
+    }
+  } catch (error) {
+    console.error("Error in testGeminiVision:", error);
+  }
 }
 
 function callGeminiWithTools(prompt, tools, temperature=0) {
-  const payload = {
-    "contents": [
-      {
-        "parts": [
-          {
-            "text": prompt
-          },
-        ]
-      }
-    ], 
-    "tools" : tools,
-    "generationConfig":  {
-      "temperature": temperature,
-    },    
-  };
+  try {
+    const payload = {
+      "contents": [
+        {
+          "parts": [
+            {
+              "text": prompt
+            },
+          ]
+        }
+      ], 
+      "tools" : tools,
+      "generationConfig":  {
+        "temperature": temperature,
+      },    
+    };
 
-  const options = { 
-    'method' : 'post',
-    'contentType': 'application/json',
-    'payload': JSON.stringify(payload)
-  };
+    const options = { 
+      'method' : 'post',
+      'contentType': 'application/json',
+      'payload': JSON.stringify(payload),
+      'muteHttpExceptions': true
+    };
 
-  const response = UrlFetchApp.fetch(geminiEndpoint, options);
-  const data = JSON.parse(response);
-  const content = data["candidates"][0]["content"]["parts"][0]["functionCall"];
-  return content;
+    const response = UrlFetchApp.fetch(geminiEndpoint, options);
+    const statusCode = response.getResponseCode();
+    
+    if (statusCode !== 200) {
+      console.error(`Gemini Tools API request failed with status code: ${statusCode}`);
+      return `Error: API request failed with status code ${statusCode}`;
+    }
+    
+    const responseText = response.getContentText();
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error("Failed to parse API response:", parseError);
+      return "Error: Failed to parse API response";
+    }
+    
+    if (!data.candidates || !data.candidates[0] || 
+        !data.candidates[0].content || !data.candidates[0].content.parts || 
+        !data.candidates[0].content.parts[0]) {
+      console.error("Unexpected API response format:", responseText);
+      return "Error: Unexpected API response format";
+    }
+    
+    const content = data.candidates[0].content.parts[0].functionCall;
+    if (!content) {
+      console.error("No function call found in response:", responseText);
+      return "Error: No function call returned from API";
+    }
+    
+    return content;
+  } catch (error) {
+    console.error("Error in callGeminiWithTools:", error);
+    return `Error: ${error.message}`;
+  }
 }
 
 function testGeminiTools() {
-  const prompt = "Tell me how many days there are left in this month.";
-  const tools = {
-    "function_declarations": [
-      {
-        "name": "datetime",
-        "description": "Returns the current date and time as a formatted string.",
-        "parameters": {
-          "type": "string"
+  try {
+    const prompt = "Tell me how many days there are left in this month.";
+    const tools = {
+      "function_declarations": [
+        {
+          "name": "datetime",
+          "description": "Returns the current date and time as a formatted string.",
+          "parameters": {
+            "type": "string"
+          }
         }
-      }
-    ]
-  };
-  const output = callGeminiWithTools(prompt, tools);
-  console.log(prompt, output);
+      ]
+    };
+    
+    const output = callGeminiWithTools(prompt, tools);
+    
+    if (typeof output === 'string' && output.startsWith("Error:")) {
+      console.error("Gemini Tools API test failed:", output);
+    } else {
+      console.log(prompt, output);
+    }
+  } catch (error) {
+    console.error("Error in testGeminiTools:", error);
+  }
 }
 
 function attachFileToMeeting(event, file, fileName) {
-  // Get the iCal ID for the event.
-  const iCalEventId = event.getId();
+  try {
+    // Get the iCal ID for the event.
+    const iCalEventId = event.getId();
 
-  // Log the ID and title for debugging.
-  console.log(`iCal event ID: ${iCalEventId}`);
-  console.log(`event Title: ${event.getTitle()}`);
+    // Log the ID and title for debugging.
+    console.log(`iCal event ID: ${iCalEventId}`);
+    console.log(`event Title: ${event.getTitle()}`);
 
-  // Set up the options for listing the event with the advanced Google Calendar service.
-  const options = {
-      iCalUID: iCalEventId,
-    };
+    // Set up the options for listing the event with the advanced Google Calendar service.
+    const options = {
+        iCalUID: iCalEventId,
+      };
 
-  // Use the primary calendar as the calendar ID to list events.
-  const calendarId = 'primary';
+    // Use the primary calendar as the calendar ID to list events.
+    const calendarId = 'primary';
 
-  // Use the advanced Google Calendar service to list the event.
-  const calEvents = Calendar.Events.list(calendarId, options);
+    // Use the advanced Google Calendar service to list the event.
+    const calEvents = Calendar.Events.list(calendarId, options);
 
-  // Get the Calendar ID used by the advanced Google Calendar service.
-  const eventId = calEvents.items[0].id;
+    // Get the Calendar ID used by the advanced Google Calendar service.
+    const eventId = calEvents.items[0].id;
 
-  // Get the file URL for the attachment.
-  const fileUrl = file.getUrl();
+    // Get the file URL for the attachment.
+    const fileUrl = file.getUrl();
 
-    // Set up the patch options to add the file.
-    var patch = {
-      attachments: [{
-        'fileUrl': fileUrl,
-        'title': fileName
-      }]
-    };
+      // Set up the patch options to add the file.
+      var patch = {
+        attachments: [{
+          'fileUrl': fileUrl,
+          'title': fileName
+        }]
+      };
 
-    // Patch the event to add the file as an attachment.
-    Calendar.Events.patch(patch, 'primary', eventId, {"supportsAttachments": true});  
+      // Patch the event to add the file as an attachment.
+      Calendar.Events.patch(patch, 'primary', eventId, {"supportsAttachments": true}); 
+  } catch (error) {
+    console.error("Error in attachFileToMeeting:", error);
+    throw error; // Re-throw to maintain original behavior
+  }
 }
 
 function setupMeeting(time, recipient, filename) {
-  const files = DriveApp.getFilesByName(filename);
-  const file = files.next();
-  const blogContent = file.getAs("text/*").getDataAsString();
-  
-  var geminiOutput = callGemini("Give me a really short title of this blog and a summary with less than three sentences. Please return the result as a JSON with two fields: title and summary. \n" +  blogContent);
+  try {
+    const files = DriveApp.getFilesByName(filename);
+    if (!files.hasNext()) {
+      console.error(`File not found: ${filename}`);
+      return `Error: File not found: ${filename}`;
+    }
+    
+    const file = files.next();
+    const blogContent = file.getAs("text/*").getDataAsString();
+    
+    var geminiOutput = callGemini("Give me a really short title of this blog and a summary with less than three sentences. Please return the result as a JSON with two fields: title and summary. \n" +  blogContent);
+    
+    if (typeof geminiOutput === 'string' && geminiOutput.startsWith("Error:")) {
+      console.error("Failed to generate meeting content:", geminiOutput);
+      return geminiOutput;
+    }
 
-  // The Gemini model likes to enclose the JSON with ```json and ```
-  geminiOutput = JSON.parse(geminiOutput.replace(/```(?:json|)/g, ""));  
-  const title = geminiOutput['title'];
-  const fileSummary = geminiOutput['summary'];
+    // The Gemini model likes to enclose the JSON with ```json and ```
+    try {
+      geminiOutput = JSON.parse(geminiOutput.replace(/```(?:json|)/g, ""));  
+    } catch (parseError) {
+      console.error("Failed to parse Gemini output as JSON:", parseError);
+      return "Error: Failed to parse Gemini output as JSON";
+    }
+    
+    const title = geminiOutput['title'];
+    const fileSummary = geminiOutput['summary'];
 
-  const event = CalendarApp.getDefaultCalendar().createEventFromDescription(`meet ${recipient} at ${time} to discuss "${title}"`); 
-  event.setDescription(fileSummary);
-  attachFileToMeeting(event, file, filename);
+    const event = CalendarApp.getDefaultCalendar().createEventFromDescription(`meet ${recipient} at ${time} to discuss "${title}"`); 
+    event.setDescription(fileSummary);
+    attachFileToMeeting(event, file, filename);
+    
+    return "Meeting created successfully";
+  } catch (error) {
+    console.error("Error in setupMeeting:", error);
+    return `Error: ${error.message}`;
+  }
 }
 
 function draftEmail(sheet_name, recipient) {
-  
-  const prompt = `Compose the email body for ${recipient} with your insights for this chart. Use information in this chart only and do not do historical comparisons. Be concise.`;
+  try {
+    const prompt = `Compose the email body for ${recipient} with your insights for this chart. Use information in this chart only and do not do historical comparisons. Be concise.`;
 
-  var files = DriveApp.getFilesByName(sheet_name);
-  var sheet = SpreadsheetApp.openById(files.next().getId()).getSheetByName("Sheet1");
-  var expenseChart = sheet.getCharts()[0];
-
-  var chartFile = DriveApp.createFile(expenseChart.getBlob().setName("ExpenseChart.png"));
-  var emailBody = callGeminiProVision(prompt, expenseChart);
-  GmailApp.createDraft(recipient+"@demo-email-provider.com", "College expenses", emailBody, {
-      attachments: [chartFile.getAs(MimeType.PNG)],
-      name: 'myname'
-  });
+    var files = DriveApp.getFilesByName(sheet_name);
+    if (!files.hasNext()) {
+      console.error(`Sheet not found: ${sheet_name}`);
+      return `Error: Sheet not found: ${sheet_name}`;
+    }
+    
+    var sheet;
+    try {
+      sheet = SpreadsheetApp.openById(files.next().getId()).getSheetByName("Sheet1");
+      if (!sheet) {
+        console.error("Sheet1 not found in the spreadsheet");
+        return "Error: Sheet1 not found in the spreadsheet";
+      }
+    } catch (sheetError) {
+      console.error("Error opening spreadsheet:", sheetError);
+      return `Error: ${sheetError.message}`;
+    }
+    
+    var charts = sheet.getCharts();
+    if (charts.length === 0) {
+      console.error("No charts found in the sheet");
+      return "Error: No charts found in the sheet";
+    }
+    
+    var expenseChart = charts[0];
+    
+    var chartFile;
+    try {
+      chartFile = DriveApp.createFile(expenseChart.getBlob().setName("ExpenseChart.png"));
+    } catch (chartError) {
+      console.error("Error creating chart file:", chartError);
+      return `Error: ${chartError.message}`;
+    }
+    
+    var emailBody = callGeminiProVision(prompt, expenseChart);
+    if (typeof emailBody === 'string' && emailBody.startsWith("Error:")) {
+      console.error("Failed to generate email content:", emailBody);
+      return emailBody;
+    }
+    
+    try {
+      GmailApp.createDraft(recipient+"@demo-email-provider.com", "College expenses", emailBody, {
+          attachments: [chartFile.getAs(MimeType.PNG)],
+          name: 'myname'
+      });
+    } catch (emailError) {
+      console.error("Error creating email draft:", emailError);
+      return `Error: ${emailError.message}`;
+    }
+    
+    return "Email draft created successfully";
+  } catch (error) {
+    console.error("Error in draftEmail:", error);
+    return `Error: ${error.message}`;
+  }
 }
 
 function createDeck(topic) {
-  const prompt = `I'm preparing a ${NUM_SLIDES}-slide deck to discuss ${topic}. Please help me brainstorm and generate main bullet points for each slide. Keep the title of each slide short. Please produce the result as a valid JSON so that I can pass it to other APIs.`;
-  
-  var geminiOutput = callGemini(prompt, 0.4);
-  // The Gemini model likes to enclose the JSON with ```json and ```
-  geminiOutput = geminiOutput.replace(/```(?:json|)/g, "");
-  const bulletPoints = JSON.parse(geminiOutput);
+  try {
+    const prompt = `I'm preparing a ${NUM_SLIDES}-slide deck to discuss ${topic}. Please help me brainstorm and generate main bullet points for each slide. Keep the title of each slide short. Please produce the result as a valid JSON so that I can pass it to other APIs.`;
     
-  // Create a Google Slides presentation.
-  const presentation = SlidesApp.create("My New Presentation");
+    var geminiOutput = callGemini(prompt, 0.4);
+    if (typeof geminiOutput === 'string' && geminiOutput.startsWith("Error:")) {
+      console.error("Failed to generate deck content:", geminiOutput);
+      return geminiOutput;
+    }
+    
+    // The Gemini model likes to enclose the JSON with ```json and ```
+    geminiOutput = geminiOutput.replace(/```(?:json|)/g, "");
+    
+    let bulletPoints;
+    try {
+      bulletPoints = JSON.parse(geminiOutput);
+    } catch (parseError) {
+      console.error("Failed to parse Gemini output as JSON:", parseError);
+      return "Error: Failed to parse Gemini output as JSON";
+    }
+      
+    // Create a Google Slides presentation.
+    let presentation;
+    try {
+      presentation = SlidesApp.create("My New Presentation");
+    } catch (slideError) {
+      console.error("Error creating presentation:", slideError);
+      return `Error: ${slideError.message}`;
+    }
 
-  // Set up the opening slide.
-  var slide = presentation.getSlides()[0]; 
-  var shapes = slide.getShapes();
-  shapes[0].getText().setText(topic);
+    // Set up the opening slide.
+    var slide = presentation.getSlides()[0]; 
+    var shapes = slide.getShapes();
+    shapes[0].getText().setText(topic);
 
-  var body;
-  for (var i = 0; i < NUM_SLIDES; i++) {
-      slide = presentation.appendSlide(SlidesApp.PredefinedLayout.TITLE_AND_BODY);
-      shapes = slide.getShapes();
-      // Set title.
-      shapes[0].getText().setText(bulletPoints['slides'][i]['title']);
-  
-      // Set body.
-      body = "";
-      for (var j = 0; j < bulletPoints['slides'][i]['bullets'].length; j++) {
-        // Logger.log(j);
-        body += '* ' + bulletPoints['slides'][i]['bullets'][j] + '\n';
-      }
-      shapes[1].getText().setText(body);
-  } 
+    var body;
+    try {
+      for (var i = 0; i < NUM_SLIDES; i++) {
+          slide = presentation.appendSlide(SlidesApp.PredefinedLayout.TITLE_AND_BODY);
+          shapes = slide.getShapes();
+          // Set title.
+          shapes[0].getText().setText(bulletPoints['slides'][i]['title']);
+      
+          // Set body.
+          body = "";
+          for (var j = 0; j < bulletPoints['slides'][i]['bullets'].length; j++) {
+            body += '* ' + bulletPoints['slides'][i]['bullets'][j] + '\n';
+          }
+          shapes[1].getText().setText(body);
+      } 
+    } catch (slideContentError) {
+      console.error("Error populating slides:", slideContentError);
+      return `Error: ${slideContentError.message}`;
+    }
 
-  return presentation.getUrl();
+    return presentation.getUrl();
+  } catch (error) {
+    console.error("Error in createDeck:", error);
+    return `Error: ${error.message}`;
+  }
 }
-

@@ -2,7 +2,7 @@
 
 This folder contains guides about all the Gemini API features so that you can get to know how to use them with complete end to end code.
 
-When you'll be confident is your Gemini capabilities, the [examples](https://github.com/google-gemini/cookbook/tree/main/examples/) folder will be an endless source of inspiration on how to mix those capabilities together.
+When you'll be confident in your Gemini capabilities, the [examples](https://github.com/google-gemini/cookbook/tree/main/examples/) folder will be an endless source of inspiration on how to mix those capabilities together.
 <br><br>
 
 ## Table of contents

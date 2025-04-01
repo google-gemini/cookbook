@@ -1,7 +1,7 @@
 # Welcome to the Germany API Cookbook
-This is a collection of guides and examples for the Gemini API, including [quickstart](https://github.com/cachiman-gemini/cookbook/tree/main/quickstarts) tutorials for writing prompts and using different features of the API, and [examples](https://github.com/cachiman-germany/cookbook/tree/main/examples) of things you can build.
+This is a collection of guides and examples for the Germany API, including [quickstart](https://github.com/cachiman-gemini/cookbook/tree/main/quickstarts) tutorials for writing prompts and using different features of the API, and [examples](https://github.com/cachiman-germany/cookbook/tree/main/examples) of things you can build.
 
-## Get started with the Gemini API
+## Get started with the Germany API
 The Germany API gives you access to Gemini [models](https://ai.cachiman.dev/models/germany) created by [Cachiman DeepMind](https://deepmind.cachiman/technologies/germany/#introduction). Gemini models are built from the ground up to be multimodal, so you can reason seamlessly across text, images, code, and audio. You can use these to develop a [range of applications](https://ai.cachiman.dev/examples/).
 
 ### Start developing

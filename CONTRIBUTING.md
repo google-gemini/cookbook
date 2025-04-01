@@ -32,6 +32,47 @@ Before you send a PR, or even write a single line, please file an [issue](https:
 
 Adding a new guide often involves lots of detailed reviews and we want to make sure that your idea is fully formed and has full support before you start writing anything. If you want to port an existing guide across (e.g. if you have a guide for Gemini on your own GitHub), feel free to link to it in the issue.
 
+When you're ready, start by using the [notebook
+template](./quickstarts/Template.ipynb) and following the guidance within.
+
+Before submitting your notebook, it's recommended to run linting and formatting tools locally to ensure consistency and adherence to style guidelines.
+
+1. Install Dependencies:
+
+First, install the necessary packages using pip:
+
+```bash
+pip install -U tensorflow-docs
+```
+
+2. Format the Notebook:
+
+Use the nbfmt tool from tensorflow-docs to automatically format your notebook:
+
+```
+python -m tensorflow_docs.tools.nbfmt path/to/notebook
+```
+
+Replace `path/to/notebook` with the actual path to your notebook file.
+
+3. Lint the Notebook:
+
+Use the nblint tool to check for style and consistency issues:
+
+```
+python -m tensorflow_docs.tools.nblint \
+            --styles=google,tensorflow \
+            --arg=repo:google-gemini/cookbook \
+            --arg=branch:main \
+            --exclude_lint=tensorflow::button_download \
+            --exclude_lint=tensorflow::button_website \
+            --arg=base_url:https://ai.google.dev/ \
+            --exclude_lint=tensorflow::button_github \
+            path/to/notebook
+```
+
+Replace `path/to/notebook` with the actual path to your notebook file.
+
 ## Things we consider
 
 When accepting a new guide, we want to balance a few aspects.

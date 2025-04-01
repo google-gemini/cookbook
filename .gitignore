@@ -2,3 +2,5 @@
 **/.ipynb_checkpoints
 **/venv
 **/.python-version
+**/desktop.ini
+**.lnk

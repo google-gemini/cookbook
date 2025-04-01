@@ -1,3 +1,18 @@
+/*
+ * Copyright 2025 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 const dotenv = require('dotenv');
 const fs = require('fs');
 const {google} = require('googleapis');
@@ -30,7 +45,7 @@ async function run(filePath, fileDisplayName) {
 
         // Make Gemini 1.5 API LLM call
         const prompt = "Describe the image with a creative description";
-        const model = "models/gemini-1.5-pro-latest";
+        const model = "models/gemini-2.0-flash";
         const contents = {'contents': [{ 
         'parts':[
             {'text': prompt},

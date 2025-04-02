@@ -22,8 +22,8 @@ preferences within our organization.
 Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Only the `source` of the `cells` should be analyzed/reviewed.
 * Those cells can be either Markdown or python code (or sometimes bash in which case the code cell starts with `%%bash`).
-* The `outputs` do not have to be ignored, but if none of them changed, shile some code has, it might be a sign that the
-  notebook has note been run to check that it works, in which case a warning should be raised;
+* The `outputs` do not have to be ignored, but if none of them changed while some code has, it might be a sign that the
+  notebook has not been run to check that it works, in which case a warning should be raised;
 * If the `execution_count` has changed to something else than `null`, it usually indicates that the formatting script has not
   been run. A warning should be raised, but only once per notebook.
 
@@ -33,6 +33,8 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Use one `H1` header (`#` in Markdown) for the title.
 * Include the "open in colab" button immediately after the `H1`. It should look like
   `<a target=\"_blank\" href=\"URL\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" height=30/>`
+  where `URL` should be `https://colab.research.google.com/github/google-gemini/cookbook/blob/main/` followed by the notebook
+  location in the cookbook
 * Include an overview section before any code.
 * use %pip instead of !pip
 * Put the imports when they are first used.

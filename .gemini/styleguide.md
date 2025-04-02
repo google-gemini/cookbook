@@ -31,8 +31,10 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 
 * Include the collapsed license at the top (uses the Colab "Form" mode to hide the cells).
 * Use one `H1` header (`#` in Markdown) for the title.
-* Include the "open in colab" button immediately after the `H1`.
+* Include the "open in colab" button immediately after the `H1`. It should look like
+  `<a target=\"_blank\" href=\"URL\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" height=30/>`
 * Include an overview section before any code.
+* use %pip instead of !pip
 * Put the imports when they are first used.
 * Keep code as brief as possible. 
 * Break text cells at headings
@@ -99,6 +101,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
         }
     )    
     ```
+Notice the line break on the first and last lines.
 * Long text variables should use triple double quotes and proper indentation for better readability:
     ```python
     long_prompt = """
@@ -108,6 +111,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
         Lemon drops tootsie roll marshmallow halvah carrot cake.
     """    
     ```
+Notice the line break on the first and last lines.
     
 ## Naming Conventions
 

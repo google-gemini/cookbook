@@ -16,6 +16,7 @@ This is a collection of fun and helpful examples for the Gemini API.
 | [Animated Story Generation](./Animated_Story_Video_Generation_gemini.ipynb) | Create animated videos by combining story generation, images, and audio | Imagen, Live API, structured output | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Animated_Story_Video_Generation_gemini.ipynb) |
 | [Plotting and mapping Live](./LiveAPI_plotting_and_mapping.ipynb) | Ask Gemini for complex graphs live | Live API, Code execution | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/LiveAPI_plotting_and_mapping.ipynb) |
 | [Search grounding for research report](./Search_grounding_for_research_report.ipynb) | Use grounding to improve the quality of your research report | Grounding | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Search_grounding_for_research_report.ipynb) |
+| [Market a Jet Backpack](./Market_a_Jet_Backpack.ipynb) | Create a marketing campaign from a product sketch | Multimodal | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Market_a_Jet_Backpack.ipynb) |
 | [3D Spatial understanding](./Spatial_understanding_3d.ipynb) | Use Gemini 3D spatial abilities to understand 3D scenes and answer questions about them | Multimodal, Spatial understanding | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Spatial_understanding_3d.ipynb) |
 | [Video Analysis - Classification](./Analyze_a_Video_Classification.ipynb) | Use Gemini's multimodal capabilities to classify animal species in videos | Video, Multimodal | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Analyze_a_Video_Classification.ipynb) |
 | [Video Analysis - Summarization](./Analyze_a_Video_Summarization.ipynb) | Generate summaries of video content using Gemini | Video, Multimodal | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Analyze_a_Video_Summarization.ipynb) |
@@ -26,6 +27,8 @@ This is a collection of fun and helpful examples for the Gemini API.
 | [Invoice and Form Data Extraction](./Pdf_structured_outputs_on_invoices_and_forms.ipynb) | Use the Gemini API to extract information from PDFs | File API, Structured Outputs | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Pdf_structured_outputs_on_invoices_and_forms.ipynb) |
 | [Opossum search](./Opossum_search.ipynb) | Code generation with the Gemini API. Just for fun, you'll prompt the model to create a web app called "Opossum Search" that searches Google with "opossum" appended to the query. | Code generation | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Opossum_search.ipynb) |
 | [Virtual Try-on](./Virtual_Try_On.ipynb) | A Virtual Try-On application that uses Gemini 2.0 for 2D object detection to identify outfits in images and Imagen 3 for generating and inpainting new outfits. | Spatial Understanding | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Virtual_Try_On.ipynb) |
+| [Talk to documents](./Talk_to_documents_with_embeddings.ipynb) | Use embeddings to search through a custom database. | Embeddings | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Talk_to_documents_with_embeddings.ipynb) |
+| [Entity extraction](./Entity_Extraction.ipynb) | Use Gemini API to speed up some of your tasks, such as searching through text to extract needed information. Entity extraction with a Gemini model is a simple query, and you can ask it to retrieve its answer in the form that you prefer. | Embeddings | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Entity_Extraction.ipynb) |
 
 ---
 <br>
@@ -34,7 +37,6 @@ Some old examples are still using the legacy SDK, they should still work and are
 * [Agents and Automatic Function Calling](./Agents_Function_Calling_Barista_Bot.ipynb): Create an agent (Barrista-bot) to take your coffee order.
 * [Classify text with emeddings](./Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.
 * [Guess the shape](./Guess_the_shape.ipynb): A simple example of using images in prompts.
-* [Market a Jet Backpack](./Market_a_Jet_Backpack.ipynb): Create a marketing campaign from a product sketch.
 * [Object detection](./Object_detection.ipynb): Extensive examples with object detection, including with multiple classes, OCR, visual question answering, and even an interactive demo.
 * [Search Wikipedia with ReAct](./Search_Wikipedia_using_ReAct.ipynb): Use ReAct prompting with Gemini Flash to search Wikipedia interactively.
 * [Search Re-ranking with Embeddings](./Search_reranking_using_embeddings.ipynb): Use embeddings to re-rank search results.
@@ -50,6 +52,7 @@ Some old examples are still using the legacy SDK, they should still work and are
 ### Integrations
 
 * [Personalized Product Descriptions with Weaviate](../examples/weaviate/personalized_description_with_weaviate_and_gemini_api.ipynb): Load data into a Weaviate vector DB, build a semantic search system using embeddings from the Gemini API, create a knowledge graph and generate unique product descriptions for personas using the Gemini API and Weaviate.
+* [Similarity Search using Qdrant](../examples/qdrant/Qdrant_similarity_search.ipynb): Load website data, build a semantic search system using embeddings from the Gemini API, store the embeddings in a Qdrant vector DB and perform similarity search using the Gemini API and Qdrant.
 <br><br>
 
 ### Folders

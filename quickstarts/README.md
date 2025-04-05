@@ -36,10 +36,10 @@ Finally, these guides will deep-dive into specific capabilities of the Gemini mo
 
 
 ---
-Those guides are using the legacy SDK and haven't been updated yet, still they are worth checking as even if the SDK is not the same, the underlying logic of the feature stays the same. They will be converted to the SDK soon:
+These guids will showcase you the various use-cases of the Gemini API.
 * [Asynchronous requests](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Asynchronous_requests.ipynb): Learn how to use Python's async/await API with the Gemini SDK to parallelize calls.
 * [Counting Tokens](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Counting_Tokens.ipynb) Tokens are the basic inputs to the Gemini models. Through this notebook, you will gain a better understanding of tokens through an interactive experience.
-* [Gemini Flash Introduction](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Gemini_Flash_Introduction.ipynb): Get started with Gemini Flash 1.5.
+* [Gemini Flash Introduction](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Gemini_Flash_Introduction.ipynb): Get started with Gemini Flash 2.0.
 * [Models](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Models.ipynb): Learn about the different models and parameters available in the Gemini API.
 * [Working with files](https://github.com/google-gemini/cookbook/blob/main/quickstarts/File_API.ipynb): Use the Gemini API to upload files (audio, video, images, code, text) and perform actions with them through the Gemini models.
 * [Audio](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Audio.ipynb): Learn how to use the Gemini API with audio files.

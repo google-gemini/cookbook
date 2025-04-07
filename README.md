@@ -79,6 +79,7 @@ Then, explore the other quickstarts tutorials to learn about individual features
 ## 2. Examples (Practical Use Cases)
 
 These examples demonstrate how to combine multiple Gemini API features or 3rd-party tools to build more complex applications.
+*  [Outfit Assistant](./examples/Outfit_Assistant.ipynb): Leverages Gemini's multimodality to get outfit recommendations based on the user's preferences, occasion, and temperature of the user's location.
 *  [Illustrate a book](./examples/Book_illustration.ipynb): Use Gemini and Imagen to create illustration for an open-source book
 *  [Animated Story Generation](./examples/Animated_Story_Video_Generation_gemini.ipynb): Create animated videos by combining Gemini's story generation, Imagen, and audio synthesis
 *  [Plotting and mapping Live](./examples/LiveAPI_plotting_and_mapping.ipynb): Mix *Live API* and *Code execution* to solve complex tasks live

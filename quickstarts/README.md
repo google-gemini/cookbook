@@ -14,7 +14,8 @@ If you are new to Gemini API, you should start with those two guides:
 
 
 Then learn about how to **Get Started** with the other models that you can use with the API:
-* [Imagen](./Get_started_imagen.ipynb): Get started with our image generation model. ([REST version](./Get_started_imagen_rest.ipynb))
+* [Veo](./Get_started_Veo.ipynb): Get started with video generation using the Veo models.
+* [Imagen](./Get_started_imagen.ipynb): Get started with our image generation model. ([REST version](./Get_started_imagen_rest.ipynb)).
 * [Thinking model](./Get_started_thinking.ipynb): The thinking models are, as their names implies, capable of deeper chains of thoughts than the classical models, this guide will show you how to use those thinking capabilities to solve complex problems. 
 * More to come very soon...
 <br><br>
@@ -36,7 +37,7 @@ Finally, these guides will deep-dive into specific capabilities of the Gemini mo
 
 
 ---
-Those guides are using the legacy SDK and haven't been updated yet, still they are worth checking as even if the SDK is not the same, the underlying logic of the feature stays the same. They will be converted to the SDK soon:
+Those guides are older, still they are worth checking as they explain what the advances features are:
 * [Asynchronous requests](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Asynchronous_requests.ipynb): Learn how to use Python's async/await API with the Gemini SDK to parallelize calls.
 * [Counting Tokens](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Counting_Tokens.ipynb) Tokens are the basic inputs to the Gemini models. Through this notebook, you will gain a better understanding of tokens through an interactive experience.
 * [Gemini Flash Introduction](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Gemini_Flash_Introduction.ipynb): Get started with Gemini Flash 1.5.

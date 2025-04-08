@@ -1,5 +1,11 @@
 # Gemini 2.0 Cookbook
 
+**Note:** All of this folder's content has been moved to the [websockets](https://github.com/google-gemini/cookbook/tree/main/quickstarts/websockets) folder of the Cookbook's [quickstarts](https://github.com/google-gemini/cookbook/tree/main/quickstarts).
+
+This folder is kept in its state so that you can find where the content has been moved and will likely be deleted when the next big model realease will happen. 
+
+-----------
+
 This is a collection of websocket-specific examples and quickstarts for using the **experimental** Gemini 2.0 Flash model.
 
 Python users should build using the [Google GenAI SDK](https://ai.google.dev/gemini-api/docs/sdks) to access the Multimodal Live API, but as the underlying API is served over secure websockets, the following examples have been provided to help you understand how the protocol works.
@@ -9,10 +15,10 @@ To learn about what’s new in the 2.0 model release and the new [Google GenAI S
 
 Explore Gemini 2.0’s capabilities on your own local machine.
 
-* [Live API starter script](./live_api_starter.py) \- A locally runnable Python script using websockets that supports streaming audio in and audio + video out from your machine
-* [Bash Websocket example](./shell_websockets.sh) \- A bash script using [`websocat`](https://github.com/vi/websocat) to interact with the Live API in a shell context
+* [Live API starter script](../../quickstarts/websockets/Get_started_LiveAPI.py) \- A locally runnable Python script using websockets that supports streaming audio in and audio + video out from your machine
+* [Bash Websocket example](../../quickstarts/websockets/shell_websockets.sh) \- A bash script using [`websocat`](https://github.com/vi/websocat) to interact with the Live API in a shell context
 
 Explore Gemini 2.0’s capabilities through the following notebooks you can run through Google Colab.
 
-* [Live API starter](./live_api_starter.ipynb) \- Overview of the Multimodal Live API using websockets
-* [Live API tool use](./live_api_tool_use.ipynb) \- Overview of tool use in the Live API with websockets
+* [Live API starter](../../quickstarts/websockets/Get_started_LiveAPI.ipynb) \- Overview of the Multimodal Live API using websockets
+* [Live API tool use](../../quickstarts/websockets/Get_started_LiveAPI_tools.ipynb) \- Overview of tool use in the Live API with websockets

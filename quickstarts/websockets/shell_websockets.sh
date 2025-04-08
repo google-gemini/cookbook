@@ -52,7 +52,7 @@ socket_pid=$!
 echo "Model connected."
 
 # Issue setup handshake.
-echo '{"setup": {"model": "models/'${MODEL}'", "generation_config": {"response_modalities":["TEXT"]}}}' |tee >(jq) >gemini_input
+echo '{"setup": {"model": "models/'${MODEL}'", "response_modalities":["TEXT"]}}' |tee >(jq) >gemini_input
 
 # Generate something.
 echo '{"client_content": { "turn_complete": true, "turns": [{"role": "user", "parts": [{"text": "what is 10 + 10?"}]}]}}' |tee >(jq) >gemini_input

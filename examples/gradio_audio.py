@@ -176,26 +176,26 @@ class GeminiHandler(StreamHandler):
                     yield (self.output_sample_rate, self.all_output_data[: self.output_frame_size].reshape(1, -1))
                     self.all_output_data = self.all_output_data[self.output_frame_size :]
 
-def generator(self):
-    """Generates audio output from the WebSocket stream."""
-    while True:
-        if not self.ws:
-            print("WebSocket not connected")
-            yield (-1, None) 
-            continue
-
-        try:
-            message = self.ws.recv(timeout=30)
-            msg = json.loads(message)
-            if "serverContent" in msg:
-                content = msg["serverContent"].get("modelTurn", {})
-                yield from self._process_server_content(content)
-        except TimeoutError:
-            print("Timeout waiting for server response")
-            yield (-1, None)
-        except Exception as e:
-            print(f"Generator error: {str(e)}")
-            yield (-1, None)
+    def generator(self):
+        """Generates audio output from the WebSocket stream."""
+        while True:
+            if not self.ws:
+                print("WebSocket not connected")
+                yield (-1, None) 
+                continue
+    
+            try:
+                message = self.ws.recv(timeout=30)
+                msg = json.loads(message)
+                if "serverContent" in msg:
+                    content = msg["serverContent"].get("modelTurn", {})
+                    yield from self._process_server_content(content)
+            except TimeoutError:
+                print("Timeout waiting for server response")
+                yield (-1, None)
+            except Exception as e:
+                print(f"Generator error: {str(e)}")
+                yield (-1, None)
 
     def emit(self) -> tuple[int, np.ndarray] | None:
         """Emits the next audio chunk from the generator."""

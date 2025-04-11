@@ -1,5 +1,11 @@
 # Gemini 2.0 Cookbook
 
+**Note:** All of this folder's content has been moved to the [websockets](https://github.com/google-gemini/cookbook/tree/main/quickstarts/websockets) folder of the Cookbook's [quickstarts](https://github.com/google-gemini/cookbook/tree/main/quickstarts).
+
+This folder is kept in its state so that you can find where the content has been moved and will likely be deleted when the next big model realease will happen. 
+
+-----------
+
 This is a collection of examples and quickstarts for using the **experimental** [Gemini 2.0 Flash](https://ai.google.dev/gemini-api/docs/models/gemini-v2) model.
 
 To learn about what’s new in the 2.0 model release and the new [Google GenAI SDKs](https://github.com/googleapis/python-genai), check out the [Gemini 2.0 model page](https://ai.google.dev/gemini-api/docs/models/gemini-v2). To start experimenting with the model now, head to [Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.0-flash-exp) for prompting or to the [Multimodal Live API demo](https://aistudio.google.com/live) to try the new Live capabilities.
@@ -21,6 +27,6 @@ Explore Gemini 2.0’s capabilities through the following notebooks using Google
 
 Or explore on your own local machine.
 
-* [Live API starter script](..quickstarts/Get_started_LiveAPI.py) \- A locally runnable Python script using GenAI SDK that supports streaming audio + video (camera or screen) in and audio from your machine
+* [Live API starter script](../quickstarts/Get_started_LiveAPI.py) \- A locally runnable Python script using GenAI SDK that supports streaming audio + video (camera or screen) in and audio from your machine
 
-Also find websocket-specific examples in the [`websockets`](./websockets/) directory.
+Also find websocket-specific examples in the [`websockets`](https://github.com/google-gemini/cookbook/tree/main/quickstarts/websockets) directory.

@@ -63,7 +63,8 @@ jobs:
 
         # Define files to exclude from linting
         excluded_files=(
-          "examples/Object_detection.ipynb"
+          "examples/Object_detection.ipynb",
+          "quickstarts/Template.ipynb",
         )
 
         # Filter out excluded files from the changed_notebooks array

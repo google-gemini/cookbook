@@ -14,7 +14,8 @@ If you are new to Gemini API, you should start with those two guides:
 
 
 Then learn about how to **Get Started** with the other models that you can use with the API:
-* [Imagen](./Get_started_imagen.ipynb): Get started with our image generation model. ([REST version](./Get_started_imagen_rest.ipynb))
+* [Veo](./Get_started_Veo.ipynb): Get started with video generation using the Veo models.
+* [Imagen](./Get_started_imagen.ipynb): Get started with our image generation model. ([REST version](./Get_started_imagen_rest.ipynb)).
 * [Thinking model](./Get_started_thinking.ipynb): The thinking models are, as their names implies, capable of deeper chains of thoughts than the classical models, this guide will show you how to use those thinking capabilities to solve complex problems. 
 * More to come very soon...
 <br><br>

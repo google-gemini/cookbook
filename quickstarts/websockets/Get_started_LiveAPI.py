@@ -74,12 +74,12 @@ RECEIVE_SAMPLE_RATE = 24000
 CHUNK_SIZE = 512
 
 host = "generativelanguage.googleapis.com"
-model = "gemini-2.0-flash-exp"
+model = "gemini-2.0-flash-live-001"
 DEFAULT_MODE="camera"
 
 
 api_key = os.environ["GOOGLE_API_KEY"]
-uri = f"wss://{host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key={api_key}"
+uri = f"wss://{host}/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key={api_key}"
 
 
 class AudioLoop:

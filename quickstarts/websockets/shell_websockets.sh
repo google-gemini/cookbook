@@ -25,7 +25,7 @@
 #    (or relevant binary from https://github.com/vi/websocat/releases)
 
 echo "HOST: ${HOST:=generativelanguage.googleapis.com}"
-echo "MODEL: ${MODEL:=gemini-2.0-flash-exp}"
+echo "MODEL: ${MODEL:=gemini-2.0-flash-live-001}"
 API_KEY=${GOOGLE_API_KEY:?Please set \$GOOGLE_API_KEY}
 
 echo "Starting..."
@@ -47,7 +47,7 @@ output_pid=$!
 echo "Output processing..."
 
 # Launch the model connection and wire it up to the pipes.
-websocat -n wss://${HOST}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${API_KEY} <gemini_input >gemini_output &
+websocat -n wss://${HOST}/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=${API_KEY} <gemini_input >gemini_output &
 socket_pid=$!
 echo "Model connected."
 

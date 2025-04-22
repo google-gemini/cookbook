@@ -65,6 +65,7 @@ jobs:
         excluded_files=(
           "examples/Object_detection.ipynb",
           "quickstarts/Template.ipynb",
+          "quickstarts/Videos.ipynb",
         )
 
         # Filter out excluded files from the changed_notebooks array

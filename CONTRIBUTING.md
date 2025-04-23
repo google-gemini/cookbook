@@ -20,7 +20,7 @@ Also check out the relevant [style guide](https://google.github.io/styleguide/) 
 
 For Python notebooks (*.ipynb files), consider running `pyink` over your notebook. It is not required, but it will avoid style-related nits.
 
-See bellow more detailed guidelines, some specific to writting notebooks and guides.
+See below for more detailed guidelines specific to writing notebooks and guides.
 
 # Making changes
 

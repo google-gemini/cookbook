@@ -1,4 +1,43 @@
-# Gemini API Google ADK Examples
+# Gemini API Google Agent Development Kit (ADK) Examples
+<html>
+    <h2 align="center">
+      <img src="https://raw.githubusercontent.com/google/adk-python/main/assets/agent-development-kit.png" width="256"/>
+    </h2>
+    <h3 align="center">
+      An open-source, code-first Python toolkit for building, evaluating, and deploying sophisticated AI agents with flexibility and control.
+    </h3>
+    <h3 align="center">
+      Important Links:
+      <a href="https://github.com/google/adk-python/">Repo</a>,
+      <a href="https://google.github.io/adk-docs/">Docs</a> &
+      <a href="https://github.com/google/adk-samples">Samples</a>.
+    </h3>
+</html>
+
+Agent Development Kit (ADK) is designed for developers seeking fine-grained
+control and flexibility when building advanced AI agents that are tightly
+integrated with services in Google Cloud. It allows you to define agent
+behavior, orchestration, and tool use directly in code, enabling robust
+debugging, versioning, and deployment anywhere – from your laptop to the cloud.
+
+
+---
+
+## ✨ Key Features
+
+- **Rich Tool Ecosystem**: Utilize pre-built tools, custom functions,
+  OpenAPI specs, or integrate existing tools to give agents diverse
+  capabilities, all for tight integration with the Google ecosystem.
+
+- **Code-First Development**: Define agent logic, tools, and orchestration
+  directly in Python for ultimate flexibility, testability, and versioning.
+
+- **Modular Multi-Agent Systems**: Design scalable applications by composing
+  multiple specialized agents into flexible hierarchies.
+
+- **Deploy Anywhere**: Easily containerize and deploy agents on Cloud Run or
+  scale seamlessly with Vertex AI Agent Engine.
+
 
 ## Table of contents
 

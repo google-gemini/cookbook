@@ -1,0 +1,4 @@
+## 🧾 `requirements.txt`
+streamlit
+google-generativeai
+python-dotenv

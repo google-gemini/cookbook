@@ -17,3 +17,6 @@ python -m tensorflow_docs.tools.nblint \
   --exclude_lint=tensorflow::button_download \
   --exclude_lint=tensorflow::button_website \
   ./gemini_chatbot.ipynb
+
+# chmod +x ./gemini_chatbot.ipynb
+# ./format.sh

@@ -34,9 +34,12 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## 🔗 Live Demo
-Try it here: [Gemini Chatbot Demo on Streamlit](https://cookbook-gemini-chatbot-sample.streamlit.app/)
+## 🔗 **Live Demo**
+For an interactive version, try the Streamlit app: ## Live Demo
+[![Gemini Chatbot Demo on Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cookbook-gemini-chatbot-sample.streamlit.app/)
 
+## 🔗 **Notebook**
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/MaryamZahiri/cookbook/blob/add-gemini-chatbot-quickstart/examples/gemini_chatbot/gemini_chatbot.ipynb)
 
 ## 📸 Demo Screenshot
 

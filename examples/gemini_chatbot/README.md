@@ -32,6 +32,7 @@ source venv/bin/activate   # Windows: .\venv\Scripts\activate
 # Install dependencies
 pip install --upgrade pip
 pip install -r requirements.txt
+```
 
 ## 🔗 Live Demo
 Try it here: [Gemini Chatbot Demo on Streamlit](https://cookbook-gemini-chatbot-sample.streamlit.app/)

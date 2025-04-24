@@ -1,7 +1,8 @@
 # 🤖 Gemini Chatbot Starter App
 
 ## 🔗 **Live Demo**
-For an interactive version, try the Streamlit app: ## Live Demo
+For an interactive version, try the Streamlit app:
+
 [![Gemini Chatbot Demo on Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cookbook-gemini-chatbot-sample.streamlit.app/)
 
 ## 🔗 **Notebook**
@@ -41,6 +42,8 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## 📸 Demo Screenshot
+## 📸 Demo Screenshot Preview
 
-![Gemini Chatbot Demo](https://github.com/user-attachments/assets/fba52881-ef2e-4a41-aef2-3cb8a7a13d05)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/fba52881-ef2e-4a41-aef2-3cb8a7a13d05" width="70%" alt="Gemini Chatbot Demo">
+</p>

@@ -3,7 +3,7 @@
 ## 🔗 **Live Demo**
 For an interactive version, try the Streamlit app:
 
-[![Gemini Chatbot Demo on Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cookbook-gemini-chatbot-sample.streamlit.app/)
+[![Gemini Chatbot Demo on Streamlit App](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)](https://cookbook-gemini-chatbot-sample.streamlit.app/)
 
 ## 🔗 **Notebook**
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/MaryamZahiri/cookbook/blob/add-gemini-chatbot-quickstart/examples/gemini_chatbot/gemini_chatbot.ipynb)
@@ -45,5 +45,5 @@ pip install -r requirements.txt
 ## 📸 Demo Screenshot Preview
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/fba52881-ef2e-4a41-aef2-3cb8a7a13d05" width="70%" alt="Gemini Chatbot Demo">
+  <img src="https://github.com/user-attachments/assets/fba52881-ef2e-4a41-aef2-3cb8a7a13d05" width="60%" alt="Gemini Chatbot Demo">
 </p>

@@ -1,5 +1,12 @@
 # 🤖 Gemini Chatbot Starter App
 
+## 🔗 **Live Demo**
+For an interactive version, try the Streamlit app: ## Live Demo
+[![Gemini Chatbot Demo on Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cookbook-gemini-chatbot-sample.streamlit.app/)
+
+## 🔗 **Notebook**
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/MaryamZahiri/cookbook/blob/add-gemini-chatbot-quickstart/examples/gemini_chatbot/gemini_chatbot.ipynb)
+
 This is a beginner-friendly chatbot demo built using [Google's Gemini API](https://ai.google.dev/) and [Streamlit](https://streamlit.io/). It allows users to ask natural language questions and receive responses powered by the Gemini 1.5 Pro model.
 
 This example is designed to help developers:
@@ -33,13 +40,6 @@ source venv/bin/activate   # Windows: .\venv\Scripts\activate
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
-
-## 🔗 **Live Demo**
-For an interactive version, try the Streamlit app: ## Live Demo
-[![Gemini Chatbot Demo on Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cookbook-gemini-chatbot-sample.streamlit.app/)
-
-## 🔗 **Notebook**
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/MaryamZahiri/cookbook/blob/add-gemini-chatbot-quickstart/examples/gemini_chatbot/gemini_chatbot.ipynb)
 
 ## 📸 Demo Screenshot
 

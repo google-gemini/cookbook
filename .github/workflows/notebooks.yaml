@@ -46,7 +46,9 @@ jobs:
     name: Notebook lint
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Get *full* history
     - uses: actions/setup-python@v4
     - name: Install tensorflow-docs
       run: python3 -m pip install -U git+https://github.com/tensorflow/docs

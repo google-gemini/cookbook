@@ -2,12 +2,12 @@
 
 This folder contains guides to help you explore all Gemini API features using complete end-to-end code examples.
 
-When you are confident in your Gemini capabilities, the [examples](https://github.com/google-gemini/cookbook/tree/main/examples/) folder will be an endless source of inspiration on how to mix those capabilities together.
+When you're confident in your Gemini capabilities, the [examples](https://github.com/google-gemini/cookbook/tree/main/examples/) folder will be an endless source of inspiration on how to mix those capabilities together.
 <br><br>
 
 ## Table of contents
 
-If you are new to Gemini API, you should start with these two guides:
+If you're new to Gemini API, you should start with these two guides:
 1. [Authentication](./Authentication.ipynb): Start here to learn how you can set up your API key so you can get access to the Gemini API.
 2.  [Get Started](./Get_started.ipynb): Learn how to make your first calls to the Gemini API and get a quick overview of everything it can do.
 <br><br>
@@ -21,7 +21,7 @@ Then learn about how to **Get Started** with the other models that you can use w
 <br><br>
 
 
-There are multiple ways to call the models using the Gemini API, these other **Get Started** guides will then show you the other ways to call the model:
+There're multiple ways to call the models using the Gemini API, these other **Get Started** guides will then show you the other ways to call the model:
 * [Get started with Live API](./Get_started_LiveAPI.ipynb): Get started with the live API with this comprehensive overview of its capabilities
 * More to come...
 <br><br>
@@ -38,7 +38,7 @@ Finally, these guides will deep-dive into specific capabilities of the Gemini mo
 
 These guides will walk you through the various use cases of the Gemini API:
 * [Asynchronous requests](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Asynchronous_requests.ipynb): Learn how to use Python's async/await API with the Gemini SDK to parallelize calls.
-* [Counting Tokens](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Counting_Tokens.ipynb) Tokens are the basic inputs to the Gemini models. Through this notebook, you will gain a better understanding of tokens through an interactive experience.
+* [Counting Tokens](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Counting_Tokens.ipynb) Tokens are the basic inputs to the Gemini models. Through this notebook, you'll gain a better understanding of tokens through an interactive experience.
 * [Gemini Flash Introduction](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Gemini_Flash_Introduction.ipynb): Get started with Gemini Flash 2.0.
 * [Models](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Models.ipynb): Learn about the different models and parameters available in the Gemini API.
 * [Working with files](https://github.com/google-gemini/cookbook/blob/main/quickstarts/File_API.ipynb): Use the Gemini API to upload files (audio, video, images, code, text) and perform actions with them through the Gemini models.

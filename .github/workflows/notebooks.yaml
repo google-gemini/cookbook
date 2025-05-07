@@ -61,35 +61,51 @@ jobs:
         if [ "${{ github.event_name }}" == "pull_request" ]; then
           # Only check notebooks modified in this pull request
           base_commit=$(git merge-base HEAD ${{ github.event.pull_request.base.sha }})
+          # Output paths relative to repo root, e.g., folder/file.ipynb
           readarray -t changed_notebooks < <(git diff --name-only "${base_commit}...HEAD" "*.ipynb" | grep -v 'gemini-2/' || true)
         else
           # Manual run, check everything
-          readarray -t changed_notebooks < <(find . -name '*.ipynb' | grep -v 'gemini-2/')
+          # Use find -printf "%P" to remove leading ./
+          readarray -t changed_notebooks < <(find . -name '*.ipynb' -printf "%P\n" | grep -v 'gemini-2/' || true)
         fi
 
-        # Define files to exclude from linting
+        echo "Debug: Initial changed notebooks: ${changed_notebooks[*]}"
+
+        # Define files to exclude from linting (no commas within or at the end of lines)
         excluded_files=(
-          "examples/Object_detection.ipynb",
-          "quickstarts/Template.ipynb",
+          "examples/Object_detection.ipynb"
+          "quickstarts/Template.ipynb"
         )
+        echo "Debug: Excluded files patterns: ${excluded_files[*]}"
 
         # Filter out excluded files from the changed_notebooks array
         filtered_notebooks=()
         for notebook in "${changed_notebooks[@]}"; do
+          # Skip empty lines that might result from command substitution if no files are found
+          if [[ -z "$notebook" ]]; then
+            continue
+          fi
           exclude=false
-          for excluded_file in "${excluded_files[@]}"; do
-            if [[ "$notebook" == "$excluded_file" ]]; then
+          normalized_notebook="${notebook#./}" # Ensure no leading ./ for comparison
+          echo "Debug: Processing notebook: '$notebook' (normalized: '$normalized_notebook')"
+          for excluded_file_pattern in "${excluded_files[@]}"; do
+            echo "Debug:   Comparing '$normalized_notebook' with excluded pattern: '$excluded_file_pattern'"
+            if [[ "$normalized_notebook" == "$excluded_file_pattern" ]]; then
+              echo "Debug:     Match! Excluding '$notebook'"
               exclude=true
               break
             fi
           done
           if [[ "$exclude" == false ]]; then
+            echo "Debug:   No exclusion match. Adding '$notebook' to lint list."
             filtered_notebooks+=("$notebook")
           fi
         done
 
+        echo "Debug: Filtered notebooks for linting: ${filtered_notebooks[*]}"
+
         if [[ ${#filtered_notebooks[@]} == 0 ]]; then
-          echo "No website notebooks modified in this pull request."
+          echo "No website notebooks modified or all modified notebooks were excluded." # Updated message
           exit 0
         else
           echo "WARNING: If the button_colab check fails for you, make sure you have <table class=\"tfo-notebook-buttons\"...>"

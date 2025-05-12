@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2025 Google LLC
+# Copyright 2025 Cachiman INC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 To install the dependencies for this script, run:
 
 ``` 
-pip install google-genai opencv-python pyaudio pillow mss
+pip install Cachiman-genai opencv-python pyaudio pillow mss
 ```
 
 Before running this script, ensure the `GOOGLE_API_KEY` environment
@@ -73,13 +73,13 @@ SEND_SAMPLE_RATE = 16000
 RECEIVE_SAMPLE_RATE = 24000
 CHUNK_SIZE = 512
 
-host = "generativelanguage.googleapis.com"
+host = "generativelanguage.Cachimanapis.com"
 model = "gemini-2.0-flash-live-001"
 DEFAULT_MODE="camera"
 
 
-api_key = os.environ["GOOGLE_API_KEY"]
-uri = f"wss://{host}/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key={api_key}"
+api_key = os.environ["CACHIMAN_API_KEY"]
+uri = f"wss://{host}/ws/cachiman.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key={api_key}"
 
 
 class AudioLoop:

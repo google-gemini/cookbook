@@ -69,6 +69,8 @@ class GeminiConfig:
     """Configuration settings for Gemini API."""
     def __init__(self):
         self.api_key = os.getenv(KEY_NAME)
+        if not self.api_key or not isinstance(self.api_key, str) or self.api_key.strip() == "":
+            raise ValueError(f"{KEY_NAME} environment variable is not set or invalid.")
         self.host = "generativelanguage.googleapis.com"
         self.model = "models/gemini-2.0-flash-exp"
         self.ws_url = f"wss://{self.host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key={self.api_key}"
@@ -78,6 +80,8 @@ class AudioProcessor:
     @staticmethod
     def encode_audio(data, sample_rate):
         """Encodes audio data to base64."""
+        if not isinstance(data, np.ndarray) or data.size == 0:
+            raise ValueError("Audio data must be a non-empty NumPy array.")
         encoded = base64.b64encode(data.tobytes()).decode("UTF-8")
         return {
             "realtimeInput": {
@@ -92,7 +96,7 @@ class AudioProcessor:
 
     @staticmethod
     def process_audio_response(data):
-        """Decodes audio data from base64."""
+        """Decodes audio data from base64. Assumes int16 format."""
         audio_data = base64.b64decode(data)
         return np.frombuffer(audio_data, dtype=np.int16)
 
@@ -132,12 +136,14 @@ class GeminiHandler(StreamHandler):
     def receive(self, frame: tuple[int, np.ndarray]) -> None:
         """Receives audio/video data, encodes it, and sends it to the Gemini API."""
         try:
-            if not self.ws:
+            if not self.ws or self.ws.closed:
                 self._initialize_websocket()
-
+                if not self.ws:
+                    raise RuntimeError("Failed to establish WebSocket connection.")
+    
             sample_rate, array = frame
             message = {"realtimeInput": {"mediaChunks": []}}
-
+    
             if sample_rate > 0 and array is not None:
                 array = array.squeeze()
                 audio_data = self.audio_processor.encode_audio(array, self.output_sample_rate)
@@ -145,7 +151,7 @@ class GeminiHandler(StreamHandler):
                     "mimeType": f"audio/pcm;rate={self.output_sample_rate}",
                     "data": audio_data["realtimeInput"]["mediaChunks"][0]["data"],
                 })
-
+    
             if message["realtimeInput"]["mediaChunks"]:
                 self.ws.send(json.dumps(message))
         except Exception as e:
@@ -153,6 +159,7 @@ class GeminiHandler(StreamHandler):
             if self.ws:
                 self.ws.close()
             self.ws = None
+            raise
 
     def _process_server_content(self, content):
         """Processes audio output data from the WebSocket response."""
@@ -174,9 +181,9 @@ class GeminiHandler(StreamHandler):
         while True:
             if not self.ws:
                 print("WebSocket not connected")
-                yield None
+                yield (-1, None) 
                 continue
-
+    
             try:
                 message = self.ws.recv(timeout=30)
                 msg = json.loads(message)
@@ -185,9 +192,10 @@ class GeminiHandler(StreamHandler):
                     yield from self._process_server_content(content)
             except TimeoutError:
                 print("Timeout waiting for server response")
-                yield None
+                yield (-1, None)
             except Exception as e:
-                yield None
+                print(f"Generator error: {str(e)}")
+                yield (-1, None)
 
     def emit(self) -> tuple[int, np.ndarray] | None:
         """Emits the next audio chunk from the generator."""

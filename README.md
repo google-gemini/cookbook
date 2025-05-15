@@ -5,30 +5,6 @@ This cookbook provides a structured learning path for using the Gemini API, focu
 **For comprehensive API documentation, visit [ai.google.dev](https://ai.google.dev/gemini-api/docs).**
 <br><br>
 
-## Important: Migration
-
-With Gemini 2 we are offering a [new SDK](https://github.com/googleapis/python-genai)
-(<code>[google-genai](https://pypi.org/project/google-genai/)</code>,
-<code>v1.0</code>). The updated SDK is fully compatible with all Gemini API
-models and features, including recent additions like the
-[live API](https://aistudio.google.com/live) (audio + video streaming),
-improved tool usage (
-[code execution](https://ai.google.dev/gemini-api/docs/code-execution?lang=python),
-[function calling](https://ai.google.dev/gemini-api/docs/function-calling/tutorial?lang=python) and integrated
-[Google search grounding](https://ai.google.dev/gemini-api/docs/grounding?lang=python)),
-and media generation ([Imagen](https://ai.google.dev/gemini-api/docs/imagen)).
-This SDK allows you to connect to the Gemini API through either
-[Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.0-flash-exp) or
-[Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/gemini-v2).
-
-The <code>[google-generativeai](https://pypi.org/project/google-generativeai)</code>
-package will continue to support the original Gemini models.
-It <em>can</em> also be used with Gemini 2 models, just with a limited feature
-set. All new features will be developed in the new Google GenAI SDK.
-
-See the [migration guide](https://ai.google.dev/gemini-api/docs/migrate) for details.
-<br><br>
-
 ## Navigating the Cookbook
 
 This cookbook is organized into two main categories:
@@ -43,12 +19,13 @@ We also showcase **Demos** in separate repositories, illustrating end-to-end app
 
 Here are the recent additions and updates to the Gemini API and the Cookbook: 
 
-* **Gemini 2.0 models:** Explore the capabilities of the latest Gemini 2.0 models! See the [Get Started Guide](./quickstarts/Get_started.ipynb).
-* **Imagen**: Get started with our image generation model with this brand new [Imagen guide](./quickstarts/Get_started_imagen.ipynb)!
+* **Gemini 2.5 models:** Explore the capabilities of the latest Gemini 2.5 models (Flash and Pro)! See the [Get Started Guide](./quickstarts/Get_started.ipynb) and the [thinking guide](./quickstarts/Get_started_thinking.ipynb) as they'll all be thinking ones.
+* **Imagen and Veo**: Get started with our media generation model with this brand new [Veo guide](./quickstarts/Get_started_Veo.ipynb) and [Imagen guide](./quickstarts/Get_started_imagen.ipynb)!
+* **LiveAPI**: Get started with the [multimodal Live API](./quickstarts/Get_started_LiveAPI.ipynb) and unlock new interactivity with Gemini.
 * **Recently Added Guides:**
   * [Browser as a tool](./examples/Browser_as_a_tool.ipynb): Use a web browser for live and internal (intranet) web interactions
   * [Code execution](./quickstarts/Code_Execution.ipynb): Generating and running Python code to solve complex tasks and even output graphs
-  * [Thinking model](./quickstarts/Get_started_thinking.ipynb): Discover the thinking model capabilities.
+  * [Function calling](./quickstarts/Function_calling.ipynb): The function calling guide has been reworked and should better explain how to use that very convient capability.
   
 <br><br>
 
@@ -70,6 +47,7 @@ We recommend starting with the following:
 
 Then, explore the other quickstarts tutorials to learn about individual features:
 *  [Get started with Live API](./quickstarts/Get_started_LiveAPI.ipynb): Get started with the live API with this comprehensive overview of its capabilities
+*  [Get started with Veo](./quickstarts/Get_started_Veo.ipynb): Get started with our video generation capabilities 
 *  [Get started with Imagen](./quickstarts/Get_started_imagen.ipynb) and [Image-out](./quickstarts/Image_out.ipynb): Get started with our image generation capabilities 
 *  [Grounding](./quickstarts/Search_Grounding.ipynb): use Google Search for grounded responses
 *  [Code execution](./quickstarts/Code_Execution.ipynb): Generating and running Python code to solve complex tasks and even ouput graphs
@@ -108,6 +86,30 @@ The Gemini API is a REST API. You can call it directly using tools like `curl` (
 * [Swift](https://github.com/google/generative-ai-swift)
 <br><br>
 
+
+## Important: Migration
+
+With Gemini 2 we are offering a [new SDK](https://github.com/googleapis/python-genai)
+(<code>[google-genai](https://pypi.org/project/google-genai/)</code>,
+<code>v1.0</code>). The updated SDK is fully compatible with all Gemini API
+models and features, including recent additions like the
+[live API](https://aistudio.google.com/live) (audio + video streaming),
+improved tool usage (
+[code execution](https://ai.google.dev/gemini-api/docs/code-execution?lang=python),
+[function calling](https://ai.google.dev/gemini-api/docs/function-calling/tutorial?lang=python) and integrated
+[Google search grounding](https://ai.google.dev/gemini-api/docs/grounding?lang=python)),
+and media generation ([Imagen](https://ai.google.dev/gemini-api/docs/imagen) and [Veo](https://ai.google.dev/gemini-api/docs/video)).
+This SDK allows you to connect to the Gemini API through either
+[Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.0-flash-exp) or
+[Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/gemini-v2).
+
+The <code>[google-generativeai](https://pypi.org/project/google-generativeai)</code>
+package will continue to support the original Gemini models.
+It <em>can</em> also be used with Gemini 2 models, just with a limited feature
+set. All new features will be developed in the new Google GenAI SDK.
+
+See the [migration guide](https://ai.google.dev/gemini-api/docs/migrate) for details.
+<br><br>
 
 ## Get Help
 

@@ -1,3 +1,30 @@
+var http = require('http');
+var crypto = require('crypto');
+
+const secret = "mysecret"
+
+http.createServer(function (req, res) {
+    let sig = req.headers['x-h1-signature'].split('=')[1]
+    let data = []
+    let valid_signature = false
+    req.on('data', chunk => {
+        data.push(chunk)
+    })
+    req.on('end', () => {
+        const hash = crypto.createHmac('sha256', secret).update(data[0]).digest('hex')
+
+        valid_signature = crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(hash));
+
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        let json_hash = {
+            "signature_valid": valid_signature          
+        }
+        res.end(JSON.stringify(json_hash))
+    })  
+}).listen(7777)
+
+git@github.com:google-gemini/cookbook.git
+
 {
     "name": "Gemini Cookbook Dev Container",
     "image": "mcr.microsoft.com/devcontainers/universal:2",
@@ -15,3 +42,4 @@
 
     "postCreateCommand": "sudo cp .devcontainer/welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt"
 }
+

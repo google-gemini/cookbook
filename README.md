@@ -25,6 +25,7 @@ Here are the recent additions and updates to the Gemini API and the Cookbook:
 * **LiveAPI**: Get started with the [multimodal Live API](./quickstarts/Get_started_LiveAPI.ipynb) and unlock new interactivity with Gemini.
 * **Recently Added Guides:**
   * [Browser as a tool](./examples/Browser_as_a_tool.ipynb): Use a web browser for live and internal (intranet) web interactions
+  * [Grounding](./quickstarts/Grounding.ipynb): Discover different ways to ground Gemini's answer using different tools, from Google Search to Youtube and the new url context tool.
   
 <br><br>
 

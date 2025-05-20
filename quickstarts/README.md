@@ -31,7 +31,8 @@ There're multiple ways to call the models using the Gemini API, these other **Ge
 
 
 Finally, these guides will deep-dive into specific capabilities of the Gemini models and API:
-* [Grounding](./Search_Grounding.ipynb): Learn how to use Google Search to ground your answers with external sources.
+* [Grounding](./Grouding.ipynb): Learn how to use diffrent ways (Google Search, Youtube, url context) to ground your answers with external sources.
+* [Search Grounding](./Search_Grounding.ipynb): Deep-dive into the Google search grounding capabilities.
 * [Function Calling](./Function_calling.ipynb): Discover how to have Gemini call you own function and enhaced its capabilites.
 * [Image-out](./Image_out.ipynb): Get to know how the Gemini model can directly output images and edit them through multi-turn discussion.
 * [Spatial understanding](./Spatial_understanding.ipynb): Learn how to use Gemini's spatial understanding capabilities to detect what's in your images, and reason about them

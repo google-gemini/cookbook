@@ -18,6 +18,7 @@ Then learn about how to **Get Started** with the other models that you can use w
 * [Imagen](./Get_started_imagen.ipynb): Get started with our image generation model. ([REST version](./Get_started_imagen_rest.ipynb)).
 * [Thinking models](./Get_started_thinking.ipynb): The thinking models are, as their names imply, capable of deeper chains of thoughts than the classical models, this guide will show you how to use those thinking capabilities to solve complex problems. 
 * [Lyria RealTime](./Get_started_LyriaRealTime.ipynb): The Lyria RealTime model let's your generate music and prompt the model in real-time to have it mis it for you live.
+* [Text-to-speech](./Get_started_TTS.ipynb): The TTS models let you generate speeches with one or even two speakers!
 * More to come very soon...
 <br><br>
 

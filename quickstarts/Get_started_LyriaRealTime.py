@@ -72,7 +72,7 @@ async def main():
             async for message in session.receive():
                 chunks_count += 1
                 if chunks_count == 1:
-                    # We introduce a delay before starting playback to have a buffer for network jitter.
+                    # Introduce a delay before starting playback to have a buffer for network jitter.
                     await asyncio.sleep(BUFFER_SECONDS)
                 # print("Received chunk: ", message)
                 if message.server_content:
@@ -165,11 +165,11 @@ async def main():
 
                         # Split on the first colon only, in case prompt text itself contains colons
                         parts = segment_str.split(':', 1)
-                        
+
                         if len(parts) == 2:
                             text_p = parts[0].strip()
                             weight_s = parts[1].strip()
-                            
+
                             if not text_p: # Prompt text should not be empty
                                 print(f"Error: Empty prompt text in segment '{segment_str_raw}'. Skipping this segment.")
                                 malformed_segment_exists = True
@@ -186,8 +186,8 @@ async def main():
                             print(f"Error: Segment '{segment_str_raw}' is not in 'text:weight' format. Skipping this segment.")
                             malformed_segment_exists = True
                             continue # Skip this malformed segment
-                    
-                    if parsed_prompts: # If we successfully parsed at least one prompt
+
+                    if parsed_prompts: # If at least one prompt was successfully parsed.
                         prompt_repr = [f"'{p.text}':{p.weight}" for p in parsed_prompts]
                         if malformed_segment_exists:
                             print(f"Partially sending {len(parsed_prompts)} valid weighted prompt(s) due to errors in other segments: {', '.join(prompt_repr)}")
@@ -196,9 +196,9 @@ async def main():
                         await session.set_weighted_prompts(prompts=parsed_prompts)
                     else: # No valid prompts were parsed from the input string that contained ":"
                         print("Error: Input contained ':' suggesting multi-prompt format, but no valid 'text:weight' segments were successfully parsed. No action taken.")
-                    
-                    continue 
-                
+
+                    continue
+
                 # If none of the above, treat as a regular single text prompt
                 print(f"Sending single text prompt: \"{prompt_str}\"")
                 await session.set_weighted_prompts(
@@ -218,7 +218,7 @@ async def main():
 
         print(f"Let's get the party started!")
         await session.play()
-        
+
         send_task = asyncio.create_task(send())
         receive_task = asyncio.create_task(receive())
 

@@ -73,14 +73,12 @@ SEND_SAMPLE_RATE = 16000
 RECEIVE_SAMPLE_RATE = 24000
 CHUNK_SIZE = 1024
 
-MODEL = "models/gemini-2.0-flash-exp"
+MODEL = "models/gemini-2.0-flash-live-001"
 
 DEFAULT_MODE = "camera"
 
-client = genai.Client(http_options={"api_version": "v1alpha"})
+client = genai.Client(http_options={"api_version": "v1beta"})
 
-# While Gemini 2.0 Flash is in experimental preview mode, only one of AUDIO or
-# TEXT may be passed here.
 CONFIG = {"response_modalities": ["AUDIO"]}
 
 pya = pyaudio.PyAudio()

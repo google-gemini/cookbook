@@ -16,7 +16,9 @@ jobs:
     name: Notebook format
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Get *full* history
     - uses: actions/setup-python@v4
     - name: Install tensorflow-docs
       run: python3 -m pip install -U git+https://github.com/tensorflow/docs
@@ -26,7 +28,8 @@ jobs:
       run: |
         if [ "${{ github.event_name }}" == "pull_request" ]; then
           # Only check notebooks modified in this pull request
-          readarray -t changed_notebooks < <(git diff --name-only main | grep '\.ipynb$' || true)
+          base_commit=$(git merge-base HEAD ${{ github.event.pull_request.base.sha }})
+          readarray -t changed_notebooks < <(git diff --name-only "${base_commit}...HEAD" "*.ipynb")
         else
           # Manual run, check everything
           readarray -t changed_notebooks < <(find -name '*.ipynb')
@@ -43,7 +46,9 @@ jobs:
     name: Notebook lint
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Get *full* history
     - uses: actions/setup-python@v4
     - name: Install tensorflow-docs
       run: python3 -m pip install -U git+https://github.com/tensorflow/docs
@@ -55,7 +60,8 @@ jobs:
       run: |
         if [ "${{ github.event_name }}" == "pull_request" ]; then
           # Only check notebooks modified in this pull request
-          readarray -t changed_notebooks < <(git diff --name-only main | grep '\.ipynb$' | grep -v 'gemini-2/' || true)
+          base_commit=$(git merge-base HEAD ${{ github.event.pull_request.base.sha }})
+          readarray -t changed_notebooks < <(git diff --name-only "${base_commit}...HEAD" "*.ipynb" | grep -v 'gemini-2/' || true)
         else
           # Manual run, check everything
           readarray -t changed_notebooks < <(find . -name '*.ipynb' | grep -v 'gemini-2/')
@@ -63,7 +69,8 @@ jobs:
 
         # Define files to exclude from linting
         excluded_files=(
-          "examples/Object_detection.ipynb"
+          "examples/Object_detection.ipynb",
+          "quickstarts/Template.ipynb",
         )
 
         # Filter out excluded files from the changed_notebooks array

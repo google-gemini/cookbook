@@ -54,3 +54,4 @@ These guides will walk you through the various use cases of the Gemini API:
 * [Embeddings](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Embeddings.ipynb): Create high quality and task-specific embeddings.
 * [Tuning](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Tuning.ipynb): Learn how to improve model performance on a specific task through tuning.
 * [Video](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video.ipynb): Upload a video to the Gemini API and use it in your prompt.
+* [AI Tutors with LearnLM](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Get_started_LearnLM.ipynb): Demonstrates how to craft AI tutoring experiences using system instructions aligned with learning science principles.

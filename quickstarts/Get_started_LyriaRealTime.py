@@ -19,7 +19,7 @@
 To install the dependencies for this script, run:
 
 ```
-pip install pyaudio websockets
+pip install pyaudio websockets python-osc
 ```
 
 Before running this script, ensure the `GOOGLE_API_KEY` environment
@@ -34,13 +34,21 @@ python LyriaRealTime_EAP.py
 ```
 
 The script takes a prompt from the command line and streams the audio back over
-websockets.
+websockets. It now also includes an OSC server for real-time control.
 """
 import asyncio
 import pyaudio
 import os
 from google import genai
 from google.genai import types
+import threading
+from pythonosc import dispatcher
+from pythonosc import osc_server
+# asyncio.Queue is used, so asyncio import is sufficient.
+
+# OSC Server Parameters
+OSC_IP = "127.0.0.1"
+OSC_PORT = 5005
 
 # Longer buffer reduces chance of audio drop, but also delays audio and user commands.
 BUFFER_SECONDS=1
@@ -64,6 +72,28 @@ client = genai.Client(
 async def main():
     p = pyaudio.PyAudio()
     config = types.LiveMusicGenerationConfig()
+    osc_queue = asyncio.Queue() # Queue for OSC messages
+
+    # OSC Server Thread Function
+    def osc_server_thread_func(event_loop, message_queue):
+        osc_dispatcher = dispatcher.Dispatcher()
+
+        def default_handler(address, *args):
+            print(f"OSC Server received: {address} {args}")
+            # Put the message onto the asyncio.Queue in a thread-safe way
+            event_loop.call_soon_threadsafe(message_queue.put_nowait, (address, args))
+
+        osc_dispatcher.set_default_handler(default_handler)
+
+        server = osc_server.ThreadingOSCUDPServer((OSC_IP, OSC_PORT), osc_dispatcher)
+        print(f"OSC Server listening on {OSC_IP}:{OSC_PORT}")
+        server.serve_forever() # This is a blocking call
+
+    # Start the OSC server in a separate thread
+    main_event_loop = asyncio.get_event_loop()
+    osc_thread = threading.Thread(target=osc_server_thread_func, args=(main_event_loop, osc_queue), daemon=True)
+    osc_thread.start()
+
     async with client.aio.live.music.connect(model=MODEL) as session:
         async def receive():
             chunks_count = 0
@@ -72,11 +102,8 @@ async def main():
             async for message in session.receive():
                 chunks_count += 1
                 if chunks_count == 1:
-                    # Introduce a delay before starting playback to have a buffer for network jitter.
                     await asyncio.sleep(BUFFER_SECONDS)
-                # print("Received chunk: ", message)
                 if message.server_content:
-                # print("Received chunk with metadata: ", message.server_content.audio_chunks[0].source_metadata)
                     audio_data = message.server_content.audio_chunks[0].data
                     output_stream.write(audio_data)
                 elif message.filtered_prompt:
@@ -86,133 +113,133 @@ async def main():
                 await asyncio.sleep(10**-12)
 
         async def send():
-            await asyncio.sleep(5) # Allow initial prompt to play a bit
-
+            print("OSC message handler ready. Waiting for messages on the queue...")
             while True:
-                print("Set new prompt ((bpm=<number|'AUTO'>, scale=<enum|'AUTO'>, top_k=<number|'AUTO'>, 'play', 'pause', 'prompt1:w1,prompt2:w2,...', or single text prompt)")
-                prompt_str = await asyncio.to_thread(
-                    input,
-                    " > "
-                )
+                address, args = await osc_queue.get()
+                # Minimal logging for every message, detailed logging within handlers
+                # print(f"OSC message received: {address} {args}")
 
-                if not prompt_str: # Skip empty input
-                    continue
-
-                if prompt_str.lower() == 'q':
-                    print("Sending STOP command.")
-                    await session.stop();
-                    return False
-
-                if prompt_str.lower() == 'play':
-                    print("Sending PLAY command.")
-                    await session.play()
-                    continue
-
-                if prompt_str.lower() == 'pause':
-                    print("Sending PAUSE command.")
-                    await session.pause()
-                    continue
-
-                if prompt_str.startswith('bpm='):
-                  if prompt_str.strip().endswith('AUTO'):
-                    del config.bpm
-                    print(f"Setting BPM to AUTO, which requires resetting context.")
-                  else:
-                    bpm_value = int(prompt_str.removeprefix('bpm='))
-                    print(f"Setting BPM to {bpm_value}, which requires resetting context.")
-                    config.bpm=bpm_value
-                  await session.set_music_generation_config(config=config)
-                  await session.reset_context()
-                  continue
-
-                if prompt_str.startswith('scale='):
-                  if prompt_str.strip().endswith('AUTO'):
-                    del config.scale
-                    print(f"Setting Scale to AUTO, which requires resetting context.")
-                  else:
-                    found_scale_enum_member = None
-                    for scale_member in types.Scale: # types.Scale is an enum
-                        if scale_member.name.lower() == prompt_str.lower():
-                            found_scale_enum_member = scale_member
-                            break
-                    if found_scale_enum_member:
-                        print(f"Setting scale to {found_scale_enum_member.name}, which requires resetting context.")
-                        config.scale = found_scale_enum_member
-                    else:
-                        print("Error: Matching enum not found.")
-                  await session.set_music_generation_config(config=config)
-                  await session.reset_context()
-                  continue
-
-                if prompt_str.startswith('top_k='):
-                    top_k_value = int(prompt_str.removeprefix('top_k='))
-                    print(f"Setting TopK to {top_k_value}.")
-                    config.top_k = top_k_value
-                    await session.set_music_generation_config(config=config)
-                    await session.reset_context()
-                    continue
-
-                # Check for multiple weighted prompts "prompt1:number1, prompt2:number2, ..."
-                if ":" in prompt_str:
+                if address == "/lyria/setPrompts":
+                    if not args or not isinstance(args[0], str):
+                        print("Error: /lyria/setPrompts expects a single string argument (e.g., 'Piano:1,Drums:0.5').")
+                        osc_queue.task_done()
+                        continue
+                    
+                    prompt_str = args[0]
+                    print(f"Received /lyria/setPrompts with \"{prompt_str}\". Parsing...")
                     parsed_prompts = []
                     segments = prompt_str.split(',')
-                    malformed_segment_exists = False # Tracks if any segment had a parsing error
+                    malformed_segment_exists = False
 
                     for segment_str_raw in segments:
                         segment_str = segment_str_raw.strip()
-                        if not segment_str: # Skip empty segments (e.g., from "text1:1, , text2:2")
-                            continue
+                        if not segment_str: continue
 
-                        # Split on the first colon only, in case prompt text itself contains colons
                         parts = segment_str.split(':', 1)
-
                         if len(parts) == 2:
                             text_p = parts[0].strip()
                             weight_s = parts[1].strip()
-
-                            if not text_p: # Prompt text should not be empty
-                                print(f"Error: Empty prompt text in segment '{segment_str_raw}'. Skipping this segment.")
+                            if not text_p:
+                                print(f"Error: Empty prompt text in segment '{segment_str_raw}'.")
                                 malformed_segment_exists = True
-                                continue # Skip this malformed segment
+                                continue
                             try:
-                                weight_f = float(weight_s) # Weights are floats
+                                weight_f = float(weight_s)
                                 parsed_prompts.append(types.WeightedPrompt(text=text_p, weight=weight_f))
                             except ValueError:
-                                print(f"Error: Invalid weight '{weight_s}' in segment '{segment_str_raw}'. Must be a number. Skipping this segment.")
+                                print(f"Error: Invalid weight '{weight_s}' in segment '{segment_str_raw}'. Must be a number.")
                                 malformed_segment_exists = True
-                                continue # Skip this malformed segment
                         else:
-                            # This segment is not in "text:weight" format.
-                            print(f"Error: Segment '{segment_str_raw}' is not in 'text:weight' format. Skipping this segment.")
+                            print(f"Error: Segment '{segment_str_raw}' is not in 'text:weight' format.")
                             malformed_segment_exists = True
-                            continue # Skip this malformed segment
-
-                    if parsed_prompts: # If at least one prompt was successfully parsed.
+                    
+                    if parsed_prompts:
                         prompt_repr = [f"'{p.text}':{p.weight}" for p in parsed_prompts]
                         if malformed_segment_exists:
-                            print(f"Partially sending {len(parsed_prompts)} valid weighted prompt(s) due to errors in other segments: {', '.join(prompt_repr)}")
+                            print(f"Partially sending {len(parsed_prompts)} valid weighted prompt(s) due to errors: {', '.join(prompt_repr)}")
                         else:
                             print(f"Sending multiple weighted prompts: {', '.join(prompt_repr)}")
                         await session.set_weighted_prompts(prompts=parsed_prompts)
-                    else: # No valid prompts were parsed from the input string that contained ":"
-                        print("Error: Input contained ':' suggesting multi-prompt format, but no valid 'text:weight' segments were successfully parsed. No action taken.")
+                    else:
+                        print("Error: No valid prompts parsed from input. No action taken.")
 
-                    continue
+                elif address == "/lyria/play":
+                    print("Received /lyria/play. Calling session.play().")
+                    await session.play()
 
-                # If none of the above, treat as a regular single text prompt
-                print(f"Sending single text prompt: \"{prompt_str}\"")
-                await session.set_weighted_prompts(
-                    prompts=[types.WeightedPrompt(text=prompt_str, weight=1.0)]
-                )
+                elif address == "/lyria/pause":
+                    print("Received /lyria/pause. Calling session.pause().")
+                    await session.pause()
+
+                elif address == "/lyria/stop":
+                    print("Received /lyria/stop. Calling session.stop().")
+                    await session.stop()
+                    osc_queue.task_done()
+                    print("Send loop is terminating due to /lyria/stop command.")
+                    return # Exit the send loop
+
+                elif address == "/lyria/bpm":
+                    if not args:
+                        print("Error: /lyria/bpm expects one argument (number or 'AUTO').")
+                        osc_queue.task_done()
+                        continue
+                    
+                    bpm_arg = args[0]
+                    if isinstance(bpm_arg, str) and bpm_arg.upper() == 'AUTO':
+                        if hasattr(config, 'bpm'):
+                            del config.bpm
+                        print(f"Setting BPM to AUTO, requires resetting context.")
+                    else:
+                        try:
+                            bpm_value = int(bpm_arg)
+                            config.bpm = bpm_value
+                            print(f"Setting BPM to {bpm_value}, requires resetting context.")
+                        except ValueError:
+                            print(f"Error: Invalid BPM value '{bpm_arg}'. Must be a number or 'AUTO'.")
+                            osc_queue.task_done()
+                            continue
+                    await session.set_music_generation_config(config=config)
+                    await session.reset_context()
+
+                elif address == "/lyria/scale":
+                    if not args or not isinstance(args[0], str):
+                        print("Error: /lyria/scale expects one string argument (scale name or 'AUTO').")
+                        osc_queue.task_done()
+                        continue
+
+                    scale_arg = args[0]
+                    if scale_arg.upper() == 'AUTO':
+                        if hasattr(config, 'scale'):
+                            del config.scale
+                        print(f"Setting Scale to AUTO, requires resetting context.")
+                    else:
+                        found_scale_enum_member = None
+                        for scale_member in types.Scale: # types.Scale is an enum
+                            if scale_member.name.lower() == scale_arg.lower():
+                                found_scale_enum_member = scale_member
+                                break
+                        if found_scale_enum_member:
+                            config.scale = found_scale_enum_member
+                            print(f"Setting scale to {found_scale_enum_member.name}, requires resetting context.")
+                        else:
+                            print(f"Error: Scale name '{scale_arg}' not found in types.Scale. Available: {[m.name for m in types.Scale]}")
+                            osc_queue.task_done()
+                            continue
+                    await session.set_music_generation_config(config=config)
+                    await session.reset_context()
+                
+                else:
+                    print(f"Unrecognized OSC address: {address}")
+
+                osc_queue.task_done()
 
         print("Starting with some piano")
         await session.set_weighted_prompts(
             prompts=[types.WeightedPrompt(text="Piano", weight=1.0)]
         )
 
-        # Set initial BPM and Scale
         config.bpm = 120
-        config.scale = types.Scale.A_FLAT_MAJOR_F_MINOR # Example initial scale
+        config.scale = types.Scale.A_FLAT_MAJOR_F_MINOR
         print(f"Setting initial BPM to {config.bpm} and scale to {config.scale.name}")
         await session.set_music_generation_config(config=config)
 
@@ -222,10 +249,15 @@ async def main():
         send_task = asyncio.create_task(send())
         receive_task = asyncio.create_task(receive())
 
-        # Don't quit the loop until tasks are done
-        await asyncio.gather(send_task, receive_task)
-
-    # Clean up PyAudio
-    p.terminate()
+        try:
+            await asyncio.gather(send_task, receive_task)
+        except Exception as e:
+            print(f"Error in main tasks: {e}")
+        finally:
+            print("Cleaning up PyAudio...")
+            p.terminate()
+            # Server thread is daemon, so it will exit when main program exits.
+            # If server was not daemon, you might need server.shutdown() here.
+            print("Exiting main function.")
 
 asyncio.run(main())

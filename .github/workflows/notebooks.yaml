@@ -1,46 +1,83 @@
 # Notebook-related checks
-
 name: Notebooks
 
 on:
-  # Relevant PRs
   pull_request:
     paths:
-    - "**.ipynb"
-  # Allow manual runs
+      - "**.ipynb"
   workflow_dispatch:
 
 jobs:
-  # Format all notebooks.
   nbfmt:
-    name: Notebook format
+    name: Notebook format and testing
     runs-on: ubuntu-latest
+
+    if: github.event.pull_request.head.repo.full_name == github.repository
+
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0  # Get *full* history
-    - uses: actions/setup-python@v4
-    - name: Install tensorflow-docs
-      run: python3 -m pip install -U git+https://github.com/tensorflow/docs
-    - name: Fetch main branch
-      run: git fetch -u origin main:main
-    - name: Check notebook formatting
-      run: |
-        if [ "${{ github.event_name }}" == "pull_request" ]; then
-          # Only check notebooks modified in this pull request
-          base_commit=$(git merge-base HEAD ${{ github.event.pull_request.base.sha }})
-          readarray -t changed_notebooks < <(git diff --name-only "${base_commit}...HEAD" "*.ipynb")
-        else
-          # Manual run, check everything
-          readarray -t changed_notebooks < <(find -name '*.ipynb')
-        fi
-        if [[ ${#changed_notebooks[@]} == 0 ]]; then
-          echo "No notebooks modified in this pull request."
-          exit 0
-        else
-          echo "Check formatting with nbfmt:"
-          python3 -m tensorflow_docs.tools.nbfmt --test "${changed_notebooks[@]}"
-        fi
+      - uses: actions/checkout@v4
+        with:
+          ref:   ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.BOT_PAT }}      # PAT for auto-running workflow after formating commit
+          fetch-depth: 0                     # merge-base needs full history
+
+      - uses: actions/setup-python@v4
+
+      - name: Install tensorflow-docs
+        run: python -m pip install -qU git+https://github.com/tensorflow/docs
+
+      - name: Configure Git user
+        run: |
+          git config --local user.email "servicebot@github.com"
+          git config --local user.name  "service"
+
+      # Main loop: test each notebook, format if needed, single commit at the end
+      - name: Check notebooks one-by-one, format if required
+        run: |
+          set -e
+
+          # Collect notebooks touched in this PR
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base=$(git merge-base HEAD origin/${{ github.event.pull_request.base.ref }})
+            readarray -t notebooks < <(git diff --name-only "${base}...HEAD" "*.ipynb")
+          else
+            readarray -t notebooks < <(find . -name '*.ipynb')
+          fi
+
+          if [[ ${#notebooks[@]} -eq 0 ]]; then
+            echo "No notebooks modified in this pull request."
+            exit 0
+          fi
+
+          echo "Notebook list: ${notebooks[*]}"
+
+          # Loop: run --test, format when necessary
+          reformatted=false
+          for nb in "${notebooks[@]}"; do
+            echo "::group::${nb}"
+            set +e
+            python -m tensorflow_docs.tools.nbfmt --test "${nb}"
+            test_rc=$?
+            set -e
+
+            if [[ $test_rc -eq 0 ]]; then
+              echo "${nb} already formatted"
+            else
+              echo "${nb} needs formatting → applying formatter"
+              python -m tensorflow_docs.tools.nbfmt "${nb}"
+              reformatted=true
+            fi
+            echo "::endgroup::"
+          done
+
+          # One commit if anything changed
+          if [[ "$reformatted" == "true" ]]; then
+            git add "${notebooks[@]}"
+            git commit -m "style: auto-format notebooks with nbfmt"
+            git push
+          else
+            echo "All notebooks already in canonical format – nothing to commit."
+          fi
 
   nblint:
     name: Notebook lint

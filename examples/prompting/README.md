@@ -7,7 +7,7 @@ This directory contains a collection of examples demonstrating various prompting
 Here's a breakdown of the notebooks available and the concepts they cover:
 
 *   **[`Add_prefixes.ipynb`](./Add_prefixes.ipynb):** Shows how to use prefixes to structure prompts for clearer model responses.
-
+*   
 *   **[`Adding_context_information.ipynb`](./Adding_context_information.ipynb):** Shows how to provide context for more relevant and accurate responses.
 
 *   **[`Basic_Classification.ipynb`](./Basic_Classification.ipynb):** Demonstrates how to use prompting for classification tasks, categorizing content.

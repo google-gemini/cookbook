@@ -54,7 +54,6 @@ Some old examples are still using the legacy SDK, they should still work and are
 
 * [Personalized Product Descriptions with Weaviate](../examples/weaviate/personalized_description_with_weaviate_and_gemini_api.ipynb): Load data into a Weaviate vector DB, build a semantic search system using embeddings from the Gemini API, create a knowledge graph and generate unique product descriptions for personas using the Gemini API and Weaviate.
 * [Similarity Search using Qdrant](../examples/qdrant/Qdrant_similarity_search.ipynb): Load website data, build a semantic search system using embeddings from the Gemini API, store the embeddings in a Qdrant vector DB and perform similarity search using the Gemini API and Qdrant.
-* [Movie Recommendation using Qdrant](../examples/qdrant/Movie_Recommendation.ipynb): Process and embed a large movie dataset with the Gemini API, index movie vectors in Qdrant, and build a semantic movie recommender that finds similar movies based on user queries using vector similarity search.
 * [MLflow Tracing for Observability](../examples/mlflow/MLflow_Observability.ipynb): Utilize MLflow tracing to capture detailed information about your interactions with Google GenAI APIs.
 <br><br>
 

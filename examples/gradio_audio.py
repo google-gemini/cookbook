@@ -70,7 +70,7 @@ class GeminiConfig:
     def __init__(self):
         self.api_key = os.getenv(KEY_NAME)
         self.host = "generativelanguage.googleapis.com"
-        self.model = "models/gemini-2.5-flash-lite-preview-06-17"
+        self.model = "models/gemini-2.0-flash-exp"
         self.ws_url = f"wss://{self.host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key={self.api_key}"
 
 class AudioProcessor:
@@ -259,6 +259,6 @@ def registry(
 
 # Launch the Gradio interface
 gr.load(
-    name='gemini-2.5-flash-lite-preview-06-17',
+    name='gemini-2.0-flash-exp',
     src=registry,
 ).launch()

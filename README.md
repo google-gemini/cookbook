@@ -1,83 +1,83 @@
-# Welcome to the Gemini API Cookbook
+# 欢迎来到 Gemini API Cookbook
 
-This cookbook provides a structured learning path for using the Gemini API, focusing on hands-on tutorials and practical examples.
+这本 Cookbook 为使用 Gemini API 提供了一个结构化的学习路径，重点是实践教程和实际示例。
 
-**For comprehensive API documentation, visit [ai.google.dev](https://ai.google.dev/gemini-api/docs).**
+**如需完整的 API 文档，请访问 [ai.google.dev](https://ai.google.dev/gemini-api/docs)。**
 <br><br>
 
-## Navigating the Cookbook
+## 浏览 Cookbook
 
-This cookbook is organized into two main categories:
+这本 Cookbook 分为两个主要类别：
 
-1.  **[Quick Starts](https://github.com/google-gemini/cookbook/tree/main/quickstarts/):**  Step-by-step guides covering both introductory topics ("[Get Started](./quickstarts/Get_started.ipynb)") and specific API features.
-2.  **[Examples](https://github.com/google-gemini/cookbook/tree/main/examples/):** Practical use cases demonstrating how to combine multiple features.
+1.  **[快速入门](https://github.com/google-gemini/cookbook/tree/main/quickstarts/):**  循序渐进的指南，涵盖入门主题（“[开始使用](./quickstarts/Get_started.ipynb)”）和特定的 API 功能。
+2.  **[示例](https://github.com/google-gemini/cookbook/tree/main/examples/):**  演示如何组合多个功能的实际用例。
 
-We also showcase **Demos** in separate repositories, illustrating end-to-end applications of the Gemini API.
+我们还在单独的存储库中展示了 **演示**，用于说明 Gemini API 的端到端应用程序。
 <br><br>
 
-## What's New?
+## 最新内容
 
-Here are the recent additions and updates to the Gemini API and the Cookbook: 
+以下是 Gemini API 和 Cookbook 的最新添加和更新：
 
-* **Gemini 2.5 models:** Explore the capabilities of the latest Gemini 2.5 models (Flash and Pro)! See the [Get Started Guide](./quickstarts/Get_started.ipynb) and the [thinking guide](./quickstarts/Get_started_thinking.ipynb) as they'll all be thinking ones.
-* **Imagen and Veo**: Get started with our media generation model with this brand new [Veo guide](./quickstarts/Get_started_Veo.ipynb) and [Imagen guide](./quickstarts/Get_started_imagen.ipynb)!
-* **Lyria and TTS**: Get started with podcast and music generation with the [TTS](./quickstarts/Get_started_TTS.ipynb) and [Lyria RealTime](./quickstarts/Get_started_LyriaRealTime.ipynb) models.
-* **LiveAPI**: Get started with the [multimodal Live API](./quickstarts/Get_started_LiveAPI.ipynb) and unlock new interactivity with Gemini.
-* **Recently Added Guides:**
-  * [Browser as a tool](./examples/Browser_as_a_tool.ipynb): Use a web browser for live and internal (intranet) web interactions
-  * [Grounding](./quickstarts/Grounding.ipynb): Discover different ways to ground Gemini's answer using different tools, from Google Search to Youtube and the new url context tool.
-  
+* **Gemini 2.5 模型：** 探索最新的 Gemini 2.5 模型（Flash 和 Pro）的功能！请参阅[入门指南](./quickstarts/Get_started.ipynb)和[思维指南](./quickstarts/Get_started_thinking.ipynb)，它们都将是思维模型。
+* **Imagen 和 Veo**：通过这个全新的 [Veo 指南](./quickstarts/Get_started_Veo.ipynb) 和 [Imagen 指南](./quickstarts/Get_started_imagen.ipynb) 开始使用我们的媒体生成模型！
+* **Lyria 和 TTS**：通过 [TTS](./quickstarts/Get_started_TTS.ipynb) 和 [Lyria RealTime](./quickstarts/Get_started_LyriaRealTime.ipynb) 模型开始播客和音乐生成。
+* **LiveAPI**：通过[多模式 Live API](./quickstarts/Get_started_LiveAPI.ipynb) 开始使用，并利用 Gemini 解锁新的交互性。
+* **最近添加的指南：**
+  * [浏览器即工具](./examples/Browser_as_a_tool.ipynb)：使用 Web 浏览器进行实时和内部（内联网）Web 交互
+  * [Grounding](./quickstarts/Grounding.ipynb)：探索使用不同工具（从 Google 搜索到 Youtube 以及新的 URL 上下文工具）来支持 Gemini 回答的不同方法。
+
 <br><br>
 
-## 1. Quick Starts
+## 1. 快速入门
 
-The [quickstarts section](https://github.com/google-gemini/cookbook/tree/main/quickstarts/) contains step-by-step tutorials to get you started with Gemini and learn about its specific features.
+[快速入门部分](https://github.com/google-gemini/cookbook/tree/main/quickstarts/)包含循序渐进的教程，可帮助您开始使用 Gemini 并了解其特定功能。
 
-**To begin, you'll need:**
+**首先，您需要：**
 
-1.  A Google account.
-2.  An API key (create one in [Google AI Studio](https://aistudio.google.com/app/apikey)).
+1.  一个 Google 帐户。
+2.  一个 API 密钥（在 [Google AI Studio](https://aistudio.google.com/app/apikey) 中创建一个）。
 <br><br>
 
-We recommend starting with the following:
+我们建议从以下内容开始：
 
-*   [Authentication](./quickstarts/Authentication.ipynb): Set up your API key for access.
-*   [**Get started**](./quickstarts/Get_started.ipynb): Get started with Gemini models and the Gemini API, covering basic prompting and multimodal input.
+*   [身份验证](./quickstarts/Authentication.ipynb)：设置您的 API 密钥以供访问。
+*   [**开始使用**](./quickstarts/Get_started.ipynb)：开始使用 Gemini 模型和 Gemini API，涵盖基本提示和多模式输入。
 <br><br>
 
-Then, explore the other quickstarts tutorials to learn about individual features:
-*  [Get started with Live API](./quickstarts/Get_started_LiveAPI.ipynb): Get started with the live API with this comprehensive overview of its capabilities
-*  [Get started with Veo](./quickstarts/Get_started_Veo.ipynb): Get started with our video generation capabilities 
-*  [Get started with Imagen](./quickstarts/Get_started_imagen.ipynb) and [Image-out](./quickstarts/Image_out.ipynb): Get started with our image generation capabilities 
-*  [Grounding](./quickstarts/Search_Grounding.ipynb): use Google Search for grounded responses
-*  [Code execution](./quickstarts/Code_Execution.ipynb): Generating and running Python code to solve complex tasks and even ouput graphs
-*  And [many more](https://github.com/google-gemini/cookbook/tree/main/quickstarts/)
+然后，浏览其他快速入门教程以了解各个功能：
+*  [Live API 入门](./quickstarts/Get_started_LiveAPI.ipynb)：通过这份对其功能进行全面概述的指南，开始使用 Live API
+*  [Veo 入门](./quickstarts/Get_started_Veo.ipynb)：开始使用我们的视频生成功能
+*  [Imagen 入门](./quickstarts/Get_started_imagen.ipynb) 和 [Image-out](./quickstarts/Image_out.ipynb)：开始使用我们的图像生成功能
+*  [Grounding](./quickstarts/Search_Grounding.ipynb)：使用 Google 搜索获取有根据的回复
+*  [代码执行](./quickstarts/Code_Execution.ipynb)：生成并运行 Python 代码以解决复杂任务，甚至输出图形
+*  以及[更多](https://github.com/google-gemini/cookbook/tree/main/quickstarts/)
 <br><br>
 
-## 2. Examples (Practical Use Cases)
+## 2. 示例（实际用例）
 
-These examples demonstrate how to combine multiple Gemini API features or 3rd-party tools to build more complex applications.
-*  [Illustrate a book](./examples/Book_illustration.ipynb): Use Gemini and Imagen to create illustration for an open-source book
-*  [Animated Story Generation](./examples/Animated_Story_Video_Generation_gemini.ipynb): Create animated videos by combining Gemini's story generation, Imagen, and audio synthesis
-*  [Plotting and mapping Live](./examples/LiveAPI_plotting_and_mapping.ipynb): Mix *Live API* and *Code execution* to solve complex tasks live
-*  [3D Spatial understanding](./examples/Spatial_understanding_3d.ipynb): Use Gemini *3D spatial* abilities to understand 3D scenes
-*  [Gradio and live API](./examples/gradio_audio.py): Use gradio to deploy your own instance of the *Live API*
-*  And [many many more](https://github.com/google-gemini/cookbook/tree/main/examples/)
+这些示例演示了如何组合多个 Gemini API 功能或第三方工具来构建更复杂的应用程序。
+*  [为书籍配图](./examples/Book_illustration.ipynb)：使用 Gemini 和 Imagen 为一本开源书籍创作插图
+*  [动画故事生成](./examples/Animated_Story_Video_Generation_gemini.ipynb)：通过结合 Gemini 的故事生成、Imagen 和音频合成来创建动画视频
+*  [实时绘图和映射](./examples/LiveAPI_plotting_and_mapping.ipynb)：混合 *Live API* 和 *代码执行* 以实时解决复杂任务
+*  [3D 空间理解](./examples/Spatial_understanding_3d.ipynb)：使用 Gemini 的 *3D 空间* 能力来理解 3D 场景
+*  [Gradio 和 Live API](./examples/gradio_audio.py)：使用 Gradio 部署您自己的 *Live API* 实例
+*  以及[更多更多](https://github.com/google-gemini/cookbook/tree/main/examples/)
 <br><br>
 
-## 3. Demos (End-to-End Applications)
+## 3. 演示（端到端应用程序）
 
-These fully functional, end-to-end applications showcase the power of Gemini in real-world scenarios. 
+这些功能齐全的端到端应用程序展示了 Gemini 在实际场景中的强大功能。
 
-*   [Gemini API quickstart](https://github.com/google-gemini/gemini-api-quickstart): Python Flask App running with the Google AI Gemini API, designed to get you started building with Gemini's multi-modal capabilities
-*   [Multimodal Live API Web Console](https://github.com/google-gemini/multimodal-live-api-web-console): React-based starter app for using the Multimodal Live API over a websocket
-*   [Google AI Studio Starter Applets](https://github.com/google-gemini/starter-applets): A collection of small apps that demonstrate how Gemini can be used to create interactive experiences
+*   [Gemini API 快速入门](https://github.com/google-gemini/gemini-api-quickstart)：一个使用 Google AI Gemini API 运行的 Python Flask 应用程序，旨在帮助您开始使用 Gemini 的多模式功能进行构建
+*   [多模式 Live API Web 控制台](https://github.com/google-gemini/multimodal-live-api-web-console)：一个基于 React 的入门应用程序，用于通过 Websocket 使用多模式 Live API
+*   [Google AI Studio 入门小部件](https://github.com/google-gemini/starter-applets)：一组小型应用程序，演示了如何使用 Gemini 创建交互式体验
 <br><br>
 
 
-## Official SDKs
+## 官方 SDK
 
-The Gemini API is a REST API. You can call it directly using tools like `curl` (see [REST examples](https://github.com/google-gemini/cookbook/tree/main/quickstarts/rest/) or the great [Postman workspace](https://www.postman.com/ai-on-postman/google-gemini-apis/overview)), or use one of our official SDKs:
+Gemini API 是一个 REST API。您可以直接使用 `curl` 等工具调用它（请参阅 [REST 示例](https://github.com/google-gemini/cookbook/tree/main/quickstarts/rest/) 或出色的 [Postman 工作区](https://www.postman.com/ai-on-postman/google-gemini-apis/overview)），或使用我们的官方 SDK 之一：
 * [Python](https://github.com/googleapis/python-genai)
 * [Go](https://github.com/google/generative-ai-go)
 * [Node.js](https://github.com/google/generative-ai-js)
@@ -87,40 +87,40 @@ The Gemini API is a REST API. You can call it directly using tools like `curl` (
 <br><br>
 
 
-## Important: Migration
+## 重要提示：迁移
 
-With Gemini 2 we are offering a [new SDK](https://github.com/googleapis/python-genai)
+对于 Gemini 2，我们提供了一个[新的 SDK](https://github.com/googleapis/python-genai)
 (<code>[google-genai](https://pypi.org/project/google-genai/)</code>,
-<code>v1.0</code>). The updated SDK is fully compatible with all Gemini API
-models and features, including recent additions like the
-[live API](https://aistudio.google.com/live) (audio + video streaming),
-improved tool usage (
-[code execution](https://ai.google.dev/gemini-api/docs/code-execution?lang=python),
-[function calling](https://ai.google.dev/gemini-api/docs/function-calling/tutorial?lang=python) and integrated
-[Google search grounding](https://ai.google.dev/gemini-api/docs/grounding?lang=python)),
-and media generation ([Imagen](https://ai.google.dev/gemini-api/docs/imagen) and [Veo](https://ai.google.dev/gemini-api/docs/video)).
-This SDK allows you to connect to the Gemini API through either
-[Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.0-flash-exp) or
-[Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/gemini-v2).
+<code>v1.0</code>)。更新后的 SDK 与所有 Gemini API
+模型和功能完全兼容，包括最近添加的功能，例如
+[Live API](https://aistudio.google.com/live)（音频 + 视频流）、
+改进的工具使用（
+[代码执行](https://ai.google.dev/gemini-api/docs/code-execution?lang=python)、
+[函数调用](https://ai.google.dev/gemini-api/docs/function-calling/tutorial?lang=python)和集成的
+[Google 搜索 Grounding](https://ai.google.dev/gemini-api/docs/grounding?lang=python)）
+以及媒体生成（[Imagen](https://ai.google.dev/gemini-api/docs/imagen) 和 [Veo](https://ai.google.dev/gemini-api/docs/video)）。
+此 SDK 允许您通过
+[Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.0-flash-exp) 或
+[Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/gemini-v2) 连接到 Gemini API。
 
-The <code>[google-generativeai](https://pypi.org/project/google-generativeai)</code>
-package will continue to support the original Gemini models.
-It <em>can</em> also be used with Gemini 2 models, just with a limited feature
-set. All new features will be developed in the new Google GenAI SDK.
+<code>[google-generativeai](https://pypi.org/project/google-generativeai)</code>
+软件包将继续支持原始的 Gemini 模型。
+它*也*可以与 Gemini 2 模型一起使用，但功能集有限。
+所有新功能都将在新的 Google GenAI SDK 中开发。
 
-See the [migration guide](https://ai.google.dev/gemini-api/docs/migrate) for details.
+有关详细信息，请参阅[迁移指南](https://ai.google.dev/gemini-api/docs/migrate)。
 <br><br>
 
-## Get Help
+## 获取帮助
 
-Ask a question on the [Google AI Developer Forum](https://discuss.ai.google.dev/).
+在 [Google AI 开发者论坛](https://discuss.ai.google.dev/)上提问。
 
-## The Gemini API on Google Cloud Vertex AI
+## Google Cloud Vertex AI 上的 Gemini API
 
-For enterprise developers, the Gemini API is also available on Google Cloud Vertex AI. See [this repo](https://github.com/GoogleCloudPlatform/generative-ai) for examples.
+对于企业开发人员，Gemini API 也可在 Google Cloud Vertex AI 上使用。有关示例，请参阅[此存储库](https://github.com/GoogleCloudPlatform/generative-ai)。
 
-## Contributing
+## 贡献
 
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+欢迎贡献！有关详细信息，请参阅 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
-Thank you for developing with the Gemini API! We're excited to see what you create.
+感谢您使用 Gemini API 进行开发！我们很高兴看到您的创作。

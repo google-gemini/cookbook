@@ -1,0 +1,19 @@
+# Python libraries for AI, Data Processing, and Web Services
+
+# AI & Data Processing
+tensorflow
+# or pytorch (choose one)
+transformers
+scikit-learn
+numpy
+pandas
+
+# API & Web Service
+fastapi
+uvicorn[standard]
+pydantic
+
+# Utilities & Code Quality
+requests
+python-dotenv
+ruff

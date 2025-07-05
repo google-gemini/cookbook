@@ -1,17 +1,47 @@
 {
-    "name": "Gemini Cookbook Dev Container",
-    "image": "mcr.microsoft.com/devcontainers/universal:2",
-    "waitFor": "onCreateCommand",
-    "updateContentCommand": "python3 -m pip install ipywidgets",
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "ms-toolsai.jupyter",
-                "ms-python.python",
-                "eamodio.gitlens"
-            ]
+  "name": "Jules Project Dev Environment",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  // Add features to the base container. This is the modern, modular way.
+  "features": {
+    // Re-adding the Node.js feature. This is the professional way to manage tooling.
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts" // Use the Long-Term Support version for stability.
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "charliermarsh.ruff",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "eamodio.gitlens",
+        "ms-azuretools.vscode-docker",
+        "github.copilot"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "[javascript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
         }
-    },
+      }
+    }
+  },
+  // Forward ports from the container to your local machine
+  "forwardPorts": [8000, 3000],
 
-    "postCreateCommand": "sudo cp .devcontainer/welcome.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt"
+  // Run commands after the container is created.
+  // This command will now succeed because Node.js (and npm) will be installed.
+  "postCreateCommand": "pip install -r requirements.txt && npm install",
+
+  // Run as the non-root user defined in the Dockerfile
+  "remoteUser": "appuser"
 }

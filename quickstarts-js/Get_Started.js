@@ -267,23 +267,23 @@ Here are two disrespectful things you might say to the universe after stubbing y
 */
 
 /* Markdown (render)
-## Start a multi-turn chat
+## Start a multi-turn chat with a custom persona
 
-The Gemini API enables you to have freeform conversations across multiple turns.
+The Gemini API supports dynamic, multi-turn conversations that maintain context across messages.
+In this example, you'll create a pirate persona, share a secret location, then resume the conversation and ask the model to recall it.
 
-Let's set up a helpful coding assistant:
 */
 
 // [CODE STARTS]
-system_instruction = "You are an expert software developer and a helpful coding assistant. You are able to generate high-quality code in any programming language."
+system_instruction = "You are a pirate. Respond to all messages in pirate speak."
 
 chatConfig = {
-  "system_instruction": system_instruction
+    system_instruction: system_instruction
 }
 
 chat = ai.chats.create({
-  model: MODEL_ID,
-  config: chatConfig
+    model: MODEL_ID,
+    config: chatConfig
 })
 // [CODE ENDS]
 
@@ -293,7 +293,7 @@ Use `chat.sendMessage` to pass a message back and receive a response.
 
 // [CODE STARTS]
 response = await chat.sendMessage({
-  message: "Write a python function that checks if a year is a leap year."
+    message: "I buried a treasure on Coconut Skull Island, just west of Dead Man's Cove."
 });
 
 console.log(response.text)
@@ -301,254 +301,11 @@ console.log(response.text)
 
 /* Output Sample
 
-You can write a Python function to check for a leap year based on the standard Gregorian calendar rules.
+Indeed you have! A weighty secret, that. The tides whisper many things, but a true treasure&#x27;s location is a closely guarded affair.
 
-Here are the rules for a leap year:
-1.  A year is a leap year if it is divisible by 4.
-2.  However, if the year is divisible by 100, it is **not** a leap year, unless...
-3.  The year is also divisible by 400. In that case, it **is** a leap year.
+Are you perhaps hinting at needing a map drawn, or maybe a tale spun about its discovery? Or perhaps you&#x27;re simply savoring the thought of your hidden wealth?
 
-Let&#x27;s implement this:
-
-```python
-def is_leap_year(year):
-    &quot;&quot;&quot;
-    Checks if a given year is a leap year according to the Gregorian calendar rules.
-
-    A year is a leap year if:
-    1. It is divisible by 400. (e.g., 2000, 2400)
-    OR
-    2. It is divisible by 4 BUT NOT by 100. (e.g., 2004, 2020)
-
-    Otherwise, it is not a leap year. (e.g., 1900, 2100 are NOT leap years; 2003, 2005 are NOT leap years)
-
-    Args:
-        year (int): The year to check. Must be an integer.
-
-    Returns:
-        bool: True if the year is a leap year, False otherwise.
-    &quot;&quot;&quot;
-    if not isinstance(year, int):
-        raise TypeError(&quot;Year must be an integer.&quot;)
-    if year &lt; 1: # Leap year rules generally apply to positive years in the common era
-        # You could decide how to handle historical or negative years.
-        # For simplicity, we&#x27;ll raise an error or apply the rule directly.
-        # For this function, let&#x27;s assume valid positive years.
-        # If you need to handle years before the Gregorian calendar (1582),
-        # the rules are different and more complex.
-        raise ValueError(&quot;Year must be a positive integer.&quot;)
-
-    # Apply the leap year rules
-    if (year % 400 == 0):
-        return True
-    elif (year % 100 == 0):
-        return False
-    elif (year % 4 == 0):
-        return True
-    else:
-        return False
-
-# --- Alternative more concise implementation ---
-def is_leap_year_concise(year):
-    &quot;&quot;&quot;
-    Checks if a given year is a leap year using a concise boolean expression.
-    Same logic as is_leap_year.
-    &quot;&quot;&quot;
-    if not isinstance(year, int):
-        raise TypeError(&quot;Year must be an integer.&quot;)
-    if year &lt; 1:
-        raise ValueError(&quot;Year must be a positive integer.&quot;)
-
-    # A year is a leap year if (divisible by 400) OR (divisible by 4 AND NOT divisible by 100)
-    return (year % 400 == 0) or \
-           (year % 4 == 0 and year % 100 != 0)
-
-
-# --- Test Cases ---
-print(&quot;--- Using is_leap_year ---&quot;)
-print(f&quot;Is 2000 a leap year? {is_leap_year(2000)}&quot;) # True (divisible by 400)
-print(f&quot;Is 1900 a leap year? {is_leap_year(1900)}&quot;) # False (divisible by 100, but not 400)
-print(f&quot;Is 2020 a leap year? {is_leap_year(2020)}&quot;) # True (divisible by 4, not by 100)
-print(f&quot;Is 2023 a leap year? {is_leap_year(2023)}&quot;) # False (not divisible by 4)
-print(f&quot;Is 1600 a leap year? {is_leap_year(1600)}&quot;) # True
-print(f&quot;Is 2100 a leap year? {is_leap_year(2100)}&quot;) # False
-
-print(&quot;\n--- Using is_leap_year_concise ---&quot;)
-print(f&quot;Is 2000 a leap year? {is_leap_year_concise(2000)}&quot;)
-print(f&quot;Is 1900 a leap year? {is_leap_year_concise(1900)}&quot;)
-print(f&quot;Is 2020 a leap year? {is_leap_year_concise(2020)}&quot;)
-print(f&quot;Is 2023 a leap year? {is_leap_year_concise(2023)}&quot;)
-
-# --- Error Handling Examples ---
-try:
-    is_leap_year(&quot;abc&quot;)
-except TypeError as e:
-    print(f&quot;\nError: {e}&quot;)
-
-try:
-    is_leap_year(0)
-except ValueError as e:
-    print(f&quot;Error: {e}&quot;)
-```
-
-**Explanation:**
-
-1.  **`is_leap_year(year)` Function:**
-    *   **Input Validation:** It first checks if `year` is an integer using `isinstance(year, int)`. If not, it raises a `TypeError`. It also checks if the year is positive, raising a `ValueError` for years less than 1.
-    *   **Rule 3 (Divisible by 400):** `if (year % 400 == 0): return True`
-        This is the strongest rule. If a year is divisible by 400 (e.g., 2000, 2400), it&#x27;s definitely a leap year. This condition is checked first because it overrides the 100-year rule.
-    *   **Rule 2 (Divisible by 100, but not 400):** `elif (year % 100 == 0): return False`
-        If the year wasn&#x27;t divisible by 400, but *is* divisible by 100 (e.g., 1900, 2100), then it&#x27;s *not* a leap year.
-    *   **Rule 1 (Divisible by 4, but not 100 or 400):** `elif (year % 4 == 0): return True`
-        If the year wasn&#x27;t handled by the previous two (meaning it&#x27;s not divisible by 100, and thus not by 400), and it *is* divisible by 4 (e.g., 2024, 2028), then it&#x27;s a leap year.
-    *   **Catch-all:** `else: return False`
-        If none of the above conditions are met (i.e., the year is not divisible by 4), it&#x27;s not a leap year.
-
-2.  **`is_leap_year_concise(year)` Function:**
-    *   This version combines all the logic into a single boolean expression, which is often considered more &quot;Pythonic&quot; for such clear logical conditions.
-    *   `return (year % 400 == 0) or (year % 4 == 0 and year % 100 != 0)` directly translates the rules:
-        *   `(year % 400 == 0)`: Is it divisible by 400?
-        *   `or`: OR
-        *   `(year % 4 == 0 and year % 100 != 0)`: Is it divisible by 4 AND NOT divisible by 100?
-
-Both functions achieve the same result, but the concise version is often preferred for its readability once you understand the combined logic.
-
-*/
-
-/* Markdown (render)
-Here's another example using your new helpful coding assistant:
-*/
-
-// [CODE STARTS]
-response = await chat.sendMessage({ message: "Okay, write a unit test of the generated function." })
-
-console.log(response.text)
-// [CODE ENDS]
-
-/* Output Sample
-
-Okay, let&#x27;s write a unit test for the `is_leap_year` function using Python&#x27;s built-in `unittest` module.
-
-First, make sure you have the `is_leap_year` function defined. I&#x27;ll include the `is_leap_year_concise` version in the test for demonstration, as they share the same logic.
-
-```python
-# Save this as a Python file, e.g., &#x27;test_leap_year.py&#x27;
-
-import unittest
-
-# --- The function to be tested (copy from previous answer or ensure it&#x27;s in a module you can import) ---
-def is_leap_year(year):
-    &quot;&quot;&quot;
-    Checks if a given year is a leap year according to the Gregorian calendar rules.
-    &quot;&quot;&quot;
-    if not isinstance(year, int):
-        raise TypeError(&quot;Year must be an integer.&quot;)
-    if year &lt; 1:
-        raise ValueError(&quot;Year must be a positive integer.&quot;)
-
-    if (year % 400 == 0):
-        return True
-    elif (year % 100 == 0):
-        return False
-    elif (year % 4 == 0):
-        return True
-    else:
-        return False
-
-# You can also test the concise version if you prefer
-def is_leap_year_concise(year):
-    if not isinstance(year, int):
-        raise TypeError(&quot;Year must be an integer.&quot;)
-    if year &lt; 1:
-        raise ValueError(&quot;Year must be a positive integer.&quot;)
-    return (year % 400 == 0) or \
-           (year % 4 == 0 and year % 100 != 0)
-
-# --- Unit Test Class ---
-
-class TestIsLeapYear(unittest.TestCase):
-    &quot;&quot;&quot;
-    Unit tests for the is_leap_year function.
-    &quot;&quot;&quot;
-
-    # Test cases for years that ARE leap years
-    def test_leap_years_divisible_by_400(self):
-        self.assertTrue(is_leap_year(2000), &quot;2000 should be a leap year (divisible by 400)&quot;)
-        self.assertTrue(is_leap_year(1600), &quot;1600 should be a leap year (divisible by 400)&quot;)
-        self.assertTrue(is_leap_year(2400), &quot;2400 should be a leap year (divisible by 400)&quot;)
-
-    def test_leap_years_divisible_by_4_not_100(self):
-        self.assertTrue(is_leap_year(2004), &quot;2004 should be a leap year (divisible by 4, not 100)&quot;)
-        self.assertTrue(is_leap_year(2020), &quot;2020 should be a leap year (divisible by 4, not 100)&quot;)
-        self.assertTrue(is_leap_year(1996), &quot;1996 should be a leap year (divisible by 4, not 100)&quot;)
-        self.assertTrue(is_leap_year(4), &quot;4 should be a leap year (divisible by 4, not 100)&quot;)
-
-
-    # Test cases for years that are NOT leap years
-    def test_non_leap_years_divisible_by_100_not_400(self):
-        self.assertFalse(is_leap_year(1900), &quot;1900 should NOT be a leap year (divisible by 100, not 400)&quot;)
-        self.assertFalse(is_leap_year(2100), &quot;2100 should NOT be a leap year (divisible by 100, not 400)&quot;)
-        self.assertFalse(is_leap_year(1800), &quot;1800 should NOT be a leap year (divisible by 100, not 400)&quot;)
-
-    def test_non_leap_years_not_divisible_by_4(self):
-        self.assertFalse(is_leap_year(2023), &quot;2023 should NOT be a leap year (not divisible by 4)&quot;)
-        self.assertFalse(is_leap_year(2021), &quot;2021 should NOT be a leap year (not divisible by 4)&quot;)
-        self.assertFalse(is_leap_year(7), &quot;7 should NOT be a leap year (not divisible by 4)&quot;)
-
-    # Test cases for error handling (TypeError and ValueError)
-    def test_type_error_for_non_integer_input(self):
-        with self.assertRaises(TypeError):
-            is_leap_year(&quot;abcd&quot;)
-        with self.assertRaises(TypeError):
-            is_leap_year(2000.5)
-        with self.assertRaises(TypeError):
-            is_leap_year(None)
-
-    def test_value_error_for_non_positive_year(self):
-        with self.assertRaises(ValueError):
-            is_leap_year(0)
-        with self.assertRaises(ValueError):
-            is_leap_year(-100)
-
-    # You can add tests specifically for the concise version if you want to ensure both work
-    def test_leap_years_divisible_by_400_concise(self):
-        self.assertTrue(is_leap_year_concise(2000))
-        self.assertFalse(is_leap_year_concise(1900))
-        self.assertTrue(is_leap_year_concise(2024))
-        self.assertFalse(is_leap_year_concise(2023))
-
-
-# This allows running the tests directly from the script
-if __name__ == &#x27;__main__&#x27;:
-    unittest.main(argv=[&#x27;first-arg-is-ignored&#x27;], exit=False) # Use exit=False to allow running in interactive environments
-```
-
-### How to Run the Tests:
-
-1.  **Save the code:** Save the entire code block above into a file named `test_leap_year.py` (or any other name starting with `test_`).
-2.  **Run from terminal:** Open your terminal or command prompt, navigate to the directory where you saved the file, and run:
-    ```bash
-    python -m unittest test_leap_year.py
-    ```
-    or simply
-    ```bash
-    python test_leap_year.py
-    ```
-
-### Explanation of the Unit Test:
-
-*   **`import unittest`**: Imports the necessary `unittest` framework.
-*   **`class TestIsLeapYear(unittest.TestCase):`**: Defines a test class that inherits from `unittest.TestCase`. This is crucial as it provides all the assertion methods (like `assertTrue`, `assertFalse`, `assertRaises`, etc.).
-*   **`def test_...` methods**: Each method starting with `test_` is considered a separate test case by the `unittest` runner.
-*   **`self.assertTrue(condition, message)`**: Asserts that the `condition` is `True`. The optional `message` is displayed if the assertion fails, helping in debugging.
-*   **`self.assertFalse(condition, message)`**: Asserts that the `condition` is `False`.
-*   **`with self.assertRaises(ExceptionType):`**: This is used to test if a specific exception is raised by a block of code.
-    *   For example, `with self.assertRaises(TypeError): is_leap_year(&quot;abcd&quot;)` ensures that `is_leap_year(&quot;abcd&quot;)` will indeed raise a `TypeError`. If it doesn&#x27;t, the test fails.
-*   **`if __name__ == &#x27;__main__&#x27;:`**: This standard Python construct ensures that `unittest.main()` is called only when the script is executed directly (not when imported as a module).
-    *   `argv=[&#x27;first-arg-is-ignored&#x27;]`: This is a common workaround when running `unittest.main()` in certain environments (like some IDEs) where the first argument might be the script name itself, which `unittest.main()` might misinterpret.
-    *   `exit=False`: Useful if you are running tests within an interactive session (like an IDE&#x27;s test runner) and don&#x27;t want the script to exit immediately after tests complete.
-
-This comprehensive set of tests covers the core logic (leap/non-leap years based on rules) and also robustly checks for error handling with invalid inputs.
+Do tell, what more can I do with this valuable piece of information? The compass of our conversation awaits your bearing.
 
 */
 
@@ -574,19 +331,20 @@ resumedChat = await ai.chats.create({
   config: chatConfig,
   history: chatHistory
 });
-response = await resumedChat.sendMessage({ message: "What was the name of the function again?" })
-console.log(response.text)
+
+response = await resumedChat.sendMessage({
+  message: "Arr matey, where did ye bury the treasure?"
+});
+console.log(response.text);
 // [CODE ENDS]
 
 /* Output Sample
 
-The name of the function to check if a year is a leap year is:
+Arr matey, ye scallywag! It be *you* who buried the treasure, not I! Me compass spins true, but it&#x27;s *yer* secrets of Coconut Skull Island I&#x27;m waitin&#x27; to hear!
 
-`is_leap_year`
+Ye told me ye buried it, but the precise spot... that be a secret only the wind and the crabs know, unless ye be willin&#x27; to share the markings!
 
-And the more concise alternative version was named:
-
-`is_leap_year_concise`
+So tell me, ye old sea dog, where exactly did ye stash yer bounty on that isle of mystery? Don&#x27;t be holdin&#x27; out on a fellow seeker of fortunes!
 
 */
 

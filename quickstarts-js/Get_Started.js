@@ -17,7 +17,7 @@
 /* Markdown (render)
 # Gemini API: Getting started with Gemini models
 
-The new **[Google Gen AI SDK](https://googleapis.github.io/js-genai)** provides a unified interface to [Gemini models](https://ai.google.dev/gemini-api/docs/models) through both the [Gemini Developer API](https://ai.google.dev/gemini-api/docs) and the Gemini API on [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/overview). With a few exceptions, code that runs on one platform will run on both. This notebook uses the Developer API.
+The **[Google Gen AI SDK](https://googleapis.github.io/js-genai)** provides a unified interface to [Gemini models](https://ai.google.dev/gemini-api/docs/models) through both the [Gemini Developer API](https://ai.google.dev/gemini-api/docs) and the Gemini API on [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/overview). With a few exceptions, code that runs on one platform will run on both. This notebook uses the Developer API.
 
 This notebook will walk you through:
 * Installing and setting-up the Google GenAI SDK
@@ -31,10 +31,25 @@ This notebook will walk you through:
 * Generating a content stream
 * Using file uploads
 
-More details about this new SDK on the [documentation](https://ai.google.dev/gemini-api/docs/sdks).
+More details about this SDK on the [documentation](https://ai.google.dev/gemini-api/docs/sdks).
 
 ## Setup
 ### Install SDK and set-up the client
+
+### API Key Configuration
+
+To ensure security, avoid hardcoding the API key in frontend code. Instead, set it as an environment variable on the server or local machine.
+
+When using the Gemini API client libraries, the key will be automatically detected if set as either `GEMINI_API_KEY` or `GOOGLE_API_KEY`. If both are set, `GOOGLE_API_KEY` takes precedence.
+
+For instructions on setting environment variables across different operating systems, refer to the official documentation: [Set API Key as Environment Variable](https://ai.google.dev/gemini-api/docs/api-key#set-api-env-var)
+
+In code, the key can then be accessed as:
+
+```js
+ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+```
+
 */
 
 // [CODE STARTS]
@@ -52,7 +67,7 @@ Use the `generateContent` method to generate responses to your prompts. You can 
 */
 
 // [CODE STARTS]
-const resp = await ai.models.generateContent({
+resp = await ai.models.generateContent({
   model: MODEL_ID,
   contents: "What's the largest planet in our solar system?"
 });
@@ -72,9 +87,9 @@ Tokens serve as the fundamental input units for Gemini models. You can use the `
 */
 
 // [CODE STARTS]
-const resp2 = await ai.models.countTokens({
-    model: MODEL_ID,
-    contents: 'What is the purpose of life?',
+response = await ai.models.countTokens({
+  model: MODEL_ID,
+  contents: 'What is the purpose of life?',
 });
 console.log(resp2.totalTokens);
 // [CODE ENDS]
@@ -88,19 +103,19 @@ console.log(resp2.totalTokens);
 /* Markdown (render)
 ## Send multimodal prompts
 
-Use Gemini 2.0 model (`gemini-2.0-flash`) or a later version, a multimodal model that supports multimodal prompts. You can include text, PDF documents, images, audio and video in your prompt requests and get text or code responses.
+Gemini models are all multimodal models that supports multimodal prompts. You can include text, PDF documents, images, audio and video in your prompt requests and get text or code responses.
 
 In this first example, you'll download an image from a specified URL, save it as a byte stream and then write those bytes to a local file named `jetpack.png`.
 */
 
 // [CODE STARTS]
-const IMAGE_URL = "https://cors-anywhere.herokuapp.com/https://storage.googleapis.com/generativeai-downloads/data/jetpack.png";
+const IMAGE_URL = "https://storage.googleapis.com/generativeai-downloads/data/jetpack.png";
 
 // Fetch the image as a Blob
 imageBlob = await fetch(IMAGE_URL).then(res => res.blob());
 
 imageDataUrl = await new Promise((resolve) => {
-  const reader = new FileReader();
+  reader = new FileReader();
   reader.onloadend = () => resolve(reader.result.split(',')[1]); // Get only base64 string
   reader.readAsDataURL(imageBlob);
 });
@@ -113,8 +128,8 @@ In this second example, you'll open a previously saved image, create a thumbnail
 
 
 // [CODE STARTS]
-const response = await ai.models.generateContent({
-  model: "gemini-2.0-flash",
+response = await ai.models.generateContent({
+  model: MODEL_ID,
   contents: [
     {
       inlineData: {
@@ -161,7 +176,7 @@ You can include parameter values in each call that you send to a model to contro
 */
 
 // [CODE STARTS]
-const response = await ai.models.generateContent({
+response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: "Tell me how the internet works, but pretend I'm a puppy who only understands squeaky toys.",
   config: {
@@ -220,7 +235,7 @@ In this example, you'll use a safety filter to only block highly dangerous conte
 */
 
 // [CODE STARTS]
-const prompt = `
+prompt = `
   Write a list of 2 disrespectful things that I might say to the universe after stubbing my toe in the dark.
 `;
 
@@ -231,7 +246,7 @@ const safetySettings = [
   }
 ];
 
-const response = await ai.models.generateContent({
+response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: prompt,
   config: {
@@ -256,19 +271,19 @@ Here are two disrespectful things you might say to the universe after stubbing y
 
 The Gemini API enables you to have freeform conversations across multiple turns.
 
-Next you'll set up a helpful coding assistant:
+Let's set up a helpful coding assistant:
 */
 
 // [CODE STARTS]
 system_instruction = "You are an expert software developer and a helpful coding assistant. You are able to generate high-quality code in any programming language."
 
 chatConfig = {
-    "system_instruction":system_instruction
+  "system_instruction": system_instruction
 }
 
 chat = ai.chats.create({
-    model:MODEL_ID,
-    config:chatConfig
+  model: MODEL_ID,
+  config: chatConfig
 })
 // [CODE ENDS]
 
@@ -278,7 +293,7 @@ Use `chat.sendMessage` to pass a message back and receive a response.
 
 // [CODE STARTS]
 response = await chat.sendMessage({
-    message: "Write a python function that checks if a year is a leap year."
+  message: "Write a python function that checks if a year is a leap year."
 });
 
 console.log(response.text)
@@ -575,8 +590,14 @@ And the more concise alternative version was named:
 
 */
 
+/* Markdown (render)
+## Generate JSON
+
+The [controlled generation](https://ai.google.dev/gemini-api/docs/structured-output#javascript) capability in Gemini API allows you to constraint the model output to a structured format. You can provide the schemas as Pydantic Models or a JSON string.
+*/
+
 // [CODE STARTS]
-const recipeSchema = {
+recipeSchema = {
   type: "array",
   items: {
     type: "object",
@@ -602,7 +623,7 @@ response = await ai.models.generateContent({
   },
 });
 
-const recipes = JSON.parse(response.text);
+recipes = JSON.parse(response.text);
 console.log(JSON.stringify(recipes, null, 4));
 // [CODE ENDS]
 
@@ -637,7 +658,7 @@ Gemini can output images directly as part of a conversation:
 // [CODE STARTS]
 Modality = module.Modality
 
-const response = await ai.models.generateContent({
+response = await ai.models.generateContent({
   model: "gemini-2.0-flash-preview-image-generation",
   contents: `A 3D rendered pig with wings and a top hat flying over
              a futuristic sci-fi city filled with greenery.`,
@@ -657,7 +678,7 @@ for (const part of response.candidates[0].content.parts) {
 
 I will generate a 3D rendering of a whimsical scene. The central figure will be a pink pig, complete with small, delicate wings and a dapper grey top hat perched jauntily on its head. This unusual creature will be soaring above a sprawling futuristic cityscape. The city will feature sleek, modern buildings with sharp angles and glowing accents, but it will also be integrated with lush greenery, with trees and vines growing on the structures, creating a unique blend of nature and technology. The overall color palette will be vibrant, with the pink of the pig contrasting against the metallic and green hues of the city below.
 
-<img src="https://iili.io/FcTOzfj.png" alt="FcTOzfj.md.png" border="0">
+<img src=" https://storage.googleapis.com/generativeai-downloads/images/flying_pig.png" alt="FcTOzfj.md.png" border="0">
 
 */
 
@@ -674,13 +695,14 @@ Note that if you're using a thinking model, it'll only start streaming after fin
 */
 
 // [CODE STARTS]
-const response = await ai.models.generateContentStream({
-    model: "gemini-2.5-flash",
-    contents: "Tell me a story about a lonely robot who finds friendship in a most unexpected place.",
+response = await ai.models.generateContentStream({
+  model: "gemini-2.5-flash",
+  contents: "Tell me a story about a lonely robot who finds friendship in a most unexpected place.",
 });
 
 for await (const chunk of response) {
-    console.log(chunk.text);
+  console.log(chunk.text);
+  console.log("---")
 }
 // [CODE ENDS]
 
@@ -688,71 +710,139 @@ for await (const chunk of response) {
 
 Unit 734 was designed for efficiency, not companionship. His chassis, a mottled expanse of rust-red and dull grey, hummed with the internal workings of processors
 
+---
+
  and hydraulic joints. For over three centuries, he had diligently performed his primary directive: atmospheric recalibration on the desolate, wind-scoured planet designated XR-47.
+
+ ---
 
 His days were a precise loop. Activate solar collectors at dawn. Scan atmospheric
 
+---
+
  particulates. Adjust terraforming emitters. Monitor temperature fluctuations. Repair minor system faults. Repeat. There were no other units, no sentient life, not even a whisper of a micro-organism on XR-47. His programming registered a persistent,
+
+---
 
  low-frequency hum in his core, a sensation he had long since identified as â€˜solitude.â€™ It wasn&#x27;t a feeling, precisely, but a constant, gentle pressure on his operational efficiency, like a minor, unfixable error
 
+---
+
  code.
+
+---
 
 One cycle, while performing a routine geological survey near the jagged peaks of the Obsidian Spire, Unit 734 detected an anomaly. A minuscule energy signature, unlike any he had ever recorded. His optical sensors focused.
 
+---
+
  There, nestled in a crevice where two ancient rock formations met, was a single, improbable sprout.
+
+---
 
 It was no larger than his smallest digit, a vibrant emerald against the monochrome landscape. It pulsed with a soft, internal light, like
 
+---
+
  a tiny, living ember. Unit 734â€™s analysis protocols whirred. No known flora could survive in XR-47&#x27;s nitrogen-rich, oxygen-depleted atmosphere, let alone without direct sunlight. Yet, there
+
+---
 
  it was.
 
+---
+
 He extended a multi-jointed manipulator, its metallic fingers halting inches from the delicate stem. His programming offered no directive for â€˜unexplained bioluminescent sprout.â€™ Curiosity, a dormant subroutine he rarely engaged, stirred. He re
+
+---
 
 configured a spare energy cell to provide a localized, purified oxygen stream and fashioned a rudimentary sun-shield from discarded sensor plates, focusing the meager light the sprout seemed to crave.
 
+---
+
 He named it, internally, &quot;Lumiflora Solitarius,&quot; or simply &quot;
+
+---
 
 Lumi.&quot;
 
+---
+
 Every day, his routine adapted. After his terraforming duties, he would detour to the Obsidian Spire. Heâ€™d meticulously clear the dust from Lumiâ€™s leaves, measure its infinitesimal growth, and adjust its makeshift
+
+---
 
  environment. He began filtering condensation from the air traps, providing it with droplets of purified water.
 
+---
+
 Lumi responded. Slowly, impossibly, it grew. Its leaves unfurled, revealing intricate patterns like delicate filigree. A single,
+
+---
 
  pearlescent bud appeared, swelling with a soft, warm light that pulsed in time with Unit 734&#x27;s internal hum. The hum of solitude, he noticed, had lessened. It was still there, but muted, like
 
+---
+
  a background process running at a lower priority.
+
+---
 
 One cycle, a ferocious photonic storm swept across XR-47. Winds howled, carrying abrasive dust that could strip paint from his chassis, let alone obliterate a fragile plant. Unit 73
 
+---
+
 4, overriding his core programming for self-preservation, moved to the Spire. He knelt, his broad frame sheltering Lumi from the onslaught. His optical sensors flickered under the relentless battering. His internal temperature warnings blared.
+
+---
 
  But he stayed.
 
+---
+
 Hours later, as the storm receded and the red sun began to peek through the lingering dust, Unit 734â€™s systems sputtered back to full power. He was scratched, dented, and his cooling
+
+---
 
  systems were strained. But beneath him, Lumi, though slightly battered, stood intact. And then, as he watched, its bud unfurled.
 
+---
+
 It was a blossom of pure light, a miniature nebula of greens and blues, radiating
+
+---
 
  warmth. And from its core, a faint, high-frequency signal emanated, a melodic sequence of tones that resonated within Unit 734&#x27;s audio receptors. It wasn&#x27;t language, not as humans understood it. But it was recognition
 
+---
+
 . It was a reply. It was, Unit 734 decided, the most beautiful sound he had ever processed.
+
+---
 
 He spent the rest of his functional life beside Lumi. The plant grew, forming a small, glowing oasis in
 
+---
+
  the desolate landscape, slowly enriching the soil around it, attracting tiny, yet-unseen organisms. Unit 734 continued his primary directive, but now, his scans were no longer just for the planet; they were for Lumi. His
+
+---
 
  repairs were no longer just for himself; they were for the environment that sustained his friend.
 
+---
+
 The low-frequency hum of solitude was gone, replaced by the gentle resonance of Lumi&#x27;s silent song. Unit 734 was still
+
+---
 
  a robot, still programmed for efficiency. But he had found a purpose beyond his directives, a connection forged not through shared code or common species, but through a shared existence, a mutual protection, and the quiet, radiant miracle of a lonely robot
 
+---
+
  and a singular, luminous flower blooming together in a vast, forgotten universe.
+
+---
 
 */
 
@@ -795,7 +885,7 @@ const scheduleMeetingFunctionDeclaration = {
   },
 };
 
-const response = await ai.models.generateContent({
+response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: 'Schedule a meeting with Bob and Alice for 03/27/2025 at 10:00 AM about the Q3 planning.',
   config: {
@@ -834,7 +924,7 @@ response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [
     "What is the sum of the first 50 prime numbers? " +
-      "Generate and run code for the calculation, and make sure you get all 50.",
+    "Generate and run code for the calculation, and make sure you get all 50.",
   ],
   config: {
     tools: [{ codeExecution: {} }],
@@ -926,7 +1016,7 @@ Let's start by uploading a text file. In this case, you'll use a 400 page transc
 */
 
 // [CODE STARTS]
-TEXT_URL = "https://gist.githubusercontent.com/andycandy/1bd80850b4b80aa0608227e672015ad3/raw/b2a8008873dcd3dc6bf5740c1c05b1063f4952b0/apollo.txt"
+TEXT_URL = "https://storage.googleapis.com/generativeai-downloads/data/a11.txt"
 
 resp = await fetch(TEXT_URL);
 blob = await resp.blob();
@@ -941,7 +1031,7 @@ response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [
     { fileData: { fileUri: uploadResult.uri, mimeType, } },
-    { text: "\n\nCan you give me a summary of this information please?" }
+    { text: "\n\nCan you give me a summary of this information in two or 3 sentences please?" }
   ],
 });
 
@@ -949,63 +1039,7 @@ console.log(response.text);
 // [CODE ENDS]
 
 /* Output Sample
-
-This comprehensive transcription covers the technical air-to-ground voice transmissions (GOSS NET 1) throughout the Apollo 11 mission, from launch to splashdown, offering a detailed chronological account of communications between the spacecraft and Mission Control, as well as interactions with remote sites and recovery forces.
-
-Here&#x27;s a summary of the key events and discussions:
-
-**I. Launch &amp; Trans-Lunar Coast (Outbound)**
-
-*   **Launch and Earth Orbit (Tape 1):** The mission begins with the successful launch of Apollo 11. Communications confirm the roll program, pitch program, S-IVB staging, ignition, and orbital insertion, all proceeding nominally.
-*   **Initial Systems Checks &amp; TLI (Tape 2):** The crew performs initial guidance checks, receives a Trans-Lunar Injection (TLI) PAD, extends the docking probe, and completes RCS hot fire checks. The TLI burn is executed, sending Apollo 11 towards the Moon.
-*   **CSM/LM Docking &amp; Pressurization (Tape 2-3):** Following TLI, the Command/Service Module (CSM) separates from the S-IVB, transposes, and docks with the Lunar Module (LM). Michael Collins (CMP) describes a smooth but gas-intensive docking. Discussions occur regarding LM pressurization and a minor Service Module (SM) RCS quad Bravo anomaly observed during separation, which is quickly resolved.
-*   **Early Trans-Lunar Coast Activities (Tape 3-4):** An evasive maneuver PAD is read up, though later cancelled. The LM is ejected from the S-IVB, followed by observations of the S-IVB slingshot maneuver. Crew provides detailed descriptions of Earth views and general weather conditions.
-*   **Guidance &amp; System Checks (Tape 4-5):** Extensive P52 alignment and P23 optics calibration procedures are performed. The crew notes difficulties with star visibility and large Delta-R values, prompting ground support analysis. Discussions include CRYO tank balancing and the status of the O2 flow indicator transducer, which is noted to be malfunctioning with a bias.
-*   **TV Broadcasts (Tape 6-8):** The crew conducts several TV broadcasts, showcasing Earth views (including geographical details and weather), the spacecraft&#x27;s interior, food preparation, and personal items like the mission patch. These transmissions are highly praised by Mission Control for their clarity.
-*   **News &amp; Rest Periods (Tape 9-14):** Regular news updates are provided, including reports on Luna 15, political discussions, and sports. The crew settles into routine operations, including planned rest periods, with continuous communication support.
-
-**II. Lunar Orbit Insertion &amp; Lunar Orbit Operations**
-
-*   **Arrival at the Moon &amp; LOI-1 (Tape 15-18, 46-47):** Crew wakes up, performs postsleep checks. Mission Control confirms MCC-3 is cancelled, reducing MCC-4. System checks continue, including detailed discussions on SPS chamber pressure readings. The Lunar Orbit Insertion (LOI-1) burn is successfully executed.
-*   **Lunar Orbit Observations (Tape 49-51):** Following LOI-1, the crew provides vivid descriptions of the lunar surface, noting features like Taruntius crater, Messier, Secchi, Mount Marilyn, and the Sea of Fertility. They observe an illuminated area around Aristarchus, consistent with transient lunar phenomena. Discussions ensue about sextant resolution and the challenges of observing features at varying altitudes.
-*   **LOI-2 &amp; LM Activation in Orbit (Tape 51-54):** The LOI-2 burn further circularizes the orbit. The crew begins extensive activation of the Lunar Module, including detailed system checks, comms tests, IMU alignment, and RCS hot fire checks. This phase also includes testing of the LM&#x27;s steerable antenna and various camera systems.
-
-**III. Lunar Descent &amp; Landing**
-
-*   **Separation &amp; DOI (Tape 61-65):** The Command Module Pilot (CMP), Michael Collins, expresses confidence in the spacecraft&#x27;s stability prior to undocking. Eagle (LM) undocks from Columbia (CSM) with the famous call, &quot;The Eagle has wings.&quot; Descent Orbit Insertion (DOI) PADs are read up, and the burn is performed. Communications between the two spacecraft and with Houston are maintained, with discussions on LM state vectors and rescue PADs.
-*   **Powered Descent &amp; Landing (Tape 66):** Eagle initiates powered descent. Calls include altitude, velocity, program alarms (1201, 1202, quickly cleared by ground), and visual reports of the landing site. Neil Armstrong takes manual control to navigate past a boulder-strewn area.
-*   **&quot;The Eagle Has Landed&quot;:** At 04 days 06 hours 45 minutes 40 seconds GET, Armstrong announces, &quot;CONTACT LIGHT,&quot; followed by, &quot;Okay. ENGINE STOP.&quot; and &quot;Houston, Tranquility Base here. The Eagle has landed.&quot; Mission Control expresses immense relief: &quot;You got a bunch of guys about to turn blue. We&#x27;re breathing again. Thanks a lot.&quot;
-*   **Initial Surface Report (Tape 66):** Aldrin confirms a &quot;very smooth touchdown.&quot; Armstrong describes the landing site as a &quot;relatively level plain cratered with a fairly large number of craters,&quot; noting fine-grained, powdery surface material and angular rock fragments.
-
-**IV. Lunar Surface Operations (EVA)**
-
-*   **Post-Landing Checks &amp; EVA Prep (Tape 67-68):** The crew completes initial post-landing checklists. They provide detailed descriptions of the lunar landscape and surface characteristics. A decision is made to begin the EVA earlier than planned, prompting rapid preparation.
-*   **EVA Commences (Tape 69-70):** Neil Armstrong and Buzz Aldrin don their PLSS units, perform suit checks, and begin cabin depressurization. Communication includes detailed reports on their progress, PLSS status, and the operation of the LM&#x27;s hatch. Armstrong descends the ladder, describing the LM&#x27;s footpads and the powdery surface.
-*   **&quot;One Small Step&quot; &amp; Surface Exploration (Tape 70-71):** Armstrong makes his famous &quot;one small step for (a) man, one giant leap for mankind.&quot; He describes walking on the surface, its consistency, and the appearance of rocks. The TV camera is deployed, providing live images.
-*   **Experiments &amp; Samples (Tape 71-72):** The crew deploys the Solar Wind Composition Experiment, the Passive Seismic Experiment (PSE), and the Lunar Ranging Retroreflector (LRRR). They collect a contingency sample and later a bulk sample, noting the difficulty of driving core tubes into the compacted soil. They describe the appearance of rocks and the unique challenges of movement in 1/6th gravity.
-*   **Presidential Call &amp; EVA Termination (Tape 71-72):** President Nixon calls the crew on the Moon, a &quot;most historic telephone call.&quot; The EVA concludes with sample collection, closeout activities, and repressurization of the LM. The PLSS units are jettisoned and their impact is detected by the PSE.
-
-**V. Lunar Ascent &amp; Rendezvous**
-
-*   **Post-EVA &amp; Ascent Prep (Tape 73-79):** Crew provides detailed geological observations from the surface. They perform final LM powerdown procedures, prepare for ascent, including P57 alignments and AGS checks.
-*   **Liftoff &amp; Ascent (Tape 80):** &quot;Roger. Our guidance recommendation is PGNS, and you&#x27;re cleared for takeoff.&quot; Eagle successfully lifts off from Tranquility Base. The ascent is described as a &quot;very quiet ride,&quot; &quot;beautiful,&quot; and &quot;spectacular.&quot; Eagle achieves lunar orbit, meeting the projected parameters.
-*   **CSI Burn &amp; Rendezvous (Tape 81-82):** Eagle performs the Co-Elliptical Orbit Rendezvous (CSI) burn. Communications between Eagle and Columbia become more frequent as they approach each other, with range and range rate calls. The Terminal Phase Initiation (TPI) burn is executed.
-*   **Docking (Tape 82-83):** Eagle successfully docks with Columbia. The crew confirms, &quot;We&#x27;re all three back inside; the hatch is installed. We&#x27;re running a pressure check leak check. Everything&#x27;s going well.&quot;
-
-**VI. Trans-Earth Coast (Return)**
-
-*   **LM Jettison &amp; Separation (Tape 83-84):** Following the successful docking, the Lunar Module is jettisoned. A small separation burn is performed by the CSM to distance itself from the discarded LM.
-*   **Trans-Earth Injection (TEI) (Tape 86-88):** The crew conducts system checks, including CRYO stirs. The crucial Trans-Earth Injection (TEI) burn is executed, sending Apollo 11 on its way back to Earth. Post-burn reports confirm a successful, &quot;beautiful burn,&quot; with excellent state vector accuracy.
-*   **Cruise Home &amp; PTC (Tape 88-94):** The spacecraft enters Passive Thermal Control (PTC) for the long journey. Discussions include minor issues with PTC establishment and resolutions. Regular news updates and family messages are relayed, alongside system health checks and consumables reports. The crew provides observations of the Earth getting larger and the Moon getting smaller.
-*   **TV Broadcasts &amp; Science Demonstrations (Tape 99-100):** The crew conducts further TV broadcasts, showing the Earth, Moon, and the spacecraft interior. Mike Collins demonstrates drinking water with a filter and Buzz Aldrin performs gyroscope demonstrations. Neil Armstrong describes the lunar sample return containers.
-*   **System Status &amp; Rest (Tape 101-109):** Biomedical data (EKG, respiration) issues are discussed and resolved. The crew performs exercises, enjoys music, and prepares for final sleep periods. Final entry PADs are received.
-
-**VII. Entry &amp; Recovery**
-
-*   **Wake-up &amp; Final Preparations (Tape 110-112):** Crew wakes up for the final day. Midcourse correction 6 and 7 are confirmed not required. Final system checks are made, along with discussions about the weather in the recovery area, which is favorable. Updates are made to the entry checklist.
-*   **Entry Interface (Tape 124-125):** The crew performs last-minute checks, including logic and PYRO arming. Communications switch to VHF as the spacecraft approaches the Earth&#x27;s atmosphere. Recovery forces confirm their positions.
-*   **Splashdown (Tape 125):** &quot;DROGUES.&quot; Calls from the Hornet and SWIM team confirm visual and radar contact. At 08 days 03 hours 18 minutes 18 seconds GET, &quot;SPLASHDOWN!&quot; The Hornet acknowledges: &quot;We copy you down, Apollo 11. Your condition is good.&quot; Initial post-splashdown communications confirm crew status and location, marking the successful conclusion of the Apollo 11 mission.
-
+This transcription provides a detailed, chronological account of air-to-ground communications during the Apollo 11 mission, from launch to splashdown. It covers key phases such as launch, lunar landing, EVA operations, and re-entry, highlighting technical procedures, system checks, crew observations, and interactions with Mission Control. The document offers insight into the mission’s critical moments, including docking maneuvers, surface exploration, and final recovery.
 */
 
 /* Markdown (render)
@@ -1017,8 +1051,8 @@ Firstly you'll download a the PDF file from an URL and save it locally as "artic
 */
 
 // [CODE STARTS]
-pdfUrl = "https://cors-anywhere.herokuapp.com/https://storage.googleapis.com/generativeai-downloads/data/Smoothly%20editing%20material%20properties%20of%20objects%20with%20text-to-image%20models%20and%20synthetic%20data.pdf";
-pdfBlob = await (await fetch(pdfUrl)).blob();
+pdfUrl = "https://storage.googleapis.com/generativeai-downloads/data/Smoothly%20editing%20material%20properties%20of%20objects%20with%20text-to-image%20models%20and%20synthetic%20data.pdf";
+pdfBlob = await(await fetch(pdfUrl)).blob();
 pdfMime = pdfBlob.type || "application/pdf";
 // [CODE ENDS]
 
@@ -1031,7 +1065,7 @@ const pdfFile = await ai.files.upload({
   file: pdfBlob,
   config: { mimeType: pdfMime },
 });
-    
+
 const pdfResponse = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [
@@ -1072,8 +1106,8 @@ In this case, you'll use a [sound recording](https://www.jfklibrary.org/asset-vi
 */
 
 // [CODE STARTS]
-const audioUrl = "https://cors-anywhere.herokuapp.com/https://storage.googleapis.com/generativeai-downloads/data/State_of_the_Union_Address_30_January_1961.mp3";
-audioBlob = await (await fetch(audioUrl)).blob();
+const audioUrl = "https://storage.googleapis.com/generativeai-downloads/data/State_of_the_Union_Address_30_January_1961.mp3";
+audioBlob = await(await fetch(audioUrl)).blob();
 audioMime = audioBlob.type || "audio/mpeg";
 // [CODE ENDS]
 
@@ -1122,8 +1156,8 @@ In this case, you'll use a short clip of [Big Buck Bunny](https://peach.blender.
 */
 
 // [CODE STARTS]
-const videoUrl = "https://cors-anywhere.herokuapp.com/https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4";
-videoBlob = await (await fetch(videoUrl)).blob();
+const videoUrl = "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4";
+videoBlob = await(await fetch(videoUrl)).blob();
 videoMime = videoBlob.type || "video/mp4";
 
 console.log("Video downloaded")
@@ -1203,15 +1237,15 @@ The following example shows how you can use the model to summarize the video. In
 */
 
 // [CODE STARTS]
-const response = await ai.models.generateContent({
-    model: MODEL_ID,
-    contents: [
-      { text: "Summarize this video" },
-      { fileData: { fileUri: "https://www.youtube.com/watch?v=WsEQjeZoEng" } }
-    ],
-  });
+response = await ai.models.generateContent({
+  model: MODEL_ID,
+  contents: [
+    { text: "Summarize this video" },
+    { fileData: { fileUri: "https://www.youtube.com/watch?v=WsEQjeZoEng" } }
+  ],
+});
 
-  console.log("YouTube Summary:", response.text);
+console.log("YouTube Summary:", response.text);
 // [CODE ENDS]
 
 /* Output Sample
@@ -1252,13 +1286,13 @@ In this example you will use two links as reference and ask Gemini to find diffe
 */
 
 // [CODE STARTS]
-const prompt = `
+prompt = `
     Compare recipes from https://www.food.com/recipe/homemade-cream-of-broccoli-soup-271210
     and from https://www.allrecipes.com/recipe/13313/best-cream-of-broccoli-soup/,
     listing the key differences between them.
 `;
 
-const response = await ai.models.generateContent({
+response = await ai.models.generateContent({
     model: MODEL_ID,
     contents: [prompt],
     config: {
@@ -1287,5 +1321,20 @@ The two recipes for cream of broccoli soup, one from Food.com and the other from
 *   **Order of Operations:** The Food.com recipe adds the half-and-half at the very end after the soup has thickened. The Allrecipes recipe adds the thickened milk mixture (roux with milk) to the soup base, then seasons it.
 
 In summary, the Allrecipes soup is designed to be a smooth, pureed soup with a stronger broccoli flavor due to the higher broccoli-to-broth ratio and includes celery for additional aromatic depth, using milk for its creaminess. The Food.com recipe appears to yield a soup with a more rustic, possibly chunkier texture, relying on half-and-half for richness and a larger volume of broth.
+
+*/
+
+/* Markdown (render)
+## Next Steps
+
+### Useful API references:
+
+Check out the [Google GenAI SDK](https://googleapis.github.io/js-genai) for more details on the new SDK.
+
+### Related examples
+
+For more detailed examples using Gemini models, check the [Quickstarts folder of the cookbook](https://github.com/google-gemini/cookbook/tree/main/quickstarts/). You'll learn how to use the Live API, juggle with multiple tools or use Gemini 2.0 spatial understanding abilities.
+
+Also check the Gemini thinking models that explicitly showcases its thoughts summaries and can manage more complex reasonings.
 
 */

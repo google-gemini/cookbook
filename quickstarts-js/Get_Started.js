@@ -67,7 +67,7 @@ Use the `generateContent` method to generate responses to your prompts. You can 
 */
 
 // [CODE STARTS]
-resp = await ai.models.generateContent({
+response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: "What's the largest planet in our solar system?"
 });
@@ -776,7 +776,7 @@ Let's start by uploading a text file. In this case, you'll use a 400 page transc
 // [CODE STARTS]
 TEXT_URL = "https://storage.googleapis.com/generativeai-downloads/data/a11.txt"
 
-resp = await fetch(TEXT_URL);
+response = await fetch(TEXT_URL);
 blob = await resp.blob();
 mimeType = blob.type || "application/octet-stream";
 

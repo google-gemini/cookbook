@@ -914,7 +914,7 @@ In this case, you'll use a short clip of [Big Buck Bunny](https://peach.blender.
 */
 
 // [CODE STARTS]
-const videoUrl = "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4";
+const videoUrl = "https://storage.googleapis.com/generativeai-downloads/videos/Big_Buck_Bunny.mp4";
 videoBlob = await(await fetch(videoUrl)).blob();
 videoMime = videoBlob.type || "video/mp4";
 

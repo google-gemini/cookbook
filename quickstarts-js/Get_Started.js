@@ -71,7 +71,7 @@ response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: "What's the largest planet in our solar system?"
 });
-console.log(resp.text);
+console.log(response.text);
 // [CODE ENDS]
 
 /* Output Sample
@@ -91,7 +91,7 @@ response = await ai.models.countTokens({
   model: MODEL_ID,
   contents: 'What is the purpose of life?',
 });
-console.log(resp2.totalTokens);
+console.log(response.totalTokens);
 // [CODE ENDS]
 
 /* Output Sample
@@ -777,7 +777,7 @@ Let's start by uploading a text file. In this case, you'll use a 400 page transc
 TEXT_URL = "https://storage.googleapis.com/generativeai-downloads/data/a11.txt"
 
 response = await fetch(TEXT_URL);
-blob = await resp.blob();
+blob = await response.blob();
 mimeType = blob.type || "application/octet-stream";
 
 uploadResult = await ai.files.upload({

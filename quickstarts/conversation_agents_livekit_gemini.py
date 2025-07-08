@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# to run it, install livekit and all dependency , add gemini api in .env and
+# to run it, pip install livekit google.genai livekit-agents livekit-api python-dotenv google-genai livekit-plugins-google , add gemini api in .env and
 # then run "python conversation_agents_livekit_gemini.py console" in terminal
 
 import asyncio  

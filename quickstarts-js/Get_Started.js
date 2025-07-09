@@ -710,22 +710,23 @@ parts.forEach((part) => {
 
 /* Output Sample
 
-To find the sum of the first 50 prime numbers, I will first generate a list of prime numbers. I&#x27;ll use a function to check for primality and then iterate through numbers, adding primes to a list until I have 50. Finally, I will sum the numbers in that list.
+To find the sum of the first 50 prime numbers, I will use a Python script.
+First, I&#x27;ll define a function to check if a number is prime.
+Second, I&#x27;ll iterate through numbers, checking for primality, and add them to a list until I have collected 50 prime numbers.
+Finally, I will calculate the sum of these 50 prime numbers.
 
-First, let&#x27;s define a function to check if a number is prime:
-A number `n` is prime if it is greater than 1 and not divisible by any integer from 2 up to its square root.
+Here is the code to perform these steps:
 
 
 
 ---
 
-```\nimport math
-
-def is_prime(n):
-    if n &lt; 2:
+```
+def is_prime(num):
+    if num &lt; 2:
         return False
-    for i in range(2, int(math.sqrt(n)) + 1):
-        if n % i == 0:
+    for i in range(2, int(num**0.5) + 1):
+        if num % i == 0:
             return False
     return True
 
@@ -736,22 +737,21 @@ while len(primes) &lt; 50:
         primes.append(num)
     num += 1
 
-print(f&quot;The first 50 prime numbers are: {primes}&quot;)
-print(f&quot;Number of primes found: {len(primes)}&quot;)
-
 sum_of_primes = sum(primes)
-print(f&quot;The sum of the first 50 prime numbers is: {sum_of_primes}&quot;)\n```
+
+print(f&#x27;The first 50 prime numbers are: {primes}&#x27;)
+print(f&#x27;The sum of the first 50 prime numbers is: {sum_of_primes}&#x27;)
+```
 
 ---
 
 The first 50 prime numbers are: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229]
-Number of primes found: 50
 The sum of the first 50 prime numbers is: 5117
 
 
 ---
 
-The first 50 prime numbers have been identified and their sum calculated.
+The first 50 prime numbers are: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, and 229.
 
 The sum of the first 50 prime numbers is **5117**.
 

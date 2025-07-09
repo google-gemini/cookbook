@@ -4,7 +4,7 @@ Welcome to the JavaScript/TypeScript section of the Gemini Cookbook!
 
 This folder contains code samples and quickstart notebooks designed to help you get up and running with Gemini models using the JavaScript/TypeScript SDK.
 
-While you can explore the code samples directly here, we highly recommend opening them in [AI Studio](https://aistudio.google.com) for the best experience. AI Studio lets you experiment with the code interactively without any setup required.
+While you can explore the code samples directly here, we highly recommend opening them in [AI Studio](https://aistudio.google.com/app/apps) for the best experience. AI Studio lets you experiment with the code interactively without any setup required.
 
 ## About This Folder
 

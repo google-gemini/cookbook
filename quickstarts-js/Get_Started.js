@@ -696,7 +696,7 @@ parts.forEach((part) => {
   }
 
   if (part.executableCode && part.executableCode.code) {
-    code = "```" + part.executableCode.code + "```";
+    code = "```\n" + part.executableCode.code + "\n```";
     console.log(code);
   }
 
@@ -719,7 +719,7 @@ A number `n` is prime if it is greater than 1 and not divisible by any integer f
 
 ---
 
-```import math
+```\nimport math
 
 def is_prime(n):
     if n &lt; 2:
@@ -740,7 +740,7 @@ print(f&quot;The first 50 prime numbers are: {primes}&quot;)
 print(f&quot;Number of primes found: {len(primes)}&quot;)
 
 sum_of_primes = sum(primes)
-print(f&quot;The sum of the first 50 prime numbers is: {sum_of_primes}&quot;)```
+print(f&quot;The sum of the first 50 prime numbers is: {sum_of_primes}&quot;)\n```
 
 ---
 

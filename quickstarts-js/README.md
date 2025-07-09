@@ -1,14 +1,21 @@
-# Javascript/Typescript quickstarts
+# JavaScript/TypeScript Quickstarts
 
-This foplder contains code samples to help you discover how to use the Gemini models.
+Welcome to the JavaScript/TypeScript section of the Gemini Cookbook!
 
-While the code samples can be read directly here, the experience will be better in AI Studio where you'll be able to tinker with the code and run it without having to set-up anything.
+This folder contains code samples and quickstart notebooks designed to help you get up and running with Gemini models using the JavaScript/TypeScript SDK.
 
-## Table of contents
+While you can explore the code samples directly here, we highly recommend opening them in [AI Studio](https://aistudio.google.com) for the best experience. AI Studio lets you experiment with the code interactively without any setup required.
 
-This is a collection of fun and helpful examples for the Gemini API.
+## About This Folder
 
-| Cookbook | Description | Features | Open |
-| -------- | ----------- | -------- | ---- |
-| Get Started | This is our first draft, come back in a few days for the first official JS notebooks | Get started with the JS/TS SDK! | [![Colab](https://storage.googleapis.com/generativeai-downloads/images/Open_in_AIStudio.svg)](https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221RPwJa-TqASplcgvGTTSIckQ6MWM_IYhg%22%5D,%22action%22:%22open%22,%22userId%22:%22108886437999779306059%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing) |
+This is a growing collection of fun and practical examples demonstrating how to interact with the Gemini API in JavaScript and TypeScript. We're starting with foundational examples, and more advanced and diverse use cases will be added soon, just like the existing Python examples in the [`quickstart`](../quickstarts/) and [`examples`](../examples/) folders.
+
+Stay tuned, more JavaScript notebooks are on the way!
+
+## Table of Contents
+
+| Cookbook | Description | Features | Launch | Code File |
+| --- | --- | --- | --- | --- | 
+| Get Started | A comprehensive introduction to the Gemini JS/TS SDK, demonstrating features such as text and multimodal prompting, token counting, system instructions, safety filters, multi-turn chat, output control, function calling, content streaming, file uploads, and using URL or YouTube video context. | Explore core Gemini capabilities in JS/TS | [![Open in AI Studio](https://storage.googleapis.com/generativeai-downloads/images/Open_in_AIStudio.svg)](https://aistudio.google.com/apps/bundled/get_started?showPreview=true) | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JS" width="20"/> [Get_Started.js](./Get_Started.js) |
+
 

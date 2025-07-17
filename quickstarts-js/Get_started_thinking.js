@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* Markdown (render)
 # Use Gemini thinking
 
@@ -879,12 +895,6 @@ response = await ai.models.generateContent({
 
 // [CODE ENDS]
 
-/* Output Sample
-
-ServerError: got status: 500 INTERNAL. {&quot;error&quot;:{&quot;code&quot;:500,&quot;message&quot;:&quot;Internal error encountered.&quot;,&quot;status&quot;:&quot;INTERNAL&quot;}}
-
-*/
-
 /* Markdown (render)
 Checking the model response, including the code generated and the execution result:
 */
@@ -1173,134 +1183,10 @@ Here are some of the most significant scientific breakthroughs announced last mo
 *   **Creation of an Artificial Electrical Brain Synapse** Researchers successfully developed an artificial electrical brain synapse in mice. This innovative creation altered the flow of electricity through the mouse&#x27;s brain and modified its behavior, leading to a more sociable and less anxious mouse. This breakthrough holds significant, albeit early, potential for new medical treatments for mental illnesses by bypassing natural neurotransmitter systems.
 
 ## **Google Search information:**
-
-&lt;style&gt;
-.container {
-  align-items: center;
-  border-radius: 8px;
-  display: flex;
-  font-family: Google Sans, Roboto, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  padding: 8px 12px;
-}
-.chip {
-  display: inline-block;
-  border: solid 1px;
-  border-radius: 16px;
-  min-width: 14px;
-  padding: 5px 16px;
-  text-align: center;
-  user-select: none;
-  margin: 0 8px;
-  -webkit-tap-highlight-color: transparent;
-}
-.carousel {
-  overflow: auto;
-  scrollbar-width: none;
-  white-space: nowrap;
-  margin-right: -12px;
-}
-.headline {
-  display: flex;
-  margin-right: 4px;
-}
-.gradient-container {
-  position: relative;
-}
-.gradient {
-  position: absolute;
-  transform: translate(3px, -9px);
-  height: 36px;
-  width: 9px;
-}
-@media (prefers-color-scheme: light) {
-  .container {
-    background-color: #fafafa;
-    box-shadow: 0 0 0 1px #0000000f;
-  }
-  .headline-label {
-    color: #1f1f1f;
-  }
-  .chip {
-    background-color: #ffffff;
-    border-color: #d2d2d2;
-    color: #5e5e5e;
-    text-decoration: none;
-  }
-  .chip:hover {
-    background-color: #f2f2f2;
-  }
-  .chip:focus {
-    background-color: #f2f2f2;
-  }
-  .chip:active {
-    background-color: #d8d8d8;
-    border-color: #b6b6b6;
-  }
-  .logo-dark {
-    display: none;
-  }
-  .gradient {
-    background: linear-gradient(90deg, #fafafa 15%, #fafafa00 100%);
-  }
-}
-@media (prefers-color-scheme: dark) {
-  .container {
-    background-color: #1f1f1f;
-    box-shadow: 0 0 0 1px #ffffff26;
-  }
-  .headline-label {
-    color: #fff;
-  }
-  .chip {
-    background-color: #2c2c2c;
-    border-color: #3c4043;
-    color: #fff;
-    text-decoration: none;
-  }
-  .chip:hover {
-    background-color: #353536;
-  }
-  .chip:focus {
-    background-color: #353536;
-  }
-  .chip:active {
-    background-color: #464849;
-    border-color: #53575b;
-  }
-  .logo-light {
-    display: none;
-  }
-  .gradient {
-    background: linear-gradient(90deg, #1f1f1f 15%, #1f1f1f00 100%);
-  }
-}
-&lt;/style&gt;
-&lt;div class=&quot;container&quot;&gt;
-  &lt;div class=&quot;headline&quot;&gt;
-    &lt;svg class=&quot;logo-light&quot; width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;9 9 35 35&quot; fill=&quot;none&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;&gt;
-      &lt;path fill-rule=&quot;evenodd&quot; clip-rule=&quot;evenodd&quot; d=&quot;M42.8622 27.0064C42.8622 25.7839 42.7525 24.6084 42.5487 23.4799H26.3109V30.1568H35.5897C35.1821 32.3041 33.9596 34.1222 32.1258 35.3448V39.6864H37.7213C40.9814 36.677 42.8622 32.2571 42.8622 27.0064V27.0064Z&quot; fill=&quot;#4285F4&quot;/&gt;
-      &lt;path fill-rule=&quot;evenodd&quot; clip-rule=&quot;evenodd&quot; d=&quot;M26.3109 43.8555C30.9659 43.8555 34.8687 42.3195 37.7213 39.6863L32.1258 35.3447C30.5898 36.3792 28.6306 37.0061 26.3109 37.0061C21.8282 37.0061 18.0195 33.9811 16.6559 29.906H10.9194V34.3573C13.7563 39.9841 19.5712 43.8555 26.3109 43.8555V43.8555Z&quot; fill=&quot;#34A853&quot;/&gt;
-      &lt;path fill-rule=&quot;evenodd&quot; clip-rule=&quot;evenodd&quot; d=&quot;M16.6559 29.8904C16.3111 28.8559 16.1074 27.7588 16.1074 26.6146C16.1074 25.4704 16.3111 24.3733 16.6559 23.3388V18.8875H10.9194C9.74388 21.2072 9.06992 23.8247 9.06992 26.6146C9.06992 29.4045 9.74388 32.022 10.9194 34.3417L15.3864 30.8621L16.6559 29.8904V29.8904Z&quot; fill=&quot;#FBBC05&quot;/&gt;
-      &lt;path fill-rule=&quot;evenodd&quot; clip-rule=&quot;evenodd&quot; d=&quot;M26.3109 16.2386C28.85 16.2386 31.107 17.1164 32.9095 18.8091L37.8466 13.8719C34.853 11.082 30.9659 9.3736 26.3109 9.3736C19.5712 9.3736 13.7563 13.245 10.9194 18.8875L16.6559 23.3388C18.0195 19.2636 21.8282 16.2386 26.3109 16.2386V16.2386Z&quot; fill=&quot;#EA4335&quot;/&gt;
-    &lt;/svg&gt;
-    &lt;svg class=&quot;logo-dark&quot; width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 48 48&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;&gt;
-      &lt;circle cx=&quot;24&quot; cy=&quot;23&quot; fill=&quot;#FFF&quot; r=&quot;22&quot;/&gt;
-      &lt;path d=&quot;M33.76 34.26c2.75-2.56 4.49-6.37 4.49-11.26 0-.89-.08-1.84-.29-3H24.01v5.99h8.03c-.4 2.02-1.5 3.56-3.07 4.56v.75l3.91 2.97h.88z&quot; fill=&quot;#4285F4&quot;/&gt;
-      &lt;path d=&quot;M15.58 25.77A8.845 8.845 0 0 0 24 31.86c1.92 0 3.62-.46 4.97-1.31l4.79 3.71C31.14 36.7 27.65 38 24 38c-5.93 0-11.01-3.4-13.45-8.36l.17-1.01 4.06-2.85h.8z&quot; fill=&quot;#34A853&quot;/&gt;
-      &lt;path d=&quot;M15.59 20.21a8.864 8.864 0 0 0 0 5.58l-5.03 3.86c-.98-2-1.53-4.25-1.53-6.64 0-2.39.55-4.64 1.53-6.64l1-.22 3.81 2.98.22 1.08z&quot; fill=&quot;#FBBC05&quot;/&gt;
-      &lt;path d=&quot;M24 14.14c2.11 0 4.02.75 5.52 1.98l4.36-4.36C31.22 9.43 27.81 8 24 8c-5.93 0-11.01 3.4-13.45 8.36l5.03 3.85A8.86 8.86 0 0 1 24 14.14z&quot; fill=&quot;#EA4335&quot;/&gt;
-    &lt;/svg&gt;
-    &lt;div class=&quot;gradient-container&quot;&gt;&lt;div class=&quot;gradient&quot;&gt;&lt;/div&gt;&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;carousel&quot;&gt;
-    &lt;a class=&quot;chip&quot; href=&quot;https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEGkcyuBIahEUNQC8EU6jbRgw60J3gFOf4pfn-JjZ1jdkEMyWWswer747YCaSazAIZFx_-c_XXm3YM1qKMi88wb6Bu9dCpQcBA-8nZVrhR4wD8nmqsIl6CQohnWprHX7u_7VhRazrVFgehINvqxEgPChIFFxK_iw4_hbaK7GwZ-hBR16UTYKzTZOuhHc1sTar75vTOR8f9tcwur7j7_s2ZG94JbUylBAOA3c9NhpMtIpg==&quot;&gt;significant scientific advancements June 2025&lt;/a&gt;
-    &lt;a class=&quot;chip&quot; href=&quot;https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGu3Sr0pTKEDHKhYFUyICZtgnwszGKR6gZhtt990xW0GtPNPQNHv90i8Ytf58XxJ4cVtH_mTaG6Eo3OvqSm7XbQixtujcuQ307wjFt8Mj9VaBTCjFsO1w3wdkVhj5qpWTFE78eSSNM5at9x1AXaYr3cDDiP-k_CfuhUjTN3L2L-ps1jhtHf8Yn1BVSjIOLg6scVlrJvwn2-S5qxNN2cA51iZPOBcL0XZxVWxbI=&quot;&gt;major scientific breakthroughs June 2025&lt;/a&gt;
-    &lt;a class=&quot;chip&quot; href=&quot;https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQG7lwrOO8gxA7-LagAQ9EuFk5p8fMrIapaHj13elVVfdRAg1TOAfM-ikg7iBGMO781SBVLeOEsQ8fUWawJgrArQ24nB-47nAiIUzYMPoK76NI-uZNNTJ9Amgw7y7uP7BmrndUxD6u1WcqBWNy4pvvsqDhmCRtOBVOHuiwwfxkb6J_d23pXkGPG_7ILhLztGX3pQOotZqg6oMdygB_WFbJ5cRuSehhU-rA==&quot;&gt;top scientific discoveries June 2025&lt;/a&gt;
-    &lt;a class=&quot;chip&quot; href=&quot;https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEKa3yoOVboKiftTjUgyFghn-lBcTl-roSQwuQsvKG7LJ7ivqlld3pHiQ9ybkAt26E-Aoy8d9dNFSLJq1piJNTXQz7aU0orikXY2hqB5YS1gsXQQv7YcRfkV9wQgxHoP0WJXHWkid59QBEvm5DWBh7sHqNlEeVlUUQ3SqBdCnjl4aFzePxfGqW2IsefPx91PZQnvgfW6QcPewEKn3qp4Q-84V8=&quot;&gt;breakthrough research June 2025&lt;/a&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
+[significant scientific advancements June 2025](https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEGkcyuBIahEUNQC8EU6jbRgw60J3gFOf4pfn-JjZ1jdkEMyWWswer747YCaSazAIZFx_-c_XXm3YM1qKMi88wb6Bu9dCpQcBA-8nZVrhR4wD8nmqsIl6CQohnWprHX7u_7VhRazrVFgehINvqxEgPChIFFxK_iw4_hbaK7GwZ-hBR16UTYKzTZOuhHc1sTar75vTOR8f9tcwur7j7_s2ZG94JbUylBAOA3c9NhpMtIpg==)
+[major scientific breakthroughs June 2025](https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGu3Sr0pTKEDHKhYFUyICZtgnwszGKR6gZhtt990xW0GtPNPQNHv90i8Ytf58XxJ4cVtH_mTaG6Eo3OvqSm7XbQixtujcuQ307wjFt8Mj9VaBTCjFsO1w3wdkVhj5qpWTFE78eSSNM5at9x1AXaYr3cDDiP-k_CfuhUjTN3L2L-ps1jhtHf8Yn1BVSjIOLg6scVlrJvwn2-S5qxNN2cA51iZPOBcL0XZxVWxbI=&quot;&gt;major scientific breakthroughs June 2025&lt;/a&gt;
+[top scientific discoveries June 2025](https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQG7lwrOO8gxA7-LagAQ9EuFk5p8fMrIapaHj13elVVfdRAg1TOAfM-ikg7iBGMO781SBVLeOEsQ8fUWawJgrArQ24nB-47nAiIUzYMPoK76NI-uZNNTJ9Amgw7y7uP7BmrndUxD6u1WcqBWNy4pvvsqDhmCRtOBVOHuiwwfxkb6J_d23pXkGPG_7ILhLztGX3pQOotZqg6oMdygB_WFbJ5cRuSehhU-rA==)
+[breakthrough research June 2025](https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEKa3yoOVboKiftTjUgyFghn-lBcTl-roSQwuQsvKG7LJ7ivqlld3pHiQ9ybkAt26E-Aoy8d9dNFSLJq1piJNTXQz7aU0orikXY2hqB5YS1gsXQQv7YcRfkV9wQgxHoP0WJXHWkid59QBEvm5DWBh7sHqNlEeVlUUQ3SqBdCnjl4aFzePxfGqW2IsefPx91PZQnvgfW6QcPewEKn3qp4Q-84V8=)
 
 
 */

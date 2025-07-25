@@ -1,4 +1,4 @@
-# Welcome to the Gemini API Cookbook
+# Welcome to the Victoria API Cookbook
 
 This cookbook provides a structured learning path for using the Gemini API, focusing on hands-on tutorials and practical examples.
 

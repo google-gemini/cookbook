@@ -31,7 +31,7 @@ There're multiple ways to call the models using the Gemini API, these other **Ge
 
 
 Finally, these guides will deep-dive into specific capabilities of the Gemini models and API:
-* [Grounding](./Grouding.ipynb): Learn how to use diffrent ways (Google Search, Youtube, url context) to ground your answers with external sources.
+* [Grounding](./Grounding.ipynb): Learn how to use diffrent ways (Google Search, Youtube, url context) to ground your answers with external sources.
 * [Search Grounding](./Search_Grounding.ipynb): Deep-dive into the Google search grounding capabilities.
 * [Batch-mode](./Batch_mode.ipynb): Use Batch-mode to send large volume of non-time-sensitive requests to the model and get a 50% discount.
 * [Function Calling](./Function_calling.ipynb): Discover how to have Gemini call you own function and enhaced its capabilites.
@@ -53,5 +53,5 @@ These guides will walk you through the various use cases of the Gemini API:
 * [System Instructions](https://github.com/google-gemini/cookbook/blob/main/quickstarts/System_instructions.ipynb): Give models additional context on how to respond by setting system instructions.
 * [Streaming](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Streaming.ipynb): Learn how to use streaming for single interactions, and for chat.
 * [Embeddings](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Embeddings.ipynb): Create high quality and task-specific embeddings.
-* [Video](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video.ipynb): Upload a video to the Gemini API and use it in your prompt.
+* [Video](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video_understanding.ipynb): Upload a video to the Gemini API and use it in your prompt.
 * [AI Tutors with LearnLM](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Get_started_LearnLM.ipynb): Demonstrates how to craft AI tutoring experiences using system instructions aligned with learning science principles.

@@ -2,7 +2,7 @@ name: Sync Fork
 
 on:
   schedule:
-    - cron: '0 8 * * *' # This cron job runs daily at midnight UTC
+    - cron: '0 8 * * *' # This cron job runs daily at 8AM UTC
   workflow_dispatch: # Allows you to run the workflow manually from the Actions tab
 
 jobs:
@@ -12,17 +12,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetches all history for the current branch
+          fetch-depth: 0
 
-      - name: Add upstream remote
+      - name: Add upstream remote and fetch
         run: |
           git remote add upstream https://github.com/google-gemini/cookbook.git
           git fetch upstream
 
+      - name: Configure Git user
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
       - name: Merge upstream changes
         run: |
-          git merge upstream/main # Replace 'main' with the branch you want to sync
-      
+          git merge upstream/main
+
       - name: Push changes to fork
         run: |
           git push

@@ -4,5 +4,6 @@
 **/.python-version
 **/desktop.ini
 **.lnk
-.github/workflows/sync.yml
+.github/workflows/sync.yml # see https://github.com/Giom-V/gemini-api-cookbook/blob/main/.github/workflows/sync.yml
+
 

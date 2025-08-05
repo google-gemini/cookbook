@@ -4,3 +4,5 @@
 **/.python-version
 **/desktop.ini
 **.lnk
+.github/workflows/sync.yml
+

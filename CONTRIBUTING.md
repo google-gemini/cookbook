@@ -158,7 +158,7 @@ If you have authored a new guide from scratch, you are welcome to include a byli
     prompt = "Draw a square around the fox' shadow"  # @param ["Find the two origami animals.", "Where are the origamis' shadows?","Draw a square around the fox' shadow"] {"allow-input":true}
     ```
 * To ensure notebook text remains accurate, present model metadata (like context window size) by executing code, not by hardcoding it in Markdown.
-    * Example: Instead of writing "This model has a 1M token context window", display the output of `genai.get_model('models/gemini-2.5-pro').input_token_limit`.
+    * Example: Instead of writing "This model has a 1M token context window", display the output of `client.models.get('models/gemini-2.5-pro').input_token_limit`.
 
 ## Naming Conventions
 

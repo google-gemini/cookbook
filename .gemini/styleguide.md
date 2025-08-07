@@ -17,6 +17,10 @@ preferences within our organization.
 
 # Cookbook notebook specific instructions
 
+## Hard-coded API keys
+
+Very important: notebooks must not contain hard-coded API keys. If you find one, immediately tell the author to cancel their submission, revoke the compromised key, and create a new one. Exposed keys are quickly collected and can lead to unauthorized usage and costs for the author.
+
 ## Notebook specificities
 
 Most of the cookbook content is Colab notebooks, which are stored as Json.

@@ -5,6 +5,8 @@ This style guide outlines the coding conventions for Python notebooks developped
 It's based on PEP 8, but with some modifications to address specific needs and
 preferences within our organization.
 
+This guide is mostly about the python content and the notebook, but don't forget to also review the markdown files. In particular, any new notebook should be referenced in the corresponding readmes (at folder level at least, and potentially the one on higer levels).
+
 # Key Principles
 * **Readability:** Code should be easy to understand for all developers. Since they are notebooks and aimed at teaching
   how to use Gemini and its API/SDK, the focus should be on writting didactic and easy-to-read code while limiting the

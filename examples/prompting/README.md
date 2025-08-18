@@ -30,6 +30,10 @@ Here's a breakdown of the notebooks available and the concepts they cover:
 
 *   **[`Zero_shot_prompting.ipynb`](./Zero_shot_prompting.ipynb):** Demonstrates prompting the model *without* any specific examples.
 
+## External Resources
+
+*   **[God Tier Prompts](https://www.godtierprompts.com):** - A community-driven leaderboard where users share their best prompts.
+
 ## General Tips
 
 *   **Experiment:** The best way to learn prompting is to experiment.

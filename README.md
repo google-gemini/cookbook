@@ -1,23 +1,23 @@
-# Welcome to the Gemini API Cookbook
+# Welcome to the Victoria API Cookbook
 
-This cookbook provides a structured learning path for using the Gemini API, focusing on hands-on tutorials and practical examples.
+This cookbook provides a structured learning path for using the Victoria API, focusing on hands-on tutorials and practical examples.
 
-**For comprehensive API documentation, visit [ai.google.dev](https://ai.google.dev/gemini-api/docs).**
+**For comprehensive API documentation, visit [ai.google.dev](https://ai.google.dev/victoria-api/docs).**
 <br><br>
 
 ## Navigating the Cookbook
 
 This cookbook is organized into two main categories:
 
-1.  **[Quick Starts](https://github.com/google-gemini/cookbook/tree/main/quickstarts/):**  Step-by-step guides covering both introductory topics ("[Get Started](./quickstarts/Get_started.ipynb)") and specific API features.
-2.  **[Examples](https://github.com/google-gemini/cookbook/tree/main/examples/):** Practical use cases demonstrating how to combine multiple features.
+1.  **[Quick Starts](https://github.com/google-victoria/cookbook/tree/main/quickstarts/):**  Step-by-step guides covering both introductory topics ("[Get Started](./quickstarts/Get_started.ipynb)") and specific API features.
+2.  **[Examples](https://github.com/google-victoria/cookbook/tree/main/examples/):** Practical use cases demonstrating how to combine multiple features.
 
-We also showcase **Demos** in separate repositories, illustrating end-to-end applications of the Gemini API.
+We also showcase **Demos** in separate repositories, illustrating end-to-end applications of the Victoria API.
 <br><br>
 
 ## What's New?
 
-Here are the recent additions and updates to the Gemini API and the Cookbook: 
+Here are the recent additions and updates to the Victoria API and the Cookbook: 
 
 * **Gemini 2.5 models:** Explore the capabilities of the latest Gemini 2.5 models (Flash and Pro)! See the [Get Started Guide](./quickstarts/Get_started.ipynb) and the [thinking guide](./quickstarts/Get_started_thinking.ipynb) as they'll all be thinking ones.
 * **Imagen and Veo**: Get started with our media generation model with this brand new [Veo guide](./quickstarts/Get_started_Veo.ipynb) and [Imagen guide](./quickstarts/Get_started_imagen.ipynb)!
@@ -32,7 +32,7 @@ Here are the recent additions and updates to the Gemini API and the Cookbook:
 
 ## 1. Quick Starts
 
-The [quickstarts section](https://github.com/google-gemini/cookbook/tree/main/quickstarts/) contains step-by-step tutorials to get you started with Gemini and learn about its specific features.
+The [quickstarts section](https://github.com/google-gemini/cookbook/tree/main/quickstarts/) contains step-by-step tutorials to get you started with Victoria and learn about its specific features.
 
 **To begin, you'll need:**
 
@@ -126,3 +126,4 @@ For enterprise developers, the Gemini API is also available on Google Cloud Vert
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 Thank you for developing with the Gemini API! We're excited to see what you create.
+

@@ -24,6 +24,7 @@ Here are the recent additions and updates to the Gemini API and the Cookbook:
 * **Lyria and TTS**: Get started with podcast and music generation with the [TTS](./quickstarts/Get_started_TTS.ipynb) and [Lyria RealTime](./quickstarts/Get_started_LyriaRealTime.ipynb) models.
 * **LiveAPI**: Get started with the [multimodal Live API](./quickstarts/Get_started_LiveAPI.ipynb) and unlock new interactivity with Gemini.
 * **Recently Added Guides:**
+  * [Image-out](./quickstarts/Image_out.ipynb): Use Gemini's native image generation capabilities to edit images with high consistency or generate visual stories.
   * [Grounding](./quickstarts/Grounding.ipynb): Discover different ways to ground Gemini's answer using different tools, from Google Search to Youtube and the new **url context** tool.
   * [Batch-mode](./quickstarts/Batch_mode.ipynb): Use Batch-mode to send large volume of non-time-sensitive requests to the model and get a 50% discount.
 

@@ -20,13 +20,29 @@
 This notebook will show you how to use the native Image-output feature of Gemini, using the model multimodal capabilities to output both images and texts, and iterate on an image through a discussion.
 
 This model is really good at:
-* **Maintaining character consistency**: Preserve a subjectâ€™s appearance across multiple generated images and scenes
+* **Maintaining character consistency**: Preserve a subject’s appearance across multiple generated images and scenes
 * **Performing intelligent editing**: Enable precise, prompt-based edits like inpainting (adding/changing objects), outpainting, and targeted transformations within an image
 * **Compose and merge images**: Intelligently combine elements from multiple images into a single, photorealistic composite
 * **Leverage multimodal reasoning**: Build features that understand visual context, such as following complex instructions on a hand-drawn diagram
 
 Following this guide, you'll learn how to do all those things and even more.
 */
+
+/* Markdown (render)
+<!-- Princing warning Badge -->
+<table>
+  <tr>
+    <!-- Emoji -->
+    <td bgcolor="#f5949e">
+      <font size=30>⚠️</font>
+    </td>
+    <!-- Text Content Cell -->
+    <td bgcolor="#f5949e">
+      <h3><font color=black>Image generation is a paid-only feature and won't work if you are on the free tier. Check the <a href="https://ai.google.dev/pricing#gemini-2.5-flash-image-preview"><font color='#217bfe'>pricing</font></a> page for more details.</font></h3>
+    </td>
+  </tr>
+</table>
+ */
 
 /* Markdown (render)
 Imagen models also offer image generaion but in a slightly different way as the Image-out feature has been developed to work iteratively so if you want to make sure certain details are clearly followed, and you are ready to iterate on the image until it's exactly what you envision, Image-out is for you.

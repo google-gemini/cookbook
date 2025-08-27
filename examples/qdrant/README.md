@@ -14,6 +14,10 @@ This folder contains example notebooks demonstrating how to combine the **Gemini
 * **[Movie Recommendation using Qdrant](./Movie_Recommendation.ipynb)**
   Process and embed a large movie dataset with the Gemini API, index movie vectors in Qdrant, and build a semantic movie recommender that returns similar movies based on user input using vector similarity search.
 
+* **[Hybrid Search & Reranking with Qdrant: Under the Hood of Legal AI](./Hybrid_Search_Legal.ipynb)**
+  Embed and index a legal dataset with the Gemini API and Qdrant, combining dense (based on Matryoshka Representations of Gemini embeddings) and sparse (based on the Qdrant's custom keywords-based retriever miniCOIL) vectors for hybrid search to ensure high accuracy, citation-grounded legal domain question answering.
+  
+
 ---
 
 These examples show how to:

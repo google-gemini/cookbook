@@ -437,7 +437,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-Here&#x27;s the figurine Cooking a barbecue with an apron! 
+Here&#x27;s the figurine chilling in a spa! 
 
 <img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_spa.jpg" style="height:auto; width:100%;" />
 

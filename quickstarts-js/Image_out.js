@@ -110,7 +110,7 @@ for (const part of response.candidates[0].content.parts) {
 
 Here is your requested image: 
 
-<img src="https://iili.io/K2AiWvI.png" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/cat.png" style="height:auto; width:100%;" />
 
 */
 
@@ -149,7 +149,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="https://iili.io/K2A4E42.png" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/cat_tropical.png" style="height:auto; width:100%;" />
 
 */
 
@@ -188,7 +188,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="https://iili.io/K2AS4sV.png" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/cat_restaurant.png" style="height:auto; width:100%;" />
 
 */
 
@@ -319,7 +319,7 @@ for (const part of response.candidates[0].content.parts) {
 
 Here is an image of a plastic toy fox figurine in a kid&#x27;s bedroom, with accessories: 
 
-<img src="https://iili.io/K2A8OAJ.png" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine.png" style="height:auto; width:100%;" />
 
 */
 
@@ -343,7 +343,7 @@ for (const part of response.candidates[0].content.parts) {
 
 Here&#x27;s the toy fox figurine with a blue planet on its helmet: 
 
-<img src="https://iili.io/K2A8CyG.png" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_helmet.png" style="height:auto; width:100%;" />
 
 */
 
@@ -391,7 +391,55 @@ for (const part of response.candidates[0].content.parts) {
 
 Here&#x27;s your fox figurine base-jumping from a spaceship in a wingsuit! 
 
-<img src="https://iili.io/K2AkrWN.png" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_space.png" style="height:auto; width:100%;" />
+
+*/
+
+// [CODE STARTS]
+message = "Cooking a barbecue with an apron";
+
+response = await chat.sendMessage({ message });
+ 
+for (const part of response.candidates[0].content.parts) {
+  if (part.text !== undefined) {
+    console.log(part.text);
+  }
+  if (part.inlineData !== undefined) {
+    console.image(part.inlineData.data);
+  }
+}
+
+// [CODE ENDS]
+
+/* Output Sample
+
+Here&#x27;s the figurine cooking a barbecue! 
+
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_bbq.jpg" style="height:auto; width:100%;" />
+
+*/
+
+// [CODE STARTS]
+message = "What about chilling in a spa?";
+
+response = await chat.sendMessage({ message });
+ 
+for (const part of response.candidates[0].content.parts) {
+  if (part.text !== undefined) {
+    console.log(part.text);
+  }
+  if (part.inlineData !== undefined) {
+    console.image(part.inlineData.data);
+  }
+}
+
+// [CODE ENDS]
+
+/* Output Sample
+
+Here&#x27;s the figurine Cooking a barbecue with an apron! 
+
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_spa.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -437,7 +485,7 @@ for (const part of response.candidates[0].content.parts) {
 
 Certainly! Here is your image: 
 
-<img src="https://iili.io/K2AOpp4.png" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_riding.png" style="height:auto; width:100%;" />
 
 */
 

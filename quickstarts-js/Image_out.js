@@ -14,33 +14,24 @@
  * limitations under the License.
  */
 
-
 /* Markdown (render)
-# Gemini API: Gemini 2.0 Image output
+# Gemini 2.5 Native Image generation
+
+This notebook will show you how to use the native Image-output feature of Gemini, using the model multimodal capabilities to output both images and texts, and iterate on an image through a discussion.
+
+This model is really good at:
+* **Maintaining character consistency**: Preserve a subjectâ€™s appearance across multiple generated images and scenes
+* **Performing intelligent editing**: Enable precise, prompt-based edits like inpainting (adding/changing objects), outpainting, and targeted transformations within an image
+* **Compose and merge images**: Intelligently combine elements from multiple images into a single, photorealistic composite
+* **Leverage multimodal reasoning**: Build features that understand visual context, such as following complex instructions on a hand-drawn diagram
+
+Following this guide, you'll learn how to do all those things and even more.
 */
 
 /* Markdown (render)
-This notebook will show you how to use the Image-out feature of Gemini, using the model multimodal capabilities to output both images and texts, and iterate on an image through a discussion.
-
-This feature is very close to what [Imagen](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Get_started_imagen.ipynb) offers but in a slightly different way as the Image-out feature has been developed to work iteratively so if you want to make sure certain details are clearly followed, and you are ready to iterate on the image until it's exactly what you envision, Image-out is for you.
+Imagen models also offer image generaion but in a slightly different way as the Image-out feature has been developed to work iteratively so if you want to make sure certain details are clearly followed, and you are ready to iterate on the image until it's exactly what you envision, Image-out is for you.
 
 Check the [documentation](https://ai.google.dev/gemini-api/docs/image-generation#choose-a-model) for more details on both features and some more advice on when to use each one.
-*/
-
-/* Markdown (render)
-<!-- Notice Badge -->
-<table align="left" border="3">
-  <tr>
-    <!-- Emoji -->
-    <td bgcolor="#DCE2FF">
-      <font size=30>🪧</font>
-    </td>
-    <!-- Text Content Cell -->
-    <td bgcolor="#DCE2FF">
-      <h4><font color=black>Image-out is a preview feature. It's free to use with quota limitations, but subject to change. See <a href="https://ai.google.dev/gemini-api/docs/pricing#gemini-2.0-flash"><font color='#217bfe'>pricing</font></a> and <a href="https://ai.google.dev/gemini-api/docs/rate-limits#current-rate-limits"><font color='#217bfe'>rate limit</font></a> pages for more details.</font></h4>
-    </td>
-  </tr>
-</table>
 */
 
 /* Markdown (render)
@@ -66,306 +57,371 @@ ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 module = await import("https://esm.sh/@google/genai@1.4.0");
 GoogleGenAI = module.GoogleGenAI;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-// [CODE ENDS]
 
-/* Markdown (render)
-### Select a model
-
-Image-out is available through the `gemini-2.0-flash-preview-image-generation` model.
-
-For more information about all Gemini models, check the [documentation](https://ai.google.dev/gemini-api/docs/models/gemini) for extended information.
-
-*/
-
-// [CODE STARTS]
-MODEL_ID = "gemini-2.0-flash-preview-image-generation"
+MODEL_ID = "gemini-2.5-flash-image-preview"
 // [CODE ENDS]
 
 /* Markdown (render)
 ## Generate images
 
-Use `responseModalities` to indicate to the model that you are expecting an image in the output. You'll need to specify both `"text"` and `"image"` in your generation configuration. If you set only `"image"` in `responseModalities`, you'll get an error.
+Using the Gemini Image generation model is the same as using any Gemini model: you simply call `generateContent`.
 
-If you want to generate image only outputs, you can use Imagen.
-
-Remember that generating people is not allowed at the moment.
+You can set the `responseModalities` to indicate to the model that you are expecting an image in the output but it's optional as this is expected with this model.
 */
 
 // [CODE STARTS]
 Modality = module.Modality
 
+prompt = 'Create a photorealistic image of a siamese cat with a green left eye and a blue right one and red patches on his face and a black and pink nose';
+
 response = await ai.models.generateContent({
-  model: MODEL_ID,
-  contents: `A 3D rendered pig with wings and a top hat flying over
-             a futuristic sci-fi city filled with greenery.`,
-  config: { responseModalities: [Modality.TEXT, Modality.IMAGE] }
+    model: MODEL_ID,
+    contents: prompt,
+    config: { responseModalities: [Modality.TEXT, Modality.IMAGE] }
 });
 
 for (const part of response.candidates[0].content.parts) {
-  if (part.text) {
-    console.log(part.text);
-  } else if (part.inlineData) {
-    console.image(part.inlineData.data, "image/png");
-  }
+    if (part.text !== undefined) {
+        console.log(part.text);
+    } else if (part.inlineData !== undefined) {
+        catImage = part.inlineData.data;
+        console.image(catImage);
+    }
 }
 // [CODE ENDS]
 
 /* Output Sample
 
-I will generate a 3D rendering of a whimsical scene. Imagine a pink pig with small, delicate wings sprouting from its back, wearing a tall, elegant black top hat perched jauntily on its head. This flying pig soars above a vibrant, futuristic metropolis. The city below is characterized by sleek, silver skyscrapers with glowing blue accents, interwoven with lush green parks and elevated gardens, creating a harmonious blend of technology and nature.
+Here is your requested image: 
 
-
-
-<img src="https://i.ibb.co/n88Lw9YQ/pig.png" alt="pig" border="0">
+<img src="https://iili.io/K2AiWvI.png" style="height:auto; width:100%;" />
 
 */
 
 /* Markdown (render)
 ## Edit images
 
-You can also do image editing, simply save the original image and pass it as inline data in the next prompt.
+You can also do image editing, simply pass the original image as part of the prompt. Don't limit yourself to simple edit, Gemini is able to keep the character consistency and reprensent you character in different behaviors or places.
 */
 
 // [CODE STARTS]
-responseInlineMime = null;
-responseInlineData = null;
-
-for (const part of response.candidates[0].content.parts) {
-  if (part.inlineData !== undefined) {
-    responseInlineMime = part.inlineData.mimeType;
-    responseInlineData = part.inlineData.data;
-  }
-}
+textPrompt = "Create a side view picture of that cat, in a tropical forest, eating a nano-banana, under the stars";
 
 response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [
-    { text: "could you edit this image to make it a cat instead of a pig?"},
+    { text: textPrompt },
     {
       inlineData: {
-        data: responseInlineData,
-        mimeType: responseInlineMime
+        data: catImage,
+        mimeType: "image/png"
       }
     }
-  ],
-  config: {
-    responseModalities: ["Text", "Image"]
-  }
+  ]
 });
 
 for (const part of response.candidates[0].content.parts) {
-  if (part.text) {
+  if (part.text !== undefined) {
     console.log(part.text);
-  } else if (part.inlineData) {
-    console.image(part.inlineData.data, "image/png");
+  } else if (part.inlineData !== undefined) {
+    catImage = part.inlineData.data;
+    console.image(catImage);
   }
 }
-
-
 
 // [CODE ENDS]
 
 /* Output Sample
 
-Okay, I will edit the image so that the flying pig is replaced with a flying cat that retains the tiger stripes, wings, and top hat, keeping the same overall style and perspective within the futuristic cityscape.
-
-
-<img src="https://i.ibb.co/j98mSjMh/catpig.png" alt="catpig" border="0">
+<img src="https://iili.io/K2A4E42.png" style="height:auto; width:100%;" />
 
 */
 
 /* Markdown (render)
-## Get multiple images
+As you can see, you can clearly recognize the same cat with its peculiar nose and eyes.
 
-So far you've only generated one image per call, but you can request way more than that! Let's try a baking receipe.
+Let's do a second one:
 */
 
 // [CODE STARTS]
-contents = "Show me how to bake a macaron with images.";
+textPrompt = "Now the cat should keep the same attitude, but be well dressed in fancy restaurant and eat a fancy nano banana.";
 
 response = await ai.models.generateContent({
   model: MODEL_ID,
-  contents: contents,
-  config: {
-    responseModalities: ["Text", "Image"]
-  }
+  contents: [
+    { text: textPrompt },
+    {
+      inlineData: {
+        data: catImage,
+        mimeType: "image/png"
+      }
+    }
+  ]
 });
 
 for (const part of response.candidates[0].content.parts) {
-  if (part.text) {
+  if (part.text !== undefined) {
     console.log(part.text);
-  } else if (part.inlineData) {
-    console.image(part.inlineData.data, "image/png");
+  } else if (part.inlineData !== undefined) {
+    catImage = part.inlineData.data;
+    console.image(catImage);
   }
 }
+
 // [CODE ENDS]
 
 /* Output Sample
 
-Okay! Let's embark on the delightful (and sometimes challenging!) journey of making macarons.  I'll provide step-by-step instructions with images to guide you.  
-
-**Important Note:** Macarons are finicky. Success depends on accuracy and patience. Follow the instructions closely, especially with measurements.
-
-**Recipe: Classic French Macarons**
-
-**Ingredients:**
-
-*   **For the Macaron Shells:**
-    *   100 grams (about 1 cup) finely ground almond flour (almond meal is NOT the same)
-    *   100 grams (about 1 cup) powdered sugar (also called confectioners' sugar or icing sugar)
-    *   100 grams (about 1/2 cup) aged egg whites (about 3-4 large egg whites, separated a day or two in advance and stored in an airtight container in the fridge). Room temperature when using.
-    *   50 grams (about 1/4 cup) granulated sugar
-    *   Pinch of salt
-    *   Optional: gel food coloring (not liquid!)
-
-*   **For the Filling (you can choose your favorite, this is for a simple vanilla buttercream):**
-    *   100 grams (about 1/2 cup) unsalted butter, softened
-    *   200 grams (about 1 3/4 cups) powdered sugar, sifted
-    *   1-2 tablespoons milk or cream
-    *   1 teaspoon vanilla extract
-
-**Equipment:**
-
-*   Kitchen scale (highly recommended for accuracy)
-*   Fine-mesh sieve
-*   Stand mixer or hand mixer with whisk attachment
-*   Rubber spatula
-*   Piping bag fitted with a round tip (about 8-10mm)
-*   Baking sheets
-*   Parchment paper or silicone baking mats
-*   Toothpick or scribe
-
-**Let's Begin!**
-
-**Step 1: Prepare the Dry Ingredients**
-
-![Macaron prepartation step 1](https://storage.googleapis.com/generativeai-downloads/images/macaron_step1.png)
-
-
-1.  In a large bowl, combine the **almond flour** and **powdered sugar**.
-2.  Sift the mixture through a fine-mesh sieve into another bowl. This removes any lumps and ensures a smooth batter. Discard any large pieces left in the sieve.
-3. Set the bowl aside.
-
-**Step 2: Whip the Egg Whites**
-
-![Macaron prepartation step 2](https://storage.googleapis.com/generativeai-downloads/images/macaron_step2.png)
-
-1. In a clean and dry mixing bowl, add the room-temperature **egg whites** and **salt**.
-2. Using a stand mixer or hand mixer with the whisk attachment, beat on medium speed until soft peaks form.
-3. Gradually add the **granulated sugar** a little at a time while continuing to beat. Increase the speed to medium-high.
-4. Beat until stiff, glossy peaks form. The meringue should hold its shape and have a shiny appearance. If using gel food coloring, add a couple of drops now and beat until combined.
-
-**Step 3: The Macaronage (Folding)**
-
-![Macaron prepartation step 3](https://storage.googleapis.com/generativeai-downloads/images/macaron_step3.png)
-
-1. Add about 1/3 of the sifted dry ingredient mixture to the meringue.
-2. Using a rubber spatula, gently fold the dry ingredients into the meringue. You want to cut through the center, rotate your bowl slightly and pull up from the bottom and over. This is a technique to incorporate air and flatten it.
-3. Add the remaining dry ingredients in two more additions, folding each time.
-4. Continue the folding process until the batter is smooth, shiny, and flows like lava. When you lift the spatula, it should form a ribbon that slowly falls back into the bowl and disappears in about 20 seconds. This is often referred to as achieving the "ribbon stage" or "lava consistency". Do not over-mix.
-
-**Step 4: Piping**
-
-![Macaron prepartation step 4](https://storage.googleapis.com/generativeai-downloads/images/macaron_step4.png)
-
-1. Line your baking sheets with parchment paper or silicone mats. It might help to trace circles on the parchment paper beforehand.
-2. Transfer the batter to your piping bag.
-3. Holding the piping bag straight above the baking sheet, pipe even circles about 1.5 inches (3.8 cm) in diameter, leaving some space between each one.
-4. Once you finish piping, gently tap the baking sheet on your counter to remove air bubbles in the batter.  
-5. If you see a few small bubbles, use a toothpick or scribe to gently pop them.
-
-**Step 5: Drying (Skin Formation)**
-
-![Macaron prepartation step ](https://storage.googleapis.com/generativeai-downloads/images/macaron_step5.png)
-
-1. Allow the piped macaron shells to sit at room temperature for 30-60 minutes, or until a thin skin forms on top. You should be able to gently touch them without the batter sticking to your finger. If your environment is humid, the drying time will be longer.
-
-**Step 6: Baking**
-
-And that's it folk!
+<img src="https://iili.io/K2AS4sV.png" style="height:auto; width:100%;" />
 
 */
 
 /* Markdown (render)
-## Chat (recommended)
+## Get multiple images (e: tell stories)
+
+So far you've only generated one image per call, but you can request way more than that! Let's try a baking receipe or telling a story.
+*/
+
+// [CODE STARTS]
+prompt = 'Show me how to bake macarons with images';
+
+response = await ai.models.generateContent({
+    model: MODEL_ID,
+    contents: prompt
+});
+
+for (const part of response.candidates[0].content.parts) {
+    if (part.text !== undefined) {
+        console.log(part.text);
+    } else if (part.inlineData !== undefined) {
+        imageURL = part.inlineData.data;
+        console.image(imageURL);
+    }
+}
+// [CODE ENDS]
+
+
+/* Markdown (render)
+The output of the previous code cell could not be saved in the notebook without making it too big to be managed by Github, but here are some examples of what it should look like when you run it when asking for a story, or for a baking receipe:
+
+----------
+**Prompt**: *Create a beautifully entertaining 8 part story with 8 images with two blue characters and their adventures in the 1960s music scene. The story is thrilling throughout with emotional highs and lows and ending on a great twist and high note. Do not include any words or text on the images but tell the story purely through the imagery itself.*
+![Azure tone story](https://storage.googleapis.com/generativeai-downloads/images/azuretones.png)
+(Images have been stitched together)
+
+----------
+**Prompt**: *Show me how to bake macarons with images*
+
+
+That sounds delicious! Here's a simplified guide on how to bake macarons. While it can be a bit tricky, practice makes perfect!
+
+**Ingredients you'll need:**
+
+*   **For the Macaron Shells:**
+    *   100g almond flour
+    *   100g powdered sugar
+    *   75g granulated sugar
+    *   2 egg whites (aged for a day or two at room temp, if possible, for better stability)
+    *   Pinch of salt (optional)
+    *   Food coloring (gel or powder, not liquid)
+
+*   **For the Filling:** (Buttercream, ganache, or jam are popular choices)
+
+---
+
+**Step 1: Prepare your dry ingredients.**
+Sift together the almond flour and powdered sugar into a bowl. This step is crucial for achieving smooth macaron shells, as it removes any lumps.
+
+
+![Macaron prepartation step 1](https://storage.googleapis.com/generativeai-downloads/images/macaron_step1.png)
+
+**Step 2: Make the meringue.**
+In a separate, clean bowl, beat the egg whites with a pinch of salt (if using) until foamy. Gradually add the granulated sugar, continuing to beat until you achieve stiff, glossy peaks. If you're using food coloring, add it now. The meringue should be firm enough that you can turn the bowl upside down without it falling out.
+
+![Macaron prepartation step 2](https://storage.googleapis.com/generativeai-downloads/images/macaron_step2.png)
+
+**Step 3: Combine dry ingredients with meringue (Macaronage).**
+Gently fold the sifted almond flour and powdered sugar into the meringue in two or three additions. This is called "macaronage" and is the most critical step. You want to mix until the batter flows like "lava" or a slowly ribboning consistency when you lift your spatula. Be careful not to overmix, or your macarons will be flat; under-mixing will result in lumpy shells.
+
+![Macaron prepartation step 3](https://storage.googleapis.com/generativeai-downloads/images/macaron_step3.png)
+
+**Step 4: Pipe the macarons.**
+Transfer the batter to a piping bag fitted with a round tip. Pipe uniform circles onto baking sheets lined with parchment paper or silicone mats. Leave some space between each macaron.
+
+![Macaron prepartation step 4](https://storage.googleapis.com/generativeai-downloads/images/macaron_step4.png)
+
+**Step 5: Tap and Rest.**
+Firmly tap the baking sheets on your counter several times to release any air bubbles. Use a toothpick to pop any remaining bubbles. This helps create smooth tops and the characteristic "feet." Let the piped macarons rest at room temperature for 30-60 minutes, or until a skin forms on top. When you gently touch a shell, it shouldn't feel sticky. This "drying" step is essential for the feet to develop properly.
+
+![Macaron prepartation step 5](https://storage.googleapis.com/generativeai-downloads/images/macaron_step5.png)
+
+**Step 6: Bake the macarons.**
+Preheat your oven to 300Â°F (150Â°C). Bake one tray at a time for 12-15 minutes. The exact time can vary by oven. They are done when they have developed "feet" and don't wobble when gently touched.
+
+**Step 7: Cool and Fill.**
+Once baked, let the macaron shells cool completely on the baking sheet before carefully peeling them off. This prevents them from breaking.  Then, match them up by size and pipe or spread your chosen filling onto one shell before sandwiching it with another.
+
+![Macaron prepartation step 7](https://storage.googleapis.com/generativeai-downloads/images/macaron_step7.png)
+
+Finally, let them mature in the refrigerator for at least 24 hours. This allows the flavors to meld and the shells to soften to the perfect chewy consistency.
+
+Enjoy your homemade macarons!
+
+-----
+*/
+
+/* Markdown (render)
+## Chat mode (recommended method)
 
 So far you've used unary calls, but Image-out is actually made to work better with chat mode as it's easier to iterate on an image turn after turn.
 */
 
 // [CODE STARTS]
-chat = await ai.chats.create({
-  model: MODEL_ID,
-  config: {
-    responseModalities: ["Text", "Image"]
+chat = ai.chats.create({
+    model: MODEL_ID
+})
+// [CODE ENDS]
+
+// [CODE STARTS]
+message = "create a image of a plastic toy fox figurine in a kid's bedroom, it can have accessories but no weapon";
+
+response = await chat.sendMessage({ message: message });
+
+for (const part of response.candidates[0].content.parts) {
+  if (part.text !== undefined) {
+    console.log(part.text);
   }
+  if (part.inlineData !== undefined) {
+    foxFigurineImage = part.inlineData.data
+    console.image(foxFigurineImage);
+  }
+}
+
+// [CODE ENDS]
+
+/* Output Sample
+
+Here is an image of a plastic toy fox figurine in a kid&#x27;s bedroom, with accessories: 
+
+<img src="https://iili.io/K2A8OAJ.png" style="height:auto; width:100%;" />
+
+*/
+
+// [CODE STARTS]
+message = "Add a blue planet on the figuring's helmet or hat (add one if needed)";
+
+response = await chat.sendMessage({ message: message });
+
+for (const part of response.candidates[0].content.parts) {
+  if (part.text !== undefined) {
+    console.log(part.text);
+  }
+  if (part.inlineData !== undefined) {
+    console.image(part.inlineData.data);
+  }
+}
+
+// [CODE ENDS]
+
+/* Output Sample
+
+Here&#x27;s the toy fox figurine with a blue planet on its helmet: 
+
+<img src="https://iili.io/K2A8CyG.png" style="height:auto; width:100%;" />
+
+*/
+
+// [CODE STARTS]
+message = "Move that figurine on a beach";
+
+response = await chat.sendMessage({ message: message });
+
+for (const part of response.candidates[0].content.parts) {
+  if (part.text !== undefined) {
+    console.log(part.text);
+  }
+  if (part.inlineData !== undefined) {
+    console.image(part.inlineData.data);
+  }
+}
+
+// [CODE ENDS]
+
+/* Output Sample
+
+Here&#x27;s the figurine on a beach! 
+
+<img src="https://iili.io/K2AvYIR.png" style="height:auto; width:100%;" />
+
+*/
+
+// [CODE STARTS]
+message = "Now it should be base-jumping from a spaceship with a wingsuit";
+
+response = await chat.sendMessage({ message });
+ 
+for (const part of response.candidates[0].content.parts) {
+  if (part.text !== undefined) {
+    console.log(part.text);
+  }
+  if (part.inlineData !== undefined) {
+    console.image(part.inlineData.data);
+  }
+}
+
+// [CODE ENDS]
+
+/* Output Sample
+
+Here&#x27;s your fox figurine base-jumping from a spaceship in a wingsuit! 
+
+<img src="https://iili.io/K2AkrWN.png" style="height:auto; width:100%;" />
+
+*/
+
+/* Markdown (render)
+## Mix multiple pictures
+You can also mix multiple images (up to 3), either because there are multiple characters in your image, or because you want to hightlight a certain product, or set the background.
+*/
+
+// [CODE STARTS]
+textPrompt = "Create a picture of that figurine riding that cat in a fantasy world.";
+
+response = await ai.models.generateContent({
+    model: MODEL_ID,
+    contents: [
+        { text: textPrompt },
+        {
+            inlineData: {
+                data: catImage,
+                mimeType: "image/png"
+            }
+        },
+        {
+            inlineData: {
+                data: foxFigurineImage,
+                mimeType: "image/png"
+            }
+        }
+    ]
 });
 
-message = "create a photorealistic image of a giraffe with a tiny bird on its head";
-
-response = await chat.sendMessage({ message: message });
-
 for (const part of response.candidates[0].content.parts) {
-  if (part.text) {
-    console.log(part.text);
-  } else if (part.inlineData) {
-    console.image(part.inlineData.data, "image/png");
-  }
+    if (part.text !== undefined) {
+        console.log(part.text);
+    }
+    if (part.inlineData !== undefined) {
+        console.image(part.inlineData.data);
+    }
 }
+
 // [CODE ENDS]
 
 /* Output Sample
 
-I will generate a photorealistic image of a tall giraffe standing in a sunny savanna, with a small, bright yellow bird perched comfortably on the very top of its head, creating a charming and slightly humorous scene.
+Certainly! Here is your image: 
 
-
-<img src="https://i.ibb.co/h1cb0wSw/gir.png" alt="gir" border="0">
-
-*/
-
-// [CODE STARTS]
-message = "use a cartoon style instead of photorealistic";
-
-response = await chat.sendMessage({ message: message });
-
-for (const part of response.candidates[0].content.parts) {
-  if (part.text) {
-    console.log(part.text);
-  } else if (part.inlineData) {
-    console.image(part.inlineData.data, "image/png");
-  }
-}
-// [CODE ENDS]
-
-/* Output Sample
-
-I will generate a cartoon-style image of a smiling giraffe with long eyelashes and a friendly expression, standing in a vibrantly colored savanna. On the top of its head, a small, cheerful bluebird with big, round eyes is perched, looking equally happy.
-
-
-<img src="https://i.ibb.co/HDKn0yp6/cartoongir.png" alt="cartoongir" border="0">
-
-
-*/
-
-// [CODE STARTS]
-message = "add a rainbow and some colorful birds";
-
-response = await chat.sendMessage({ message: message });
-
-for (const part of response.candidates[0].content.parts) {
-  if (part.text) {
-    console.log(part.text);
-  } else if (part.inlineData) {
-    console.image(part.inlineData.data, "image/png");
-  }
-}
-// [CODE ENDS]
-
-/* Output Sample
-
-I will add a vibrant rainbow arcing across the sky behind the cartoon giraffe and bluebird from the previous image. Several more colorful cartoon birds of different shapes and sizes, such as a red cardinal, a green parrot, and an orange robin, will be flying around the giraffe and perched on its neck and back, creating a whimsical scene.
-
-
-<img src="https://i.ibb.co/gLRfL32S/cartoongir2.png" alt="cartoongir2" border="0">
+<img src="https://iili.io/K2AOpp4.png" style="height:auto; width:100%;" />
 
 */
 
@@ -373,10 +429,19 @@ I will add a vibrant rainbow arcing across the sky behind the cartoon giraffe an
 ## Next Steps
 ### Useful documentation references:
 
-Check the [documentation](https://ai.google.dev/gemini-api/docs/image-generation#gemini) for more details about the image generation capabilities of the model. To improve your prompting skills, check out the [Imagen prompt guide](https://ai.google.dev/gemini-api/docs/imagen-prompt-guide) for great advices on creating your prompts.
+Check the [documentation](https://ai.google.dev/gemini-api/docs/image-generation#gemini) for more details about the image generation capabilities of the model. To improve your prompting skills, check out the [prompt guide](https://ai.google.dev/gemini-api/docs/image-generation#prompt-guide) for great advices on creating your prompts.
+
+### Play with the AI Studio apps
+
+Theses 5 AI Studio apps are all great showcases of Gemini image generation capabilities:
+* [Past Forward](https://aistudio.google.com/apps/bundled/past_forward) lets you travel through time
+* [Home Canvas](https://aistudio.google.com/apps/bundled/home_canvas) lets your try out new furniture
+* [Gembooth](https://aistudio.google.com/apps/bundled/gembooth) places you into a comic book or a Renaissance painting
+* [Gemini Co-drawing](https://aistudio.google.com/apps/bundled/codrawing) lets you draw alongside with Gemini
+* [Pixshop](https://aistudio.google.com/apps/bundled/pixshop), an AI-powered image editor
 
 ### Check-out Imagen as well:
-The [Imagen](https://ai.google.dev/gemini-api/docs/image-generation#imagen) model is another way to generate images. Check out the [Get Started with Imagen notebook](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Get_started_imagen.ipynb) to start playing with it too.
+The [Imagen](https://ai.google.dev/gemini-api/docs/imagen) model is another way to generate images. Check out the [Get Started with Imagen notebook](./Get_started_imagen.ipynb) to start playing with it too.
 
 Here are some Imagen examples to get your imagination started on how to use it in creative ways:
 *  [Illustrate a book](https://github.com/google-gemini/cookbook/blob/main/examples/Book_illustration.ipynb): Use Gemini and Imagen to create illustration for an open-source book

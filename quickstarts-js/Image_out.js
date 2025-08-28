@@ -33,12 +33,12 @@ Following this guide, you'll learn how to do all those things and even more.
 <table>
   <tr>
     <!-- Emoji -->
-    <td bgcolor="#f5949e">
+    <td bgcolor="#ffe680">
       <font size=30>⚠️</font>
     </td>
     <!-- Text Content Cell -->
-    <td bgcolor="#f5949e">
-      <h3><font color=black>After a few free triesz, you will need <a href="https://ai.google.dev/gemini-api/docs/billing#enable-cloud-billing" taget="_blank">billing</a> enabled to use image generation. Click on the 
+    <td bgcolor="#ffe680">
+      <h3><font color=black>After a few free tries, you will need <a href="https://ai.google.dev/gemini-api/docs/billing#enable-cloud-billing" taget="_blank">billing</a> enabled to use image generation. Click on the 
 <img src="https://i.postimg.cc/pX6FQwjz/key-off-24dp-E3-E3-E3-FILL0-wght400-GRAD0-opsz24.png" style="margin:0px 0px !important;" height="18px" width="18px" />
 button in the top right corner to select a cloud project with billing.</font></h3>
     </td>

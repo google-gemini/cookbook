@@ -38,7 +38,9 @@ Following this guide, you'll learn how to do all those things and even more.
     </td>
     <!-- Text Content Cell -->
     <td bgcolor="#f5949e">
-      <h3><font color=black>Image generation is a paid-only feature and won't work if you are on the free tier. Check the <a href="https://ai.google.dev/pricing#gemini-2.5-flash-image-preview"><font color='#217bfe'>pricing</font></a> page for more details.</font></h3>
+      <h3><font color=black>After a few free tried, you will need <a href="https://ai.google.dev/gemini-api/docs/billing#enable-cloud-billing" taget="_blank">billing</a> enabled to use image generation. Click on the 
+<img src="https://i.postimg.cc/pX6FQwjz/key-off-24dp-E3-E3-E3-FILL0-wght400-GRAD0-opsz24.png" style="margin:0px 0px;" height="18px" width="18px" />
+button in the top right corner to select a cloud project with billing.</font></h3>
     </td>
   </tr>
 </table>
@@ -52,9 +54,7 @@ Check the [documentation](https://ai.google.dev/gemini-api/docs/image-generation
 
 /* Markdown (render)
 ## Setup
-### Install SDK and set-up the client
-
-### API Key Configuration
+### Install SDK and set-up the client with the API key
 
 To ensure security, avoid hardcoding the API key in frontend code. Instead, set it as an environment variable on the server or local machine.
 

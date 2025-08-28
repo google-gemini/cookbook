@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Magic Mirror</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #camera-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        video, canvas, img {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Magic Mirror</h1>
+    <div id="camera-container">
+        <div>
+            <h2>Webcam</h2>
+            <video id="video" width="640" height="480" autoplay></video>
+        </div>
+        <div>
+            <h2>Princess You!</h2>
+            <img id="result" width="640" height="480">
+        </div>
+    </div>
+    <button id="snap">Become a Princess</button>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+    <script type="module" src="magic_mirror.js"></script>
+</body>
+</html>

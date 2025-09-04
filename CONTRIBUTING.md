@@ -147,7 +147,7 @@ If you have authored a new guide from scratch, you are welcome to include a byli
 * If you *must* use extra parameters, explain *why* they are needed and the reasoning behind the specific value the first time you use them.
 * When selecting a model, use a Colab form selector for easier maintainability:
     ```python
-    MODEL_ID="gemini-1.5-flash" # @param ["gemini-1.0-pro", "gemini-1.5-flash", "gemini-1.5-pro"] {"allow-input":true, isTemplate: true}
+    MODEL_ID="gemini-2.5-flash" # @param ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.5-pro"] {"allow-input":true, isTemplate: true}
     ```
 * Some notebooks can benefit from having a form to update the prompt:
     ```python
@@ -158,7 +158,7 @@ If you have authored a new guide from scratch, you are welcome to include a byli
     prompt = "Draw a square around the fox' shadow"  # @param ["Find the two origami animals.", "Where are the origamis' shadows?","Draw a square around the fox' shadow"] {"allow-input":true}
     ```
 * To ensure notebook text remains accurate, present model metadata (like context window size) by executing code, not by hardcoding it in Markdown.
-    * Example: Instead of writing "This model has a 1M token context window", display the output of `genai.get_model('models/gemini-1.5-pro-latest').input_token_limit`.
+    * Example: Instead of writing "This model has a 1M token context window", display the output of `client.models.get('models/gemini-2.5-pro').input_token_limit`.
 
 ## Naming Conventions
 

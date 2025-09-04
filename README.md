@@ -24,8 +24,10 @@ Here are the recent additions and updates to the Gemini API and the Cookbook:
 * **Lyria and TTS**: Get started with podcast and music generation with the [TTS](./quickstarts/Get_started_TTS.ipynb) and [Lyria RealTime](./quickstarts/Get_started_LyriaRealTime.ipynb) models.
 * **LiveAPI**: Get started with the [multimodal Live API](./quickstarts/Get_started_LiveAPI.ipynb) and unlock new interactivity with Gemini.
 * **Recently Added Guides:**
-  * [Browser as a tool](./examples/Browser_as_a_tool.ipynb): Use a web browser for live and internal (intranet) web interactions
-  * [Grounding](./quickstarts/Grounding.ipynb): Discover different ways to ground Gemini's answer using different tools, from Google Search to Youtube and the new url context tool.
+  * [Image-out](./quickstarts/Image_out.ipynb): Use Gemini's native image generation capabilities to edit images with high consistency or generate visual stories.
+  * [Grounding](./quickstarts/Grounding.ipynb): Discover different ways to ground Gemini's answer using different tools, from Google Search to Youtube and the new **url context** tool.
+  * [Batch-mode](./quickstarts/Batch_mode.ipynb): Use Batch-mode to send large volume of non-time-sensitive requests to the model and get a 50% discount.
+
   
 <br><br>
 
@@ -57,6 +59,7 @@ Then, explore the other quickstarts tutorials to learn about individual features
 ## 2. Examples (Practical Use Cases)
 
 These examples demonstrate how to combine multiple Gemini API features or 3rd-party tools to build more complex applications.
+*  [Browser as a tool](./examples/Browser_as_a_tool.ipynb): Use a web browser for live and internal (intranet) web interactions
 *  [Illustrate a book](./examples/Book_illustration.ipynb): Use Gemini and Imagen to create illustration for an open-source book
 *  [Animated Story Generation](./examples/Animated_Story_Video_Generation_gemini.ipynb): Create animated videos by combining Gemini's story generation, Imagen, and audio synthesis
 *  [Plotting and mapping Live](./examples/LiveAPI_plotting_and_mapping.ipynb): Mix *Live API* and *Code execution* to solve complex tasks live

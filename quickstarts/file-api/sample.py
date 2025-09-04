@@ -16,41 +16,80 @@ from google import genai
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
-api_key = os.environ["GOOGLE_API_KEY"]
+def upload_file(client, file_path, display_name):
+    """Uploads a file to the client.files API."""
+    with open(file_path, "rb") as f:
+        file_response = client.files.upload(
+            file=f,
+            config={
+                "mime_type": "image/png",
+                "display_name": display_name
+            }
+        )
+    print(f"Uploaded file {file_response.display_name} as: {file_response.uri}")
+    return file_response
 
-# Initialize Google API Client
-client=genai.Client(api_key=api_key)
+def get_file(client, file_name):
+    """Retrieves a file from the client.files API."""
+    get_file_response = client.files.get(name=file_name)
+    print(f"Retrieved file {get_file_response.display_name} as: {get_file_response.uri}")
+    return get_file_response
 
-# Upload a sample file to the client.files API
-file_path = "/content/image.png"
-display_name = "Gemini Logo"
-file_response = client.files.upload(
-    file=open(file_path, "rb"),
-    config={
-        "mime_type":"image/png",
-        "display_name":display_name
-    }
-)
-print(f"Uploaded file {file_response.display_name} as: {file_response.uri}")
+def generate_content(client, model_name, prompt, file_response):
+    """Generates content using the client.models API."""
+    response = client.models.generate_content(
+        model=model_name,
+        contents=[
+            prompt,
+            file_response
+        ]
+    )
+    print(response.text)
+    return response
 
-# Retrieve the uploaded file from the client.files.get
-get_file =client.files.get(name=file_response.name)
-print(f"Retrieved file {get_file.display_name} as: {get_file.uri}")
+def delete_file(client, file_name):
+    """Deletes a file from the client.files API."""
+    client.files.delete(name=file_name)
+    print(f"Deleted file with name {file_name}")
 
-# Generate content using the client.models API
-prompt = "Describe the image with a creative description"
-model_name = "gemini-2.0-flash"
-response = client.models.generate_content(
-    model=model_name,
-    contents=[
-      prompt,
-      file_response
-    ]
-)
-print(response.text)
+def main():
+    """Main function to run the sample."""
+    # Load environment variables from .env file
+    load_dotenv()
+    api_key = os.environ.get("GOOGLE_API_KEY")
+    if not api_key:
+        raise ValueError("GOOGLE_API_KEY not found in environment variables.")
 
-# Delete the sample file
-client.files.delete(name=file_response.name)
-print(f"Deleted file {file_response.display_name}")
+    # Initialize Google API Client
+    client = genai.Client(api_key=api_key)
+
+    # File to upload
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(script_dir, "sample_data/gemini_logo.png")
+    display_name = "Gemini Logo"
+
+    # Check if the file exists
+    if not os.path.exists(file_path):
+        print(f"File not found at {file_path}. Creating a dummy file.")
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, "w") as f:
+            f.write("dummy content")
+
+    # Upload the file
+    file_response = upload_file(client, file_path, display_name)
+
+    # Get the file
+    if file_response:
+        get_file(client, file_response.name)
+
+        # Generate content
+        prompt = "Describe the image with a creative description"
+        model_name = "gemini-2.0-flash"
+        generate_content(client, model_name, prompt, file_response)
+
+        # Delete the file
+        delete_file(client, file_response.name)
+
+
+if __name__ == "__main__":
+    main()

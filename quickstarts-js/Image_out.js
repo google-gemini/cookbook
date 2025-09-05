@@ -29,24 +29,6 @@ Following this guide, you'll learn how to do all those things and even more.
 */
 
 /* Markdown (render)
-<!-- Princing warning Badge -->
-<table>
-  <tr>
-    <!-- Emoji -->
-    <td bgcolor="#ffe680">
-      <font size=30>⚠️</font>
-    </td>
-    <!-- Text Content Cell -->
-    <td bgcolor="#ffe680">
-      <h3><font color=black>After a few free tries, you will need <a href="https://ai.google.dev/gemini-api/docs/billing#enable-cloud-billing" taget="_blank">billing</a> enabled to use image generation. Click on the 
-<img src="https://i.postimg.cc/pX6FQwjz/key-off-24dp-E3-E3-E3-FILL0-wght400-GRAD0-opsz24.png" style="margin:0px 0px !important;" height="18px" width="18px" />
-button in the top right corner to select a cloud project with billing.</font></h3>
-    </td>
-  </tr>
-</table>
- */
-
-/* Markdown (render)
 Imagen models also offer image generaion but in a slightly different way as the Image-out feature has been developed to work iteratively so if you want to make sure certain details are clearly followed, and you are ready to iterate on the image until it's exactly what you envision, Image-out is for you.
 
 Check the [documentation](https://ai.google.dev/gemini-api/docs/image-generation#choose-a-model) for more details on both features and some more advice on when to use each one.
@@ -513,5 +495,6 @@ Here are some Imagen examples to get your imagination started on how to use it i
 ### Continue your discovery of the Gemini API
 
 Gemini is not only good at generating images, but also at understanding them. Check the [Spatial understanding](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Spatial_understanding.ipynb) guide for an introduction on those capabilities, and the [Video understanding](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video_understanding.ipynb) one for video examples.
+
 
 */

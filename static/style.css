@@ -1,0 +1,139 @@
+/* static/style.css */
+:root {
+    --bg-color: #121212;
+    --primary-text: #E0E0E0;
+    --secondary-text: #BDBDBD;
+    --surface-color: #1E1E1E;
+    --primary-accent: #03DAC6; /* A bright, techy color */
+    --error-color: #CF6679;
+    --border-color: #333;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--primary-text);
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+}
+
+header, main, footer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+header h1 {
+    font-size: 2.5em;
+    color: var(--primary-accent);
+    margin-bottom: 0;
+}
+
+.tool-section, #monetization {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+h2 {
+    color: var(--primary-accent);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+    color: var(--primary-text);
+    font-family: inherit;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: var(--primary-accent);
+    color: var(--bg-color);
+    border: none;
+    padding: 12px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #018786;
+}
+
+.result-container {
+    margin-top: 20px;
+}
+
+pre {
+    background-color: var(--bg-color);
+    padding: 15px;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    border: 1px solid var(--border-color);
+}
+
+.pricing-tiers {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.tier {
+    flex: 1;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+#primary-tier {
+    border: 2px solid var(--primary-accent);
+    transform: scale(1.05);
+    box-shadow: 0 0 15px var(--primary-accent);
+}
+
+#urgency-engine {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#countdown-timer {
+    color: var(--error-color);
+}
+
+#social-proof {
+    color: var(--secondary-text);
+    font-style: italic;
+    font-size: 0.9em;
+    transition: opacity 0.5s ease-in-out;
+}
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--secondary-text);
+    font-size: 0.8em;
+}

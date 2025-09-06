@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Weapon AI Suite</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <h1>Academic Weapon AI Suite</h1>
+        <p>The Unfair Advantage. Dominate Your Academics.</p>
+    </header>
+
+    <main>
+        <!-- InstaEssay AI -->
+        <section class="tool-section" id="insta-essay">
+            <h2>InstaEssay AI</h2>
+            <form id="insta-essay-form">
+                <textarea id="essay-prompt" placeholder="Paste your essay prompt, rubric, and source links here..." rows="5" required></textarea>
+                <button type="submit">Generate Essay</button>
+            </form>
+            <div class="result-container">
+                <h3>Result:</h3>
+                <pre><code id="insta-essay-result"></code></pre>
+            </div>
+        </section>
+
+        <!-- LitReview Synth -->
+        <section class="tool-section" id="lit-review">
+            <h2>LitReview Synth</h2>
+            <form id="lit-review-form">
+                <input type="text" id="review-topic" placeholder="Enter your literature review topic..." required>
+                <button type="submit">Generate Review</button>
+            </form>
+            <div class="result-container">
+                <h3>Result:</h3>
+                <pre><code id="lit-review-result"></code></pre>
+            </div>
+        </section>
+
+        <!-- ExamCram GPT -->
+        <section class="tool-section" id="exam-cram">
+            <h2>ExamCram GPT</h2>
+            <form id="exam-cram-form">
+                <textarea id="exam-notes" placeholder="Paste your lecture notes, textbook chapters, or PowerPoints content here..." rows="5" required></textarea>
+                <button type="submit">Generate Study Guide</button>
+            </form>
+            <div class="result-container">
+                <h3>Result:</h3>
+                <pre><code id="exam-cram-result"></code></pre>
+            </div>
+        </section>
+
+        <!-- Presentation Bot -->
+        <section class="tool-section" id="presentation-bot">
+            <h2>Presentation Bot</h2>
+            <form id="presentation-bot-form">
+                <input type="text" id="presentation-topic" placeholder="Enter your one-sentence presentation topic..." required>
+                <button type="submit">Generate Presentation</button>
+            </form>
+            <div class="result-container">
+                <h3>Result:</h3>
+                <pre><code id="presentation-bot-result"></code></pre>
+            </div>
+        </section>
+
+        <!-- Monetization & Urgency -->
+        <section id="monetization">
+            <h2>Choose Your Weapon</h2>
+            <div class="pricing-tiers">
+                <div class="tier">
+                    <h3>The Taste (Free)</h3>
+                    <p>1 Free Essay (500 words)</p>
+                    <p><strong>The Hook.</strong></p>
+                </div>
+                <div class="tier">
+                    <h3>Student Hustler</h3>
+                    <p>$27/month</p>
+                    <p>5 Essays/month</p>
+                    <p>10 Exam Guides</p>
+                </div>
+                <div class="tier" id="primary-tier">
+                    <h3>Academic Weapon</h3>
+                    <p>$97/month</p>
+                    <p><strong>UNLIMITED EVERYTHING</strong></p>
+                    <p>The ultimate solution.</p>
+                </div>
+            </div>
+            <div id="urgency-engine">
+                <p>Price doubles in: <span id="countdown-timer">23:59:59</span></p>
+                <p><span id="social-proof">John from NYU just aced his finals with us.</span></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Generated via AcademicWeapon.ai - The Unfair Advantage</p>
+    </footer>
+
+    <script src="/static/main.js"></script>
+</body>
+</html>

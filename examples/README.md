@@ -30,7 +30,7 @@ This is a collection of fun and helpful examples for the Gemini API.
 | [Talk to documents](./Talk_to_documents_with_embeddings.ipynb) | Use embeddings to search through a custom database. | Embeddings | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Talk_to_documents_with_embeddings.ipynb) |
 | [Entity extraction](./Entity_Extraction.ipynb) | Use Gemini API to speed up some of your tasks, such as searching through text to extract needed information. Entity extraction with a Gemini model is a simple query, and you can ask it to retrieve its answer in the form that you prefer. | Embeddings | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Entity_Extraction.ipynb) |
 | [Google I/O 2025 Live coding session](./Google_IO2025_Live_Coding.ipynb) | Play with the notebook used during the Google I/O 2025 live coding session delivered by the Google DeepMind DevRel team. Work with the Gemini API SDK, know and practice with the GenMedia models, the thinking capable models, start using the Gemini API tools and more!| Gemini API and its models and features | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Google_IO2025_Live_Coding.ipynb) |
-| [GitHub issues analyzer](./GitHub_issues_analyzer.ipynb) | Use Gemini API function calling to interact with the GitHub API to analyze GitHub issues | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/GitHub_issues_analyzer.ipynb) |
+| [GitHub issues analyzer](./GitHub_issues_analyzer.ipynb) | Use Gemini API function calling to interact with the GitHub API to analyze GitHub issues | Function Calling | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/GitHub_issues_analyzer.ipynb) |
 
 ---
 <br>
@@ -68,4 +68,5 @@ Some old examples are still using the legacy SDK, they should still work and are
 * [JSON Capabilities](./json_capabilities/): A directory with guides containing different types of tasks you can do with JSON schemas.
 * [Automate Google Workspace tasks with the Gemini API](./Apps_script_and_Workspace_codelab/): This codelabs shows you how to connect to the Gemini API using Apps Script, and uses the function calling, vision and text capabilities to automate Google Workspace tasks - summarizing a document, analyzing a chart, sending an email and generating some slides directly. All of this is done from a free text input.
 * [Langchain examples](./langchain/): A directory with multiple examples using Gemini with Langchain.
+
 

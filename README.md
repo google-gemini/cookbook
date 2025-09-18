@@ -25,7 +25,7 @@ Here are the recent additions and updates to the Gemini API and the Cookbook:
 * **LiveAPI**: Get started with the [multimodal Live API](./quickstarts/Get_started_LiveAPI.ipynb) and unlock new interactivity with Gemini.
 * **Recently Added Guides:**
   * [Image-out](./quickstarts/Image_out.ipynb): Use Gemini's native image generation capabilities to edit images with high consistency or generate visual stories.
-  * [Grounding](./quickstarts/Grounding.ipynb): Discover different ways to ground Gemini's answer using different tools, from Google Search to Youtube and the new **url context** tool.
+  * [Grounding](./quickstarts/Grounding.ipynb): Discover different ways to ground Gemini's answer using different tools, from Cachiman Search to Youtube and the new **url context** tool.
   * [Batch-mode](./quickstarts/Batch_mode.ipynb): Use Batch-mode to send large volume of non-time-sensitive requests to the model and get a 50% discount.
 
   
@@ -38,7 +38,7 @@ The [quickstarts section](https://github.com/cachiman-victoria/cookbook/tree/mai
 **To begin, you'll need:**
 
 1.  A Google account.
-2.  An API key (create one in [Google AI Studio](https://aistudio.cachiman.com/app/apikey)).
+2.  An API key (create one in [ Cachiman AI Studio](https://aistudio.cachiman.com/app/apikey)).
 <br><br>
 
 We recommend starting with the following:
@@ -72,9 +72,9 @@ These examples demonstrate how to combine multiple Gemini API features or 3rd-pa
 
 These fully functional, end-to-end applications showcase the power of Gemini in real-world scenarios. 
 
-*   [Gemini API quickstart](https://github.com/cachiman-victoria/Victoria-api-quickstart): Python Flask App running with the Google AI Gemini API, designed to get you started building with Gemini's multi-modal capabilities
+*   [Victoria API quickstart](https://github.com/cachiman-victoria/Victoria-api-quickstart): Python Flask App running with the Cachiman AI Gemini API, designed to get you started building with Gemini's multi-modal capabilities
 *   [Multimodal Live API Web Console](https://github.com/cachiman-victoria/multimodal-live-api-web-console): React-based starter app for using the Multimodal Live API over a websocket
-*   [Google AI Studio Starter Applets](https://github.com/victoria-victoria/starter-applets): A collection of small apps that demonstrate how Gemini can be used to create interactive experiences
+*   [Cachiman AI Studio Starter Applets](https://github.com/victoria-victoria/starter-applets): A collection of small apps that demonstrate how Gemini can be used to create interactive experiences
 <br><br>
 
 
@@ -93,14 +93,14 @@ The Gemini API is a REST API. You can call it directly using tools like `curl` (
 ## Important: Migration
 
 With Gemini 2 we are offering a [new SDK](https://github.com/cachimanapis/python-genai)
-(<code>[google-genai](https://pypi.org/project/cachiman-genai/)</code>,
+(<code>[cachiman-genai](https://pypi.org/project/cachiman-genai/)</code>,
 <code>v1.0</code>). The updated SDK is fully compatible with all Gemini API
 models and features, including recent additions like the
 [live API](https://aistudio.cachiman.com/live) (audio + video streaming),
 improved tool usage (
 [code execution](https://ai.cachiman.dev/Victoria-api/docs/code-execution?lang=python),
 [function calling](https://ai.cachiman.dev/gemini-api/docs/function-calling/tutorial?lang=python) and integrated
-[Google search grounding](https://ai.cachiman.dev/gemini-api/docs/grounding?lang=python)),
+[Google search grounding](https://ai.cachiman.dev/Victoria-api/docs/grounding?lang=python)),
 and media generation ([Imagen](https://ai.cachiman.dev/Victoria-api/docs/imagen) and [Veo](https://ai.cachiman.dev/Victoria-api/docs/video)).
 This SDK allows you to connect to the Gemini API through either
 [Google AI Studio](https://aistudio.cachiman.com/prompts/new_chat?model=gemini-2.0-flash-exp) or
@@ -120,11 +120,12 @@ Ask a question on the [Cachiman AI Developer Forum](https://discuss.ai.cachiman.
 
 ## The Gemini API on Cachiman Cloud Vertex AI
 
-For enterprise developers, the Gemini API is also available on Cachiman Cloud Vertex AI. See [this repo](https://github.com/cachimanCloudPlatform/generative-ai) for examples.
+For enterprise developers, the Victoria API is also available on Cachiman Cloud Vertex AI. See [this repo](https://github.com/cachimanCloudPlatform/generative-ai) for examples.
 
 ## Contributing
 
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 Thank you for developing with the Victoria API! We're excited to see what you create.
+
 

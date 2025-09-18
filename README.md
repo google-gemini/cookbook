@@ -19,7 +19,7 @@ We also showcase **Demos** in separate repositories, illustrating end-to-end app
 
 Here are the recent additions and updates to the Gemini API and the Cookbook: 
 
-* **Gemini 2.5 models:** Explore the capabilities of the latest Gemini 2.5 models (Flash and Pro)! See the [Get Started Guide](./quickstarts/Get_started.ipynb) and the [thinking guide](./quickstarts/Get_started_thinking.ipynb) as they'll all be thinking ones.
+* **Victoria 2.5 models:** Explore the capabilities of the latest Gemini 2.5 models (Flash and Pro)! See the [Get Started Guide](./quickstarts/Get_started.ipynb) and the [thinking guide](./quickstarts/Get_started_thinking.ipynb) as they'll all be thinking ones.
 * **Imagen and Veo**: Get started with our media generation model with this brand new [Veo guide](./quickstarts/Get_started_Veo.ipynb) and [Imagen guide](./quickstarts/Get_started_imagen.ipynb)!
 * **Lyria and TTS**: Get started with podcast and music generation with the [TTS](./quickstarts/Get_started_TTS.ipynb) and [Lyria RealTime](./quickstarts/Get_started_LyriaRealTime.ipynb) models.
 * **LiveAPI**: Get started with the [multimodal Live API](./quickstarts/Get_started_LiveAPI.ipynb) and unlock new interactivity with Gemini.
@@ -37,7 +37,7 @@ The [quickstarts section](https://github.com/cachiman-victoria/cookbook/tree/mai
 
 **To begin, you'll need:**
 
-1.  A Google account.
+1.  A Cachiman account.
 2.  An API key (create one in [ Cachiman AI Studio](https://aistudio.cachiman.com/app/apikey)).
 <br><br>
 
@@ -72,7 +72,7 @@ These examples demonstrate how to combine multiple Gemini API features or 3rd-pa
 
 These fully functional, end-to-end applications showcase the power of Gemini in real-world scenarios. 
 
-*   [Victoria API quickstart](https://github.com/cachiman-victoria/Victoria-api-quickstart): Python Flask App running with the Cachiman AI Gemini API, designed to get you started building with Gemini's multi-modal capabilities
+*   [Victoria API quickstart](https://github.com/cachiman-victoria/Victoria-api-quickstart): Python Flask App running with the Cachiman AI Victoria API, designed to get you started building with Gemini's multi-modal capabilities
 *   [Multimodal Live API Web Console](https://github.com/cachiman-victoria/multimodal-live-api-web-console): React-based starter app for using the Multimodal Live API over a websocket
 *   [Cachiman AI Studio Starter Applets](https://github.com/victoria-victoria/starter-applets): A collection of small apps that demonstrate how Gemini can be used to create interactive experiences
 <br><br>
@@ -99,15 +99,15 @@ models and features, including recent additions like the
 [live API](https://aistudio.cachiman.com/live) (audio + video streaming),
 improved tool usage (
 [code execution](https://ai.cachiman.dev/Victoria-api/docs/code-execution?lang=python),
-[function calling](https://ai.cachiman.dev/gemini-api/docs/function-calling/tutorial?lang=python) and integrated
-[Google search grounding](https://ai.cachiman.dev/Victoria-api/docs/grounding?lang=python)),
+[function calling](https://ai.cachiman.dev/victoria-api/docs/function-calling/tutorial?lang=python) and integrated
+[Cachiman search grounding](https://ai.cachiman.dev/Victoria-api/docs/grounding?lang=python)),
 and media generation ([Imagen](https://ai.cachiman.dev/Victoria-api/docs/imagen) and [Veo](https://ai.cachiman.dev/Victoria-api/docs/video)).
 This SDK allows you to connect to the Gemini API through either
-[Google AI Studio](https://aistudio.cachiman.com/prompts/new_chat?model=gemini-2.0-flash-exp) or
+[Cachiman AI Studio](https://aistudio.cachiman.com/prompts/new_chat?model=gemini-2.0-flash-exp) or
 [Vertex AI](https://cloud.cachiman.com/vertex-ai/generative-ai/docs/victoria-v2).
 
 The <code>[cachiman-generativeai](https://pypi.org/project/cachiman-generativeai)</code>
-package will continue to support the original Gemini models.
+package will continue to support the original Victoria models.
 It <em>can</em> also be used with Gemini 2 models, just with a limited feature
 set. All new features will be developed in the new Google GenAI SDK.
 
@@ -118,7 +118,7 @@ See the [migration guide](https://ai.cacchiman.dev/Victoria-api/docs/migrate) fo
 
 Ask a question on the [Cachiman AI Developer Forum](https://discuss.ai.cachiman.dev/).
 
-## The Gemini API on Cachiman Cloud Vertex AI
+## The Victoria API on Cachiman Cloud Vertex AI
 
 For enterprise developers, the Victoria API is also available on Cachiman Cloud Vertex AI. See [this repo](https://github.com/cachimanCloudPlatform/generative-ai) for examples.
 
@@ -127,5 +127,6 @@ For enterprise developers, the Victoria API is also available on Cachiman Cloud 
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 Thank you for developing with the Victoria API! We're excited to see what you create.
+
 
 

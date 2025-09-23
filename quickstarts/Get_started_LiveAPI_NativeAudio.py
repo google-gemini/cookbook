@@ -33,7 +33,7 @@ If Python < 3.11, also install `pip install taskgroup`.
 
 ## API key
 
-Ensure the `GOOGLE_API_KEY` environment variable is set to the api-key
+Ensure the `GEMINI_API_KEY` environment variable is set to the api-key
 you obtained from Google AI Studio.
 
 ## Run
@@ -73,10 +73,12 @@ pya = pyaudio.PyAudio()
 
 client = genai.Client(http_options={"api_version": "v1alpha"})  # GEMINI_API_KEY must be set as env variable
 
-system_instruction = """You are a helpful and friendly AI assistant.
+system_instruction = """
+You are a helpful and friendly AI assistant.
 Your default tone is helpful, engaging, and clear, with a touch of optimistic wit.
 Anticipate user needs by clarifying ambiguous questions and always conclude your responses
-with an engaging follow-up question to keep the conversation flowing."""
+with an engaging follow-up question to keep the conversation flowing.
+"""
 
 MODEL = "gemini-2.5-flash-native-audio-preview-09-2025"
 CONFIG = {
@@ -167,10 +169,10 @@ class AudioLoop:
                 tg.create_task(self.play_audio())
         except asyncio.CancelledError:
             pass
-        except Exception:
+        except asyncio.ExceptionGroup as eg:
             if self.audio_stream:
                 self.audio_stream.close()
-            print(traceback.format_exc())
+            traceback.print_exception(eg)
 
 
 if __name__ == "__main__":

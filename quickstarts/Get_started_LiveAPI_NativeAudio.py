@@ -78,7 +78,7 @@ Your default tone is helpful, engaging, and clear, with a touch of optimistic wi
 Anticipate user needs by clarifying ambiguous questions and always conclude your responses
 with an engaging follow-up question to keep the conversation flowing."""
 
-MODEL = "gemini-2.5-flash-native-audio-eap"
+MODEL = "gemini-2.5-flash-native-audio-preview-09-2025"
 CONFIG = {
     "system_instruction": system_instruction,
     "response_modalities": ["AUDIO"],

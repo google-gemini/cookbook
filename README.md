@@ -21,7 +21,7 @@ Here are the recent additions and updates to the Gemini API and the Cookbook:
 
 * **Gemini 2.5 models:** Explore the capabilities of the latest Gemini 2.5 models (Flash and Pro)! See the [Get Started Guide](./quickstarts/Get_started.ipynb) and the [thinking guide](./quickstarts/Get_started_thinking.ipynb) as they'll all be thinking ones.
 * **Imagen and Veo**: Get started with our media generation model with this brand new [Veo guide](./quickstarts/Get_started_Veo.ipynb) and [Imagen guide](./quickstarts/Get_started_imagen.ipynb)!
-* **Gemini Robotics-ER 1.5**: Learn about this new Gemini model specifically for spatial understanding and reasoning for [robotics applications](,.quickstarts/gemini-robotics-er.).
+* **Gemini Robotics-ER 1.5**: Learn about this new Gemini model specifically for spatial understanding and reasoning for [robotics applications](,.quickstarts/gemini-robotics-er.ipynb).
 * **Lyria and TTS**: Get started with podcast and music generation with the [TTS](./quickstarts/Get_started_TTS.ipynb) and [Lyria RealTime](./quickstarts/Get_started_LyriaRealTime.ipynb) models.
 * **LiveAPI**: Get started with the [multimodal Live API](./quickstarts/Get_started_LiveAPI.ipynb) and unlock new interactivity with Gemini.
 * **Recently Added Guides:**
@@ -128,3 +128,4 @@ For enterprise developers, the Gemini API is also available on Google Cloud Vert
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 Thank you for developing with the Gemini API! We're excited to see what you create.
+

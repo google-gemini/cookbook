@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This script shows you how to use `websocat` to interact with the Gemini 2.0
+# This script shows you how to use `websocat` to interact with the Gemini
 # Multimodal Live API.
 
 # You need to set $GOOGLE_API_KEY

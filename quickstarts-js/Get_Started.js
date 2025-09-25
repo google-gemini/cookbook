@@ -1091,7 +1091,7 @@ Check out the [Google GenAI SDK](https://googleapis.github.io/js-genai) for more
 
 ### Related examples
 
-For more detailed examples using Gemini models, check the [Quickstarts folder of the cookbook](https://github.com/google-gemini/cookbook/tree/main/quickstarts/). You'll learn how to use the Live API, juggle with multiple tools or use Gemini 2.0 spatial understanding abilities.
+For more detailed examples using Gemini models, check the [Quickstarts folder of the cookbook](https://github.com/google-gemini/cookbook/tree/main/quickstarts/). You'll learn how to use the Live API, juggle with multiple tools or use Gemini's spatial understanding abilities.
 
 Also check the Gemini thinking models that explicitly showcases its thoughts summaries and can manage more complex reasonings.
 

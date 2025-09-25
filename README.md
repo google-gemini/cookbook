@@ -103,7 +103,7 @@ improved tool usage (
 [Google search grounding](https://ai.google.dev/gemini-api/docs/grounding?lang=python)),
 and media generation ([Imagen](https://ai.google.dev/gemini-api/docs/imagen) and [Veo](https://ai.google.dev/gemini-api/docs/video)).
 This SDK allows you to connect to the Gemini API through either
-[Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.0-flash-exp) or
+[Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.5-flash) or
 [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/gemini-v2).
 
 The <code>[google-generativeai](https://pypi.org/project/google-generativeai)</code>

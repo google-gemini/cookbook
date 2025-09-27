@@ -26,8 +26,8 @@ This Arduino-based application demonstrates how to capture audio from a micropho
 * **SD Card Adapter -> ESP32**
     * CS -> IO5
     * SCK -> IO18
-    * MOSI -> IO23
-    * MISO -> IO19
+    * MOSI/DI -> IO23
+    * MISO/DO -> IO19
     * VCC -> 3.3V
     * GND -> GND
 

@@ -19,6 +19,15 @@ This guide is mostly about the python content and the notebook, but don't forget
 
 # Cookbook notebook specific instructions
 
+## Common mistakes
+
+* There are multiple SDKs to use the Gemini APIs. The correct and most recent one is the [Python genai](https://github.com/googleapis/python-genai) one.
+    * `%pip install -U -q 'google-genai>=1.0.0'` is the right way to install the SDK. The version indicated should reflect the minimum version needed to use the features used in the notebook (1.0.0 by default or in doubt).
+    * `from google import genai` is the right way to import the official SDK.
+    * `from google.genai import types` is the right way to uimport the types.
+    * `import google.generativeai` is incorrect, this is the old one that was deprecated early 2025.
+
+
 ## Hard-coded API keys
 
 Very important: notebooks must not contain hard-coded API keys. If you find one, immediately tell the author to cancel their submission, revoke the compromised key, and create a new one. Exposed keys are quickly collected and can lead to unauthorized usage and costs for the author.
@@ -42,8 +51,8 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
   where `URL` should be `https://colab.research.google.com/github/google-gemini/cookbook/blob/main/` followed by the notebook
   location in the cookbook
 * Include an overview section before any code.
-* use %pip instead of !pip
-* Put the imports when they are first used.
+* use `%pip` instead of `!pip`
+* Put the imports when they are first used. Try to avoid having a big "import" cell at the beginning.
 * Keep code as brief as possible. 
 * Break text cells at headings
 * Break code cells between "building" and "running".

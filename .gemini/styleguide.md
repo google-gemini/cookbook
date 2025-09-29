@@ -39,8 +39,9 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Those cells can be either Markdown or python code (or sometimes bash in which case the code cell starts with `%%bash`).
 * The `outputs` do not have to be ignored, but if none of them changed while some code has, it might be a sign that the
   notebook has not been run to check that it works, in which case a warning should be raised;
+* Ideally we want the ouputs to be saved in the notebooks so that one can see what the code does without runnning it. The only exception is when the ouput is tooo large (it contains images or videos for ex.).
 * If the `execution_count` has changed to something else than `null`, it usually indicates that the formatting script has not
-  been run. A warning should be raised, but only once per notebook.
+  been run. A warning should be raised, but only once per notebook. Be very clear that it means that the formatting script must be run, not that the outputs should be removed.
 
 ## Notebook style
 

@@ -417,7 +417,7 @@ Gemini can output images directly as part of a conversation:
 Modality = module.Modality
 
 response = await ai.models.generateContent({
-  model: "gemini-2.5-flash-image-preview",
+  model: "gemini-2.5-flash-image",
   contents: `A 3D rendered pig with wings and a top hat flying over
              a futuristic sci-fi city filled with greenery.`,
   config: { responseModalities: [Modality.TEXT, Modality.IMAGE] }

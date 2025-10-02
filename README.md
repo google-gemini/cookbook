@@ -53,7 +53,7 @@ Then, explore the other quickstarts tutorials to learn about individual features
 *  [Get started with Veo](./quickstarts/Get_started_Veo.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_Veo.ipynb): Get started with our video generation capabilities 
 *  [Get started with Imagen](./quickstarts/Get_started_imagen.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_imagen.ipynb) and [Native image generation](./quickstarts/Image_out.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Image_out.ipynb): Get started with our image generation capabilities 
 *  [Grounding](./quickstarts/Grounding.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Grounding.ipynb): use Google Search for grounded responses
-*  [Code execution](./quickstarts/Code_Execution.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Code_Execution.ipynb): Generating and running Python code to solve complex tasks and even ouput graphs
+*  [Code execution](./quickstarts/Code_Execution.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Code_Execution.ipynb): Generating and running Python code to solve complex tasks and even output graphs
 *  And [many more](https://github.com/google-gemini/cookbook/tree/main/quickstarts/)
 <br><br>
 
@@ -128,5 +128,6 @@ For enterprise developers, the Gemini API is also available on Google Cloud Vert
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 Thank you for developing with the Gemini API! We're excited to see what you create.
+
 
 

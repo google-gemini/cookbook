@@ -1,6 +1,6 @@
 {
     "name": "Gemini Cookbook Dev Container",
-    "image": "mcr.microsoft.com/devcontainers/universal:2", 
+    "image": "mcr.microsoft.com/devcontainers/universal:2",
     "waitFor": "onCreateCommand",
     "updateContentCommand": "python3 -m pip install ipywidgets",
     "customizations": {

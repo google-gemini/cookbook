@@ -1,5 +1,5 @@
 have_fun: false  
-code_review: 
+code_review:  
   disable: false
   comment_severity_threshold: MEDIUM
   max_review_comments: -1

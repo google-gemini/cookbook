@@ -1,5 +1,5 @@
 # Gemini Cookbook Python notebooks Style Guide
-
+ 
 # Introduction
 This style guide outlines the coding conventions for Python notebooks developped by the Gemini team.
 It's based on PEP 8, but with some modifications to address specific needs and

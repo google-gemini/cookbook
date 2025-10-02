@@ -29,7 +29,7 @@ Following this guide, you'll learn how to do all those things and even more.
 */
 
 /* Markdown (render)
-Imagen models also offer image generaion but in a slightly different way as the Image-out feature has been developed to work iteratively so if you want to make sure certain details are clearly followed, and you are ready to iterate on the image until it's exactly what you envision, Image-out is for you.
+Imagen models also offer image generation but in a slightly different way as the Image-out feature has been developed to work iteratively so if you want to make sure certain details are clearly followed, and you are ready to iterate on the image until it's exactly what you envision, Image-out is for you.
 
 Check the [documentation](https://ai.google.dev/gemini-api/docs/image-generation#choose-a-model) for more details on both features and some more advice on when to use each one.
 */
@@ -56,7 +56,7 @@ module = await import("https://esm.sh/@google/genai@1.4.0");
 GoogleGenAI = module.GoogleGenAI;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-MODEL_ID = "gemini-2.5-flash-image-preview"
+MODEL_ID = "gemini-2.5-flash-image"
 // [CODE ENDS]
 
 /* Markdown (render)

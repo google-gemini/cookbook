@@ -41,7 +41,7 @@ print(f"Retrieved file {get_file.display_name} as: {get_file.uri}")
 
 # Generate content using the client.models API
 prompt = "Describe the image with a creative description"
-model_name = "gemini-2.0-flash"
+model_name = "gemini-2.5-flash"
 response = client.models.generate_content(
     model=model_name,
     contents=[

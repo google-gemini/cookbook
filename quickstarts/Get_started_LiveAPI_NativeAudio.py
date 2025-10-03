@@ -14,6 +14,12 @@
 # limitations under the License.
 
 """
+This script lets you to talk to a Gemini native audio model using the Live API.
+
+Important: **Use headphones**. This script uses the system default audio
+input and output, which often won't include echo cancellation. So to prevent
+the model from interrupting itself it is important that you use headphones. 
+
 ## Setup
 
 To install the dependencies for this script, run:
@@ -23,9 +29,11 @@ brew install portaudio
 pip install -U google-genai pyaudio
 ```
 
+If Python < 3.11, also install `pip install taskgroup`.
+
 ## API key
 
-Ensure the `GOOGLE_API_KEY` environment variable is set to the api-key
+Ensure the `GEMINI_API_KEY` environment variable is set to the api-key
 you obtained from Google AI Studio.
 
 ## Run
@@ -53,6 +61,7 @@ if sys.version_info < (3, 11, 0):
     asyncio.TaskGroup = taskgroup.TaskGroup
     asyncio.ExceptionGroup = exceptiongroup.ExceptionGroup
 
+
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 SEND_SAMPLE_RATE = 16000
@@ -62,21 +71,29 @@ CHUNK_SIZE = 1024
 pya = pyaudio.PyAudio()
 
 
-client = genai.Client()  # GOOGLE_API_KEY must be set as env variable
+client = genai.Client(http_options={"api_version": "v1alpha"})  # GEMINI_API_KEY must be set as env variable
 
-MODEL = "gemini-2.5-flash-preview-native-audio-dialog"
-CONFIG = {"response_modalities": ["AUDIO"]}
+system_instruction = """
+You are a helpful and friendly AI assistant.
+Your default tone is helpful, engaging, and clear, with a touch of optimistic wit.
+Anticipate user needs by clarifying ambiguous questions and always conclude your responses
+with an engaging follow-up question to keep the conversation flowing.
+"""
+
+MODEL = "gemini-2.5-flash-native-audio-preview-09-2025"
+CONFIG = {
+    "system_instruction": system_instruction,
+    "response_modalities": ["AUDIO"],
+    "proactivity": {'proactive_audio': True}
+}
 
 
 class AudioLoop:
     def __init__(self):
         self.audio_in_queue = None
         self.out_queue = None
-
         self.session = None
-
         self.audio_stream = None
-
         self.receive_audio_task = None
         self.play_audio_task = None
 
@@ -152,10 +169,10 @@ class AudioLoop:
                 tg.create_task(self.play_audio())
         except asyncio.CancelledError:
             pass
-        except ExceptionGroup as EG:
+        except asyncio.ExceptionGroup as eg:
             if self.audio_stream:
                 self.audio_stream.close()
-            traceback.print_exception(EG)
+            traceback.print_exception(eg)
 
 
 if __name__ == "__main__":

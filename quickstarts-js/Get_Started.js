@@ -57,7 +57,7 @@ module = await import("https://esm.sh/@google/genai@1.4.0");
 GoogleGenAI = module.GoogleGenAI;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-MODEL_ID = "gemini-2.5-flash" // ["gemini-2.5-flash-lite-preview-06-17", "gemini-2.5-flash", "gemini-2.5-pro"]
+MODEL_ID = "gemini-2.5-flash" // ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.5-pro"]
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -417,7 +417,7 @@ Gemini can output images directly as part of a conversation:
 Modality = module.Modality
 
 response = await ai.models.generateContent({
-  model: "gemini-2.0-flash-preview-image-generation",
+  model: "gemini-2.5-flash-image",
   contents: `A 3D rendered pig with wings and a top hat flying over
              a futuristic sci-fi city filled with greenery.`,
   config: { responseModalities: [Modality.TEXT, Modality.IMAGE] }
@@ -1091,8 +1091,9 @@ Check out the [Google GenAI SDK](https://googleapis.github.io/js-genai) for more
 
 ### Related examples
 
-For more detailed examples using Gemini models, check the [Quickstarts folder of the cookbook](https://github.com/google-gemini/cookbook/tree/main/quickstarts/). You'll learn how to use the Live API, juggle with multiple tools or use Gemini 2.0 spatial understanding abilities.
+For more detailed examples using Gemini models, check the [Quickstarts folder of the cookbook](https://github.com/google-gemini/cookbook/tree/main/quickstarts/). You'll learn how to use the Live API, juggle with multiple tools or use Gemini's spatial understanding abilities.
 
 Also check the Gemini thinking models that explicitly showcases its thoughts summaries and can manage more complex reasonings.
 
 */
+

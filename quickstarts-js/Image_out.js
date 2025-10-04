@@ -154,7 +154,13 @@ response = await ai.models.generateContent({
         mimeType: "image/png"
       }
     }
-  ]
+  ],
+  config: {
+    responseModalities: [Modality.IMAGE],
+    imageConfig: {
+      aspectRatio: "16:9"
+    },
+  }
 });
 
 for (const part of response.candidates[0].content.parts) {
@@ -498,3 +504,4 @@ Gemini is not only good at generating images, but also at understanding them. Ch
 
 
 */
+

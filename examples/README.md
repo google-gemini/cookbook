@@ -12,7 +12,8 @@ This is a collection of fun and helpful examples for the Gemini API.
 | Cookbook | Description | Features | Open |
 | -------- | ----------- | -------- | ---- |
 | [Browser as a tool](./Browser_as_a_tool.ipynb) | Demonstrates 3 ways to use a web browser as a tool with the Gemini API | Tools, Live API | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Browser_as_a_tool.ipynb) |
-| [Illustrate a book](./Book_illustration.ipynb) | Use Gemini and Imagen to create illustration for an open-source book | Imagen, structured output | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Book_illustration.ipynb) |
+| [Multi-spectral remote sensing](./multi_spectral_remote_sensing.ipynb) | Learn how to use Gemini's image understanding capabilities for multi-spectral analysis and remote sensing. | Multimodal| [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/multi_spectral_remote_sensing.ipynb) |
+| [Illustrate a book](./Book_illustration.ipynb) | Use Gemini to create illustration for an open-source book | Gemini Image, structured output | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Book_illustration.ipynb) |
 | [Animated Story Generation](./Animated_Story_Video_Generation_gemini.ipynb) | Create animated videos by combining story generation, images, and audio | Imagen, Live API, structured output | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Animated_Story_Video_Generation_gemini.ipynb) |
 | [Plotting and mapping Live](./LiveAPI_plotting_and_mapping.ipynb) | Ask Gemini for complex graphs live | Live API, Code execution | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/LiveAPI_plotting_and_mapping.ipynb) |
 | [Search grounding for research report](./Search_grounding_for_research_report.ipynb) | Use grounding to improve the quality of your research report | Grounding | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Search_grounding_for_research_report.ipynb) |
@@ -35,16 +36,19 @@ This is a collection of fun and helpful examples for the Gemini API.
 <br>
 Some old examples are still using the legacy SDK, they should still work and are still worth checking to get ideas:
 
+* [Anomaly detection with embeddings](./anomaly_detection.ipynb): Detect data anomalies using embeddings.
 * [Agents and Automatic Function Calling](./Agents_Function_Calling_Barista_Bot.ipynb): Create an agent (Barrista-bot) to take your coffee order.
-* [Classify text with emeddings](./Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.
+* [Classify text with embeddings](./Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.
+* [Clustering with embeddings](./clustering_with_embeddings.ipynb): Perform clustering on text datasets using embeddings.
 * [Guess the shape](./Guess_the_shape.ipynb): A simple example of using images in prompts.
 * [Object detection](./Object_detection.ipynb): Extensive examples with object detection, including with multiple classes, OCR, visual question answering, and even an interactive demo.
 * [Search Wikipedia with ReAct](./Search_Wikipedia_using_ReAct.ipynb): Use ReAct prompting with Gemini Flash to search Wikipedia interactively.
-* [Search Re-ranking with Embeddings](./Search_reranking_using_embeddings.ipynb): Use embeddings to re-rank search results.
 * [Story writing with prompt chaining.ipynb](./Story_Writing_with_Prompt_Chaining.ipynb): Write a story using two powerful tools: prompt chaining and iterative generation.
 * [Tag and Caption images](./Tag_and_caption_images.ipynb): Use the Gemini model's vision capabilities and the embedding model to add tags and captions to images of pieces of clothing.
-* [Talk to documents](./Talk_to_documents_with_embeddings.ipynb): This is a basic intro to Retrieval Augmented Generation (RAG). Use embeddings to search through a custom database.
 * [Voice Memos](./Voice_memos.ipynb): You'll use the Gemini API to help you generate ideas for your next blog post, based on voice memos you recorded on your phone, and previous articles you've written.
+* [Search for information on documents](./document_search.ipynb): Perform searches across documents using embeddings.
+* [Search Re-ranking with Embeddings](./Search_reranking_using_embeddings.ipynb): Use embeddings to re-rank search results.
+* [Talk to documents](./Talk_to_documents_with_embeddings.ipynb): This is a basic intro to Retrieval Augmented Generation (RAG). Use embeddings to search through a custom database.
 * [Translate a public domain](./Translate_a_Public_Domain_Book.ipynb): In this notebook, you will explore Gemini model as a translation tool, demonstrating how to prepare data, create effective prompts, and save results into a `.txt` file.
 * [Working with Charts, Graphs, and Slide Decks](./Working_with_Charts_Graphs_and_Slide_Decks.ipynb): Gemini models are powerful multimodal LLMs that can process both text and image inputs. This notebook shows how Gemini Flash model is capable of extracting data from various images.
 * [Entity extraction](./Entity_Extraction.ipynb): Use Gemini API to speed up some of your tasks, such as searching through text to extract needed information. Entity extraction with a Gemini model is a simple query, and you can ask it to retrieve its answer in the form that you prefer.

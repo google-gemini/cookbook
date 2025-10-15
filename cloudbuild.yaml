@@ -1,0 +1,6 @@
+steps:
+# Build Docker image and push to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build','-t','gcr.io/$PROJECT_ID/samdiagnosis-backend:$SHORT_SHA','.']
+images:
+- 'gcr.io/$PROJECT_ID/samdiagnosis-backend:$SHORT_SHA'

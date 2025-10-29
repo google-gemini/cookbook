@@ -11,7 +11,6 @@ This is a collection of fun and helpful examples for the Gemini API.
 
 | Cookbook | Description | Features | Open |
 | -------- | ----------- | -------- | ---- |
-| [Batch-mode](./Datasets.ipynb) | Process your collected log datasets using the Batch API. | Batch API, Datasets | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Datasets.ipynb) |
 | [Browser as a tool](./Browser_as_a_tool.ipynb) | Demonstrates 3 ways to use a web browser as a tool with the Gemini API | Tools, Live API | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Browser_as_a_tool.ipynb) |
 | [Multi-spectral remote sensing](./multi_spectral_remote_sensing.ipynb) | Learn how to use Gemini's image understanding capabilities for multi-spectral analysis and remote sensing. | Multimodal| [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/multi_spectral_remote_sensing.ipynb) |
 | [Illustrate a book](./Book_illustration.ipynb) | Use Gemini to create illustration for an open-source book | Gemini Image, structured output | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Book_illustration.ipynb) |

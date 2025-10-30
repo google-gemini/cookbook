@@ -45,11 +45,10 @@ python Get_started_LiveAPI.py --mode screen
 ```
 """
 
+import os
 import asyncio
 import base64
 import io
-import os
-import sys
 import traceback
 
 import cv2
@@ -60,12 +59,7 @@ import mss
 import argparse
 
 from google import genai
-
-if sys.version_info < (3, 11, 0):
-    import taskgroup, exceptiongroup
-
-    asyncio.TaskGroup = taskgroup.TaskGroup
-    asyncio.ExceptionGroup = exceptiongroup.ExceptionGroup
+from google.genai import types
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
@@ -73,13 +67,31 @@ SEND_SAMPLE_RATE = 16000
 RECEIVE_SAMPLE_RATE = 24000
 CHUNK_SIZE = 1024
 
-MODEL = "models/gemini-2.0-flash-live-001"
+MODEL = "models/gemini-live-2.5-flash-preview"
 
 DEFAULT_MODE = "camera"
 
-client = genai.Client(http_options={"api_version": "v1beta"})
+client = genai.Client(
+    http_options={"api_version": "v1beta"},
+    api_key=os.environ.get("GOOGLE_API_KEY")
+)
 
-CONFIG = {"response_modalities": ["AUDIO"]}
+
+CONFIG = types.LiveConnectConfig(
+    response_modalities=[
+        "AUDIO",
+    ],
+    media_resolution="MEDIA_RESOLUTION_MEDIUM",
+    speech_config=types.SpeechConfig(
+        voice_config=types.VoiceConfig(
+            prebuilt_voice_config=types.PrebuiltVoiceConfig(voice_name="Zephyr")
+        )
+    ),
+    context_window_compression=types.ContextWindowCompressionConfig(
+        trigger_tokens=25600,
+        sliding_window=types.SlidingWindow(target_tokens=12800),
+    ),
+)
 
 pya = pyaudio.PyAudio()
 
@@ -105,7 +117,7 @@ class AudioLoop:
             )
             if text.lower() == "q":
                 break
-            await self.session.send(input=text or ".", end_of_turn=True)
+            await self.session.send_client_content(turns={"role": "user", "parts": [{"text": text or "."}]}, turn_complete=True)
 
     def _get_frame(self, cap):
         # Read the frameq
@@ -178,7 +190,7 @@ class AudioLoop:
     async def send_realtime(self):
         while True:
             msg = await self.out_queue.get()
-            await self.session.send(input=msg)
+            await self.session.send_realtime_input(media=msg)
 
     async def listen_audio(self):
         mic_info = pya.get_default_input_device_info()

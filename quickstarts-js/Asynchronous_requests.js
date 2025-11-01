@@ -15,7 +15,7 @@
  */
 
 /* Markdown (render)
-# Gemini API: Asynchronous Python requests
+# Gemini API: Asynchronous JavaScript requests
 
 This notebook demonstrates how to make asynchronous and parallel requests using the Gemini API's JavaScript SDK with modern async/await syntax.
 

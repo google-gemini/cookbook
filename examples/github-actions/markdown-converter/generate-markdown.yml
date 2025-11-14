@@ -1,0 +1,54 @@
+
+
+name: Generate Markdown from Text
+
+
+on:
+  push:
+    paths:
+      - 'source.txt'
+  pull_request:
+    paths:
+      - 'source.txt'
+    
+      
+
+
+permissions:
+  contents: write
+
+
+jobs:
+  convert_to_md:
+    runs-on: ubuntu-latest
+
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+  
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+    
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install google-genai
+
+    
+      - name: Run Markdown Converter Script
+        run: python convert_to_md.py
+        env:
+          
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'Auto-generate README.md from source.txt'
+          branch: main 

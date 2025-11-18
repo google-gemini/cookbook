@@ -5,6 +5,10 @@ This folder contains guides to help you explore all Gemini API features using co
 When you're confident in your Gemini capabilities, the [examples](https://github.com/google-gemini/cookbook/tree/main/examples/) folder will be an endless source of inspiration on how to mix those capabilities together.
 <br><br>
 
+---
+> <font color="#1a73e8">**Gemini 3 Pro**: For the latest on our new model, please check the [Get Started](./Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3) and the [thinking](./Get_started_thinking.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb#gemini3) guides who include [migration guides](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3migration).</font>
+---
+
 ## Table of contents
 
 If you're new to Gemini API, you should start with these two guides:

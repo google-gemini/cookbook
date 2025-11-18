@@ -5,6 +5,10 @@ This cookbook provides a structured learning path for using the Gemini API, focu
 **For comprehensive API documentation, visit [ai.google.dev](https://ai.google.dev/gemini-api/docs).**
 <br><br>
 
+---
+> <font color="#1a73e8">**Gemini 3 Pro**: For the latest on our new model, please check the [Get Started](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3) and the [thinking](./quickstarts/Get_started_thinking.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb#gemini3) guides who include [migration guides](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3migration).</font>
+---
+
 ## Navigating the Cookbook
 
 This cookbook is organized into two main categories:
@@ -74,8 +78,10 @@ These examples demonstrate how to combine multiple Gemini API features or 3rd-pa
 
 These fully functional, end-to-end applications showcase the power of Gemini in real-world scenarios. 
 
+*   [Gemini CLI](https://github.com/google-gemini/gemini-cli): Open-source AI agent that brings the power of Gemini directly into your terminal
 *   [Gemini API quickstart](https://github.com/google-gemini/gemini-api-quickstart): Python Flask App running with the Google AI Gemini API, designed to get you started building with Gemini's multi-modal capabilities
 *   [Multimodal Live API Web Console](https://github.com/google-gemini/multimodal-live-api-web-console): React-based starter app for using the Multimodal Live API over a websocket
+*   [Fullstack Langgraph Quickstart](https://github.com/google-gemini/gemini-fullstack-langgraph-quickstart): A fullstack application using a React frontend and a LangGraph-powered backend agent
 *   [Google AI Studio Starter Applets](https://github.com/google-gemini/starter-applets): A collection of small apps that demonstrate how Gemini can be used to create interactive experiences
 <br><br>
 
@@ -89,31 +95,6 @@ The Gemini API is a REST API. You can call it directly using tools like `curl` (
 * [Dart (Flutter)](https://github.com/google/generative-ai-dart)
 * [Android](https://github.com/google/generative-ai-android)
 * [Swift](https://github.com/google/generative-ai-swift)
-<br><br>
-
-
-## Important: Migration
-
-With Gemini 2 we are offering a [new SDK](https://github.com/googleapis/python-genai)
-(<code>[google-genai](https://pypi.org/project/google-genai/)</code>,
-<code>v1.0</code>). The updated SDK is fully compatible with all Gemini API
-models and features, including recent additions like the
-[live API](https://aistudio.google.com/live) (audio + video streaming),
-improved tool usage (
-[code execution](https://ai.google.dev/gemini-api/docs/code-execution?lang=python),
-[function calling](https://ai.google.dev/gemini-api/docs/function-calling/tutorial?lang=python) and integrated
-[Google search grounding](https://ai.google.dev/gemini-api/docs/grounding?lang=python)),
-and media generation ([Imagen](https://ai.google.dev/gemini-api/docs/imagen) and [Veo](https://ai.google.dev/gemini-api/docs/video)).
-This SDK allows you to connect to the Gemini API through either
-[Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.5-flash) or
-[Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/gemini-v2).
-
-The <code>[google-generativeai](https://pypi.org/project/google-generativeai)</code>
-package will continue to support the original Gemini models.
-It <em>can</em> also be used with Gemini 2 models, just with a limited feature
-set. All new features will be developed in the new Google GenAI SDK.
-
-See the [migration guide](https://ai.google.dev/gemini-api/docs/migrate) for details.
 <br><br>
 
 ## Get Help

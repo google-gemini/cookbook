@@ -15,23 +15,21 @@
  */
 
 /* Markdown (render)
-# Gemini 2.5 Native Image generation
+# Gemini Native Image generation (aka 🍌Nano-Banana models)
 
 This notebook will show you how to use the native Image-output feature of Gemini, using the model multimodal capabilities to output both images and texts, and iterate on an image through a discussion.
 
-This model is really good at:
+There are now 2 models you can use:
+* `gemini-2.5-flash-image` aka. "nano-banana": Cheap and fast yet powerful. This should be your default choice.
+* `gemini-3-pro-image-preview` aka "nano-banana-pro": More powerful thanks to its **thinking** capabilities and its access to real-wold data using **Google Search**. It really shines at creating diagrams and grounded images. And cherry on top, it can create 2K and 4K images!
+
+These models are really good at:
 * **Maintaining character consistency**: Preserve a subject’s appearance across multiple generated images and scenes
 * **Performing intelligent editing**: Enable precise, prompt-based edits like inpainting (adding/changing objects), outpainting, and targeted transformations within an image
-* **Compose and merge images**: Intelligently combine elements from multiple images into a single, photorealistic composite
+* **Compose and merge images**: Intelligently combine elements from multiple images into a single, photorealistic composite (maximum 3 with flash, 14 with pro)
 * **Leverage multimodal reasoning**: Build features that understand visual context, such as following complex instructions on a hand-drawn diagram
 
 Following this guide, you'll learn how to do all those things and even more.
-*/
-
-/* Markdown (render)
-Imagen models also offer image generation but in a slightly different way as the Image-out feature has been developed to work iteratively so if you want to make sure certain details are clearly followed, and you are ready to iterate on the image until it's exactly what you envision, Image-out is for you.
-
-Check the [documentation](https://ai.google.dev/gemini-api/docs/image-generation#choose-a-model) for more details on both features and some more advice on when to use each one.
 */
 
 /* Markdown (render)
@@ -39,10 +37,6 @@ Check the [documentation](https://ai.google.dev/gemini-api/docs/image-generation
 ### Install SDK and set-up the client with the API key
 
 To ensure security, avoid hardcoding the API key in frontend code. Instead, set it as an environment variable on the server or local machine.
-
-When using the Gemini API client libraries, the key will be automatically detected if set as either `GEMINI_API_KEY` or `GOOGLE_API_KEY`. If both are set, `GOOGLE_API_KEY` takes precedence.
-
-For instructions on setting environment variables across different operating systems, refer to the official documentation: [Set API Key as Environment Variable](https://ai.google.dev/gemini-api/docs/api-key#set-api-env-var)
 
 In code, the key can then be accessed as:
 
@@ -52,11 +46,12 @@ ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 */
 
 // [CODE STARTS]
-module = await import("https://esm.sh/@google/genai@1.22.0");
+module = await import("https://esm.sh/@google/genai@0.0.21");
 GoogleGenAI = module.GoogleGenAI;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 MODEL_ID = "gemini-2.5-flash-image"
+PRO_MODEL_ID = "gemini-3-pro-image-preview"
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -64,7 +59,7 @@ MODEL_ID = "gemini-2.5-flash-image"
 
 Using the Gemini Image generation model is the same as using any Gemini model: you simply call `generateContent`.
 
-You can set the `responseModalities` to indicate to the model that you are expecting an image in the output but it's optional as this is expected with this model.
+You can set the `responseModalities` to indicate to the model that you are expecting text and images in the output but it's optional as this is expected with this model.
 */
 
 // [CODE STARTS]
@@ -90,7 +85,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-Here is your requested image: 
+Here is your requested image:
 
 <img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/cat.png" style="height:auto; width:100%;" />
 
@@ -138,7 +133,11 @@ for (const part of response.candidates[0].content.parts) {
 /* Markdown (render)
 As you can see, you can clearly recognize the same cat with its peculiar nose and eyes.
 
-Let's do a second one:
+## Control aspect ratio
+
+You can control the aspect ratio of the output image. The model's primary behavior is to match the size of your input images; otherwise, it defaults to generating square (1:1) images.
+
+To do so, add an `aspectRatio` value to the `imageConfig`.
 */
 
 // [CODE STARTS]
@@ -212,65 +211,6 @@ The output of the previous code cell could not be saved in the notebook without 
 **Prompt**: *Create a beautifully entertaining 8 part story with 8 images with two blue characters and their adventures in the 1960s music scene. The story is thrilling throughout with emotional highs and lows and ending on a great twist and high note. Do not include any words or text on the images but tell the story purely through the imagery itself.*
 ![Azure tone story](https://storage.googleapis.com/generativeai-downloads/images/azuretones.png)
 (Images have been stitched together)
-
-----------
-**Prompt**: *Show me how to bake macarons with images*
-
-
-That sounds delicious! Here's a simplified guide on how to bake macarons. While it can be a bit tricky, practice makes perfect!
-
-**Ingredients you'll need:**
-
-*   **For the Macaron Shells:**
-    *   100g almond flour
-    *   100g powdered sugar
-    *   75g granulated sugar
-    *   2 egg whites (aged for a day or two at room temp, if possible, for better stability)
-    *   Pinch of salt (optional)
-    *   Food coloring (gel or powder, not liquid)
-
-*   **For the Filling:** (Buttercream, ganache, or jam are popular choices)
-
----
-
-**Step 1: Prepare your dry ingredients.**
-Sift together the almond flour and powdered sugar into a bowl. This step is crucial for achieving smooth macaron shells, as it removes any lumps.
-
-
-![Macaron prepartation step 1](https://storage.googleapis.com/generativeai-downloads/images/macaron_step1.png)
-
-**Step 2: Make the meringue.**
-In a separate, clean bowl, beat the egg whites with a pinch of salt (if using) until foamy. Gradually add the granulated sugar, continuing to beat until you achieve stiff, glossy peaks. If you're using food coloring, add it now. The meringue should be firm enough that you can turn the bowl upside down without it falling out.
-
-![Macaron prepartation step 2](https://storage.googleapis.com/generativeai-downloads/images/macaron_step2.png)
-
-**Step 3: Combine dry ingredients with meringue (Macaronage).**
-Gently fold the sifted almond flour and powdered sugar into the meringue in two or three additions. This is called "macaronage" and is the most critical step. You want to mix until the batter flows like "lava" or a slowly ribboning consistency when you lift your spatula. Be careful not to overmix, or your macarons will be flat; under-mixing will result in lumpy shells.
-
-![Macaron prepartation step 3](https://storage.googleapis.com/generativeai-downloads/images/macaron_step3.png)
-
-**Step 4: Pipe the macarons.**
-Transfer the batter to a piping bag fitted with a round tip. Pipe uniform circles onto baking sheets lined with parchment paper or silicone mats. Leave some space between each macaron.
-
-![Macaron prepartation step 4](https://storage.googleapis.com/generativeai-downloads/images/macaron_step4.png)
-
-**Step 5: Tap and Rest.**
-Firmly tap the baking sheets on your counter several times to release any air bubbles. Use a toothpick to pop any remaining bubbles. This helps create smooth tops and the characteristic "feet." Let the piped macarons rest at room temperature for 30-60 minutes, or until a skin forms on top. When you gently touch a shell, it shouldn't feel sticky. This "drying" step is essential for the feet to develop properly.
-
-![Macaron prepartation step 5](https://storage.googleapis.com/generativeai-downloads/images/macaron_step5.png)
-
-**Step 6: Bake the macarons.**
-Preheat your oven to 300Â°F (150Â°C). Bake one tray at a time for 12-15 minutes. The exact time can vary by oven. They are done when they have developed "feet" and don't wobble when gently touched.
-
-**Step 7: Cool and Fill.**
-Once baked, let the macaron shells cool completely on the baking sheet before carefully peeling them off. This prevents them from breaking.  Then, match them up by size and pipe or spread your chosen filling onto one shell before sandwiching it with another.
-
-![Macaron prepartation step 7](https://storage.googleapis.com/generativeai-downloads/images/macaron_step7.png)
-
-Finally, let them mature in the refrigerator for at least 24 hours. This allows the flavors to meld and the shells to soften to the perfect chewy consistency.
-
-Enjoy your homemade macarons!
-
 -----
 */
 
@@ -305,7 +245,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-Here is an image of a plastic toy fox figurine in a kid&#x27;s bedroom, with accessories: 
+Here is an image of a plastic toy fox figurine in a kid&#x27;s bedroom, with accessories:
 
 <img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine.png" style="height:auto; width:100%;" />
 
@@ -329,7 +269,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-Here&#x27;s the toy fox figurine with a blue planet on its helmet: 
+Here&#x27;s the toy fox figurine with a blue planet on its helmet:
 
 <img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_helmet.png" style="height:auto; width:100%;" />
 
@@ -353,7 +293,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-Here&#x27;s the figurine on a beach! 
+Here&#x27;s the figurine on a beach!
 
 <img src="https://iili.io/K2AvYIR.png" style="height:auto; width:100%;" />
 
@@ -363,7 +303,7 @@ Here&#x27;s the figurine on a beach!
 message = "Now it should be base-jumping from a spaceship with a wingsuit";
 
 response = await chat.sendMessage({ message });
- 
+
 for (const part of response.candidates[0].content.parts) {
   if (part.text !== undefined) {
     console.log(part.text);
@@ -377,63 +317,32 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-Here&#x27;s your fox figurine base-jumping from a spaceship in a wingsuit! 
+Here&#x27;s your fox figurine base-jumping from a spaceship in a wingsuit!
 
 <img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_space.png" style="height:auto; width:100%;" />
 
 */
 
 // [CODE STARTS]
-message = "Cooking a barbecue with an apron";
+// Note: You can also control aspect ratio in chat
+message = "Bring it back to the bedroom";
 
-response = await chat.sendMessage({ message });
- 
+response = await chat.sendMessage({
+    message: message,
+    config: {
+        imageConfig: { aspectRatio: "16:9" }
+    }
+});
+
 for (const part of response.candidates[0].content.parts) {
-  if (part.text !== undefined) {
-    console.log(part.text);
-  }
-  if (part.inlineData !== undefined) {
-    console.image(part.inlineData.data);
-  }
+  if (part.text !== undefined) console.log(part.text);
+  if (part.inlineData !== undefined) console.image(part.inlineData.data);
 }
-
 // [CODE ENDS]
-
-/* Output Sample
-
-Here&#x27;s the figurine cooking a barbecue! 
-
-<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_bbq.jpg" style="height:auto; width:100%;" />
-
-*/
-
-// [CODE STARTS]
-message = "What about chilling in a spa?";
-
-response = await chat.sendMessage({ message });
- 
-for (const part of response.candidates[0].content.parts) {
-  if (part.text !== undefined) {
-    console.log(part.text);
-  }
-  if (part.inlineData !== undefined) {
-    console.image(part.inlineData.data);
-  }
-}
-
-// [CODE ENDS]
-
-/* Output Sample
-
-Here&#x27;s the figurine chilling in a spa! 
-
-<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_spa.jpg" style="height:auto; width:100%;" />
-
-*/
 
 /* Markdown (render)
 ## Mix multiple pictures
-You can also mix multiple images (up to 3), either because there are multiple characters in your image, or because you want to hightlight a certain product, or set the background.
+You can also mix multiple images (up to 3 with nano-banana, 14 with pro), either because there are multiple characters in your image, or because you want to hightlight a certain product, or set the background.
 */
 
 // [CODE STARTS]
@@ -471,11 +380,423 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-Certainly! Here is your image: 
+Certainly! Here is your image:
 
 <img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_riding.png" style="height:auto; width:100%;" />
 
 */
+
+/* Markdown (render)
+## Nano-Banana Pro
+
+Compared to the flash model, the pro version (`gemini-3-pro-image-preview`) is able to go further in understanding your requests since it's a **thinking** model. It's able to use **search grounding** to even better understand the subjects your are talking about and access to up-to-date informations.
+
+You'll be able to control the output resolution and generate up to 4K images.
+
+### Check the thoughts
+
+Let's do a request with `includeThoughts: true`.
+*/
+
+// [CODE STARTS]
+prompt = "Create an unusual but realistic image that might go viral";
+
+response = await ai.models.generateContent({
+    model: PRO_MODEL_ID,
+    contents: prompt,
+    config: {
+        responseModalities: [Modality.TEXT, Modality.IMAGE],
+        imageConfig: {
+            aspectRatio: "16:9",
+        },
+        thinkingConfig: {
+            includeThoughts: true
+        }
+    }
+});
+
+// Display thoughts and images
+for (const part of response.candidates[0].content.parts) {
+    if (part.thought) {
+        console.log("THOUGHTS:", part.text);
+    } else if (part.text) {
+        console.log("RESPONSE:", part.text);
+    } else if (part.inlineData) {
+        console.image(part.inlineData.data);
+    }
+}
+// [CODE ENDS]
+
+/* Output Sample
+
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/viral.png" style="height:auto; width:100%;" />
+
+*/
+
+/* Markdown (render)
+#### Thoughts signatures
+
+The output part of Gemini 3 models always contain `thought_signatures` (or `thoughtSignature` in JS).
+
+This signature is used by the model when you want to do chat/multi-turn discussions. It helps the model not only remember what was said before, but also what it thought before.
+*/
+
+// [CODE STARTS]
+for (const part of response.candidates[0].content.parts) {
+  if (part.thoughtSignature) {
+    console.log("Signature present:", part.thoughtSignature);
+  }
+}
+// [CODE ENDS]
+
+
+/* Markdown (render)
+### Use search grounding
+
+Note that it only ground using the text results and not the images that could be found using Google Search. You just need to add `tools: [{ googleSearch: {} }]` to your config.
+*/
+
+// [CODE STARTS]
+prompt = "Visualize the current weather forecast for the next 5 days in Tokyo as a clean, modern weather chart. add a visual on what i should wear each day";
+
+response = await ai.models.generateContent({
+    model: PRO_MODEL_ID,
+    contents: prompt,
+    config: {
+        responseModalities: [Modality.TEXT, Modality.IMAGE],
+        imageConfig: {
+            aspectRatio: "16:9",
+        },
+        tools: [{ googleSearch: {} }]
+    }
+});
+
+for (const part of response.candidates[0].content.parts) {
+    if (part.text) {
+        console.log(part.text);
+    } else if (part.inlineData) {
+        console.image(part.inlineData.data);
+    }
+}
+
+// Display grounding metadata
+console.log(response.candidates[0].groundingMetadata.searchEntryPoint.renderedContent);
+// [CODE ENDS]
+
+/* Output Sample
+
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/weather.png" style="height:auto; width:100%;" />
+
+*/
+
+/* Markdown (render)
+### Generate 4K images
+
+The pro model can generate 1K, 2K or 4K images.
+*/
+
+// [CODE STARTS]
+prompt = "A photo of an oak tree experiencing every season";
+
+response = await ai.models.generateContent({
+    model: PRO_MODEL_ID,
+    contents: prompt,
+    config: {
+        responseModalities: [Modality.TEXT, Modality.IMAGE],
+        imageConfig: {
+            aspectRatio: "1:1",
+            imageSize: "4K"
+        }
+    }
+});
+
+for (const part of response.candidates[0].content.parts) {
+    if (part.text) {
+        console.log(part.text);
+    } else if (part.inlineData) {
+        console.image(part.inlineData.data);
+    }
+}
+// [CODE ENDS]
+
+/* Markdown (render)
+### Generate or translate image
+
+You can now generate or translate images is over a dozen languages!
+*/
+
+// [CODE STARTS]
+chat = ai.chats.create({
+    model: PRO_MODEL_ID,
+    config: {
+        responseModalities: [Modality.TEXT, Modality.IMAGE],
+        tools: [{ googleSearch: {} }]
+    }
+});
+
+message = "Make an infographic explaining Einstein's theory of General Relativity suitable for a 6th grader in Spanish";
+
+response = await chat.sendMessage({
+    message: message,
+    config: {
+        imageConfig: { aspectRatio: "16:9" }
+    }
+});
+
+for (const part of response.candidates[0].content.parts) {
+    if (part.text) console.log(part.text);
+    if (part.inlineData) {
+        relativityES = part.inlineData.data;
+        console.image(relativityES);
+    }
+}
+
+message = "Translate this infographic in Japanese, keeping everything else the same";
+
+response = await chat.sendMessage({
+    message: message,
+    config: {
+        imageConfig: { imageSize: "2K" }
+    }
+});
+
+for (const part of response.candidates[0].content.parts) {
+    if (part.text) console.log(part.text);
+    if (part.inlineData) console.image(part.inlineData.data);
+}
+// [CODE ENDS]
+
+
+/* Markdown (render)
+### Mix up to 14 images!
+You can now mix up to 6 images in high-fidelity and 14 with minor changes.
+*/
+
+// [CODE STARTS]
+// Assuming catImage and foxFigurineImage are already loaded.
+// You can load up to 14 separate image inputs (fetching helper omitted for brevity)
+textPrompt = "Create a marketing photoshoot of these items from my daughter's bedroom. Focus on the items and ignore their backgrounds.";
+
+response = await ai.models.generateContent({
+    model: MODEL_ID,
+    contents: [
+        { text: textPrompt },
+        { inlineData: { data: catImage, mimeType: "image/png" } },
+        { inlineData: { data: foxFigurineImage, mimeType: "image/png" } },
+        // ... add up to 12 more images
+    ],
+    config: {
+        responseModalities: [Modality.TEXT, Modality.IMAGE],
+        imageConfig: {
+            aspectRatio: "5:4",
+            imageSize: "1K"
+        },
+    }
+});
+
+for (const part of response.candidates[0].content.parts) {
+    if (part.text) console.log(part.text);
+    if (part.inlineData) console.image(part.inlineData.data);
+}
+// [CODE ENDS]
+
+/* Markdown (render)
+## Other cool prompts to test
+
+### Back to the 80s
+*/
+
+// [CODE STARTS]
+textPrompt = "Create a photograph of the person in this image as if they were living in the 1980s. The photograph should capture the distinct fashion, hairstyles, and overall atmosphere of that time period.";
+
+response = await ai.models.generateContent({
+    model: MODEL_ID,
+    contents: [
+        { text: textPrompt },
+        { inlineData: { data: catImage, mimeType: "image/png" } }
+    ]
+});
+
+for (const part of response.candidates[0].content.parts) {
+    if (part.text) console.log(part.text);
+    if (part.inlineData) {
+      cat80s = part.inlineData.data;
+      console.image(cat80s);
+    }
+}
+// [CODE ENDS]
+
+/* Markdown (render)
+### Mini-figurine
+*/
+
+// [CODE STARTS]
+textPrompt = "create a 1/7 scale commercialized figurine of the characters in the picture, in a realistic style, in a real environment. The figurine is placed on a computer desk. The figurine has a round transparent acrylic base, with no text on the base. The content on the computer screen is a 3D modeling process of this figurine. Next to the computer screen is a toy packaging box, designed in a style reminiscent of high-quality collectible figures, printed with original artwork. The packaging features two-dimensional flat illustrations.";
+
+response = await ai.models.generateContent({
+    model: MODEL_ID,
+    contents: [
+        { text: textPrompt },
+        { inlineData: { data: cat80s, mimeType: "image/png" } }
+    ]
+});
+
+for (const part of response.candidates[0].content.parts) {
+    if (part.text) console.log(part.text);
+    if (part.inlineData) console.image(part.inlineData.data);
+}
+// [CODE ENDS]
+
+/* Markdown (render)
+### Stickers
+*/
+
+// [CODE STARTS]
+textPrompt = "Create a single sticker in the distinct Pop Art style. The image should feature bold, thick black outlines around all figures, objects, and text. Utilize a limited, flat color palette consisting of vibrant primary and secondary colors, applied in unshaded blocks, but maintain the person skin tone. Incorporate visible Ben-Day dots or halftone patterns to create shading, texture, and depth. The subject should display a dramatic expression. Include stylized text within speech bubbles or dynamic graphic shapes to represent sound effects (onomatopoeia). The overall aesthetic should be clean, graphic, and evoke a mass-produced, commercial art sensibility with a polished finish. The user's face from the uploaded photo must be the main character, ideally with an interesting outline shape that is not square or circular but closer to a dye-cut pattern";
+
+response = await ai.models.generateContent({
+    model: MODEL_ID,
+    contents: [
+        { text: textPrompt },
+        { inlineData: { data: cat80s, mimeType: "image/png" } }
+    ]
+});
+
+for (const part of response.candidates[0].content.parts) {
+    if (part.text) console.log(part.text);
+    if (part.inlineData) console.image(part.inlineData.data);
+}
+// [CODE ENDS]
+
+/* Markdown (render)
+### Colorize black and white images
+*/
+
+// [CODE STARTS]
+// You would fetch the image first, here we assume 'bwImage' contains the base64 of the lunch atop skyscraper photo
+textPrompt = "Restore and colorize this image from 1932.";
+
+// Placeholder for fetching the image
+// bwImage = await fetch("...").then(r => r.arrayBuffer())...
+
+if (typeof bwImage !== 'undefined') {
+  response = await ai.models.generateContent({
+      model: MODEL_ID,
+      contents: [
+          { text: textPrompt },
+          { inlineData: { data: bwImage, mimeType: "image/jpeg" } }
+      ]
+  });
+
+  for (const part of response.candidates[0].content.parts) {
+      if (part.text) console.log(part.text);
+      if (part.inlineData) console.image(part.inlineData.data);
+  }
+}
+// [CODE ENDS]
+
+/* Markdown (render)
+### Google Map transformation
+*/
+
+// [CODE STARTS]
+textPrompt = "Show me what we see from the red arrow";
+
+// Placeholder for map image
+// mapImage = ...
+
+if (typeof mapImage !== 'undefined') {
+  response = await ai.models.generateContent({
+      model: MODEL_ID,
+      contents: [
+          { text: textPrompt },
+          { inlineData: { data: mapImage, mimeType: "image/png" } }
+      ]
+  });
+  // Display logic...
+}
+// [CODE ENDS]
+
+/* Markdown (render)
+### What does Google know about me? (Pro)
+*/
+
+// [CODE STARTS]
+textPrompt = "Search the web then generate an image of isometric perspective, detailed pixel art that shows the career of Guillaume Vernade";
+
+response = await ai.models.generateContent({
+    model: PRO_MODEL_ID,
+    contents: [{ text: textPrompt }],
+    config: {
+        imageConfig: { aspectRatio: "16:9" },
+        tools: [{ googleSearch: {} }]
+    }
+});
+
+for (const part of response.candidates[0].content.parts) {
+    if (part.text) console.log(part.text);
+    if (part.inlineData) console.image(part.inlineData.data);
+}
+// [CODE ENDS]
+
+/* Markdown (render)
+### Famous meme restyling (Pro & chat)
+*/
+
+// [CODE STARTS]
+textPrompt = "There's a vary famous meme about a dog in a house in fire saying \"this is fine\", can you do a papier maché version of it?";
+
+chat = ai.chats.create({
+    model: PRO_MODEL_ID,
+    config: {
+        imageConfig: { aspectRatio: "16:9" },
+        tools: [{ googleSearch: {} }]
+    }
+});
+
+response = await chat.sendMessage({ message: textPrompt });
+
+for (const part of response.candidates[0].content.parts) {
+    if (part.text) console.log(part.text);
+    if (part.inlineData) console.image(part.inlineData.data);
+}
+
+otherStyle = "Now do a new version with generic building blocks";
+response = await chat.sendMessage({ message: otherStyle });
+
+for (const part of response.candidates[0].content.parts) {
+    if (part.text) console.log(part.text);
+    if (part.inlineData) console.image(part.inlineData.data);
+}
+// [CODE ENDS]
+
+
+/* Markdown (render)
+### Sprites (Pro)
+*/
+
+// [CODE STARTS]
+textPrompt = "Sprite sheet of a jumping illustration, 3x3 grid, white background, sequence, frame by frame animation, square aspect ratio. Follow the structure of the attached reference image exactly.";
+// Placeholder for grid reference image
+// gridImage = ...
+
+if (typeof gridImage !== 'undefined') {
+    response = await ai.models.generateContent({
+        model: PRO_MODEL_ID,
+        contents: [
+            { text: textPrompt },
+            { inlineData: { data: gridImage, mimeType: "image/png" } }
+        ],
+        config: {
+            imageConfig: { aspectRatio: "1:1" }
+        }
+    });
+    
+    for (const part of response.candidates[0].content.parts) {
+      if (part.inlineData) console.image(part.inlineData.data);
+    }
+}
+// [CODE ENDS]
 
 /* Markdown (render)
 ## Next Steps
@@ -485,24 +806,15 @@ Check the [documentation](https://ai.google.dev/gemini-api/docs/image-generation
 
 ### Play with the AI Studio apps
 
-Theses 5 AI Studio apps are all great showcases of Gemini image generation capabilities:
+AI Studio features a ton of Nano-banana Apps that you can test and customize to your needs. Here are my favorite:
 * [Past Forward](https://aistudio.google.com/apps/bundled/past_forward) lets you travel through time
-* [Home Canvas](https://aistudio.google.com/apps/bundled/home_canvas) lets your try out new furniture
-* [Gembooth](https://aistudio.google.com/apps/bundled/gembooth) places you into a comic book or a Renaissance painting
-* [Gemini Co-drawing](https://aistudio.google.com/apps/bundled/codrawing) lets you draw alongside with Gemini
+* [Personalized comics](https://aistudio.google.com/apps/bundled/personalized_comics) lets you create comics where YOU are the hero (or the foe, or both 🤯)
 * [Pixshop](https://aistudio.google.com/apps/bundled/pixshop), an AI-powered image editor
-
-### Check-out Imagen as well:
-The [Imagen](https://ai.google.dev/gemini-api/docs/imagen) model is another way to generate images. Check out the [Get Started with Imagen notebook](./Get_started_imagen.ipynb) to start playing with it too.
-
-Here are some Imagen examples to get your imagination started on how to use it in creative ways:
-*  [Illustrate a book](https://github.com/google-gemini/cookbook/blob/main/examples/Book_illustration.ipynb): Use Gemini and Imagen to create illustration for an open-source book
+* [FitCheck](https://aistudio.google.com/apps/bundled/fitcheck), let you virtually try on any clothes
+* [Info Genius](https://aistudio.google.com/apps/bundled/info_genius), to create infographics of anything
+* And [plenty others](https://aistudio.google.com/apps?source=showcase&showcaseTag=nano-banana)
 
 ### Continue your discovery of the Gemini API
 
 Gemini is not only good at generating images, but also at understanding them. Check the [Spatial understanding](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Spatial_understanding.ipynb) guide for an introduction on those capabilities, and the [Video understanding](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video_understanding.ipynb) one for video examples.
-
-
 */
-
-

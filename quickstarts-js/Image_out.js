@@ -21,7 +21,7 @@ This notebook will show you how to use the native Image-output feature of Gemini
 
 There are now 2 models you can use:
 * `gemini-2.5-flash-image` aka. "nano-banana": Cheap and fast yet powerful. This should be your default choice.
-* `gemini-3-pro-image-preview` aka "nano-banana-pro": More powerful thanks to its **thinking** capabilities and its access to real-wold data using **Google Search**. It really shines at creating diagrams and grounded images. And cherry on top, it can create 2K and 4K images!
+* `gemini-3-pro-image-preview` aka "nano-banana-pro": More powerful thanks to its **thinking** capabilities and its access to real-world data using **Google Search**. It really shines at creating diagrams and grounded images. And cherry on top, it can create 2K and 4K images!
 
 These models are really good at:
 * **Maintaining character consistency**: Preserve a subject’s appearance across multiple generated images and scenes
@@ -422,7 +422,7 @@ Certainly! Here is your image:
 /* Markdown (render)
 ## Nano-Banana Pro
 
-Compared to the flash model, the pro version (`gemini-3-pro-image-preview`) is able to go further in understanding your requests since it's a **thinking** model. It's able to use **search grounding** to even better understand the subjects your are talking about and access to up-to-date informations.
+Compared to the flash model, the pro version (`gemini-3-pro-image-preview`) is able to go further in understanding your requests since it's a **thinking** model. It's able to use **search grounding** to even better understand the subjects you are talking about and access to up-to-date information.
 
 You'll be able to control the output resolution and generate up to 4K images.
 
@@ -464,7 +464,7 @@ for (const part of response.candidates[0].content.parts) {
 
 THOUGHTS:
 
-###I magining Llama Commuters
+### Imagining Llama Commuters
 
 I'm focusing on the llamas now. The goal is to capture them as daily commuters on a bustling bus in La Paz, Bolivia. My plan involves a vintage bus crammed with amused passengers. The image will highlight details like one llama looking out the window, another interacting with a passenger, all while people take photos.
 
@@ -689,7 +689,7 @@ cards = await fetchImage("https://storage.googleapis.com/generativeai-downloads/
 textPrompt = "Create a marketing photoshoot of those items from my daughter's bedroom. Focus on the items and ignore their backgrounds.";
 
 response = await ai.models.generateContent({
-    model: MODEL_ID,
+    model: PRO_MODEL_ID,
     contents: [
         { text: textPrompt },
         { inlineData: { data: sweets, mimeType: "image/png" } },
@@ -981,7 +981,7 @@ for (const part of response.candidates[0].content.parts) {
 */
 
 // [CODE STARTS]
-textPrompt = "There's a vary famous meme about a dog in a house in fire saying \"this is fine\", can you do a papier maché version of it?";
+textPrompt = "There's a very famous meme about a dog in a house in fire saying \"this is fine\", can you do a papier maché version of it?";
 
 chat = ai.chats.create({
     model: PRO_MODEL_ID,
@@ -1060,5 +1060,6 @@ AI Studio features a ton of Nano-banana Apps that you can test and customize to 
 
 Gemini is not only good at generating images, but also at understanding them. Check the [Spatial understanding](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Spatial_understanding.ipynb) guide for an introduction on those capabilities, and the [Video understanding](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video_understanding.ipynb) one for video examples.
 */
+
 
 

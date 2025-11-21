@@ -91,7 +91,7 @@ for (const part of response.candidates[0].content.parts) {
 
 Here is your requested image:
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/cat.png" style="height:auto; width:100%;" />
 
 */
 
@@ -130,7 +130,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/cat_tropical.png" style="height:auto; width:100%;" />
 
 */
 
@@ -179,7 +179,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/cat_restaurant.png" style="height:auto; width:100%;" />
 
 */
 
@@ -190,7 +190,7 @@ So far you've only generated one image per call, but you can request way more th
 */
 
 // [CODE STARTS]
-prompt = 'Show me how to bake macarons with images';
+prompt = 'Create a beautifully entertaining 8 part story with 8 images with two blue characters and their adventures in the 1960s music scene. The story is thrilling throughout with emotional highs and lows and ending on a great twist and high note. Do not include any words or text on the images but tell the story purely through the imagery itself.';
 
 response = await ai.models.generateContent({
     model: MODEL_ID,
@@ -210,11 +210,8 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-Here is a guide on how to bake macarons:
-
-<img src="TODO" style="height:auto; width:100%;" />
-<img src="TODO" style="height:auto; width:100%;" />
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/images/azuretones.png" style="height:auto; width:100%;" />
+(images have been stitched together)
 
 */
 
@@ -251,7 +248,7 @@ for (const part of response.candidates[0].content.parts) {
 
 Here is an image of a plastic toy fox figurine in a kid&#x27;s bedroom, with accessories:
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine.png" style="height:auto; width:100%;" />
 
 */
 
@@ -275,7 +272,7 @@ for (const part of response.candidates[0].content.parts) {
 
 Here&#x27;s the toy fox figurine with a blue planet on its helmet:
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_helmet.png" style="height:auto; width:100%;" />
 
 */
 
@@ -299,7 +296,7 @@ for (const part of response.candidates[0].content.parts) {
 
 Here&#x27;s the figurine on a beach!
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_beach.png" style="height:auto; width:100%;" />
 
 */
 
@@ -323,7 +320,7 @@ for (const part of response.candidates[0].content.parts) {
 
 Here&#x27;s your fox figurine base-jumping from a spaceship in a wingsuit!
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_space.png" style="height:auto; width:100%;" />
 
 */
 
@@ -345,7 +342,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_bbq.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -367,31 +364,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
-
-*/
-
-
-// [CODE STARTS]
-// Note: You can also control aspect ratio in chat
-message = "Bring it back to the bedroom";
-
-response = await chat.sendMessage({
-    message: message,
-    config: {
-        imageConfig: { aspectRatio: "16:9" }
-    }
-});
-
-for (const part of response.candidates[0].content.parts) {
-  if (part.text !== undefined) console.log(part.text);
-  if (part.inlineData !== undefined) console.image(part.inlineData.data);
-}
-// [CODE ENDS]
-
-/* Output Sample
-
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_spa.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -437,7 +410,7 @@ for (const part of response.candidates[0].content.parts) {
 
 Certainly! Here is your image:
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/figurine_riding.png" style="height:auto; width:100%;" />
 
 */
 
@@ -484,9 +457,20 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-THOUGHTS: [Model's reasoning process...]
+THOUGHTS:
 
-<img src="TODO" style="height:auto; width:100%;" />
+###I magining Llama Commuters
+
+I'm focusing on the llamas now. The goal is to capture them as daily commuters on a bustling bus in La Paz, Bolivia. My plan involves a vintage bus crammed with amused passengers. The image will highlight details like one llama looking out the window, another interacting with a passenger, all while people take photos.
+
+IMAGE
+
+### Visualizing the Concept
+
+I'm now fully immersed in the requested scenario. My primary focus is on the "unusual yet realistic" aspects. The scene is starting to take shape with the key elements established.
+
+RESPONSE: 
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/lamas.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -506,6 +490,9 @@ for (const part of response.candidates[0].content.parts) {
 }
 // [CODE ENDS]
 
+/* Output Sample
+b'\x12\xcc\x92s\n\xc8\x92s\x01\xd1\xed\x8ao\x.....
+*/
 
 /* Markdown (render)
 ### Use search grounding
@@ -543,9 +530,30 @@ console.log(response.candidates[0].groundingMetadata.searchEntryPoint.renderedCo
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/weather.jpg" style="height:auto; width:100%;" />
 
-<div>[Grounding Sources HTML]</div>
+<div class="container">
+  <div class="headline">
+    <svg class="logo-light" width="18" height="18" viewBox="9 9 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M42.8622 27.0064C42.8622 25.7839 42.7525 24.6084 42.5487 23.4799H26.3109V30.1568H35.5897C35.1821 32.3041 33.9596 34.1222 32.1258 35.3448V39.6864H37.7213C40.9814 36.677 42.8622 32.2571 42.8622 27.0064V27.0064Z" fill="#4285F4"></path>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M26.3109 43.8555C30.9659 43.8555 34.8687 42.3195 37.7213 39.6863L32.1258 35.3447C30.5898 36.3792 28.6306 37.0061 26.3109 37.0061C21.8282 37.0061 18.0195 33.9811 16.6559 29.906H10.9194V34.3573C13.7563 39.9841 19.5712 43.8555 26.3109 43.8555V43.8555Z" fill="#34A853"></path>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M16.6559 29.8904C16.3111 28.8559 16.1074 27.7588 16.1074 26.6146C16.1074 25.4704 16.3111 24.3733 16.6559 23.3388V18.8875H10.9194C9.74388 21.2072 9.06992 23.8247 9.06992 26.6146C9.06992 29.4045 9.74388 32.022 10.9194 34.3417L15.3864 30.8621L16.6559 29.8904V29.8904Z" fill="#FBBC05"></path>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M26.3109 16.2386C28.85 16.2386 31.107 17.1164 32.9095 18.8091L37.8466 13.8719C34.853 11.082 30.9659 9.3736 26.3109 9.3736C19.5712 9.3736 13.7563 13.245 10.9194 18.8875L16.6559 23.3388C18.0195 19.2636 21.8282 16.2386 26.3109 16.2386V16.2386Z" fill="#EA4335"></path>
+    </svg>
+    <svg class="logo-dark" width="18" height="18" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="23" fill="#FFF" r="22"></circle>
+      <path d="M33.76 34.26c2.75-2.56 4.49-6.37 4.49-11.26 0-.89-.08-1.84-.29-3H24.01v5.99h8.03c-.4 2.02-1.5 3.56-3.07 4.56v.75l3.91 2.97h.88z" fill="#4285F4"></path>
+      <path d="M15.58 25.77A8.845 8.845 0 0 0 24 31.86c1.92 0 3.62-.46 4.97-1.31l4.79 3.71C31.14 36.7 27.65 38 24 38c-5.93 0-11.01-3.4-13.45-8.36l.17-1.01 4.06-2.85h.8z" fill="#34A853"></path>
+      <path d="M15.59 20.21a8.864 8.864 0 0 0 0 5.58l-5.03 3.86c-.98-2-1.53-4.25-1.53-6.64 0-2.39.55-4.64 1.53-6.64l1-.22 3.81 2.98.22 1.08z" fill="#FBBC05"></path>
+      <path d="M24 14.14c2.11 0 4.02.75 5.52 1.98l4.36-4.36C31.22 9.43 27.81 8 24 8c-5.93 0-11.01 3.4-13.45 8.36l5.03 3.85A8.86 8.86 0 0 1 24 14.14z" fill="#EA4335"></path>
+    </svg>
+    <div class="gradient-container"><div class="gradient"></div></div>
+  </div>
+  <div class="carousel">
+    <a class="chip" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEF63dRkzQLrHhsPhqLvTYZC-wMy6xQRe1dBfl91G9DrtpfMhP4KwR8qlXPcFULRA2mwAsqKAtspv5zVELj2wYtEyj8Ac8VE5A2KYZHW9eeKOYjN0x_xgIXFHJ27v5EvNA1z3vQg30US1nz2h6J-GPZUtfqYrntQbBTsf35ZcC0gOdghoTRztLRRhghZ1LT-3O22VsqcMBcqvO-91O_xMDSmL96jMfD27J_Fvar0bKdlkYA08ZditXefEwIbAn6Cvyh-x_Irtu5czi7WDi3lA==" target="_blank">current weather forecast next 5 days San Francisco clothing recommendation</a>
+    <a class="chip" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQG9WwNoONLdq_kGlkUVOrfHDnq28tmnQQdTpOzkK6_ugaNJzauyY6ega_-8ZwwZRm9xceMJziHuH3SkoCWzk7cUrBtCxEpvvIQZWBKbK1iIMEKk4_C6eFUSIzlS8TQ9-1qXXLKVRVM9Re6Oneic10QvEVgL9cRd7U65CUz4Ua8yVdg4kQ-KV2MN-fB8fJNtKk7Cm_bxsHPrQWf57jreWFFISGoYVezIayMyt2wUuLTx2tVXjTRZsA==" target="_blank">San Francisco 5-day weather forecast November 2025</a>
+  </div>
+</div>
 */
 
 /* Markdown (render)
@@ -581,7 +589,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/oak_tree.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -621,7 +629,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/relativity_SP.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -644,7 +652,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/relativity_JP.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -703,7 +711,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/mixing_images.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -735,7 +743,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/cat_80.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -762,7 +770,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/cat_figurine.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -789,7 +797,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/cat_sticker.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -818,7 +826,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/colorize.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -847,7 +855,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/mont_st_michel.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -874,7 +882,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/mont_st_michel_isometric.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -903,7 +911,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/giom_life.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -931,7 +939,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/sonnet.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -959,7 +967,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/theater.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -989,7 +997,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/fine_papier.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -1006,7 +1014,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/fine_blocks.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -1023,7 +1031,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Output Sample
 
-<img src="TODO" style="height:auto; width:100%;" />
+<img src="https://storage.googleapis.com/generativeai-downloads/cookbook/image_out/fine_crochet.jpg" style="height:auto; width:100%;" />
 
 */
 
@@ -1047,3 +1055,4 @@ AI Studio features a ton of Nano-banana Apps that you can test and customize to 
 
 Gemini is not only good at generating images, but also at understanding them. Check the [Spatial understanding](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Spatial_understanding.ipynb) guide for an introduction on those capabilities, and the [Video understanding](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video_understanding.ipynb) one for video examples.
 */
+

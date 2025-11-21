@@ -657,8 +657,12 @@ You can now mix up to 6 images in high-fidelity and 14 with minor changes.
 // Helper function to convert URL to base64
 async function fetchImage(url) {
     const response = await fetch(url);
-    const buffer = await response.arrayBuffer();
-    return Buffer.from(buffer).toString("base64");
+    const blob = await response.blob();
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result.split(',')[1]);
+        reader.readAsDataURL(blob);
+    });
 }
 
 // Fetch the images
@@ -790,62 +794,25 @@ for (const part of response.candidates[0].content.parts) {
 */
 
 /* Markdown (render)
-### Multi-image fusion
-*/
-
-// [CODE STARTS]
-textPrompt = "Combine everything in these images to create a 60s inspired fashion editorial photoshoot";
-
-// Placeholder for fetching the image
-// multiImage = ...
-
-if (typeof multiImage !== 'undefined') {
-  response = await ai.models.generateContent({
-      model: MODEL_ID,
-      contents: [
-          { text: textPrompt },
-          { inlineData: { data: catImage, mimeType: "image/png" } },
-          { inlineData: { data: multiImage, mimeType: "image/png" } }
-      ]
-  });
-
-  for (const part of response.candidates[0].content.parts) {
-      if (part.text) console.log(part.text);
-      if (part.inlineData) console.image(part.inlineData.data);
-  }
-}
-// [CODE ENDS]
-
-/* Output Sample
-
-<img src="TODO" style="height:auto; width:100%;" />
-
-*/
-
-/* Markdown (render)
 ### Colorize black and white images
 */
 
 // [CODE STARTS]
-// You would fetch the image first, here we assume 'bwImage' contains the base64 of the lunch atop skyscraper photo
 textPrompt = "Restore and colorize this image from 1932.";
 
-// Placeholder for fetching the image
-// bwImage = await fetch("...").then(r => r.arrayBuffer())...
+bwImage = await fetchImage("https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Lunch_atop_a_Skyscraper_-_Charles_Clyde_Ebbets.jpg/1374px-Lunch_atop_a_Skyscraper_-_Charles_Clyde_Ebbets.jpg");
 
-if (typeof bwImage !== 'undefined') {
-  response = await ai.models.generateContent({
-      model: MODEL_ID,
-      contents: [
-          { text: textPrompt },
-          { inlineData: { data: bwImage, mimeType: "image/jpeg" } }
-      ]
-  });
+response = await ai.models.generateContent({
+    model: MODEL_ID,
+    contents: [
+        { text: textPrompt },
+        { inlineData: { data: bwImage, mimeType: "image/jpeg" } }
+    ]
+});
 
-  for (const part of response.candidates[0].content.parts) {
-      if (part.text) console.log(part.text);
-      if (part.inlineData) console.image(part.inlineData.data);
-  }
+for (const part of response.candidates[0].content.parts) {
+    if (part.text) console.log(part.text);
+    if (part.inlineData) console.image(part.inlineData.data);
 }
 // [CODE ENDS]
 
@@ -862,22 +829,19 @@ if (typeof bwImage !== 'undefined') {
 // [CODE STARTS]
 textPrompt = "Show me what we see from the red arrow";
 
-// Placeholder for map image
-// mapImage = ...
+mapImage = await fetchImage("https://storage.googleapis.com/generativeai-downloads/images/Mont_St_Michel.png");
 
-if (typeof mapImage !== 'undefined') {
-  response = await ai.models.generateContent({
-      model: MODEL_ID,
-      contents: [
-          { text: textPrompt },
-          { inlineData: { data: mapImage, mimeType: "image/png" } }
-      ]
-  });
+response = await ai.models.generateContent({
+    model: MODEL_ID,
+    contents: [
+        { text: textPrompt },
+        { inlineData: { data: mapImage, mimeType: "image/png" } }
+    ]
+});
 
-  for (const part of response.candidates[0].content.parts) {
-      if (part.text) console.log(part.text);
-      if (part.inlineData) console.image(part.inlineData.data);
-  }
+for (const part of response.candidates[0].content.parts) {
+    if (part.text) console.log(part.text);
+    if (part.inlineData) console.image(part.inlineData.data);
 }
 // [CODE ENDS]
 
@@ -894,19 +858,17 @@ if (typeof mapImage !== 'undefined') {
 // [CODE STARTS]
 textPrompt = "Take this location and make the landmark an isometric image (building only), in the style of the game Theme Park.";
 
-if (typeof mapImage !== 'undefined') {
-  response = await ai.models.generateContent({
-      model: MODEL_ID,
-      contents: [
-          { text: textPrompt },
-          { inlineData: { data: mapImage, mimeType: "image/png" } }
-      ]
-  });
+response = await ai.models.generateContent({
+    model: MODEL_ID,
+    contents: [
+        { text: textPrompt },
+        { inlineData: { data: mapImage, mimeType: "image/png" } }
+    ]
+});
 
-  for (const part of response.candidates[0].content.parts) {
-      if (part.text) console.log(part.text);
-      if (part.inlineData) console.image(part.inlineData.data);
-  }
+for (const part of response.candidates[0].content.parts) {
+    if (part.text) console.log(part.text);
+    if (part.inlineData) console.image(part.inlineData.data);
 }
 // [CODE ENDS]
 

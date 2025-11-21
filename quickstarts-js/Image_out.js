@@ -1,10 +1,3 @@
-I apologize for that. I stripped away the explanatory text in the Setup section which explains how API keys are handled. I have restored the original text instructions while keeping the necessary code updates (adding the Pro model ID) to ensure the new features work.
-
-Here is the corrected `Image_out.js` file:
-
-```javascript
---- START OF FILE Image_out.js ---
-
 /*
  * Copyright 2025 Google LLC
  *
@@ -57,7 +50,7 @@ ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 */
 
 // [CODE STARTS]
-module = await import("https://esm.sh/@google/genai@0.0.21");
+module = await import("https://esm.sh/@google/genai@1.30.0");
 GoogleGenAI = module.GoogleGenAI;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -536,6 +529,7 @@ response = await ai.models.generateContent({
 });
 
 for (const part of response.candidates[0].content.parts) {
+    if (part.thought) continue;
     if (part.text) {
         console.log(part.text);
     } else if (part.inlineData) {
@@ -576,6 +570,7 @@ response = await ai.models.generateContent({
 });
 
 for (const part of response.candidates[0].content.parts) {
+    if (part.thought) continue;
     if (part.text) {
         console.log(part.text);
     } else if (part.inlineData) {
@@ -615,6 +610,7 @@ response = await chat.sendMessage({
 });
 
 for (const part of response.candidates[0].content.parts) {
+    if (part.thought) continue;
     if (part.text) console.log(part.text);
     if (part.inlineData) {
         relativityES = part.inlineData.data;
@@ -640,6 +636,7 @@ response = await chat.sendMessage({
 });
 
 for (const part of response.candidates[0].content.parts) {
+    if (part.thought) continue;
     if (part.text) console.log(part.text);
     if (part.inlineData) console.image(part.inlineData.data);
 }
@@ -657,17 +654,33 @@ You can now mix up to 6 images in high-fidelity and 14 with minor changes.
 */
 
 // [CODE STARTS]
-// Assuming catImage and foxFigurineImage are already loaded.
-// You can load up to 14 separate image inputs (fetching helper omitted for brevity)
-textPrompt = "Create a marketing photoshoot of these items from my daughter's bedroom. Focus on the items and ignore their backgrounds.";
+// Helper function to convert URL to base64
+async function fetchImage(url) {
+    const response = await fetch(url);
+    const buffer = await response.arrayBuffer();
+    return Buffer.from(buffer).toString("base64");
+}
+
+// Fetch the images
+sweets = await fetchImage("https://storage.googleapis.com/generativeai-downloads/images/sweets.png");
+car = await fetchImage("https://storage.googleapis.com/generativeai-downloads/images/car.png");
+rabbit = await fetchImage("https://storage.googleapis.com/generativeai-downloads/images/rabbit.png");
+spartan = await fetchImage("https://storage.googleapis.com/generativeai-downloads/images/spartan.png");
+cactus = await fetchImage("https://storage.googleapis.com/generativeai-downloads/images/cactus.png");
+cards = await fetchImage("https://storage.googleapis.com/generativeai-downloads/images/cards.png");
+
+textPrompt = "Create a marketing photoshoot of those items from my daughter's bedroom. Focus on the items and ignore their backgrounds.";
 
 response = await ai.models.generateContent({
     model: MODEL_ID,
     contents: [
         { text: textPrompt },
-        { inlineData: { data: catImage, mimeType: "image/png" } },
-        { inlineData: { data: foxFigurineImage, mimeType: "image/png" } },
-        // ... add up to 12 more images
+        { inlineData: { data: sweets, mimeType: "image/png" } },
+        { inlineData: { data: car, mimeType: "image/png" } },
+        { inlineData: { data: rabbit, mimeType: "image/png" } },
+        { inlineData: { data: spartan, mimeType: "image/png" } },
+        { inlineData: { data: cactus, mimeType: "image/png" } },
+        { inlineData: { data: cards, mimeType: "image/png" } },
     ],
     config: {
         responseModalities: [Modality.TEXT, Modality.IMAGE],
@@ -920,6 +933,7 @@ response = await ai.models.generateContent({
 });
 
 for (const part of response.candidates[0].content.parts) {
+    if (part.thought) continue;
     if (part.text) console.log(part.text);
     if (part.inlineData) console.image(part.inlineData.data);
 }
@@ -947,6 +961,7 @@ response = await ai.models.generateContent({
 });
 
 for (const part of response.candidates[0].content.parts) {
+    if (part.thought) continue;
     if (part.text) console.log(part.text);
     if (part.inlineData) console.image(part.inlineData.data);
 }
@@ -974,6 +989,7 @@ response = await ai.models.generateContent({
 });
 
 for (const part of response.candidates[0].content.parts) {
+    if (part.thought) continue;
     if (part.text) console.log(part.text);
     if (part.inlineData) console.image(part.inlineData.data);
 }
@@ -1003,6 +1019,7 @@ chat = ai.chats.create({
 response = await chat.sendMessage({ message: textPrompt });
 
 for (const part of response.candidates[0].content.parts) {
+    if (part.thought) continue;
     if (part.text) console.log(part.text);
     if (part.inlineData) console.image(part.inlineData.data);
 }
@@ -1019,6 +1036,7 @@ otherStyle = "Now do a new version with generic building blocks";
 response = await chat.sendMessage({ message: otherStyle });
 
 for (const part of response.candidates[0].content.parts) {
+    if (part.thought) continue;
     if (part.text) console.log(part.text);
     if (part.inlineData) console.image(part.inlineData.data);
 }
@@ -1035,41 +1053,9 @@ otherStyle = "What about a crochet version?";
 response = await chat.sendMessage({ message: otherStyle });
 
 for (const part of response.candidates[0].content.parts) {
+    if (part.thought) continue;
     if (part.text) console.log(part.text);
     if (part.inlineData) console.image(part.inlineData.data);
-}
-// [CODE ENDS]
-
-/* Output Sample
-
-<img src="TODO" style="height:auto; width:100%;" />
-
-*/
-
-/* Markdown (render)
-### Sprites (Pro)
-*/
-
-// [CODE STARTS]
-textPrompt = "Sprite sheet of a jumping illustration, 3x3 grid, white background, sequence, frame by frame animation, square aspect ratio. Follow the structure of the attached reference image exactly.";
-// Placeholder for grid reference image
-// gridImage = ...
-
-if (typeof gridImage !== 'undefined') {
-    response = await ai.models.generateContent({
-        model: PRO_MODEL_ID,
-        contents: [
-            { text: textPrompt },
-            { inlineData: { data: gridImage, mimeType: "image/png" } }
-        ],
-        config: {
-            imageConfig: { aspectRatio: "1:1" }
-        }
-    });
-
-    for (const part of response.candidates[0].content.parts) {
-      if (part.inlineData) console.image(part.inlineData.data);
-    }
 }
 // [CODE ENDS]
 
@@ -1099,4 +1085,3 @@ AI Studio features a ton of Nano-banana Apps that you can test and customize to 
 
 Gemini is not only good at generating images, but also at understanding them. Check the [Spatial understanding](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Spatial_understanding.ipynb) guide for an introduction on those capabilities, and the [Video understanding](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video_understanding.ipynb) one for video examples.
 */
-```

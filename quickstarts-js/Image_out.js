@@ -36,7 +36,12 @@ Following this guide, you'll learn how to do all those things and even more.
 ## Setup
 ### Install SDK and set-up the client with the API key
 
-To ensure security, avoid hardcoding the API key in frontend code. Instead, set it as an environment variable on the server or local machine.
+First, install the SDK:
+```bash
+npm install @google/genai
+```
+
+Then, to ensure security, avoid hardcoding the API key in frontend code. Instead, set it as an environment variable on the server or local machine.
 
 When using the Gemini API client libraries, the key will be automatically detected if set as either `GEMINI_API_KEY` or `GOOGLE_API_KEY`. If both are set, `GOOGLE_API_KEY` takes precedence.
 
@@ -1055,4 +1060,5 @@ AI Studio features a ton of Nano-banana Apps that you can test and customize to 
 
 Gemini is not only good at generating images, but also at understanding them. Check the [Spatial understanding](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Spatial_understanding.ipynb) guide for an introduction on those capabilities, and the [Video understanding](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video_understanding.ipynb) one for video examples.
 */
+
 

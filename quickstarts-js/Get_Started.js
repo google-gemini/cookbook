@@ -53,7 +53,7 @@ ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 */
 
 // [CODE STARTS]
-module = await import("https://esm.sh/@google/genai@1.4.0");
+module = await import("https://esm.sh/@google/genai@1.30.0");
 GoogleGenAI = module.GoogleGenAI;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -1096,4 +1096,5 @@ For more detailed examples using Gemini models, check the [Quickstarts folder of
 Also check the Gemini thinking models that explicitly showcases its thoughts summaries and can manage more complex reasonings.
 
 */
+
 

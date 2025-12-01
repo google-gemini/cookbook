@@ -1,0 +1,47 @@
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+usage:
+  cookbook test [path/to/notebook.ipynb] [--ai-compare] [--timeout=900] [--kernel=python3]
+
+notes:
+  - If no notebook path is provided, it runs ALL notebooks.
+  - --ai-compare sets AI_COMPARE=1 (uses your GOOGLE_API_KEY).
+  - Outputs go to reports/*.compare.json
+EOF
+}
+
+cmd="${1:-}"; shift || true
+case "$cmd" in
+  test)
+    NB_ARG=""
+    AI_COMPARE="${AI_COMPARE:-0}"
+    TIMEOUT="900"
+    KERNEL="python3"
+
+    for a in "$@"; do
+      case "$a" in
+        --ai-compare) AI_COMPARE=1 ;;
+        --timeout=*) TIMEOUT="${a#*=}" ;;
+        --kernel=*) KERNEL="${a#*=}" ;;
+        *.ipynb) NB_ARG="$a" ;;
+      esac
+    done
+
+    if [[ -n "$NB_ARG" ]]; then export NB="$NB_ARG"; fi
+    export AI_COMPARE="$AI_COMPARE"
+    export NB_TIMEOUT="$TIMEOUT"
+    export NB_KERNEL="$KERNEL"
+
+    exec python tests/test_nbclient.py
+    ;;
+  ""|-h|--help|help)
+    usage
+    ;;
+  *)
+    echo "Unknown subcommand: $cmd" >&2
+    usage
+    exit 2
+    ;;
+esac

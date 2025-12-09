@@ -296,10 +296,7 @@ class AudioVideoLoop:
             pass
         except ExceptionGroup as eg:
             traceback.print_exc()
-        finally:
-            # Ensure all streams are properly closed
-            if self.audio_stream is not None:
-                self.audio_stream.close()
+
 
 
 if __name__ == "__main__":

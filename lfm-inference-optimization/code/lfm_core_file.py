@@ -123,10 +123,13 @@ class LutonFieldModel:
         end_time = time.perf_counter()
         latency = end_time - start_time
         
-        # FIX: Return the Dataclass object cleanly
+        # FIX: Return the Dataclass Instance (Not a Dictionary)
+        # This satisfies the bot's request for type safety.
         return InteractionResult(
             scale_k=k,
             pressure_pa=pressure,
             interaction_strength=interaction_val,
             compute_latency=latency
         )
+
+

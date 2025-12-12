@@ -1,3 +1,5 @@
+code
+Markdown
 # Luton Field Model (LFM) - Deterministic Inference Kernel
 
 **A deterministic pre-computation layer for optimizing RAG pipelines and scientific AI inference.**
@@ -26,12 +28,10 @@ No heavy dependencies required. Simply import the core kernel.
 # Clone the repository
 git clone https://github.com/google-gemini/cookbook.git
 cd cookbook/lfm-inference-optimization
-```
-
-### 2. Usage Example
+2. Usage Example
 Use LFM to "sanity check" or generate data for Gemini prompts:
-
-```python
+code
+Python
 from code.lfm_core import LutonFieldModel
 
 # Initialize the Kernel
@@ -44,37 +44,17 @@ pruning_factor = lfm.get_geometric_pruning_factor(psi=0.85)
 
 print(f"Derived Pressure: {pressure:.2e} Pa")
 print(f"Recommended RAG Pruning Factor: {pruning_factor:.2f}")
-```
-
-### 3. Running the Benchmark
+3. Running the Benchmark
 To visualize the efficiency gains on your local machine:
-
-```bash
+code
+Bash
 python benchmark_efficiency.py
-```
-
 Output will generate a comparison report of LFM Kernel vs. Simulated LLM Inference.
+License
+This project is licensed under the Apache License, Version 2.0. You may obtain a copy of the License at:
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+code
+Code
+***
 
-## License & Commercial Use
-
-The Luton Field Model software is provided under a **Dual License** model to encourage research while ensuring sustainable enterprise support.
-
-### ✅ Community, Academic, and Evaluation License (Free)
-
-This software is **Free to use** for:
-* **Individuals & Hobbyists**: Personal projects and experimentation.
-* **Students & Researchers**: Academic work and non-profit research.
-* **Corporate Evaluation**: Companies may use this software free of charge for testing, benchmarking, and proof-of-concept purposes.
-
-### 💼 Commercial Production License
-
-For corporate entities deploying LFM into production environments:
-* A commercial license is **required after 1 month (30 days)** of successful deployment or demonstrated cost savings.
-* The model acts as a "Force Multiplier" for efficiency; the license ensures continued support and enterprise-grade validation.
-
-**For Commercial Licensing Inquiries:** Please contact Keith Luton directly to discuss enterprise terms based on compute savings.  
-📧 **Email:** Keith@thenewfaithchurch.org
-
----
-
-**Disclaimer:** This kernel is a deterministic mathematical utility. It is designed to augment generative AI models, not replace them.

@@ -309,7 +309,7 @@ def generate_report(results):
     lfm_acc_pct = (sum(lfm["accuracy"]) / NUM_QUERIES) * 100
     llm_acc_pct = (sum(llm["accuracy"]) / NUM_QUERIES) * 100
     
-    speedup_factor = llm_total_time / lfm_total_time
+    speedup_factor = llm_total_time / lfm_total_time if lfm_total_time > 0 else float('inf')
 
     print("\n" + "="*60)
     print(f"  LFM vs. LLM: COMPUTATIONAL EFFICIENCY REPORT ({NUM_QUERIES} Queries)")

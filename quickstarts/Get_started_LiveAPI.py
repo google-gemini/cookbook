@@ -73,7 +73,7 @@ SEND_SAMPLE_RATE = 16000
 RECEIVE_SAMPLE_RATE = 24000
 CHUNK_SIZE = 1024
 
-MODEL = "models/gemini-2.0-flash-live-001"
+MODEL = "gemini-2.5-flash-native-audio-preview-12-2025"
 
 DEFAULT_MODE = "camera"
 

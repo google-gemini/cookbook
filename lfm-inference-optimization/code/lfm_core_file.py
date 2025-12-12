@@ -123,12 +123,10 @@ class LutonFieldModel:
         end_time = time.perf_counter()
         latency = end_time - start_time
         
-        # FIX: Return the Dataclass (InteractionResult) as requested by the Bot
-        # This solves the "inconsistent fields" and "type safety" errors.
+        # FIX: Return the Dataclass object cleanly
         return InteractionResult(
             scale_k=k,
             pressure_pa=pressure,
             interaction_strength=interaction_val,
             compute_latency=latency
-        )LFM"
-        }
+        )

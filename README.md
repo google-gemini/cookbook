@@ -6,7 +6,7 @@ This cookbook provides a structured learning path for using the Gemini API, focu
 <br><br>
 
 ---
-> **Gemini 3 Pro**: For the latest on our new model, please check the [Get Started](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3) and the [thinking](./quickstarts/Get_started_thinking.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb#gemini3) guides who include [migration guides](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3migration).
+> **Gemini 3 Pro**: For the latest on our new model, please check out the [Get Started](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3) and [Thinking](./quickstarts/Get_started_thinking.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb#gemini3) guides, both of which include migration sections.
 > 
 > **🍌 Nano-Banana Pro**: Go bananas with our new flagship image generation model with thinking and search grounding and 4K image generation. Get started [here](./quickstarts/Get_Started_Nano_Banana.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb#nano-banana-pro) with a ton of examples!
 ---
@@ -112,6 +112,7 @@ For enterprise developers, the Gemini API is also available on Google Cloud Vert
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 Thank you for developing with the Gemini API! We're excited to see what you create.
+
 
 
 

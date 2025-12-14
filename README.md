@@ -106,6 +106,9 @@ The Gemini API is a REST API. You can call it directly using tools like `curl` (
 * [Node.js](https://github.com/googleapis/js-genai)
 * [Java](https://github.com/googleapis/java-genai)
 * [C#](https://github.com/googleapis/dotnet-genai/)
+* [Dart (Flutter)](https://github.com/google/generative-ai-dart) (deprecated)
+* [Android](https://github.com/google/generative-ai-android) (deprecated)
+* [Swift](https://github.com/google/generative-ai-swift) (deprecated)
 <br><br>
 
 ## Get Help

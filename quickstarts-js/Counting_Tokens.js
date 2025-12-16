@@ -100,7 +100,7 @@ For more information about all Gemini models, check the [documentation](https://
 */
 
 // [CODE STARTS]
-MODEL_ID = "gemini-2.5-flash" // "gemini-2.5-flash-lite", "gemini-2.5-flash""gemini-2.5-pro", "fiercefalcon", "gemini-3-pro-preview"
+MODEL_ID = "gemini-2.5-flash" // "gemini-2.5-flash-lite", "gemini-2.5-flash""gemini-2.5-pro", "gemini-3-flash-preview", "gemini-3-pro-preview"
 // [CODE ENDS]
 
 /* Markdown (render)

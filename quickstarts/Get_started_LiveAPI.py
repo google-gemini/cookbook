@@ -173,7 +173,7 @@ class AudioVideoLoop:
                 stream.close()
 
     async def receive_audio(self):
-        "Background task to read from the websocket and write pcm chunks to the output queue"
+        """Read from the websocket and write PCM chunks to the output queue."""
         try:
             while True:
                 turn = self.session.receive()

@@ -253,7 +253,7 @@ async def handle_tool_call(ws, tool_call: dict):
                 print(f"📤 Sending tool response: {json.dumps(response_msg, indent=2)}")
                 await ws.send(json.dumps(response_msg))
                 
-            except Exception as e:
+            except TypeError as e:
                 print(f"    ✗ Error executing {function_name}: {e}")
                 # Send error response
                 error_response = {

@@ -41,6 +41,7 @@ python Websocket_Tool_Call_Response_Example.py
 ```
 """
 
+import argparse
 import asyncio
 import json
 import os
@@ -52,7 +53,6 @@ if not GOOGLE_API_KEY:
     raise ValueError("GOOGLE_API_KEY environment variable must be set")
 
 host = "generativelanguage.googleapis.com"
-model = "gemini-2.0-flash-live-001"
 uri = f"wss://{host}/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key={GOOGLE_API_KEY}"
 
 
@@ -85,7 +85,7 @@ TOOL_REGISTRY = {
 }
 
 
-async def setup_session(ws):
+async def setup_session(ws, model="gemini-2.0-flash-live-001"):
     """Initialize the websocket session with model configuration and tools."""
     setup_msg = {
         "setup": {
@@ -302,10 +302,11 @@ async def process_responses(ws):
             await handle_tool_call(ws, tool_call)
 
 
-async def main():
+async def main(model="gemini-2.0-flash-live-001"):
     """Main function demonstrating tool call handling."""
     print("=" * 70)
     print("Gemini Live API - Websocket Tool Call Response Example")
+    print(f"Using model: {model}")
     print("=" * 70)
     
     async with connect(
@@ -313,7 +314,7 @@ async def main():
         additional_headers={"Content-Type": "application/json"}
     ) as ws:
         # Setup session
-        await setup_session(ws)
+        await setup_session(ws, model)
         
         # Example 1: Simple function call
         print("\n" + "=" * 70)
@@ -348,4 +349,15 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    parser = argparse.ArgumentParser(
+        description="Websocket tool response example for Gemini Live API"
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="gemini-2.0-flash-live-001",
+        help="The model to use (default: gemini-2.0-flash-live-001)",
+    )
+    args = parser.parse_args()
+    
+    asyncio.run(main(args.model))

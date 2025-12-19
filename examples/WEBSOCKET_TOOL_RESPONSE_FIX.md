@@ -1,6 +1,6 @@
 # Websocket Tool Call Response - Solution for GitHub Issue #906
 
-## Problem Summary
+## Problem summary
 
 When using the Gemini Live API with websockets for function calling, the documentation mentions `BidiGenerateContentToolResponse` but doesn't clearly explain the correct format for sending function/tool responses back to the model. Many developers encounter connection closures or non-functional responses when trying to implement tool calling.
 
@@ -12,7 +12,7 @@ Users were struggling with:
 3. Websocket connections closing when sending tool responses
 4. No clear examples of the working format for websockets
 
-## The Solution
+## The solution
 
 There are **TWO working formats** for sending tool responses via websockets:
 
@@ -104,7 +104,7 @@ response_msg = {
 await ws.send(json.dumps(response_msg))
 ```
 
-## Key Differences from Documentation
+## Key differences from documentation
 
 **What DOESN'T work:**
 - ❌ `BidiGenerateContentToolResponse` as a top-level message type
@@ -116,7 +116,7 @@ await ws.send(json.dumps(response_msg))
 - ✅ `clientContent` with `functionResponse` in parts
 - ✅ Both methods require proper function ID and name matching
 
-## Complete Working Example
+## Complete working example
 
 See the full working example in:
 - [`Websocket_Tool_Call_Response_Example.py`](./Websocket_Tool_Call_Response_Example.py)
@@ -128,7 +128,7 @@ This example demonstrates:
 - Multiple function calls in sequence
 - Error handling
 
-## Code Comparison
+## Code comparison
 
 ### SDK vs Websockets
 
@@ -169,7 +169,7 @@ response_msg = {
 await ws.send(json.dumps(response_msg))
 ```
 
-## Tool Declaration Format
+## Tool declaration format
 
 When setting up the websocket session, declare your tools like this:
 
@@ -201,7 +201,7 @@ setup_msg = {
 }
 ```
 
-## Handling Tool Calls
+## Handling tool calls
 
 When the model wants to call a function, you'll receive a message like:
 
@@ -223,7 +223,7 @@ When the model wants to call a function, you'll receive a message like:
 
 Process it and send back the response using one of the two methods above.
 
-## Common Pitfalls
+## Common pitfalls
 
 1. **Forgetting the function ID**: Always include the `id` field from the original function call
 2. **Wrong nesting**: The response data must be nested correctly under `response.result` or `response.output`
@@ -231,7 +231,7 @@ Process it and send back the response using one of the two methods above.
 4. **Sending as Python dict instead of JSON string**: Use `json.dumps()` to convert to string
 5. **Mismatched function names**: The response name must match the call name exactly
 
-## Testing Your Implementation
+## Testing your implementation
 
 Use this simple test to verify your tool responses work:
 
@@ -261,7 +261,7 @@ async def test_tool_response():
 - Cookbook examples by Google Gemini team
 - Community contributions and testing
 
-## Need Help?
+## Need help?
 
 If you're still having issues:
 1. Check that your API key is valid

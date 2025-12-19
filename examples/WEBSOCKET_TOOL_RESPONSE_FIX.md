@@ -265,7 +265,7 @@ async def test_tool_response():
 
 If you're still having issues:
 1. Check that your API key is valid
-2. Verify you're using the correct model (`gemini-2.0-flash-live-001`)
+2. Verify you're using a compatible model (e.g., `gemini-2.0-flash-live-001`)
 3. Ensure your websocket URI is correct
 4. Review the complete example in `Websocket_Tool_Call_Response_Example.py`
 5. Open an issue in the [cookbook repository](https://github.com/google-gemini/cookbook/issues)

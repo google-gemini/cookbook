@@ -26,20 +26,36 @@ const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 async function run() {
   console.log("--- Sending request to Gemini with Code Execution enabled ---");
 
-  const model = "gemini-2.5-flash-lite"; 
+  // Bot Suggestion 1: Use MODEL_ID for consistency
+  const MODEL_ID = "gemini-2.5-flash-lite"; 
   
   try {
     const response = await client.models.generateContent({
-      model: model,
-      // 🚨 THIS IS THE KEY PART: Enabling the Code Execution Tool
+      model: MODEL_ID,
       tools: [
         { codeExecution: {} } 
       ],
       contents: "Calculate the sum of the first 50 prime numbers. Write and run python code to solve this."
     });
 
-    // The response includes the model's thought process, the code it ran, and the final answer.
-    console.log(response.text);
+    // Bot Suggestion 2: Parse response to show the code and the result separately
+    // This loops through the "parts" of the response to show exactly what the model did.
+    if (response.candidates && response.candidates[0].content.parts) {
+      for (const part of response.candidates[0].content.parts) {
+        if (part.text) {
+          console.log(part.text);
+        } else if (part.executableCode) {
+          console.log('\n--- Executable Code ---');
+          console.log(part.executableCode.code);
+        } else if (part.codeExecutionResult) {
+          console.log('\n--- Code Execution Result ---');
+          console.log(part.codeExecutionResult.output);
+        }
+      }
+    } else {
+      // Fallback if structure is different
+      console.log(response.text);
+    }
     
   } catch (error) {
     console.error("Error:", error);

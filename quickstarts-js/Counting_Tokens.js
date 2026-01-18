@@ -100,7 +100,7 @@ For more information about all Gemini models, check the [documentation](https://
 */
 
 // [CODE STARTS]
-MODEL_ID = "gemini-1.5-flash" // "gemini-1.5-flash-lite", "gemini-1.5-flash""gemini-1.5-pro", "gemini-1.5-flash-preview", "gemini-1.5-pro-preview"
+MODEL_ID = "gemini-1.5-flash" // "gemini-1.5-flash-lite", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-1.5-flash-preview", "gemini-1.5-pro-preview"
 // [CODE ENDS]
 
 /* Markdown (render)

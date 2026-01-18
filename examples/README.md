@@ -46,6 +46,7 @@ Some old examples are still using the legacy SDK, they should still work and are
 * [Object detection](./Object_detection.ipynb): Extensive examples with object detection, including with multiple classes, OCR, visual question answering, and even an interactive demo.
 * [Search Wikipedia with ReAct](./Search_Wikipedia_using_ReAct.ipynb): Use ReAct prompting with Gemini Flash to search Wikipedia interactively.
 * [Story writing with prompt chaining.ipynb](./Story_Writing_with_Prompt_Chaining.ipynb): Write a story using two powerful tools: prompt chaining and iterative generation.
+* [Structured Data Extraction with Pydantic](./Structured_Data_Extraction_Pydantic.ipynb) — Transform messy text into validated, type-safe JSON objects using Gemini 3 Flash.
 * [Tag and Caption images](./Tag_and_caption_images.ipynb): Use the Gemini model's vision capabilities and the embedding model to add tags and captions to images of pieces of clothing.
 * [Voice Memos](./Voice_memos.ipynb): You'll use the Gemini API to help you generate ideas for your next blog post, based on voice memos you recorded on your phone, and previous articles you've written.
 * [Search for information on documents](./document_search.ipynb): Perform searches across documents using embeddings.

@@ -80,7 +80,7 @@ DEFAULT_MODE = "camera"
 
 
 client = genai.Client(
-    api_key = os.environ.get("GEMINI_API_KEY"),
+    api_key=os.environ.get("GEMINI_API_KEY"),
     http_options={"api_version": "v1beta"},
 )
 

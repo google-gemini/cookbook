@@ -77,7 +77,14 @@ MODEL = "gemini-2.5-flash-native-audio-preview-12-2025"
 
 DEFAULT_MODE = "camera"
 
-client = genai.Client(http_options={"api_version": "v1beta"})
+api_key = os.environ.get("GOOGLE_API_KEY")
+
+if api_key is None:
+    print("Please set the GOOGLE_API_KEY environment variable.")
+    print("You can get an API key from https://aistudio.google.com/app/apikey")
+    api_key = input("Or enter your API key here: ").strip()
+
+client = genai.Client(api_key=api_key, http_options={"api_version": "v1beta"})
 
 CONFIG = {"response_modalities": ["AUDIO"]}
 

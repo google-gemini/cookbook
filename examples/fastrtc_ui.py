@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2025 Google LLC
+# Copyright 2026 Google LLC
 #
 # Written by:
 #   - Freddy Boulton (https://github.com/freddyaboulton)

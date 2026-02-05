@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ For more information about all Gemini models, check the [documentation](https://
 */
 
 // [CODE STARTS]
-MODEL_ID = "gemini-2.5-flash" // "gemini-2.5-flash-lite", "gemini-2.5-flash""gemini-2.5-pro", "gemini-3-flash-preview", "gemini-3-pro-preview"
+MODEL_ID = "gemini-2.5-flash"; // "gemini-2.5-flash-lite", "gemini-2.5-flash""gemini-2.5-pro", "gemini-3-flash-preview", "gemini-3-pro-preview"
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -84,15 +84,16 @@ First, you will prepare a sample image to upload to the API.
 */
 
 // [CODE STARTS]
-imageFile = await fetch("https://storage.googleapis.com/generativeai-downloads/images/jetpack.jpg")
-    .then(res => res.blob());
+imageFile = await fetch(
+  "https://storage.googleapis.com/generativeai-downloads/images/jetpack.jpg",
+).then((res) => res.blob());
 
 imageDataUrl = await new Promise((resolve) => {
-    reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result.split(',')[1]); // Get only base64 string
-    reader.readAsDataURL(imageFile);
+  reader = new FileReader();
+  reader.onloadend = () => resolve(reader.result.split(",")[1]); // Get only base64 string
+  reader.readAsDataURL(imageFile);
 });
-console.image(imageDataUrl)
+console.image(imageDataUrl);
 // [CODE ENDS]
 
 /* Output Sample
@@ -159,11 +160,11 @@ response = await ai.models.generateContent({
     {
       fileData: {
         fileUri: uploadedFile.uri,
-        mimeType: "image/jpeg"
-      }
+        mimeType: "image/jpeg",
+      },
     },
-    "Describe the image with a creative description."
-  ]
+    "Describe the image with a creative description.",
+  ],
 });
 
 console.log(response.text);
@@ -210,7 +211,8 @@ This example shows you how to load a markdown file into a prompt using the File 
 */
 
 // [CODE STARTS]
-fileUrl = "https://raw.githubusercontent.com/google-gemini/cookbook/main/CONTRIBUTING.md";
+fileUrl =
+  "https://raw.githubusercontent.com/google-gemini/cookbook/main/CONTRIBUTING.md";
 
 response = await fetch(fileUrl);
 blob = await response.blob();
@@ -220,8 +222,8 @@ uploadedFile = await ai.files.upload({
   file,
   config: {
     displayName: "CONTRIBUTING.md",
-    mimeType: "text/markdown"
-  }
+    mimeType: "text/markdown",
+  },
 });
 console.log("Uploaded:", uploadedFile.uri);
 
@@ -229,15 +231,15 @@ modelResponse = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [
     {
-      text: "What should I do before I start writing, when following these guidelines?"
+      text: "What should I do before I start writing, when following these guidelines?",
     },
     {
       fileData: {
         fileUri: uploadedFile.uri,
-        mimeType: "text/markdown"
-      }
-    }
-  ]
+        mimeType: "text/markdown",
+      },
+    },
+  ],
 });
 
 console.log(modelResponse.text);
@@ -268,7 +270,8 @@ Some common text formats are automatically detected, such as `text/x-python`, `t
 */
 
 // [CODE STARTS]
-fileUrl = "https://raw.githubusercontent.com/google/gemma.cpp/main/examples/hello_world/run.cc";
+fileUrl =
+  "https://raw.githubusercontent.com/google/gemma.cpp/main/examples/hello_world/run.cc";
 
 response = await fetch(fileUrl);
 blob = await response.blob();
@@ -278,8 +281,8 @@ uploadedCpp = await ai.files.upload({
   file: cppFile,
   config: {
     displayName: "gemma.cpp",
-    mimeType: "text/plain"
-  }
+    mimeType: "text/plain",
+  },
 });
 console.log("Uploaded:", uploadedCpp.uri);
 
@@ -290,10 +293,10 @@ modelResponse = await ai.models.generateContent({
     {
       fileData: {
         fileUri: uploadedCpp.uri,
-        mimeType: "text/plain"
-      }
-    }
-  ]
+        mimeType: "text/plain",
+      },
+    },
+  ],
 });
 
 console.log(modelResponse.text);

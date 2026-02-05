@@ -4,6 +4,7 @@
 **/.python-version
 **/desktop.ini
 **.lnk
+**/.env
 
 # Ignore fork-syncing workflow, should only exist in forks
 # cf. https://github.com/Giom-V/gemini-api-cookbook/blob/main/.github/workflows/sync.yml

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ For more information about all Gemini models, check the [documentation](https://
 */
 
 // [CODE STARTS]
-MODEL_ID = "gemini-2.5-flash" // "gemini-2.5-flash-lite", "gemini-2.5-flash""gemini-2.5-pro", "gemini-3-flash-preview", "gemini-3-pro-preview"
+MODEL_ID = "gemini-2.5-flash"; // "gemini-2.5-flash-lite", "gemini-2.5-flash""gemini-2.5-pro", "gemini-3-flash-preview", "gemini-3-pro-preview"
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -64,8 +64,9 @@ To use an audio file in your prompt, you must first upload it using the [File AP
 */
 
 // [CODE STARTS]
-AUDIO_URL = "https://storage.googleapis.com/generativeai-downloads/data/State_of_the_Union_Address_30_January_1961.mp3";
-audioBlob = await fetch(AUDIO_URL).then(res => res.blob());
+AUDIO_URL =
+  "https://storage.googleapis.com/generativeai-downloads/data/State_of_the_Union_Address_30_January_1961.mp3";
+audioBlob = await fetch(AUDIO_URL).then((res) => res.blob());
 audioMime = audioBlob.type || "audio/mpeg";
 
 audioFile = await ai.files.upload({
@@ -81,11 +82,13 @@ audioFile = await ai.files.upload({
 
 // [CODE STARTS]
 audioResponse = await ai.models.generateContent({
-    model: MODEL_ID,
-    contents: [
-        { fileData: { fileUri: audioFile.uri, mimeType: audioMime } },
-        { text: "Listen carefully to the following audio file. Provide a brief summary." }
-    ],
+  model: MODEL_ID,
+  contents: [
+    { fileData: { fileUri: audioFile.uri, mimeType: audioMime } },
+    {
+      text: "Listen carefully to the following audio file. Provide a brief summary.",
+    },
+  ],
 });
 
 console.log(audioResponse.text);
@@ -121,7 +124,7 @@ slicedBlob = audioBlob.slice(0, 160 * 1024); // ~10,000 ms audio slice for 128 k
 
 slicedBase64 = await new Promise((resolve) => {
   const reader = new FileReader();
-  reader.onloadend = () => resolve(reader.result.split(',')[1]);
+  reader.onloadend = () => resolve(reader.result.split(",")[1]);
   reader.readAsDataURL(slicedBlob);
 });
 // [CODE ENDS]
@@ -138,10 +141,10 @@ response = await ai.models.generateContent({
     {
       inlineData: {
         data: slicedBase64,
-        mimeType: "audio/mpeg"
-      }
-    }
-  ]
+        mimeType: "audio/mpeg",
+      },
+    },
+  ],
 });
 
 console.log(response.text);
@@ -175,14 +178,15 @@ A prompt can specify timestamps of the form `MM:SS` to refer to particular secti
 */
 
 // [CODE STARTS]
-prompt = "Provide a transcript of the speech between the timestamps 02:30 and 03:29."
+prompt =
+  "Provide a transcript of the speech between the timestamps 02:30 and 03:29.";
 
 response = await ai.models.generateContent({
-    model: MODEL_ID,
-    contents: [
-        prompt,
-        { fileData: { fileUri: audioFile.uri, mimeType: audioMime } },
-    ],
+  model: MODEL_ID,
+  contents: [
+    prompt,
+    { fileData: { fileUri: audioFile.uri, mimeType: audioMime } },
+  ],
 });
 
 console.log(response.text);
@@ -214,10 +218,7 @@ prompt = `
 
 response = await ai.models.generateContent({
   model: MODEL_ID,
-  contents: [
-    { text: prompt },
-    { fileData: { fileUri: youtubeUrl } }
-  ]
+  contents: [{ text: prompt }, { fileData: { fileUri: youtubeUrl } }],
 });
 
 console.log(response.text);
@@ -264,9 +265,7 @@ Audio files have a fixed per second token rate (more details in the dedicated [c
 // [CODE STARTS]
 countTokensResponse = await ai.models.countTokens({
   model: MODEL_ID,
-  contents: [
-    { fileData: { fileUri: audioFile.uri, mimeType: audioMime } },
-  ]
+  contents: [{ fileData: { fileUri: audioFile.uri, mimeType: audioMime } }],
 });
 
 console.log("Audio file tokens:", countTokensResponse.totalTokens);

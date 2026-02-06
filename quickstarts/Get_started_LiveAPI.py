@@ -275,7 +275,10 @@ class AudioVideoLoop:
                 if text.lower() == "q":
                     print("👋 Exiting on user request...")
                     break
-                await self.session.send_client_content(text or ".")
+                await self.session.send_client_content(
+                    turns=types.Content(parts=[types.Part(text=text or "")]),
+                    turn_complete=True,
+                )
         except asyncio.CancelledError:
             pass
 
@@ -283,7 +286,10 @@ class AudioVideoLoop:
         try:
             while True:
                 msg = await self.out_queue.get()
-                await self.session.send_realtime_input(msg)
+                if msg["mime_type"].startswith("audio/"):
+                    await self.session.send_realtime_input(audio=msg)
+                else:
+                    await self.session.send_realtime_input(media=msg)
         except asyncio.CancelledError:
             pass
 

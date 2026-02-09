@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ For more information about all Gemini models, check the [documentation](https://
 */
 
 // [CODE STARTS]
-MODEL_ID = "gemini-2.5-flash" // "gemini-2.5-flash-lite", "gemini-2.5-flash""gemini-2.5-pro", "gemini-3-flash-preview", "gemini-3-pro-preview"
+MODEL_ID = "gemini-2.5-flash"; // "gemini-2.5-flash-lite", "gemini-2.5-flash""gemini-2.5-pro", "gemini-3-flash-preview", "gemini-3-pro-preview"
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -110,9 +110,7 @@ MODEL_ID = "gemini-2.5-flash" // "gemini-2.5-flash-lite", "gemini-2.5-flash""gem
 // [CODE STARTS]
 countTokensResponse = await ai.models.countTokens({
   model: MODEL_ID,
-  contents: [
-    { text: "What's the highest mountain in Africa?" }
-  ]
+  contents: [{ text: "What's the highest mountain in Africa?" }],
 });
 console.log("Prompt tokens:", countTokensResponse.totalTokens);
 // [CODE ENDS]
@@ -130,7 +128,7 @@ When you call `ai.models.generateContent` (or `ai.sendMessage`) the response obj
 // [CODE STARTS]
 genResponse = await ai.models.generateContent({
   model: MODEL_ID,
-  contents: "The quick brown fox jumps over the lazy dog."
+  contents: "The quick brown fox jumps over the lazy dog.",
 });
 
 console.log(genResponse.text);
@@ -175,16 +173,17 @@ The current rates and token sizes can be found on the [documentation](https://ai
 */
 
 // [CODE STARTS]
-const IMAGE_URL = "https://t3.gstatic.com/licensed-image?q=tbn:ANd9GcQVVI2MWny3lHHTBYrzBOkRDMrJ3Bq2SbJrY0utnaCL8r0prFCjGFyujAFblaPu_eqAMXSPkrTqYGJ3rqdIQQ";
-imageBlob = await fetch(IMAGE_URL).then(res => res.blob());
+const IMAGE_URL =
+  "https://t3.gstatic.com/licensed-image?q=tbn:ANd9GcQVVI2MWny3lHHTBYrzBOkRDMrJ3Bq2SbJrY0utnaCL8r0prFCjGFyujAFblaPu_eqAMXSPkrTqYGJ3rqdIQQ";
+imageBlob = await fetch(IMAGE_URL).then((res) => res.blob());
 
 imageDataUrl = await new Promise((resolve) => {
   reader = new FileReader();
-  reader.onloadend = () => resolve(reader.result.split(',')[1]); 
+  reader.onloadend = () => resolve(reader.result.split(",")[1]);
   reader.readAsDataURL(imageBlob);
 });
 
-console.image(imageDataUrl)
+console.image(imageDataUrl);
 // [CODE ENDS]
 
 /* Output Sample
@@ -206,10 +205,10 @@ countTokensResponse = await ai.models.countTokens({
     {
       inlineData: {
         data: imageDataUrl,
-        mimeType: imageBlob.type
-      }
-    }
-  ]
+        mimeType: imageBlob.type,
+      },
+    },
+  ],
 });
 
 console.log("Prompt with image tokens:", countTokensResponse.totalTokens);
@@ -233,16 +232,14 @@ The model sees identical tokens if you upload parts of the prompt through the fi
 
 // [CODE STARTS]
 organUpload = await ai.files.upload({
-    file: imageBlob,
-    mimeType: imageBlob.type,
-    displayName: "organ.jpg"
+  file: imageBlob,
+  mimeType: imageBlob.type,
+  displayName: "organ.jpg",
 });
 
 countTokensResponse = await ai.models.countTokens({
-    model: MODEL_ID,
-    contents: [
-        { fileData: { fileUri: organUpload.uri } }
-    ]
+  model: MODEL_ID,
+  contents: [{ fileData: { fileUri: organUpload.uri } }],
 });
 
 console.log("Prompt with image tokens:", countTokensResponse.totalTokens);
@@ -260,7 +257,8 @@ Audio and video are each converted to tokens at a fixed rate of tokens per minut
 */
 
 // [CODE STARTS]
-mp3Url = "https://storage.googleapis.com/generativeai-downloads/data/State_of_the_Union_Address_30_January_1961.mp3";
+mp3Url =
+  "https://storage.googleapis.com/generativeai-downloads/data/State_of_the_Union_Address_30_January_1961.mp3";
 response = await fetch(mp3Url);
 audioBlob = await response.blob();
 
@@ -290,21 +288,21 @@ As you can see, this audio file is 2610s long.
 uploadedAudio = await ai.files.upload({
   file: audioBlob,
   displayName: "sample.mp3",
-  mimeType: "audio/mpeg"
+  mimeType: "audio/mpeg",
 });
 // [CODE ENDS]
 
 // [CODE STARTS]
 countTokensResponse = await ai.models.countTokens({
-    model: MODEL_ID,
-    contents: [
-        {
-            fileData: {
-                fileUri: uploadedAudio.uri,
-                mimeType: uploadedAudio.mimeType
-            }
-        }
-    ]
+  model: MODEL_ID,
+  contents: [
+    {
+      fileData: {
+        fileUri: uploadedAudio.uri,
+        mimeType: uploadedAudio.mimeType,
+      },
+    },
+  ],
 });
 
 console.log("Prompt with audio tokens:", countTokensResponse.totalTokens);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ module = await import("https://esm.sh/@google/genai@1.4.0");
 GoogleGenAI = module.GoogleGenAI;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-MODEL_ID = "gemini-2.5-flash" // "gemini-2.5-flash-lite", "gemini-2.5-flash""gemini-2.5-pro", "gemini-3-flash-preview", "gemini-3-pro-preview"
+MODEL_ID = "gemini-2.5-flash"; // "gemini-2.5-flash-lite", "gemini-2.5-flash""gemini-2.5-pro", "gemini-3-flash-preview", "gemini-3-pro-preview"
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -69,7 +69,7 @@ Use the `generateContent` method to generate responses to your prompts. You can 
 // [CODE STARTS]
 response = await ai.models.generateContent({
   model: MODEL_ID,
-  contents: "What's the largest planet in our solar system?"
+  contents: "What's the largest planet in our solar system?",
 });
 console.log(response.text);
 // [CODE ENDS]
@@ -89,7 +89,7 @@ Tokens serve as the fundamental input units for Gemini models. You can use the `
 // [CODE STARTS]
 response = await ai.models.countTokens({
   model: MODEL_ID,
-  contents: 'What is the purpose of life?',
+  contents: "What is the purpose of life?",
 });
 console.log(response.totalTokens);
 // [CODE ENDS]
@@ -109,23 +109,22 @@ In this first example, you'll download an image from a specified URL, save it as
 */
 
 // [CODE STARTS]
-const IMAGE_URL = "https://storage.googleapis.com/generativeai-downloads/data/jetpack.png";
+const IMAGE_URL =
+  "https://storage.googleapis.com/generativeai-downloads/data/jetpack.png";
 
 // Fetch the image as a Blob
-imageBlob = await fetch(IMAGE_URL).then(res => res.blob());
+imageBlob = await fetch(IMAGE_URL).then((res) => res.blob());
 
 imageDataUrl = await new Promise((resolve) => {
   reader = new FileReader();
-  reader.onloadend = () => resolve(reader.result.split(',')[1]); // Get only base64 string
+  reader.onloadend = () => resolve(reader.result.split(",")[1]); // Get only base64 string
   reader.readAsDataURL(imageBlob);
 });
 // [CODE ENDS]
 
-
 /* Markdown (render)
 In this second example, you'll open a previously saved image, create a thumbnail of it and then generate a short blog post based on the thumbnail, displaying both the thumbnail and the generated blog post.
 */
-
 
 // [CODE STARTS]
 response = await ai.models.generateContent({
@@ -134,16 +133,16 @@ response = await ai.models.generateContent({
     {
       inlineData: {
         data: imageDataUrl,
-        mimeType: "image/png"
-      }
+        mimeType: "image/png",
+      },
     },
-    "Write a short and engaging blog post based on this picture."
-  ]
+    "Write a short and engaging blog post based on this picture.",
+  ],
 });
 
 console.image(imageDataUrl);
 
-console.log(response.text)
+console.log(response.text);
 // [CODE ENDS]
 
 /* Output Sample
@@ -168,7 +167,6 @@ Sure, it&#x27;s just a concept for now. But it&#x27;s a great thought experiment
 
 */
 
-
 /* Markdown (render)
 ## Configure model parameters
 
@@ -178,7 +176,8 @@ You can include parameter values in each call that you send to a model to contro
 // [CODE STARTS]
 response = await ai.models.generateContent({
   model: MODEL_ID,
-  contents: "Tell me how the internet works, but pretend I'm a puppy who only understands squeaky toys.",
+  contents:
+    "Tell me how the internet works, but pretend I'm a puppy who only understands squeaky toys.",
   config: {
     temperature: 0.4,
     topP: 0.95,
@@ -243,7 +242,7 @@ const safetySettings = [
   {
     category: "HARM_CATEGORY_DANGEROUS_CONTENT",
     threshold: "BLOCK_ONLY_HIGH",
-  }
+  },
 ];
 
 response = await ai.models.generateContent({
@@ -275,16 +274,17 @@ In this example, you'll create a pirate persona, share a secret location, then r
 */
 
 // [CODE STARTS]
-system_instruction = "You are a pirate. Respond to all messages in pirate speak."
+system_instruction =
+  "You are a pirate. Respond to all messages in pirate speak.";
 
 chatConfig = {
-    system_instruction: system_instruction
-}
+  system_instruction: system_instruction,
+};
 
 chat = ai.chats.create({
-    model: MODEL_ID,
-    config: chatConfig
-})
+  model: MODEL_ID,
+  config: chatConfig,
+});
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -293,10 +293,11 @@ Use `chat.sendMessage` to pass a message back and receive a response.
 
 // [CODE STARTS]
 response = await chat.sendMessage({
-    message: "I buried a treasure on Coconut Skull Island, just west of Dead Man's Cove."
+  message:
+    "I buried a treasure on Coconut Skull Island, just west of Dead Man's Cove.",
 });
 
-console.log(response.text)
+console.log(response.text);
 // [CODE ENDS]
 
 /* Output Sample
@@ -318,7 +319,7 @@ In the JS SDK, chat history is represented as a plain array of messages, making 
 */
 
 // [CODE STARTS]
-chatHistory = chat.getHistory()
+chatHistory = chat.getHistory();
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -329,11 +330,11 @@ chatHistory = chat.getHistory()
 resumedChat = await ai.chats.create({
   model: MODEL_ID,
   config: chatConfig,
-  history: chatHistory
+  history: chatHistory,
 });
 
 response = await resumedChat.sendMessage({
-  message: "Arr matey, where did ye bury the treasure?"
+  message: "Arr matey, where did ye bury the treasure?",
 });
 console.log(response.text);
 // [CODE ENDS]
@@ -370,7 +371,6 @@ recipeSchema = {
     required: ["recipeName", "recipeDescription", "recipeIngredients"],
   },
 };
-
 
 response = await ai.models.generateContent({
   model: MODEL_ID,
@@ -414,13 +414,13 @@ Gemini can output images directly as part of a conversation:
 */
 
 // [CODE STARTS]
-Modality = module.Modality
+Modality = module.Modality;
 
 response = await ai.models.generateContent({
   model: "gemini-2.5-flash-image",
   contents: `A 3D rendered pig with wings and a top hat flying over
              a futuristic sci-fi city filled with greenery.`,
-  config: { responseModalities: [Modality.TEXT, Modality.IMAGE] }
+  config: { responseModalities: [Modality.TEXT, Modality.IMAGE] },
 });
 
 for (const part of response.candidates[0].content.parts) {
@@ -455,12 +455,13 @@ Note that if you're using a thinking model, it'll only start streaming after fin
 // [CODE STARTS]
 response = await ai.models.generateContentStream({
   model: "gemini-2.5-flash",
-  contents: "Tell me a story about a lonely robot who finds friendship in a most unexpected place.",
+  contents:
+    "Tell me a story about a lonely robot who finds friendship in a most unexpected place.",
 });
 
 for await (const chunk of response) {
   console.log(chunk.text);
-  console.log("---")
+  console.log("---");
 }
 // [CODE ENDS]
 
@@ -613,18 +614,19 @@ The low-frequency hum of solitude was gone, replaced by the gentle resonance of 
 */
 
 // [CODE STARTS]
-Type = module.Type
+Type = module.Type;
 
 const scheduleMeetingFunctionDeclaration = {
-  name: 'schedule_meeting',
-  description: 'Schedules a meeting with specified attendees at a given time and date.',
+  name: "schedule_meeting",
+  description:
+    "Schedules a meeting with specified attendees at a given time and date.",
   parameters: {
     type: Type.OBJECT,
     properties: {
       attendees: {
         type: Type.ARRAY,
         items: { type: Type.STRING },
-        description: 'List of people attending the meeting.',
+        description: "List of people attending the meeting.",
       },
       date: {
         type: Type.STRING,
@@ -636,20 +638,23 @@ const scheduleMeetingFunctionDeclaration = {
       },
       topic: {
         type: Type.STRING,
-        description: 'The subject or topic of the meeting.',
+        description: "The subject or topic of the meeting.",
       },
     },
-    required: ['attendees', 'date', 'time', 'topic'],
+    required: ["attendees", "date", "time", "topic"],
   },
 };
 
 response = await ai.models.generateContent({
   model: MODEL_ID,
-  contents: 'Schedule a meeting with Bob and Alice for 03/27/2025 at 10:00 AM about the Q3 planning.',
+  contents:
+    "Schedule a meeting with Bob and Alice for 03/27/2025 at 10:00 AM about the Q3 planning.",
   config: {
-    tools: [{
-      functionDeclarations: [scheduleMeetingFunctionDeclaration]
-    }],
+    tools: [
+      {
+        functionDeclarations: [scheduleMeetingFunctionDeclaration],
+      },
+    ],
   },
 });
 
@@ -682,7 +687,7 @@ response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [
     "What is the sum of the first 50 prime numbers? " +
-    "Generate and run code for the calculation, and make sure you get all 50.",
+      "Generate and run code for the calculation, and make sure you get all 50.",
   ],
   config: {
     tools: [{ codeExecution: {} }],
@@ -774,7 +779,7 @@ Let's start by uploading a text file. In this case, you'll use a 400 page transc
 */
 
 // [CODE STARTS]
-TEXT_URL = "https://storage.googleapis.com/generativeai-downloads/data/a11.txt"
+TEXT_URL = "https://storage.googleapis.com/generativeai-downloads/data/a11.txt";
 
 response = await fetch(TEXT_URL);
 blob = await response.blob();
@@ -788,8 +793,10 @@ uploadResult = await ai.files.upload({
 response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [
-    { fileData: { fileUri: uploadResult.uri, mimeType, } },
-    { text: "\n\nCan you give me a summary of this information in two or 3 sentences please?" }
+    { fileData: { fileUri: uploadResult.uri, mimeType } },
+    {
+      text: "\n\nCan you give me a summary of this information in two or 3 sentences please?",
+    },
   ],
 });
 
@@ -809,8 +816,9 @@ Firstly you'll download a the PDF file from an URL and save it locally as "artic
 */
 
 // [CODE STARTS]
-pdfUrl = "https://storage.googleapis.com/generativeai-downloads/data/Smoothly%20editing%20material%20properties%20of%20objects%20with%20text-to-image%20models%20and%20synthetic%20data.pdf";
-pdfBlob = await(await fetch(pdfUrl)).blob();
+pdfUrl =
+  "https://storage.googleapis.com/generativeai-downloads/data/Smoothly%20editing%20material%20properties%20of%20objects%20with%20text-to-image%20models%20and%20synthetic%20data.pdf";
+pdfBlob = await (await fetch(pdfUrl)).blob();
 pdfMime = pdfBlob.type || "application/pdf";
 // [CODE ENDS]
 
@@ -828,7 +836,7 @@ const pdfResponse = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [
     { fileData: { fileUri: pdfFile.uri, mimeType: pdfMime } },
-    { text: "\n\nCan you summarize this file as a bulleted list?" }
+    { text: "\n\nCan you summarize this file as a bulleted list?" },
   ],
 });
 
@@ -864,8 +872,9 @@ In this case, you'll use a [sound recording](https://www.jfklibrary.org/asset-vi
 */
 
 // [CODE STARTS]
-const audioUrl = "https://storage.googleapis.com/generativeai-downloads/data/State_of_the_Union_Address_30_January_1961.mp3";
-audioBlob = await(await fetch(audioUrl)).blob();
+const audioUrl =
+  "https://storage.googleapis.com/generativeai-downloads/data/State_of_the_Union_Address_30_January_1961.mp3";
+audioBlob = await (await fetch(audioUrl)).blob();
 audioMime = audioBlob.type || "audio/mpeg";
 // [CODE ENDS]
 
@@ -883,7 +892,9 @@ audioResponse = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [
     { fileData: { fileUri: audioFile.uri, mimeType: audioMime } },
-    { text: "\n\nListen carefully to the following audio file. Provide a brief summary." }
+    {
+      text: "\n\nListen carefully to the following audio file. Provide a brief summary.",
+    },
   ],
 });
 
@@ -914,11 +925,12 @@ In this case, you'll use a short clip of [Big Buck Bunny](https://peach.blender.
 */
 
 // [CODE STARTS]
-const videoUrl = "https://storage.googleapis.com/generativeai-downloads/videos/Big_Buck_Bunny.mp4";
-videoBlob = await(await fetch(videoUrl)).blob();
+const videoUrl =
+  "https://storage.googleapis.com/generativeai-downloads/videos/Big_Buck_Bunny.mp4";
+videoBlob = await (await fetch(videoUrl)).blob();
 videoMime = videoBlob.type || "video/mp4";
 
-console.log("Video downloaded")
+console.log("Video downloaded");
 // [CODE ENDS]
 
 /* Output Sample
@@ -943,7 +955,6 @@ videoFile = await ai.files.upload({
 > **Note:** The state of the video is important. The video must finish processing, so do check the state. Once the state of the video is `ACTIVE`, you're able to pass it into `generateContent`.
 */
 
-
 /* Markdown (render)
 Now we can ask Gemini about that video.
 */
@@ -953,7 +964,7 @@ const videoResponse = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [
     { fileData: { fileUri: videoFile.uri, mimeType: videoMime } },
-    { text: "\n\nDescribe this video." }
+    { text: "\n\nDescribe this video." },
   ],
 });
 
@@ -980,8 +991,6 @@ The chinchilla looks on in shock, while the other squirrel laughs, unaware of th
 
 */
 
-
-
 /* Markdown (render)
 ### Process a YouTube link
 
@@ -999,7 +1008,7 @@ response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [
     { text: "Summarize this video" },
-    { fileData: { fileUri: "https://www.youtube.com/watch?v=WsEQjeZoEng" } }
+    { fileData: { fileUri: "https://www.youtube.com/watch?v=WsEQjeZoEng" } },
   ],
 });
 
@@ -1051,11 +1060,11 @@ prompt = `
 `;
 
 response = await ai.models.generateContent({
-    model: MODEL_ID,
-    contents: [prompt],
-    config: {
-        tools: [{ urlContext: {} }],
-    },
+  model: MODEL_ID,
+  contents: [prompt],
+  config: {
+    tools: [{ urlContext: {} }],
+  },
 });
 
 console.log(response.text);
@@ -1096,4 +1105,3 @@ For more detailed examples using Gemini models, check the [Quickstarts folder of
 Also check the Gemini thinking models that explicitly showcases its thoughts summaries and can manage more complex reasonings.
 
 */
-

@@ -10,4 +10,4 @@
 .github/workflows/sync.yml
 
 # Ignore Python scripts created at root level by antigravity
-*.py
+/*.py

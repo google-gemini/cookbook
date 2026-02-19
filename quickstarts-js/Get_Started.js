@@ -57,7 +57,7 @@ module = await import("https://esm.sh/@google/genai@1.4.0");
 GoogleGenAI = module.GoogleGenAI;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-MODEL_ID = "gemini-2.5-flash"; // "gemini-2.5-flash-lite", "gemini-2.5-flash""gemini-2.5-pro", "gemini-3-flash-preview", "gemini-3-pro-preview"
+MODEL_ID = "gemini-3-flash-preview"; // "gemini-2.5-flash-lite", "gemini-2.5-flash""gemini-2.5-pro", "gemini-3-flash-preview", "gemini-3.1-pro-preview"
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -179,7 +179,7 @@ response = await ai.models.generateContent({
   contents:
     "Tell me how the internet works, but pretend I'm a puppy who only understands squeaky toys.",
   config: {
-    temperature: 0.4,
+    temperature: 1.0,
     topP: 0.95,
     topK: 20,
     candidateCount: 1,
@@ -454,7 +454,7 @@ Note that if you're using a thinking model, it'll only start streaming after fin
 
 // [CODE STARTS]
 response = await ai.models.generateContentStream({
-  model: "gemini-2.5-flash",
+  model: MODEL_ID,
   contents:
     "Tell me a story about a lonely robot who finds friendship in a most unexpected place.",
 });

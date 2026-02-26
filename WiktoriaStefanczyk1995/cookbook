@@ -1,0 +1,282 @@
+https://ai.google.dev/gemini-api/docs/embeddings?hl=pl#supported-task-typesimport { GoogleGenAI } from "@google/genai";
+
+async function main() {
+
+    const ai = new GoogleGenAI({});
+
+    const response = await ai.models.embedContent({
+        model: 'gemini-embedding-001',
+        contents: 'What is the meaning of life?',
+    });
+
+    console.log(response.embeddings);
+}
+
+main();package main
+
+import (
+    "context"
+    "encoding/json"
+    "fmt"
+    "log"
+
+    "google.golang.org/genai"
+)
+
+func main() {
+    ctx := context.Background()
+    client, err := genai.NewClient(ctx, nil)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    contents := []*genai.Content{
+        genai.NewContentFromText("What is the meaning of life?", genai.RoleUser),
+    }
+    result, err := client.Models.EmbedContent(ctx,
+        "gemini-embedding-001",
+        contents,
+        nil,
+    )
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    embeddings, err := json.MarshalIndent(result.Embeddings, "", "  ")
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println(string(embeddings))
+}curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent" \
+-H "x-goog-api-key: $GEMINI_API_KEY" \
+-H 'Content-Type: application/json' \
+-d '{"model": "models/gemini-embedding-001",
+     "content": {"parts":[{"text": "What is the meaning of life?"}]}
+    }'curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents" \
+-H "x-goog-api-key: $GEMINI_API_KEY" \
+-H 'Content-Type: application/json' \
+-d '{"requests": [{
+    "model": "models/gemini-embedding-001",
+    "content": {
+    "parts":[{
+        "text": "What is the meaning of life?"}]}, },
+    {
+    "model": "models/gemini-embedding-001",
+    "content": {
+    "parts":[{
+        "text": "How much wood would a woodchuck chuck?"}]}, },
+    {
+    "model": "models/gemini-embedding-001",
+    "content": {
+    "parts":[{
+        "text": "How does the brain work?"}]}, }, ]}' 2> /dev/null | grep -C 5 values
+    ```https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContentsfrom google import genai
+
+client = genai.Client()
+
+result = client.models.embed_content(
+        model="gemini-embedding-001",
+        contents="What is the meaning of life?")
+
+print(result.embeddings)google.golang.org/genaihttps://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContentsklearn.metrics.pairwiseimport { GoogleGenAI } from "@google/genai";
+import * as cosineSimilarity from "compute-cosine-similarity";
+
+async function main() {
+    const ai = new GoogleGenAI({});
+
+    const texts = [
+        "What is the meaning of life?",
+        "What is the purpose of existence?",
+        "How do I bake a cake?",
+    ];
+
+    const response = await ai.models.embedContent({
+        model: 'gemini-embedding-001',
+        contents: texts,
+        taskType: 'SEMANTIC_SIMILARITY'
+    });
+
+    const embeddings = response.embeddings.map(e => e.values);
+
+    for (let i = 0; i < texts.length; i++) {
+        for (let j = i + 1; j < texts.length; j++) {
+            const text1 = texts[i];
+            const text2 = texts[j];
+            const similarity = cosineSimilarity(embeddings[i], embeddings[j]);
+            console.log(`Similarity between '${text1}' and '${text2}': ${similarity.toFixed(4)}`);
+        }
+    }
+}
+
+main();package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+    "math"
+
+    "google.golang.org/genai"
+)
+
+// cosineSimilarity calculates the similarity between two vectors.
+func cosineSimilarity(a, b []float32) (float64, error) {
+    if len(a) != len(b) {
+        return 0, fmt.Errorf("vectors must have the same length")
+    }
+
+    var dotProduct, aMagnitude, bMagnitude float64
+    for i := 0; i < len(a); i++ {
+        dotProduct += float64(a[i] * b[i])
+        aMagnitude += float64(a[i] * a[i])
+        bMagnitude += float64(b[i] * b[i])
+    }
+
+    if aMagnitude == 0 || bMagnitude == 0 {
+        return 0, nil
+    }
+
+    return dotProduct / (math.Sqrt(aMagnitude) * math.Sqrt(bMagnitude)), nil
+}
+
+func main() {
+    ctx := context.Background()
+    client, _ := genai.NewClient(ctx, nil)
+    defer client.Close()
+
+    texts := []string{
+        "What is the meaning of life?",
+        "What is the purpose of existence?",
+        "How do I bake a cake?",
+    }
+
+    var contents []*genai.Content
+    for _, text := range texts {
+        contents = append(contents, genai.NewContentFromText(text, genai.RoleUser))
+    }
+
+    result, _ := client.Models.EmbedContent(ctx,
+        "gemini-embedding-001",
+        contents,
+        &genai.EmbedContentRequest{TaskType: genai.TaskTypeSemanticSimilarity},
+    )
+
+    embeddings := result.Embeddings
+
+    for i := 0; i < len(texts); i++ {
+        for j := i + 1; j < len(texts); j++ {
+            similarity, _ := cosineSimilarity(embeddings[i].Values, embeddings[j].Values)
+            fmt.Printf("Similarity between '%s' and '%s': %.4f\n", texts[i], texts[j], similarity)
+        }
+    }
+}Similarity between 'What is the meaning of life?' and 'What is the purpose of existence?': 0.9481
+
+Similarity between 'What is the meaning of life?' and 'How do I bake a cake?': 0.7471
+
+Similarity between 'What is the purpose of existence?' and 'How do I bake a cake?': 0.7371result.Embeddingscurl "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent" \
+-H "x-goog-api-key: $GEMINI_API_KEY" \
+-H 'Content-Type: application/json' \
+-d '{"task_type": "SEMANTIC_SIMILARITY",
+    "content": {
+    "parts":[{
+    "text": "What is the meaning of life?"}, {"text": "How much wood would a woodchuck chuck?"}, {"text": "How does the brain work?"}]}
+    }'from google import genai
+from google.genai import types
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+
+client = genai.Client()
+
+texts = [
+    "What is the meaning of life?",
+    "What is the purpose of existence?",
+    "How do I bake a cake?"]
+
+result = [
+    np.array(e.values) for e in client.models.embed_content(
+        model="gemini-embedding-001",
+        contents=texts,
+        config=types.EmbedContentConfig(task_type="SEMANTIC_SIMILARITY")).embeddings
+]
+
+# Calculate cosine similarity. Higher scores = greater semantic similarity.
+
+embeddings_matrix = np.array(result)
+similarity_matrix = cosine_similarity(embeddings_matrix)
+
+for i, text1 in enumerate(texts):
+    for j in range(i + 1, len(texts)):
+        text2 = texts[j]
+        similarity = similarity_matrix[i, j]
+        print(f"Similarity between '{text1}' and '{text2}': {similarity:.4f}")google.genaipackage main
+
+import (
+    "context"
+    "fmt"
+    "log"
+
+    "google.golang.org/genai"
+)
+
+func main() {
+    ctx := context.Background()
+    // The client uses Application Default Credentials.
+    // Authenticate with 'gcloud auth application-default login'.
+    client, err := genai.NewClient(ctx, nil)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer client.Close()
+
+    contents := []*genai.Content{
+        genai.NewContentFromText("What is the meaning of life?", genai.RoleUser),
+    }
+
+    result, err := client.Models.EmbedContent(ctx,
+        "gemini-embedding-001",
+        contents,
+        &genai.EmbedContentRequest{OutputDimensionality: 768},
+    )
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    embedding := result.Embeddings[0]
+    embeddingLength := len(embedding.Values)
+    fmt.Printf("Length of embedding: %d\n", embeddingLength)
+}from google import genai
+from google.genai import types
+
+client = genai.Client()
+
+result = client.models.embed_content(
+    model="gemini-embedding-001",
+    contents="What is the meaning of life?",
+    config=types.EmbedContentConfig(output_dimensionality=768)
+)
+
+[embedding_obj] = result.embeddings
+embedding_length = len(embedding_obj.values)
+
+print(f"Length of embedding: {embedding_length}")curl -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent" \
+    -H "x-goog-api-key: $GEMINI_API_KEY" \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "content": {"parts":[{ "text": "What is the meaning of life?"}]},
+        "output_dimensionality": 768
+    }'import { GoogleGenAI } from "@google/genai";
+
+async function main() {
+    const ai = new GoogleGenAI({});
+
+    const response = await ai.models.embedContent({
+        model: 'gemini-embedding-001',
+        content: 'What is the meaning of life?',
+        outputDimensionality: 768,
+    });
+
+    const embeddingLength = response.embedding.values.length;
+    console.log(`Length of embedding: ${embeddingLength}`);
+}
+
+main();result.embeddingsLength of embedding: 768

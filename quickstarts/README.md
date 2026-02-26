@@ -8,7 +8,7 @@ When you're confident in your Gemini capabilities, the [examples](https://github
 ---
 > **Gemini 3**: For the most recent updates on our latest generation, please check the [Get Started](./Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3) and the [thinking](./Get_started_thinking.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb#gemini3) guides who include [migration guides](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3migration).
 > 
-> **🍌Nano-Banana Pro**: Go bananas with our new flagship image generation model with thinking and search grounding and 4K image generation. Get started [here](./Get_Started_Nano_Banana.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb#nano-banana-pro) with ton of examples!
+> **🍌 Nano-Banana 2**: Go bananas with our latest image generation model: **Nano-Banana 2**. Get started [here](./Get_Started_Nano_Banana.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb#nano-banana-pro) with 512px, thinking, search and image grounding, and a ton of examples!
 ---
 
 ## Table of contents
@@ -25,7 +25,7 @@ Then learn about how to **Get Started** with the other models that you can use w
 
 | Quickstart | Description | Open |
 | -------- | ----------- | ---- |
-| [Nano-banana](./Get_Started_Nano_Banana.ipynb) aka. Gemini Image | Get to know how the Gemini model can directly output images and edit them through multi-turn discussion. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb) |
+| [Nano-Banana 2 & Pro](./Get_Started_Nano_Banana.ipynb) aka. Gemini Image | Get to know how the Gemini model can directly output images and edit them through multi-turn discussion. Now featuring Gemini 3.1 Flash! | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb) |
 | [Veo](./Get_started_Veo.ipynb) | Get started with video generation using the Veo models. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_Veo.ipynb) |
 | [Imagen](./Get_started_imagen.ipynb) | Get started with our image generation model. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_imagen.ipynb) |
 | [Imagen (REST)](./Get_started_imagen_rest.ipynb) | Get started with our image generation model (REST version). | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_imagen_rest.ipynb) |

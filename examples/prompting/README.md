@@ -28,6 +28,8 @@ Here's a breakdown of the notebooks available and the concepts they cover:
 
 *   **[`Self_ask_prompting.ipynb`](./Self_ask_prompting.ipynb):** Demonstrates a technique where the model asks itself questions to help answer the query.
 
+*   **[`Self_Improving_Prompts.ipynb`](./Self_Improving_Prompts.ipynb):** Demonstrates using Gemini to critique and improve prompts through iterative self-refinement.
+
 *   **[`Zero_shot_prompting.ipynb`](./Zero_shot_prompting.ipynb):** Demonstrates prompting the model *without* any specific examples.
 
 ## General Tips

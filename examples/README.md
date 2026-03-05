@@ -70,3 +70,4 @@ Some old examples are still using the legacy SDK, they should still work and are
 * [JSON Capabilities](./json_capabilities/): A directory with guides containing different types of tasks you can do with JSON schemas.
 * [Automate Google Workspace tasks with the Gemini API](./Apps_script_and_Workspace_codelab/): This codelabs shows you how to connect to the Gemini API using Apps Script, and uses the function calling, vision and text capabilities to automate Google Workspace tasks - summarizing a document, analyzing a chart, sending an email and generating some slides directly. All of this is done from a free text input.
 * [Langchain examples](./langchain/): A directory with multiple examples using Gemini with Langchain.
+* [LangGraph examples](./langgraph/): A directory with multiple examples using Gemini with LangGraph.

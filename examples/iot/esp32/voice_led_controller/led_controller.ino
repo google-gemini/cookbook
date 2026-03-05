@@ -305,7 +305,8 @@ void sendAudio() {
     file.close();
     SD.end(); // Close the SD connection after reading the file
     
-    int httpCode = http.POST(jsonString);
+    http.addHeader("Content-Length", String(strlen(jsonString))); //http requests require Content-Length header to prevent http 411 error
+    int httpCode = http.POST((uint8_t*)jsonString, strlen(jsonString));
     free(jsonString);
     Serial.print(F("Http code: "));
     Serial.println(httpCode);
@@ -418,7 +419,7 @@ void setup() {
 }
 
 void loop() {
-  if (digitalRead(BUTTON_PIN) == LOW) {
+  if (digitalRead(BUTTON_PIN) == HIGH) { //check if button is pressed
     digitalWrite(LED_PIN, HIGH);
     
     // This delay is to debounce the button and allow time to speak

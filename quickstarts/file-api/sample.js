@@ -17,6 +17,7 @@ const dotenv = require("dotenv");
 const fs = require("fs");
 const { google } = require("googleapis");
 const mime = require("mime-types");
+const path = require("path");
 
 // Load environment variables from .env file
 dotenv.config({ path: ".env" });
@@ -45,13 +46,13 @@ async function run(filePath, fileDisplayName) {
     const fileUri = file.uri;
     console.log("Uploaded file: " + fileUri);
 
-    // Make Gemini 1.5 API LLM call
+    // Make Gemini API LLM call
     const prompt = "Describe the image with a creative description";
     const model = "models/gemini-2.5-flash";
     const contents = {
-      contents: [
+      contents:[
         {
-          parts: [
+          parts:[
             { text: prompt },
             { file_data: { file_uri: fileUri, mime_type: file.mimeType } },
           ],
@@ -69,6 +70,6 @@ async function run(filePath, fileDisplayName) {
   }
 }
 
-filePath = "sample_data/gemini_logo.png";
-fileDisplayName = "Gemini logo";
+const filePath = path.join("sample_data", "gemini_logo.png");
+const fileDisplayName = "Gemini logo";
 run(filePath, fileDisplayName);

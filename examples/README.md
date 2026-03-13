@@ -63,6 +63,7 @@ Some old examples are still using the legacy SDK, they should still work and are
 * [Similarity Search using Qdrant](../examples/qdrant/Qdrant_similarity_search.ipynb): Load website data, build a semantic search system using embeddings from the Gemini API, store the embeddings in a Qdrant vector DB and perform similarity search using the Gemini API and Qdrant.
 * [Movie Recommendation using Qdrant](../examples/qdrant/Movie_Recommendation.ipynb): Process and embed a large movie dataset with the Gemini API, index movie vectors in Qdrant, and build a semantic movie recommender that finds similar movies based on user queries using vector similarity search.
 * [MLflow Tracing for Observability](../examples/mlflow/MLflow_Observability.ipynb): Utilize MLflow tracing to capture detailed information about your interactions with Google GenAI APIs.
+* [Cross-modal Retrieval with Gemini Embedding and Haystack](../examples/haystack/Gemini_Embedding_Haystack_Crossmodal_Retrieval.ipynb): Use Gemini Embedding 2 with Haystack for textual retrieval, RAG, and cross-modal retrieval across text, images, video, and PDFs.
 <br><br>
 
 ### Folders

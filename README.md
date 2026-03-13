@@ -110,8 +110,10 @@ For enterprise developers, the Gemini API is also available on Google Cloud Vert
 ## Contributing
 
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+* Testing Pull Request for learning purposes! 🚀
 
 Thank you for developing with the Gemini API! We're excited to see what you create.
+
 
 
 

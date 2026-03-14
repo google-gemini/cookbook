@@ -92,8 +92,8 @@ These fully functional, end-to-end applications showcase the power of Gemini in 
 
 The Gemini API is a REST API. You can call it directly using tools like `curl` (see [REST examples](https://github.com/google-gemini/cookbook/tree/main/quickstarts/rest/) or the great [Postman workspace](https://www.postman.com/ai-on-postman/google-gemini-apis/overview)), or use one of our official SDKs:
 * [Python](https://github.com/googleapis/python-genai)
-* [Go](https://github.com/google/generative-ai-go)
-* [Node.js](https://github.com/google/generative-ai-js)
+* [Go](https://github.com/googleapis/go-genai)
+* [Node.js](https://github.com/googleapis/js-genai)
 * [Dart (Flutter)](https://github.com/google/generative-ai-dart)
 * [Android](https://github.com/google/generative-ai-android)
 * [Swift](https://github.com/google/generative-ai-swift)

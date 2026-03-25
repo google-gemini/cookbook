@@ -10,7 +10,7 @@ When you're confident in your Gemini capabilities, the [examples](https://github
 > 
 > **🍌 Nano-Banana 2**: Go bananas with our latest image generation model: **Nano-Banana 2**. Get started [here](./Get_Started_Nano_Banana.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb#nano-banana-pro) with 512px, thinking, search and image grounding, and a ton of examples!
 > 
-> **🍌 Lyria 3**: Channel your inner composer with **Lyria 3**. Get started [here](./Get_Started_Lyria.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Lyria.ipynb) with 30s and full song generation, image-to-music, and a ton of examples!
+> **🎶 Lyria 3**: Channel your inner composer with **Lyria 3**. Get started [here](./Get_Started_Lyria.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Lyria.ipynb) with 30s and full song generation, image-to-music, and a ton of examples!
 ---
 
 ## Table of contents

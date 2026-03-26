@@ -97,6 +97,13 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Do not use extra parameters (like temperature) when not needed to keep the focus on what your notebook is illustrating.
 * If you have to use extra-parameters, explain why and why the specific value the first time you do.
 
+## Assets and external data
+
+* All media files (audio, images, video), datasets, and other external assets used in notebooks must be **openly licensed** (CC0, CC-BY, Apache 2.0, public domain, or equivalent). Assets with unclear or restrictive licensing must not be used.
+* Always **mention the source and license** in the markdown cell that introduces the asset. For example: "The example below uses a [CC0-licensed](https://creativecommons.org/publicdomain/zero/1.0/) sample from [SoundHelix](https://www.soundhelix.com)."
+* Prefer hosting assets on the cookbook's GCS bucket (`gs://generativeai-downloads/`) for long-term URL stability. If that is not possible, use reliable sources (Wikimedia Commons, Internet Archive, YouTube) over ephemeral URLs.
+* YouTube videos can be used directly via `types.Part.from_uri()` and do not need to be downloaded.
+
 # Deviations from PEP 8
 
 ## Line Length

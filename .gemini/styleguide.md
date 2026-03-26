@@ -130,6 +130,22 @@ Notice the line break on the first and last lines.
     """    
     ```
 Notice the line break on the first and last lines.
+* When a multiline string is used inside a function call, add an extra indent level between the `"""` delimiters and the text body to visually separate the string content from the surrounding code:
+    ```python
+    response = client.models.generate_content(
+        model=MODEL_ID,
+        contents=[
+            audio_file,
+            """
+                Analyze this audio file and extract any musical chord
+                information. Return a JSON object with:
+                - "title": the song title if identifiable
+                - "key": the musical key
+                - "chords": a list of chord objects
+            """,
+        ],
+    )
+    ```
     
 ## Naming Conventions
 

@@ -74,7 +74,7 @@ RECEIVE_SAMPLE_RATE = 24000
 CHUNK_SIZE = 512
 
 host = "generativelanguage.googleapis.com"
-model = "gemini-2.5-flash-native-audio-latest"
+model = "gemini-3.1-flash-live-preview"
 DEFAULT_MODE="camera"
 
 
@@ -104,9 +104,8 @@ class AudioLoop:
                 break
 
             msg = {
-                "client_content": {
-                    "turn_complete": True,
-                    "turns": [{"role": "user", "parts": [{"text": text}]}],
+                "realtime_input": {
+                    "text": text,
                 }
             }
             await self.ws.send(json.dumps(msg))
@@ -146,7 +145,7 @@ class AudioLoop:
                 break
             await asyncio.sleep(1.0)
 
-            msg = {"realtime_input": {"media_chunks": [frame]}}
+            msg = {"realtime_input": {"video": frame}}
             await self.out_queue.put(msg)
 
         # Release the VideoCapture object
@@ -176,7 +175,7 @@ class AudioLoop:
             
             await asyncio.sleep(1.0)
 
-            msg = {"realtime_input": {"media_chunks": frame}}
+            msg = {"realtime_input": {"video": frame}}
             await self.out_queue.put(msg)
 
     async def send_realtime(self):
@@ -200,12 +199,10 @@ class AudioLoop:
             data = await asyncio.to_thread(self.audio_stream.read, CHUNK_SIZE)
             msg = {
                 "realtime_input": {
-                    "media_chunks": [
-                        {
-                            "data": base64.b64encode(data).decode(),
-                            "mime_type": "audio/pcm",
-                        }
-                    ]
+                    "audio": {
+                        "data": base64.b64encode(data).decode(),
+                        "mime_type": "audio/pcm",
+                    }
                 }
             }
             await self.out_queue.put(msg)

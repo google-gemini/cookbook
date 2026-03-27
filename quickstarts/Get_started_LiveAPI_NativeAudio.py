@@ -80,11 +80,10 @@ Anticipate user needs by clarifying ambiguous questions and always conclude your
 with an engaging follow-up question to keep the conversation flowing.
 """
 
-MODEL = "gemini-2.5-flash-native-audio-preview-12-2025"
+MODEL = "gemini-3.1-flash-live-preview"
 CONFIG = {
     "system_instruction": system_instruction,
     "response_modalities": ["AUDIO"],
-    "proactivity": {'proactive_audio': True}
 }
 
 

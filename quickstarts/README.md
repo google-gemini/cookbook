@@ -9,6 +9,8 @@ When you're confident in your Gemini capabilities, the [examples](https://github
 > **Gemini 3**: For the most recent updates on our latest generation, please check the [Get Started](./Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3) and the [thinking](./Get_started_thinking.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb#gemini3) guides who include [migration guides](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3migration).
 > 
 > **🍌 Nano-Banana 2**: Go bananas with our latest image generation model: **Nano-Banana 2**. Get started [here](./Get_Started_Nano_Banana.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb#nano-banana-pro) with 512px, thinking, search and image grounding, and a ton of examples!
+> 
+> **🎶 Lyria 3**: Channel your inner composer with **Lyria 3**. Get started [here](./Get_started_Lyria.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_Lyria.ipynb) with 30s and full song generation, image-to-music, and a ton of examples!
 ---
 
 ## Table of contents
@@ -25,6 +27,7 @@ Then learn about how to **Get Started** with the other models that you can use w
 
 | Quickstart | Description | Open |
 | -------- | ----------- | ---- |
+| [Lyria 3](./Get_started_Lyria.ipynb) | Convert your ideas into songs with full control over the music structure and more!. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_Lyria.ipynb) |
 | [Nano-Banana 2 & Pro](./Get_Started_Nano_Banana.ipynb) aka. Gemini Image | Get to know how the Gemini model can directly output images and edit them through multi-turn discussion. Now featuring Gemini 3.1 Flash! | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb) |
 | [Veo](./Get_started_Veo.ipynb) | Get started with video generation using the Veo models. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_Veo.ipynb) |
 | [Imagen](./Get_started_imagen.ipynb) | Get started with our image generation model. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_imagen.ipynb) |

@@ -36,6 +36,7 @@ Here are the recent additions and updates to the Gemini API and the Cookbook:
   * [Grounding](./quickstarts/Grounding.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Grounding.ipynb): Discover different ways to ground Gemini's answer using different tools, from Google Search to Youtube and URLs and the new [**Maps grounding**](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Grounding.ipynb#maps_grounding) tool. 
   * [Batch API](./quickstarts/Batch_mode.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Batch_mode.ipynb): Use Batch API to send large volume of non-time-sensitive requests to the model and get up to 90% discount. 
   * [Logs and datasets](./examples/Datasets.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Datasets.ipynb): Process and evaluate your collected logs using the Batch API.
+  * **Handling Errors and Retries:** Learn how to configure retry logic with exponential backoff to handle rate limits and transient errors. [Guide](./quickstarts/Handling_Errors_and_Retries.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Handling_Errors_and_Retries.ipynb)
   
 <br><br>
 
@@ -62,6 +63,7 @@ Then, explore the other quickstarts tutorials to learn about individual features
 *  [Grounding](./quickstarts/Grounding.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Grounding.ipynb): use Google Search for grounded responses
 *  [Code execution](./quickstarts/Code_Execution.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Code_Execution.ipynb): Generate and run Python code to solve complex tasks and even output graphs
 *  And [many more](https://github.com/google-gemini/cookbook/tree/main/quickstarts/)
+* [Handling Errors and Retries](./quickstarts/Handling_Errors_and_Retries.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Handling_Errors_and_Retries.ipynb): Learn how to handle rate limits and transient errors using built-in retry logic.
 <br><br>
 
 ## 2. Examples (Practical Use Cases)

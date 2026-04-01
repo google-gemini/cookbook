@@ -87,6 +87,12 @@ It is not crucial for a submission to be strong along all of these dimensions, b
 ## Attribution
 If you have authored a new guide from scratch, you are welcome to include a byline at the top of the document with your name and GitHub username.
 
+## Assets and external data
+
+All media files (audio, images, video), datasets, and other external assets used in notebooks must be **openly licensed** (e.g. CC0, CC-BY, Apache 2.0, or public domain). Assets with unclear or restrictive licensing must not be used.
+
+Please mention the source and license in the markdown cell that introduces the asset. Prefer stable hosting (the cookbook's GCS bucket, Wikimedia Commons, Internet Archive, YouTube) over ephemeral URLs.
+
 # Detailed Coding and Notebook Guidelines
 ## Notebook Style
 
@@ -147,7 +153,7 @@ If you have authored a new guide from scratch, you are welcome to include a byli
 * If you *must* use extra parameters, explain *why* they are needed and the reasoning behind the specific value the first time you use them.
 * When selecting a model, use a Colab form selector for easier maintainability:
     ```python
-    MODEL_ID="gemini-1.5-flash" # @param ["gemini-1.0-pro", "gemini-1.5-flash", "gemini-1.5-pro"] {"allow-input":true, isTemplate: true}
+    MODEL_ID="gemini-3-flash-preview" # @param ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.5-pro", "gemini-3.1-flash-lite-preview", "gemini-3-flash-preview", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}
     ```
 * Some notebooks can benefit from having a form to update the prompt:
     ```python
@@ -158,7 +164,7 @@ If you have authored a new guide from scratch, you are welcome to include a byli
     prompt = "Draw a square around the fox' shadow"  # @param ["Find the two origami animals.", "Where are the origamis' shadows?","Draw a square around the fox' shadow"] {"allow-input":true}
     ```
 * To ensure notebook text remains accurate, present model metadata (like context window size) by executing code, not by hardcoding it in Markdown.
-    * Example: Instead of writing "This model has a 1M token context window", display the output of `genai.get_model('models/gemini-1.5-pro-latest').input_token_limit`.
+    * Example: Instead of writing "This model has a 1M token context window", display the output of `client.models.get('models/gemini-2.5-flash').input_token_limit`.
 
 ## Naming Conventions
 

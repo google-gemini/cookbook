@@ -1,0 +1,148 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+// ============================================================
+// SmoothOperationofLaw — Custom styles on top of Minima theme
+// ============================================================
+
+// Brand colors
+$sol-primary: #1a3a5c;      // Deep navy
+$sol-accent: #2e7d32;       // Legal green
+$sol-light: #f5f7fa;        // Off-white background
+$sol-text: #2c3e50;         // Dark text
+$sol-muted: #6c757d;        // Muted/secondary text
+$sol-border: #dee2e6;       // Subtle borders
+
+// Typography
+body {
+  color: $sol-text;
+  font-family: "Georgia", "Times New Roman", serif;
+  line-height: 1.75;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Helvetica Neue", "Arial", sans-serif;
+  color: $sol-primary;
+  font-weight: 700;
+}
+
+// Site header
+.site-header {
+  background-color: $sol-primary;
+  border-top: 4px solid $sol-accent;
+
+  .site-title,
+  .site-title:visited {
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .site-nav {
+    .page-link {
+      color: rgba(255, 255, 255, 0.85);
+      font-family: "Helvetica Neue", "Arial", sans-serif;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+
+      &:hover {
+        color: #ffffff;
+        text-decoration: none;
+        border-bottom: 2px solid $sol-accent;
+      }
+    }
+  }
+}
+
+// Hero / home page
+.home {
+  h1:first-child {
+    font-size: 2.4rem;
+    color: $sol-primary;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+}
+
+// Content sections
+.post-content,
+.page-content {
+  h2 {
+    border-bottom: 2px solid $sol-border;
+    padding-bottom: 0.5rem;
+    margin-top: 2.5rem;
+  }
+
+  // Course cards on courses page
+  h3 {
+    color: $sol-accent;
+  }
+
+  blockquote {
+    border-left: 4px solid $sol-accent;
+    background: $sol-light;
+    padding: 1rem 1.5rem;
+    border-radius: 0 4px 4px 0;
+    color: $sol-muted;
+    font-style: italic;
+  }
+}
+
+// Call-to-action links
+a[href$="→"] {
+  color: $sol-accent;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Disclaimer styling
+p:last-child,
+em:last-child {
+  &:contains("Disclaimer"),
+  &:contains("educational purposes") {
+    font-size: 0.85rem;
+    color: $sol-muted;
+    border-top: 1px solid $sol-border;
+    padding-top: 1rem;
+    margin-top: 2rem;
+  }
+}
+
+// Site footer
+.site-footer {
+  background-color: $sol-primary;
+  color: rgba(255, 255, 255, 0.7);
+  border-top: none;
+
+  a {
+    color: rgba(255, 255, 255, 0.85);
+
+    &:hover {
+      color: #ffffff;
+    }
+  }
+
+  .footer-disclaimer {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding-top: 1rem;
+    margin-top: 1rem;
+    line-height: 1.5;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 600px) {
+  .home h1:first-child {
+    font-size: 1.8rem;
+  }
+}

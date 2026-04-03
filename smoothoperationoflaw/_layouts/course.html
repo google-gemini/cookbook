@@ -1,0 +1,95 @@
+---
+layout: default
+---
+
+<article class="course">
+  <header class="course-header">
+    <div class="course-meta">
+      <span class="course-category">{{ page.category }}</span>
+      <span class="course-level">{{ page.level }}</span>
+    </div>
+    <h1 class="course-title">{{ page.title }}</h1>
+    {% if page.description %}
+    <p class="course-description">{{ page.description }}</p>
+    {% endif %}
+  </header>
+
+  <div class="course-content">
+    {{ content }}
+  </div>
+
+  <footer class="course-footer">
+    <div class="disclaimer-box">
+      <strong>Educational Disclaimer</strong>
+      <p>
+        This content is for general educational purposes only. It is not legal advice and does not
+        create an attorney-client relationship. Laws vary by jurisdiction and change over time.
+        For advice about your specific situation, consult a licensed attorney in your area.
+      </p>
+    </div>
+
+    {% if page.next_lesson %}
+    <div class="lesson-nav">
+      <a href="{{ page.next_lesson }}" class="btn-next">Next lesson →</a>
+    </div>
+    {% endif %}
+  </footer>
+</article>
+
+<style>
+.course-header {
+  border-bottom: 2px solid #dee2e6;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+}
+
+.course-meta {
+  margin-bottom: 0.5rem;
+}
+
+.course-meta span {
+  display: inline-block;
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  margin-right: 0.5rem;
+}
+
+.disclaimer-box {
+  background: #f5f7fa;
+  border: 1px solid #dee2e6;
+  border-left: 4px solid #6c757d;
+  border-radius: 4px;
+  padding: 1rem 1.5rem;
+  margin-top: 3rem;
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.disclaimer-box strong {
+  display: block;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.btn-next {
+  display: inline-block;
+  background: #2e7d32;
+  color: white !important;
+  padding: 0.6rem 1.5rem;
+  border-radius: 4px;
+  text-decoration: none !important;
+  margin-top: 2rem;
+  font-family: sans-serif;
+  font-weight: 600;
+}
+
+.btn-next:hover {
+  background: #1b5e20;
+}
+</style>

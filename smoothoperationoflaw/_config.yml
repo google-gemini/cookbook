@@ -1,0 +1,49 @@
+title: SmoothOperationofLaw
+description: >-
+  AI-powered legal education for everyone. Understand your rights,
+  your documents, and the legal system — in plain language.
+baseurl: ""
+url: "https://smoothoperationoflaw.com"
+
+theme: minima
+
+author:
+  name: SmoothOperationofLaw
+  email: hello@smoothoperationoflaw.com
+
+# Navigation
+header_pages:
+  - courses.md
+  - about.md
+
+# Build settings
+markdown: kramdown
+permalink: /:categories/:title/
+paginate: 10
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .bundle
+  - .jekyll-cache
+
+# Collections
+collections:
+  courses:
+    output: true
+    permalink: /courses/:path/
+
+defaults:
+  - scope:
+      path: ""
+      type: "courses"
+    values:
+      layout: "course"

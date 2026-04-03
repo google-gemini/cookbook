@@ -1,0 +1,300 @@
+- part: I
+  title: "Foundations"
+  subtitle: "Foundation Certificate"
+  chapters: "1–3"
+  description: "The conceptual and legal foundation of the Trustee's Gambit methodology."
+  chapters_list:
+    - number: 1
+      title: "Introduction to Strategic Trust Management"
+      slug: chapter-01
+    - number: 2
+      title: "Legal Framework Overview"
+      slug: chapter-02
+    - number: 3
+      title: "The Trustee's Gambit Philosophy"
+      slug: chapter-03
+
+- part: II
+  title: "Core Competencies"
+  subtitle: "Core Competencies Certificate"
+  chapters: "4–6"
+  description: "Deep mastery of the three pillars: arbitration, intellectual property, and risk management."
+  chapters_list:
+    - number: 4
+      title: "Federal Arbitration Act Mastery"
+      slug: chapter-04
+      featured: true
+    - number: 5
+      title: "Intellectual Property Integration"
+      slug: chapter-05
+    - number: 6
+      title: "Risk Management Protocols"
+      slug: chapter-06
+
+- part: III
+  title: "Advanced Operations"
+  subtitle: "Advanced Operations Certificate"
+  chapters: "7–9"
+  description: "Strategic decision frameworks and enforcement mechanisms."
+  chapters_list:
+    - number: 7
+      title: "The Gambit Matrix System"
+      slug: chapter-07
+    - number: 8
+      title: "Sovereign Immunity Strategies"
+      slug: chapter-08
+    - number: 9
+      title: "Enforcement Mechanisms"
+      slug: chapter-09
+
+- part: IV
+  title: "Practical Application"
+  subtitle: "CATM Certification Eligible"
+  chapters: "10–12"
+  certification: "CATM"
+  description: "Templates, case studies, and CATM certification."
+  chapters_list:
+    - number: 10
+      title: "Document Templates and Forms"
+      slug: chapter-10
+    - number: 11
+      title: "Case Studies and Precedents"
+      slug: chapter-11
+    - number: 12
+      title: "CATM Certification Requirements"
+      slug: chapter-12
+
+- part: V
+  title: "International IP Protection"
+  subtitle: "International IP Certificate"
+  chapters: "13–20"
+  description: "Global enforcement strategy and territorial rights."
+  chapters_list:
+    - number: 13
+      title: "Global IP Landscape and Territorial Rights"
+      slug: chapter-13
+    - number: 14
+      title: "Cross-Border Enforcement Mechanisms"
+      slug: chapter-14
+    - number: 15
+      title: "International Treaty Utilization"
+      slug: chapter-15
+    - number: 16
+      title: "Cultural and Legal Adaptation Strategies"
+      slug: chapter-16
+    - number: 17
+      title: "International Sovereign Immunity Doctrines"
+      slug: chapter-17
+    - number: 18
+      title: "Diplomatic and Commercial Exceptions"
+      slug: chapter-18
+    - number: 19
+      title: "Foreign Sovereign Immunity Complexities"
+      slug: chapter-19
+    - number: 20
+      title: "Multi-Jurisdictional Enforcement Coordination"
+      slug: chapter-20
+
+- part: VI
+  title: "Advanced International Practice"
+  subtitle: "CATM+ Certification Eligible"
+  chapters: "21–28"
+  certification: "CATM+"
+  description: "ICSID, BIT enforcement, and international structures."
+  chapters_list:
+    - number: 21
+      title: "International Arbitration and ICSID Proceedings"
+      slug: chapter-21
+    - number: 22
+      title: "Bilateral Investment Treaty Enforcement"
+      slug: chapter-22
+    - number: 23
+      title: "International Commercial Arbitration"
+      slug: chapter-23
+    - number: 24
+      title: "Cross-Border Asset Recovery and Collection"
+      slug: chapter-24
+    - number: 25
+      title: "International Trust Structures for IP Protection"
+      slug: chapter-25
+    - number: 26
+      title: "Professional Network Development and Maintenance"
+      slug: chapter-26
+    - number: 27
+      title: "Continuing Education and Specialization Pathways"
+      slug: chapter-27
+    - number: 28
+      title: "Industry Leadership and Thought Leadership Development"
+      slug: chapter-28
+
+- part: VII
+  title: "Enhanced Enforcement Protocols"
+  subtitle: "Enhanced Enforcement Certificate"
+  chapters: "29–36"
+  featured: true
+  description: "Advanced enforcement operations culminating in the flagship Sovereign Immunity Kill Protocol."
+  chapters_list:
+    - number: 29
+      title: "Strategic Enforcement Planning and Execution"
+      slug: chapter-29
+    - number: 30
+      title: "Multi-Modal Enforcement Coordination"
+      slug: chapter-30
+    - number: 31
+      title: "Strategic Cease and Desist Operations"
+      slug: chapter-31
+    - number: 32
+      title: "Advanced Arbitration and Delegation Strategies"
+      slug: chapter-32
+    - number: 33
+      title: "Estoppel Web Construction and Management"
+      slug: chapter-33
+    - number: 34
+      title: "Government Entity Psychology and Behavioral Analysis"
+      slug: chapter-34
+    - number: 35
+      title: "International Enforcement and Collection Optimization"
+      slug: chapter-35
+    - number: 36
+      title: "The Complete Sovereign Immunity Kill Protocol"
+      slug: chapter-36
+      flagship: true
+
+- part: VIII
+  title: "Specialized Enforcement Applications"
+  subtitle: "Government Entity Enforcement"
+  chapters: "37–44"
+  featured: true
+  description: "Industry-specific and government-entity enforcement."
+  chapters_list:
+    - number: 37
+      title: "Industry-Specific Enforcement Strategies"
+      slug: chapter-37
+    - number: 38
+      title: "Technology and Digital Asset Enforcement"
+      slug: chapter-38
+    - number: 39
+      title: "Entertainment and Media IP Enforcement"
+      slug: chapter-39
+    - number: 40
+      title: "Healthcare and Pharmaceutical IP Protection"
+      slug: chapter-40
+    - number: 41
+      title: "Federal Government Entity Enforcement"
+      slug: chapter-41
+      featured: true
+    - number: 42
+      title: "State Government Entity Enforcement"
+      slug: chapter-42
+      featured: true
+    - number: 43
+      title: "Municipal and Local Government Enforcement"
+      slug: chapter-43
+    - number: 44
+      title: "International Government Entity Enforcement"
+      slug: chapter-44
+      featured: true
+
+- part: IX
+  title: "Comprehensive Implementation Strategies"
+  subtitle: "Implementation Mastery Certificate"
+  chapters: "45–52"
+  description: "End-to-end campaign design through technology integration."
+  chapters_list:
+    - number: 45
+      title: "Complete Enforcement Campaign Design"
+      slug: chapter-45
+    - number: 46
+      title: "Evidence Collection and Documentation Systems"
+      slug: chapter-46
+    - number: 47
+      title: "Expert Witness Selection and Management"
+      slug: chapter-47
+    - number: 48
+      title: "Settlement Negotiation and Mediation Strategies"
+      slug: chapter-48
+    - number: 49
+      title: "Trial Preparation and Courtroom Strategy"
+      slug: chapter-49
+    - number: 50
+      title: "Post-Judgment Enforcement and Collection"
+      slug: chapter-50
+    - number: 51
+      title: "Sovereign Immunity Kill Protocol: Implementation Guide"
+      slug: chapter-51
+      flagship: true
+    - number: 52
+      title: "Technology Integration and Automation"
+      slug: chapter-52
+
+- part: X
+  title: "Strategic Warfare Mastery"
+  subtitle: "Strategic Warfare Mastery Certificate"
+  chapters: "53–60"
+  description: "Advanced multi-domain legal strategy."
+  chapters_list:
+    - number: 53
+      title: "Advanced Litigation Psychology"
+      slug: chapter-53
+    - number: 54
+      title: "Strategic Alliance Building and Network Warfare"
+      slug: chapter-54
+    - number: 55
+      title: "Media Strategy and Public Relations Warfare"
+      slug: chapter-55
+    - number: 56
+      title: "Economic Warfare and Financial Pressure"
+      slug: chapter-56
+    - number: 57
+      title: "Regulatory Warfare and Compliance Weaponization"
+      slug: chapter-57
+    - number: 58
+      title: "Political and Legislative Influence"
+      slug: chapter-58
+    - number: 59
+      title: "Counter-Intelligence and Defensive Operations"
+      slug: chapter-59
+    - number: 60
+      title: "Complete Strategic Warfare Integration"
+      slug: chapter-60
+
+- part: XI
+  title: "Professional Mastery and Certification"
+  subtitle: "CGIPE Certification"
+  chapters: "61–70"
+  certification: "CGIPE"
+  description: "The apex of the Trustee's Gambit curriculum."
+  chapters_list:
+    - number: 61
+      title: "Psychological Warfare in Legal Strategy"
+      slug: chapter-61
+      featured: true
+    - number: 62
+      title: "Advanced Negotiation and Persuasion"
+      slug: chapter-62
+    - number: 63
+      title: "Leadership and Team Management"
+      slug: chapter-63
+    - number: 64
+      title: "Business Development and Client Relations"
+      slug: chapter-64
+    - number: 65
+      title: "Intelligence Gathering and Surveillance Operations"
+      slug: chapter-65
+      featured: true
+    - number: 66
+      title: "Crisis Management and Reputation Recovery"
+      slug: chapter-66
+    - number: 67
+      title: "Ethics, Professional Responsibility, and Boundaries"
+      slug: chapter-67
+    - number: 68
+      title: "Continuing Education and Lifelong Learning"
+      slug: chapter-68
+    - number: 69
+      title: "Building Your Professional Legacy"
+      slug: chapter-69
+    - number: 70
+      title: "The Ultimate Victory — Complete System Mastery"
+      slug: chapter-70
+      flagship: true

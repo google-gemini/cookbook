@@ -87,6 +87,12 @@ It is not crucial for a submission to be strong along all of these dimensions, b
 ## Attribution
 If you have authored a new guide from scratch, you are welcome to include a byline at the top of the document with your name and GitHub username.
 
+## Assets and external data
+
+All media files (audio, images, video), datasets, and other external assets used in notebooks must be **openly licensed** (e.g. CC0, CC-BY, Apache 2.0, or public domain). Assets with unclear or restrictive licensing must not be used.
+
+Please mention the source and license in the markdown cell that introduces the asset. Prefer stable hosting (the cookbook's GCS bucket, Wikimedia Commons, Internet Archive, YouTube) over ephemeral URLs.
+
 # Detailed Coding and Notebook Guidelines
 ## Notebook Style
 

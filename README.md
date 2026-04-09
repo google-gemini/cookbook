@@ -4,6 +4,8 @@ This cookbook provides a structured learning path for using the Gemini API, focu
 
 **For comprehensive API documentation, visit [ai.google.dev](https://ai.google.dev/gemini-api/docs).**
 <br><br>
+**For Gemma quickstarts and examples, check out the [Gemma cookbook](https://github.com/google-gemma/cookbook).**
+<br><br>
 
 ---
 > **Gemini 3**: For the most recent updates on our latest generation, please check the [Get Started](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3) and the [thinking](./quickstarts/Get_started_thinking.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb#gemini3) guides who include [migration guides](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3migration).
@@ -96,11 +98,10 @@ These fully functional, end-to-end applications showcase the power of Gemini in 
 
 The Gemini API is a REST API. You can call it directly using tools like `curl` (see [REST examples](https://github.com/google-gemini/cookbook/tree/main/quickstarts/rest/) or the great [Postman workspace](https://www.postman.com/ai-on-postman/google-gemini-apis/overview)), or use one of our official SDKs:
 * [Python](https://github.com/googleapis/python-genai)
-* [Go](https://github.com/google/generative-ai-go)
-* [Node.js](https://github.com/google/generative-ai-js)
-* [Dart (Flutter)](https://github.com/google/generative-ai-dart)
-* [Android](https://github.com/google/generative-ai-android)
-* [Swift](https://github.com/google/generative-ai-swift)
+* [Go](https://github.com/googleapis/go-genai)
+* [Node.js](https://github.com/googleapis/js-genai)
+* [Java](https://github.com/googleapis/java-genai)
+* [C#](https://github.com/googleapis/dotnet-genai/)
 <br><br>
 
 ## Get Help

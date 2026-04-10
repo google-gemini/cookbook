@@ -75,7 +75,7 @@ RECEIVE_SAMPLE_RATE = 24000
 CHUNK_SIZE = 1024
 
 # --- Model Configuration ---
-MODEL = "models/gemini-2.5-flash-native-audio-preview-12-2025"
+MODEL = "models/gemini-3.1-flash-live-preview"
 DEFAULT_MODE = "camera"
 
 
@@ -275,9 +275,8 @@ class AudioVideoLoop:
                 if text.lower() == "q":
                     print("👋 Exiting on user request...")
                     break
-                await self.session.send_client_content(
-                    turns=types.Content(parts=[types.Part(text=text or "")]),
-                    turn_complete=True,
+                await self.session.send_realtime_input(
+                    text=text or "",
                 )
         except asyncio.CancelledError:
             pass
@@ -289,7 +288,7 @@ class AudioVideoLoop:
                 if msg["mime_type"].startswith("audio/"):
                     await self.session.send_realtime_input(audio=msg)
                 else:
-                    await self.session.send_realtime_input(media=msg)
+                    await self.session.send_realtime_input(video=msg)
         except asyncio.CancelledError:
             pass
 

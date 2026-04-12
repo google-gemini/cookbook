@@ -253,6 +253,82 @@ The `examples/` directory contains integration notebooks for:
 
 ---
 
+## Documentation Standards
+
+### Brand Voice and Professional Tone
+
+All documentation — notebooks, READMEs, Markdown cells, comments — must reflect a cohesive brand voice:
+
+- **Clarity first** — every sentence earns its place; cut anything that doesn't add information
+- **Second person** ("you"), present tense, imperative mood for instructions
+- **Consistent terminology** — use the same term for the same concept throughout; never alternate between "notebook" and "script" for the same artifact
+- **No filler phrases** — avoid "simply", "just", "easy", "straightforward", "please note", "it is important"
+- **Active voice** — "Call `generate_content()`", not "The method `generate_content()` should be called"
+- **Sentence case** in all headings (enforced by `nblint`)
+
+### Strategic Content Architecture
+
+Structure content so readers can orient quickly and execute without re-reading:
+
+1. **Purpose** — one sentence at the top: what the notebook does and why
+2. **Prerequisites** — exact SDK versions, required env vars, any quota requirements
+3. **Ordered sections** — overview → setup → feature demonstrations (simple → complex) → cleanup
+4. **Progressive disclosure** — show the simplest case first, layer complexity only after it's motivated
+5. **Navigation anchors** — H2 headings every 300–500 words; no section without a heading
+6. **Tables** for comparison data; **numbered lists** for ordered steps; **bullet lists** for unordered sets
+
+### Quality Assurance
+
+Every notebook submitted as a PR must pass all of the following before requesting review:
+
+| Check | Command | Must Pass |
+|---|---|---|
+| Formatting | `python -m tensorflow_docs.tools.nbfmt --test path/to/notebook` | No diff |
+| Style lint | `python -m tensorflow_docs.tools.nblint --styles=google,tensorflow ...` | Zero violations |
+| No deprecated SDK | `grep -r "google.generativeai" .` | No matches |
+| No hardcoded keys | `grep -rE "AIza[A-Za-z0-9_-]{35}" .` | No matches |
+| Second-person | `nblint` `tensorflow::not_second_person` rule | No violations |
+
+Peer reviews must check:
+- All outputs are preserved (notebook run with outputs saved)
+- No model metadata hardcoded in Markdown — retrieved via `client.models.get()`
+- Model selector uses the Colab `# @param` form field pattern
+
+### Advanced Documentation Practices
+
+**User personas** — every notebook implicitly targets one of these readers:
+
+| Persona | Skill level | What they need |
+|---|---|---|
+| API Explorer | Beginner | Working copy-paste code, minimal explanation |
+| Integration Builder | Intermediate | Patterns, edge cases, error handling |
+| Production Engineer | Advanced | Performance, quotas, cost optimization |
+
+Write for the API Explorer first. Add callout boxes (inline Markdown bold + blockquote) for concepts that Intermediate or Advanced readers will want.
+
+**Use cases** — state the concrete use case in the Overview section, not just the API feature. "Summarize legal documents with the Gemini API" is a use case; "Using the `generate_content()` API" is a feature.
+
+**Detailed workflows** — for multi-step processes, use a numbered list with sub-steps rather than flowing prose. Readers scan; they don't read linearly on first pass.
+
+### Risk Mitigation and Compliance
+
+- **Never hardcode API keys** — use `os.environ["GEMINI_API_KEY"]` or Colab secrets exclusively
+- **Flag deprecated patterns immediately** — if you see `google.generativeai`, stop and flag before continuing
+- **No legal, medical, or financial advice** — notebooks may demonstrate AI capabilities in those domains but must include a disclaimer that outputs are for educational purposes only
+- **License header required** — every `.ipynb` file must have the collapsed Apache 2.0 cell as cell 0
+- **Model deprecation** — do not hardcode deprecated model IDs; use the `# @param` selector so users can switch
+- **Rate limits** — notebooks that call the API in a loop must note the relevant quota and include `time.sleep()` where appropriate to avoid 429 errors in CI
+
+### Performance and Delivery
+
+- **Cached outputs** — always save notebooks with cell outputs so readers can see results without running
+- **Minimal installs** — only install what is actually used; `%pip install` once in a single cell
+- **No redundant API calls** — reuse `response` objects; don't re-fetch the same content in successive cells
+- **Streaming where appropriate** — for long responses, show `generate_content_stream()` so the notebook demonstrates responsive UX
+- **Continuous improvement** — link to the GitHub Discussions or issue tracker at the end of each notebook so readers can report problems or suggest enhancements
+
+---
+
 ## License
 
 All content is Apache 2.0. Every notebook must include the collapsed license header cell at the top.

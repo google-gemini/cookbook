@@ -720,6 +720,7 @@ const NAV_TREE = [
   {type:'link',id:'framework',label:'🏛️ Framework Validation'},
   {type:'link',id:'strategic',label:'📊 Strategic Documents'},
   {type:'link',id:'reference',label:'📎 Reference & Resources'},
+  {type:'link',id:'github-api',label:'🐙 GitHub API Integration'},
 ];
 
 /* ═══════════════════════════════════════════════════════
@@ -874,6 +875,7 @@ function renderPage(id){
   if(id==='reference') return renderReference();
   if(id==='framework') return renderFramework();
   if(id==='strategic') return renderStrategic();
+  if(id==='github-api') return renderGithubAPI();
   // Chapter landing pages
   if(CHAPTERS[id]) return renderChapterPage(id);
   // Template detail pages
@@ -1593,6 +1595,177 @@ function renderStrategic(){return `
 <div class="chapter-nav">
 <button class="sol-btn btn-secondary-sol" onclick="showPage('framework')">← Framework Validation</button>
 <button class="sol-btn btn-primary-sol" onclick="showPage('reference')">Reference →</button>
+</div>`;}
+
+function renderGithubAPI(){return `
+<div class="sol-header-bar">
+<div class="sol-badge">🐙 GITHUB API INTEGRATION</div>
+<div class="sol-post-title">GitHub API Integration</div>
+<div class="sol-post-subtitle">Automate your SOL™ asset governance with the GitHub REST API — agent validation, manifest builds, and IP registry updates via code.</div>
+<div class="meta-pills"><span class="meta-pill">REST API v3</span><span class="meta-pill">GitHub Actions</span><span class="meta-pill">Python 3.10+</span><span class="meta-pill">Ruby / Octokit</span></div>
+</div>
+<h2>Overview</h2>
+<p>The SOL™ Transformation Kit turns any GitHub repository into a governed, compliant trust asset library. This guide covers four integration patterns that power the CI/CD pipeline in <code>using-the-github-api-in-your-app</code>:</p>
+<ol>
+<li><strong>Agent schema validation</strong> — Python script reads YAML frontmatter and exits&nbsp;1 on failure</li>
+<li><strong>Manifest building</strong> — SHA-256-indexed JSON of all agents, rebuilt on every merge to&nbsp;main</li>
+<li><strong>Webhook-driven automation</strong> — Ruby Sinatra app receives GitHub events and enforces review gates</li>
+<li><strong>Gemini-assisted compliance review</strong> — Gemini API analyzes PR diffs against the IP registry</li>
+</ol>
+<h2>Repository Structure</h2>
+<table><thead><tr><th>Path</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>trust/DISCLAIMER.md</code></td><td>Educational use only; no legal advice</td></tr>
+<tr><td><code>trust/ACCEPTABLE_USE_POLICY.md</code></td><td>Prohibited uses (deception, unlicensed practice)</td></tr>
+<tr><td><code>trust/TERMS_OF_USE.md</code></td><td>License grant, binding arbitration, class-action waiver</td></tr>
+<tr><td><code>trust/IP_REGISTRY.md</code></td><td>Asset ID · version · IP status · license class · risk level</td></tr>
+<tr><td><code>trust/REVIEW_MATRIX.md</code></td><td>Approval gates by risk&nbsp;×&nbsp;audience</td></tr>
+<tr><td><code>schema/agent.schema.json</code></td><td>JSON Schema for agent YAML frontmatter</td></tr>
+<tr><td><code>scripts/validate.py</code></td><td>Checks required fields and enums; exits&nbsp;1 on failure</td></tr>
+<tr><td><code>scripts/build_manifest.py</code></td><td>Builds <code>dist/manifest.json</code> with SHA-256 hashes</td></tr>
+<tr><td><code>.github/workflows/main.yml</code></td><td>CI: validate → build → upload artifact</td></tr>
+<tr><td><code>server.rb</code></td><td>GitHub App webhook handler (Sinatra)</td></tr>
+</tbody></table>
+<h2>Agent Schema (Required Frontmatter)</h2>
+<p>Every agent definition file must include all seven fields. The CI validator exits with code&nbsp;1 on any violation.</p>
+<pre><code class="language-yaml">---
+id: "unique-kebab-case-id"
+name: "Human Readable Name"
+version: "1.0.0"
+status: "active"        # active | deprecated | experimental
+audience: "internal"    # internal | public | client
+risk_level: "low"       # low | medium | high
+ip_owner: "SmoothOperationofLaw Irrevocable Trust"
+---</code></pre>
+<div class="trust-note"><h4>⚠️ Release Gate</h4><p style="margin:0;"><code>risk_level: high</code> + <code>audience: public</code> is <strong>forbidden</strong>. The CI will block the merge and manual override is not permitted.</p></div>
+<h2>Python Validator</h2>
+<pre><code class="language-python">import yaml, sys, pathlib
+
+REQUIRED = ["id","name","version","status","audience","risk_level","ip_owner"]
+ENUMS = {
+    "status":    ["active","deprecated","experimental"],
+    "audience":  ["internal","public","client"],
+    "risk_level":["low","medium","high"],
+}
+
+errors = []
+for path in pathlib.Path(".").rglob("*.md"):
+    text = path.read_text()
+    if not text.startswith("---"):
+        continue
+    fm = yaml.safe_load(text.split("---")[1])
+    for field in REQUIRED:
+        if field not in fm:
+            errors.append(f"{path}: missing '{field}'")
+    for field, choices in ENUMS.items():
+        if fm.get(field) not in choices:
+            errors.append(f"{path}: '{field}' must be one of {choices}")
+
+if errors:
+    print("\\n".join(errors)); sys.exit(1)
+print("All agents valid ✓")</code></pre>
+<h2>Manifest Builder</h2>
+<pre><code class="language-python">import json, hashlib, yaml, pathlib, datetime
+
+agents = []
+for path in sorted(pathlib.Path(".").rglob("*.md")):
+    text = path.read_text()
+    if not text.startswith("---"):
+        continue
+    fm = yaml.safe_load(text.split("---")[1])
+    sha = hashlib.sha256(text.encode()).hexdigest()
+    agents.append({**fm, "path": str(path), "sha256": sha})
+
+manifest = {
+    "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
+    "agents": agents
+}
+pathlib.Path("dist").mkdir(exist_ok=True)
+pathlib.Path("dist/manifest.json").write_text(json.dumps(manifest, indent=2))
+print(f"Manifest: {len(agents)} agents")</code></pre>
+<h2>GitHub Actions Workflow</h2>
+<pre><code class="language-yaml">name: SOL Agent Governance
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.10"}
+      - run: pip install pyyaml jsonschema
+      - run: python scripts/validate.py
+
+  build-manifest:
+    needs: validate
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.10"}
+      - run: pip install pyyaml
+      - run: python scripts/build_manifest.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sol-manifest
+          path: dist/manifest.json</code></pre>
+<h2>Gemini API Compliance Review</h2>
+<p>Pair the GitHub API with Gemini to auto-review PR diffs against your IP registry:</p>
+<pre><code class="language-python">import os, requests, json
+from google import genai
+
+client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+gh_headers = {"Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}",
+              "Accept": "application/vnd.github+json"}
+
+# Fetch changed files from a PR
+pr_files = requests.get(
+    "https://api.github.com/repos/RamonDeLeon/using-the-github-api-in-your-app/pulls/1/files",
+    headers=gh_headers
+).json()
+
+diff_text = "\\n\\n".join(
+    f"### {f['filename']}\\n```diff\\n{f.get('patch','')}\\n```"
+    for f in pr_files
+)
+
+response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents=f"""You are an IP governance reviewer for the SmoothOperationofLaw Irrevocable Trust.
+Review the following PR diff and flag:
+1. Missing or invalid YAML frontmatter fields
+2. Any agent promoted to audience: public with risk_level: high (FORBIDDEN)
+3. Hardcoded credentials or API keys
+4. Missing ip_owner field
+
+Diff:
+{diff_text}
+
+Respond as JSON: {{"violations": [...], "approved": bool, "notes": "..."}}""",
+    config={"response_mime_type": "application/json"}
+)
+
+result = json.loads(response.text)
+print(json.dumps(result, indent=2))</code></pre>
+<h2>IP Registry Reference</h2>
+<table><thead><tr><th>Risk Level</th><th>Audience</th><th>Required Approvers</th></tr></thead><tbody>
+<tr><td>Low</td><td>Public</td><td>Maintainer</td></tr>
+<tr><td>Medium</td><td>Public</td><td>Maintainer + Peer Review</td></tr>
+<tr><td style="color:var(--sol-red);font-weight:700;">High</td><td>Public</td><td style="color:var(--sol-red);font-weight:700;">FORBIDDEN</td></tr>
+<tr><td>Low</td><td>Internal</td><td>Maintainer</td></tr>
+<tr><td>Medium</td><td>Internal</td><td>Maintainer + Head Trustee</td></tr>
+<tr><td>High</td><td>Internal</td><td>Head Trustee + Legal Counsel</td></tr>
+<tr><td>Any</td><td>Client</td><td>Head Trustee</td></tr>
+</tbody></table>
+<div class="chapter-nav">
+<button class="sol-btn btn-secondary-sol" onclick="showPage('reference')">← Reference</button>
+<button class="sol-btn btn-primary-sol" onclick="showPage('intro')">↑ Introduction</button>
 </div>`;}
 
 /* ═══════════════════════════════════════════════════════

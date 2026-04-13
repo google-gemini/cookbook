@@ -1731,7 +1731,7 @@ pr_files = requests.get(
 ).json()
 
 diff_text = "\\n\\n".join(
-    f"### {f['filename']}\\n```diff\\n{f.get('patch','')}\\n```"
+    f"### {f['filename']}\\n\`\`\`diff\\n{f.get('patch','')}\\n\`\`\`"
     for f in pr_files
 )
 

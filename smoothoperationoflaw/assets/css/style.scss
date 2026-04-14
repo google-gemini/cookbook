@@ -103,17 +103,13 @@ a[href$="→"] {
   }
 }
 
-// Disclaimer styling
-p:last-child,
-em:last-child {
-  &:contains("Disclaimer"),
-  &:contains("educational purposes") {
-    font-size: 0.85rem;
-    color: $sol-muted;
-    border-top: 1px solid $sol-border;
-    padding-top: 1rem;
-    margin-top: 2rem;
-  }
+// Disclaimer styling — apply .disclaimer class in templates
+.disclaimer {
+  font-size: 0.85rem;
+  color: $sol-muted;
+  border-top: 1px solid $sol-border;
+  padding-top: 1rem;
+  margin-top: 2rem;
 }
 
 // Site footer

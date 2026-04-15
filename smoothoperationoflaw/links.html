@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmoothOperationofLaw — Links</title>
+  <meta name="description" content="SmoothOperationofLaw Irrevocable Trust — AI-powered legal education, governance automation, and IP registry management.">
+  <meta property="og:title" content="SmoothOperationofLaw">
+  <meta property="og:description" content="AI-powered legal education and compliance automation">
+  <meta property="og:url" content="https://links.smoothoperationoflaw.website">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0a0e1a;
+      --surface:    #111827;
+      --border:     #1f2d45;
+      --accent:     #1e6fd9;
+      --accent-lt:  #3b8bff;
+      --gold:       #c9a84c;
+      --text:       #e8ecf4;
+      --muted:      #7a8aa8;
+      --radius:     14px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 16px 64px;
+    }
+
+    /* Subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(30,111,217,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30,111,217,.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .logo-ring {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      background: var(--surface);
+      margin-bottom: 16px;
+      box-shadow: 0 0 32px rgba(201,168,76,.18);
+    }
+
+    .logo-ring svg {
+      width: 40px;
+      height: 40px;
+    }
+
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -.01em;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .brand span {
+      color: var(--gold);
+    }
+
+    .tagline {
+      margin-top: 8px;
+      font-size: .825rem;
+      color: var(--muted);
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+
+    .trustee-badge {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 5px 14px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: .72rem;
+      color: var(--muted);
+      letter-spacing: .04em;
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: .7rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 28px 0 10px;
+      padding-left: 4px;
+    }
+
+    /* ── Link cards ── */
+    .links { display: flex; flex-direction: column; gap: 10px; }
+
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color .18s, transform .18s, box-shadow .18s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .link-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(30,111,217,.06), transparent 60%);
+      opacity: 0;
+      transition: opacity .18s;
+    }
+
+    .link-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(30,111,217,.18);
+    }
+
+    .link-card:hover::after { opacity: 1; }
+
+    .link-card.featured {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, #1a1506 0%, var(--surface) 60%);
+    }
+
+    .link-card.featured:hover {
+      border-color: var(--gold);
+      box-shadow: 0 6px 24px rgba(201,168,76,.2);
+    }
+
+    .icon-wrap {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .link-card.featured .icon-wrap {
+      border-color: rgba(201,168,76,.3);
+    }
+
+    .icon-wrap svg { width: 20px; height: 20px; }
+
+    .link-body { flex: 1; min-width: 0; }
+
+    .link-title {
+      font-size: .9rem;
+      font-weight: 600;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .link-card.featured .link-title { color: var(--gold); }
+
+    .link-sub {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chevron {
+      flex-shrink: 0;
+      color: var(--muted);
+      transition: color .18s, transform .18s;
+    }
+
+    .link-card:hover .chevron {
+      color: var(--accent-lt);
+      transform: translateX(3px);
+    }
+
+    .link-card.featured:hover .chevron { color: var(--gold); }
+
+    /* ── Contact strip ── */
+    .contact-strip {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: .82rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: border-color .18s, color .18s;
+    }
+
+    .contact-row:hover { border-color: var(--border); color: var(--text); }
+
+    .contact-row svg { flex-shrink: 0; width: 16px; height: 16px; }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 44px;
+      text-align: center;
+      font-size: .72rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    footer a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 28px 0;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo-ring">
+      <!-- Scales of justice icon -->
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="20" y1="5" x2="20" y2="35" stroke="#c9a84c" stroke-width="2" stroke-linecap="round"/>
+        <line x1="8" y1="10" x2="32" y2="10" stroke="#c9a84c" stroke-width="2" stroke-linecap="round"/>
+        <polyline points="8,10 4,22 12,22" stroke="#c9a84c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <polyline points="32,10 28,22 36,22" stroke="#c9a84c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <line x1="14" y1="35" x2="26" y2="35" stroke="#c9a84c" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="brand">Smooth<span>Operation</span>ofLaw™</div>
+    <div class="tagline">AI-Powered Legal Education &amp; Governance</div>
+    <div class="trustee-badge">GA&#8209;TR&#8209;RDL2018&#8209;2025 &middot; San Diego, CA</div>
+  </header>
+
+  <!-- Primary -->
+  <div class="section-label">Platform</div>
+  <div class="links">
+
+    <a class="link-card featured" href="https://smoothoperationoflaw.website" target="_blank" rel="noopener">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+      </div>
+      <div class="link-body">
+        <div class="link-title">smoothoperationoflaw.website</div>
+        <div class="link-sub">Main platform — courses, templates, resources</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="7 4 13 10 7 16"/></svg>
+    </a>
+
+    <a class="link-card" href="https://smoothoperationoflaw.website/courses" target="_blank" rel="noopener">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1e6fd9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
+      </div>
+      <div class="link-body">
+        <div class="link-title">Course Catalog</div>
+        <div class="link-sub">Three learning pathways — Foundations, Advanced, Certification</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="7 4 13 10 7 16"/></svg>
+    </a>
+
+    <a class="link-card" href="https://smoothoperationoflaw.website/templates" target="_blank" rel="noopener">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1e6fd9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+        </svg>
+      </div>
+      <div class="link-body">
+        <div class="link-title">Legal Template Library</div>
+        <div class="link-sub">500+ AI-governed templates — SOL-1000 through SOL-12000</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="7 4 13 10 7 16"/></svg>
+    </a>
+
+  </div>
+
+  <!-- Resources -->
+  <div class="section-label">Resources</div>
+  <div class="links">
+
+    <a class="link-card" href="https://smoothoperationoflaw.website/getting-started" target="_blank" rel="noopener">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+      </div>
+      <div class="link-body">
+        <div class="link-title">Getting Started</div>
+        <div class="link-sub">Setup guide — install, configure, run your first agent</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="7 4 13 10 7 16"/></svg>
+    </a>
+
+    <a class="link-card" href="https://smoothoperationoflaw.website/certification" target="_blank" rel="noopener">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+        </svg>
+      </div>
+      <div class="link-body">
+        <div class="link-title">Certification Program</div>
+        <div class="link-sub">AI-Assisted Legal Tech Professional credential</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="7 4 13 10 7 16"/></svg>
+    </a>
+
+    <a class="link-card" href="https://smoothoperationoflaw.website/about" target="_blank" rel="noopener">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <div class="link-body">
+        <div class="link-title">About the Platform</div>
+        <div class="link-sub">Mission, trust structure, and governance framework</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="7 4 13 10 7 16"/></svg>
+    </a>
+
+  </div>
+
+  <!-- GitHub -->
+  <div class="section-label">Open Source</div>
+  <div class="links">
+
+    <a class="link-card" href="https://github.com/RamonDeLeon/using-the-github-api-in-your-app" target="_blank" rel="noopener">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="#e8ecf4" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+      </div>
+      <div class="link-body">
+        <div class="link-title">SOL Transformation Kit</div>
+        <div class="link-sub">GitHub App + governance framework — trust/, schema/, CI/CD</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="7 4 13 10 7 16"/></svg>
+    </a>
+
+    <a class="link-card" href="https://github.com/RamonDeLeon/links.SmoothOperationofLaw.website" target="_blank" rel="noopener">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="#e8ecf4" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+      </div>
+      <div class="link-body">
+        <div class="link-title">links.SmoothOperationofLaw.website</div>
+        <div class="link-sub">This page — GitHub Pages source</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="7 4 13 10 7 16"/></svg>
+    </a>
+
+  </div>
+
+  <!-- Contact -->
+  <div class="divider"></div>
+  <div class="contact-strip">
+    <a class="contact-row" href="mailto:smoothoperationoflaw@gmail.com">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+      </svg>
+      smoothoperationoflaw@gmail.com
+    </a>
+    <a class="contact-row" href="tel:+17607919109">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.11 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3 2.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z"/>
+      </svg>
+      (760) 791-9109 &middot; San Diego, CA
+    </a>
+  </div>
+
+  <footer>
+    <div>&copy; 2025 SmoothOperationofLaw Irrevocable Trust. All rights reserved.</div>
+    <div>
+      <a href="https://smoothoperationoflaw.website/disclaimer" target="_blank" rel="noopener">Disclaimer</a>
+      &middot;
+      <a href="https://smoothoperationoflaw.website/terms" target="_blank" rel="noopener">Terms</a>
+      &middot;
+      <a href="https://smoothoperationoflaw.website/acceptable-use" target="_blank" rel="noopener">Acceptable Use</a>
+    </div>
+    <div style="margin-top:8px;color:#465570">
+      No legal advice. For educational purposes only.<br>
+      GA&#8209;TR&#8209;RDL2018&#8209;2025
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

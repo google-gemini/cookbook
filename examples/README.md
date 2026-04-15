@@ -74,4 +74,5 @@ Some old examples are still using the legacy SDK, they should still work and are
 * [Langchain examples](./langchain/): A directory with multiple examples using Gemini with Langchain.
 * [Legal AI examples](./legal-ai/): Legal document analysis, clause extraction, and document comparison using the Gemini API.
 * [GitHub API examples](./github-api/): Combine the GitHub REST API with Gemini for repository governance, compliance review, and PR analysis.
+* [PostHog examples](./posthog/): Query PostHog analytics with HogQL and use Gemini to summarize LLM costs, evaluate feature flags, and generate reports.
 

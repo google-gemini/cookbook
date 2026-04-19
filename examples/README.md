@@ -65,6 +65,7 @@ Some old examples are still using the legacy SDK, they should still work and are
 * [Movie Recommendation using Qdrant](../examples/qdrant/Movie_Recommendation.ipynb): Process and embed a large movie dataset with the Gemini API, index movie vectors in Qdrant, and build a semantic movie recommender that finds similar movies based on user queries using vector similarity search.
 * [MLflow Tracing for Observability](../examples/mlflow/MLflow_Observability.ipynb): Utilize MLflow tracing to capture detailed information about your interactions with Google GenAI APIs.
 * [Cross-modal Retrieval with Gemini Embedding and Haystack](../examples/haystack/Gemini_Embedding_Haystack_Crossmodal_Retrieval.ipynb): Use Gemini Embedding 2 with Haystack for textual retrieval, RAG, and cross-modal retrieval across text, images, video, and PDFs.
+* [Social Media Intelligence with XPOZ MCP](./Social_media_intelligence_with_XPOZ_MCP.ipynb): Connect to the XPOZ MCP server to fetch cross-platform social data (Twitter, Reddit, Instagram) and analyze sentiment with the Gemini API.
 <br><br>
 
 ### Folders

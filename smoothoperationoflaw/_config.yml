@@ -1,0 +1,65 @@
+title: "SmoothOperationofLaw™"
+tagline: "The Trustee's Gambit — Strategic Trust & IP Enforcement Mastery"
+description: >-
+  Professional legal training for strategic trust management, intellectual property
+  enforcement, and sovereign immunity navigation. Taught by Lord Ramon De Leon,
+  Head Trustee of the SmoothOperationofLaw Irrevocable Trust.
+baseurl: ""
+url: "https://smoothoperationoflaw.com"
+
+theme: minima
+
+author:
+  name: Lord Ramon De Leon
+  title: Head Trustee, SmoothOperationofLaw™
+  email: smoothoperationoflaw@gmail.com
+  phone: "(760) 791-9109"
+
+# Navigation
+header_pages:
+  - courses.md
+  - certification.md
+  - instructor.md
+  - contact.md
+
+# Build settings
+markdown: kramdown
+permalink: /:categories/:title/
+highlighter: rouge
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Collections
+collections:
+  courses:
+    output: true
+    permalink: /courses/:path/
+  chapters:
+    output: true
+    permalink: /chapters/:path/
+
+defaults:
+  - scope:
+      path: ""
+      type: "courses"
+    values:
+      layout: "course"
+  - scope:
+      path: ""
+      type: "chapters"
+    values:
+      layout: "chapter"
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .bundle
+  - .jekyll-cache
+  - README.md

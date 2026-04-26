@@ -91,12 +91,21 @@ CONFIG = types.LiveConnectConfig(
     response_modalities=["AUDIO"],
     speech_config=types.SpeechConfig(
         voice_config=types.VoiceConfig(
-            prebuilt_voice_config=types.PrebuiltVoiceConfig(voice_name = "Zephyr")
+            prebuilt_voice_config=types.PrebuiltVoiceConfig(voice_name="Zephyr")
         )
     ),
+    realtime_input_config=types.RealtimeInputConfig(
+        activity_handling=types.ActivityHandling.NO_INTERRUPTION,
+        automatic_activity_detection=types.AutomaticActivityDetection(
+            start_of_speech_sensitivity=types.StartSensitivity.START_SENSITIVITY_HIGH,
+            end_of_speech_sensitivity=types.EndSensitivity.END_SENSITIVITY_HIGH,
+            silence_duration_ms=800,
+            prefix_padding_ms=300,
+        ),
+    ),
     context_window_compression=types.ContextWindowCompressionConfig(
-        trigger_tokens = 25600,
-        sliding_window = types.SlidingWindow(target_tokens=12800),
+        trigger_tokens=25600,
+        sliding_window=types.SlidingWindow(target_tokens=12800),
     ),
 )
 
@@ -238,10 +247,11 @@ class AudioVideoLoop:
     def _capture_screen(self):
         sct = mss.mss()
         monitor = sct.monitors[0]
-        
+
         i = sct.grab(monitor)
-        
+
         img = PIL.Image.frombytes("RGB", i.size, i.rgb)
+        img.thumbnail([1024, 1024])
 
         image_io = io.BytesIO()
         img.save(image_io, format="jpeg")
@@ -289,7 +299,7 @@ class AudioVideoLoop:
                 if msg["mime_type"].startswith("audio/"):
                     await self.session.send_realtime_input(audio=msg)
                 else:
-                    await self.session.send_realtime_input(media=msg)
+                    await self.session.send_realtime_input(video=msg)
         except asyncio.CancelledError:
             pass
 

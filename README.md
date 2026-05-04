@@ -28,6 +28,7 @@ We also showcase **Demos** in separate repositories, illustrating end-to-end app
 ## What's New?
 
 Here are the recent additions and updates to the Gemini API and the Cookbook: 
+* **Webhooks**: Get real-time notifications for async operations like batch jobs and video generation with the [Webhooks quickstart](./quickstarts/Webhooks.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Webhooks.ipynb).
 
 * **Inference tiers**: Learn how to use the Priority and Flex tiers in the [Inference tiers guide](./quickstarts/Inference_tiers.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Inference_tiers.ipynb) to help you balance speed, cost, and reliability.
 * **🎶 Lyria 3**: Convert your ideas into [songs](./quickstarts/Get_Started_Lyria.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Lyria.ipynb) with full control over the music structure and more!

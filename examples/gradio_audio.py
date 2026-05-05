@@ -70,8 +70,8 @@ class GeminiConfig:
     def __init__(self):
         self.api_key = os.getenv(KEY_NAME)
         self.host = "generativelanguage.googleapis.com"
-        self.model = "models/gemini-3.1-flash-lite-preview"
-        self.ws_url = f"wss://{self.host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key={self.api_key}"
+        self.model = "models/gemini-3.1-flash-live-preview"
+        self.ws_url = f"wss://{self.host}/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key={self.api_key}"
 
 class AudioProcessor:
     """Handles encoding and decoding of audio data."""
@@ -81,12 +81,10 @@ class AudioProcessor:
         encoded = base64.b64encode(data.tobytes()).decode("UTF-8")
         return {
             "realtimeInput": {
-                "mediaChunks": [
-                    {
-                        "mimeType": f"audio/pcm;rate={sample_rate}",
-                        "data": encoded,
-                    }
-                ],
+                "audio": {
+                    "mimeType": f"audio/pcm;rate={sample_rate}",
+                    "data": encoded,
+                },
             },
         }
 
@@ -136,17 +134,14 @@ class GeminiHandler(StreamHandler):
                 self._initialize_websocket()
 
             sample_rate, array = frame
-            message = {"realtimeInput": {"mediaChunks": []}}
+            message = None
 
             if sample_rate > 0 and array is not None:
                 array = array.squeeze()
                 audio_data = self.audio_processor.encode_audio(array, self.output_sample_rate)
-                message["realtimeInput"]["mediaChunks"].append({
-                    "mimeType": f"audio/pcm;rate={self.output_sample_rate}",
-                    "data": audio_data["realtimeInput"]["mediaChunks"][0]["data"],
-                })
+                message = audio_data
 
-            if message["realtimeInput"]["mediaChunks"]:
+            if message:
                 self.ws.send(json.dumps(message))
         except Exception as e:
             print(f"Error in receive: {str(e)}")
@@ -259,6 +254,6 @@ def registry(
 
 # Launch the Gradio interface
 gr.load(
-    name="gemini-3.1-flash-lite-preview",
+    name="gemini-3.1-flash-live-preview",
     src=registry,
 ).launch()

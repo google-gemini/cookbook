@@ -25,7 +25,7 @@
 #    (or relevant binary from https://github.com/vi/websocat/releases)
 
 echo "HOST: ${HOST:=generativelanguage.googleapis.com}"
-echo "MODEL: ${MODEL:=gemini-2.5-flash-native-audio-latest}"
+echo "MODEL: ${MODEL:=gemini-3.1-flash-live-preview}"
 API_KEY=${GOOGLE_API_KEY:?Please set \$GOOGLE_API_KEY}
 
 echo "Starting..."
@@ -55,7 +55,7 @@ echo "Model connected."
 echo '{"setup": {"model": "models/'${MODEL}'", "response_modalities":["TEXT"]}}' |tee >(jq) >gemini_input
 
 # Generate something.
-echo '{"client_content": { "turn_complete": true, "turns": [{"role": "user", "parts": [{"text": "what is 10 + 10?"}]}]}}' |tee >(jq) >gemini_input
+echo '{"realtime_input": {"text": "what is 10 + 10?"}}' |tee >(jq) >gemini_input
 
 sleep 5
 rm gemini_{in,out}put

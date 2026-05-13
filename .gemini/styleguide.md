@@ -70,7 +70,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Only use helper function when you don't have a choice. If it's only a couple of lines, it's usually better to write them
   everytime so that the readers don't have to check the function definition all the time.
 * When selecting a model, use a colab selector for easier maintainability:
-  `MODEL_ID="gemini-2.5-flash" # @param ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.5-pro", "gemini-3.1-flash-lite-preview", "gemini-3-flash-preview", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}`
+  `MODEL_ID="gemini-2.5-flash" # @param ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-3.1-flash-lite", "gemini-3-flash-preview", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}`
 * Some notebooks can also benefit from having a form to update the prompt:
   `prompt = "Detect the 2d bounding boxes of the cupcakes (with “label” as topping description”)"  # @param {type:"string"}`
   or a list of prompts they can choose from:
@@ -96,6 +96,13 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Keep examples quick and concise.
 * Do not use extra parameters (like temperature) when not needed to keep the focus on what your notebook is illustrating.
 * If you have to use extra-parameters, explain why and why the specific value the first time you do.
+
+## Assets and external data
+
+* All media files (audio, images, video), datasets, and other external assets used in notebooks must be **openly licensed** (CC0, CC-BY, Apache 2.0, public domain, or equivalent). Assets with unclear or restrictive licensing must not be used.
+* Always **mention the source and license** in the markdown cell that introduces the asset. For example: "The example below uses a [CC0-licensed](https://creativecommons.org/publicdomain/zero/1.0/) sample from [SoundHelix](https://www.soundhelix.com)."
+* Prefer hosting assets on the cookbook's GCS bucket (`gs://generativeai-downloads/`) for long-term URL stability. If that is not possible, use reliable sources (Wikimedia Commons, Internet Archive, YouTube) over ephemeral URLs.
+* YouTube videos can be used directly via `types.Part.from_uri()` and do not need to be downloaded.
 
 # Deviations from PEP 8
 
@@ -130,6 +137,22 @@ Notice the line break on the first and last lines.
     """    
     ```
 Notice the line break on the first and last lines.
+* When a multiline string is used inside a function call, add an extra indent level between the `"""` delimiters and the text body to visually separate the string content from the surrounding code:
+    ```python
+    response = client.models.generate_content(
+        model=MODEL_ID,
+        contents=[
+            audio_file,
+            """
+                Analyze this audio file and extract any musical chord
+                information. Return a JSON object with:
+                - "title": the song title if identifiable
+                - "key": the musical key
+                - "chords": a list of chord objects
+            """,
+        ],
+    )
+    ```
     
 ## Naming Conventions
 

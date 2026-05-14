@@ -37,6 +37,7 @@ This is a collection of fun and helpful examples for the Gemini API.
 
 | [Gemini MultimodalBot Text & Image Tutorial](./Gemini_MultimodalBot_Text_Image_Tutorial.ipynb) | Learn how to use Gemini's multimodal capabilities to process both text and image inputs. | Multimodal | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Gemini_MultimodalBot_Text_Image_Tutorial.ipynb) |
 
+| [EU AI Act Compliance with Agent Module](./Agent_Module_EU_AI_Act_Compliance.ipynb) | Use Gemini function calling with Agent Module API for EU AI Act compliance checking | Function Calling, Tools | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Agent_Module_EU_AI_Act_Compliance.ipynb) |
 | [GitHub issue analyzer](./GitHub_issue_analyzer.ipynb) | Use Gemini API to interact with PyGitHub API and extract useful insights from this repository | Gemini API, Tools | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/GitHub_issue_analyzer.ipynb) |
 ---
 <br>

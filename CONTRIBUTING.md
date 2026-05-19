@@ -166,7 +166,7 @@ See [`.gemini/styleguide.md`](./.gemini/styleguide.md) for the full list and res
 * If you *must* use extra parameters, explain *why* they are needed and the reasoning behind the specific value the first time you use them.
 * When selecting a model, use a Colab form selector for easier maintainability:
     ```python
-    MODEL_ID="gemini-3-flash-preview" # @param ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-3.1-flash-lite", "gemini-3-flash-preview", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}
+    MODEL_ID="gemini-3.5-flash" # @param ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-3.1-flash-lite", "gemini-3.5-flash", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}
     ```
 * Some notebooks can benefit from having a form to update the prompt:
     ```python

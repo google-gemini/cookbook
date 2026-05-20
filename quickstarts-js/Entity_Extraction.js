@@ -1,3 +1,19 @@
+/*
+ * Copyright 2026 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* Markdown (render)
 # Gemini API: Entity extraction
 
@@ -24,11 +40,11 @@ ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 */
 
 // [CODE STARTS]
-module = await import("https://esm.sh/@google/genai@1.4.0");
-GoogleGenAI = module.GoogleGenAI;
-ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const module = await import("https://esm.sh/@google/genai@1.4.0");
+const GoogleGenAI = module.GoogleGenAI;
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-MODEL_ID = "gemini-2.5-flash" // ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.5-pro"]
+const MODEL_ID = "gemini-2.5-flash" // ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.5-pro"]
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -40,7 +56,7 @@ Let's extract all street names and proposed forms of transportation from it.
 */
 
 // [CODE STARTS]
-directions = `
+const directions = `
 To reach the Colosseum from Rome's Fiumicino Airport (FCO),
 your options are diverse. Take the Leonardo Express train from FCO
 to Termini Station, then hop on metro line A towards Battistini and
@@ -69,7 +85,7 @@ You will use Gemini Flash model for fast responses.
 */
 
 // [CODE STARTS]
-directionsPrompt = `
+const directionsPrompt = `
 From the given text, extract the following entities and return a list of them.
 Entities to extract: street name, form of transport.
 Text: ${directions}
@@ -77,7 +93,7 @@ Street = []
 Transport = []
 `;
 
-response = await ai.models.generateContent({
+const response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [directionsPrompt],
 });
@@ -113,7 +129,7 @@ You can modify the form of the answer for your extracted entities even more:
 */
 
 // [CODE STARTS]
-directionsListPrompt = `
+const directionsListPrompt = `
 From the given text, extract the following entities and
 return a list of them.
 Entities to extract: street name, form of transport.
@@ -123,7 +139,7 @@ Street = [street names]
 Transport = [forms of transport]
 `;
 
-response = await ai.models.generateContent({
+const response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [directionsListPrompt],
 });
@@ -146,7 +162,7 @@ Try entity extraction of phone numbers
 */
 
 // [CODE STARTS]
-customerServiceEmail = `
+const customerServiceEmail = `
 Hello,
 Thank you for reaching out to our customer support team regarding your
 recent purchase of our premium subscription service.
@@ -164,14 +180,14 @@ Thank you.
 // [CODE ENDS]
 
 // [CODE STARTS]
-phonePrompt = `
+const phonePrompt = `
 From the given text, extract the following entities and return a list of them.
 Entities to extract: phone numbers.
 Text: ${customerServiceEmail}
 Return your answer in a list:
 `;
 
-response = await ai.models.generateContent({
+const response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [phonePrompt],
 });
@@ -200,7 +216,7 @@ Try entity extraction of URLs and get response as a clickable link.
 */
 
 // [CODE STARTS]
-urlText = `
+const urlText = `
 Gemini API billing FAQs
 
 This page provides answers to frequently asked questions about billing
@@ -226,7 +242,7 @@ and they don't count against inference quota.
 // [CODE ENDS]
 
 // [CODE STARTS]
-urlPrompt = `
+const urlPrompt = `
 From the given text, extract the following entities and return a list of them.
 Entities to extract: URLs.
 Text: ${urlText}
@@ -234,7 +250,7 @@ Do not duplicate entities.
 Return your answer in a markdown format:
 `;
 
-response = await ai.models.generateContent({
+const response = await ai.models.generateContent({
   model: MODEL_ID,
   contents: [urlPrompt],
 });

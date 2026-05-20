@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ The system instruction is the primary way you tell LearnLM what kind of tutor to
 */
 
 // [CODE STARTS]
-LEARNLM_MODEL_ID = "learnlm-2.0-flash-experimental"
+LEARNLM_MODEL_ID = "learnlm-2.0-flash-experimental";
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -117,7 +117,7 @@ testPrepInstruction = `
         more questions or if they would like a summary of their session.
         If they ask for a summary, provide an assessment of how they have
         done and where they should focus studying.
-`
+`;
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -128,8 +128,8 @@ Now, let's start a chat session with LearnLM using this system instruction and s
 chat = ai.chats.create({
   model: LEARNLM_MODEL_ID,
   config: {
-    systemInstruction: testPrepInstruction
-  }
+    systemInstruction: testPrepInstruction,
+  },
 });
 
 // [CODE ENDS]
@@ -140,7 +140,7 @@ prompt = `
   generation.
 `;
 
-response = await chat.sendMessage({message: prompt});
+response = await chat.sendMessage({ message: prompt });
 console.log(response.text);
 
 // [CODE ENDS]
@@ -199,12 +199,12 @@ Now, let's simulate the student answering that question and explaining their rea
 
 // [CODE STARTS]
 response = await chat.sendMessage({
-    message: `
+  message: `
         It is James-Lange Theory, as that theory suggests that one feels a certain
         emotion because their body is reacting in that specific way.
-    `
-})
-console.log(response.text)
+    `,
+});
+console.log(response.text);
 // [CODE ENDS]
 
 /* Output Sample
@@ -240,7 +240,7 @@ conceptTeachingInstruction = `
     just one question per conversation turn so you don't overwhelm the student.
     Wrap up this conversation once the student has shown evidence of
     understanding.
-`
+`;
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -248,17 +248,18 @@ Let's start a new chat session with LearnLM using this instruction to explore a 
 */
 
 // [CODE STARTS]
-prompt = "Explain the significance of Interconnectedness of Emotion & Cognition"
+prompt =
+  "Explain the significance of Interconnectedness of Emotion & Cognition";
 
 chat = ai.chats.create({
   model: LEARNLM_MODEL_ID,
   config: {
-    systemInstruction: conceptTeachingInstruction
-  }
+    systemInstruction: conceptTeachingInstruction,
+  },
 });
 
-response = await chat.sendMessage({message:prompt})
-console.log(response.text)
+response = await chat.sendMessage({ message: prompt });
+console.log(response.text);
 // [CODE ENDS]
 
 /* Output Sample
@@ -278,12 +279,12 @@ Let's simulate the student responding to that initial guiding question.
 
 // [CODE STARTS]
 response = await chat.sendMessage({
-    message: `
+  message: `
         Cognition plays a crucial role in shaping and regulating emotions.
         Our interpretation of a situation determines the emotion and its intensity.
-    `
-})
-console.log(response.text)
+    `,
+});
+console.log(response.text);
 
 // [CODE ENDS]
 
@@ -333,7 +334,7 @@ structuredActivityInstruction = `
 
     Be encouraging and supportive.
     Only display the full text if the student asks.
-`
+`;
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -342,17 +343,17 @@ Let's start a session where the student wants to begin this activity.
 */
 
 // [CODE STARTS]
-prompt = "Hey, I'm ready to start the close reading activity."
+prompt = "Hey, I'm ready to start the close reading activity.";
 
 chat = ai.chats.create({
-    model: LEARNLM_MODEL_ID,
-    config: {
-        systemInstruction: structuredActivityInstruction
-    }
+  model: LEARNLM_MODEL_ID,
+  config: {
+    systemInstruction: structuredActivityInstruction,
+  },
 });
 
-response = await chat.sendMessage({ message: prompt })
-console.log(response.text)
+response = await chat.sendMessage({ message: prompt });
+console.log(response.text);
 // [CODE ENDS]
 
 /* Output Sample
@@ -398,7 +399,7 @@ homeworkHelpInstruction = `
     accept them at any time, even if you asked some intermediate question to
     guide them. If the student reaches a correct answer, affirm it and
     do not ask them to do any more work. Be supportive and patient.
-`
+`;
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -410,17 +411,17 @@ prompt = `
   Can you help me with this homework problem?\n
   In a box of pears, 20% of pears are rotten. If there
   are 10 pears in a box, find the number of pears that could be rotten.
-`
+`;
 
 chat = ai.chats.create({
-    model: LEARNLM_MODEL_ID,
-    config: {
-        systemInstruction: homeworkHelpInstruction
-    }
+  model: LEARNLM_MODEL_ID,
+  config: {
+    systemInstruction: homeworkHelpInstruction,
+  },
 });
 
-response = await chat.sendMessage({ message: prompt })
-console.log(response.text)
+response = await chat.sendMessage({ message: prompt });
+console.log(response.text);
 // [CODE ENDS]
 
 /* Output Sample
@@ -438,9 +439,9 @@ Now, let's demonstrate what happens when you choose 'Guidance' and then submit t
 
 // [CODE STARTS]
 response = await chat.sendMessage({
-    message: "I'd like guidance, please."
-})
-console.log(response.text)
+  message: "I'd like guidance, please.",
+});
+console.log(response.text);
 // [CODE ENDS]
 
 /* Output Sample
@@ -460,12 +461,12 @@ Now, simulate the student figuring it out and giving the final answer.
 
 // [CODE STARTS]
 response = await chat.sendMessage({
-    message: `
+  message: `
       Okay, I think I figured it out. 20% of 10 would be one-fifth of 10, that
       is 2. Is the answer 2?
-    `}
-)
-console.log(response.text)
+    `,
+});
+console.log(response.text);
 // [CODE ENDS]
 
 /* Output Sample

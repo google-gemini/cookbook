@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2025 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ Anticipate user needs by clarifying ambiguous questions and always conclude your
 with an engaging follow-up question to keep the conversation flowing.
 """
 
-MODEL = "gemini-2.5-flash-native-audio-preview-09-2025"
+MODEL = "gemini-2.5-flash-native-audio-preview-12-2025"
 CONFIG = {
     "system_instruction": system_instruction,
     "response_modalities": ["AUDIO"],

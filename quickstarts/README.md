@@ -7,6 +7,8 @@ When you're confident in your Gemini capabilities, the [examples](https://github
 
 ---
 > **Gemini 3.5 Flash**: For the most recent updates on our latest generation, please check the [Get Started](./Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3) and the [thinking](./Get_started_thinking.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb#gemini3) guides who include [migration guides](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3migration).
+>
+> **Agents API**: Create and run your custom agents using the new [Antigravity agent](./Get_started_managed_agents.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_managed_agents.ipynb)!
 > 
 > **🍌 Nano-Banana 2**: Go bananas with our latest image generation model: **Nano-Banana 2**. Get started [here](./Get_Started_Nano_Banana.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb#nano-banana-pro) with 512px, thinking, search and image grounding, and a ton of examples!
 > 

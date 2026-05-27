@@ -130,9 +130,10 @@ async def main():
                     del config.scale
                     print(f"Setting Scale to AUTO, which requires resetting context.")
                   else:
+                    scale_name = prompt_str.removeprefix('scale=').strip()
                     found_scale_enum_member = None
                     for scale_member in types.Scale: # types.Scale is an enum
-                        if scale_member.name.lower() == prompt_str.lower():
+                        if scale_member.name.lower() == scale_name.lower():
                             found_scale_enum_member = scale_member
                             break
                     if found_scale_enum_member:

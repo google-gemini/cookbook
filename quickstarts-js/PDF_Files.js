@@ -60,7 +60,7 @@ MODEL_ID = "gemini-3-flash-preview" // "gemini-2.5-flash-lite", "gemini-2.5-flas
 
 /* Markdown (render)
 
-###Download the PDF
+### Download the PDF
 
 This PDF page is an article titled Smoothly editing material properties of objects with text-to-image models and synthetic data available on the Google Research Blog. 
 */

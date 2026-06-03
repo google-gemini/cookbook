@@ -24,10 +24,11 @@ dotenv.config();
 const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 async function run() {
+  /* Markdown (render) */
   console.log("--- Sending request to Gemini with Code Execution enabled ---");
 
   // Bot Suggestion 1: Use MODEL_ID for consistency
-  const MODEL_ID = "gemini-2.5-flash-lite"; 
+  const MODEL_ID = "gemini-2.5-flash"; 
   
   try {
     const response = await client.models.generateContent({
@@ -38,6 +39,7 @@ async function run() {
       contents: "Calculate the sum of the first 50 prime numbers. Write and run python code to solve this."
     });
 
+    /* Markdown (render) */
     // Bot Suggestion 2: Parse response to show the code and the result separately
     // This loops through the "parts" of the response to show exactly what the model did.
     if (response.candidates && response.candidates[0].content.parts) {
@@ -54,7 +56,7 @@ async function run() {
       }
     } else {
       // Fallback if structure is different
-      console.log(response.text);
+      console.log(response.candidates?.[0] ? response.text : "No response generated.");
     }
     
   } catch (error) {
@@ -62,4 +64,5 @@ async function run() {
   }
 }
 
-run();
+/* Markdown (render) */
+run().catch(console.error);

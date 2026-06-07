@@ -38,7 +38,6 @@ This is a collection of fun and helpful examples for the Gemini API.
 | [EU AI Act Compliance with Agent Module](./Agent_Module_EU_AI_Act_Compliance.ipynb) | Use Gemini function calling with Agent Module API for EU AI Act compliance checking | Function Calling, Tools | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Agent_Module_EU_AI_Act_Compliance.ipynb) |
 | [GitHub issue analyzer](./GitHub_issue_analyzer.ipynb) | Use Gemini API to interact with PyGitHub API and extract useful insights from this repository | Gemini API, Tools | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/GitHub_issue_analyzer.ipynb) |
 | [Cost Estimation and Health Monitoring](./Cost_Estimation_And_Health_Monitoring.ipynb) | Learn how to track USD costs and monitor API health using token usage metadata. | Observability, Usage metadata | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Cost_Estimation_And_Health_Monitoring.ipynb) |
-
 ---
 <br>
 Some old examples are still using the legacy SDK, they should still work and are still worth checking to get ideas:

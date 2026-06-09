@@ -19,7 +19,7 @@
 To install the dependencies for this script, run:
 
 ``` 
-pip install google-genai==2.8.0 pyaudio yt-dlp
+pip install google-genai==2.8.0 pyaudio
 ```
 
 This script also requires `ffmpeg` to be installed on your system. For example, on macOS:
@@ -36,7 +36,7 @@ variable is set to the api-key you obtained from Google AI Studio.
 To run the script:
 
 ```
-python Get_started_LiveTranslate.py --url "https://www.youtube.com/watch?v=QhdEJFFaig0" --target es
+python Get_started_LiveTranslate.py --url "https://storage.googleapis.com/generativeai-downloads/gemini-cookbook/audio/gemini-live-translate-sample.wav" --target es
 ```
 """
 
@@ -44,7 +44,6 @@ import array
 import asyncio
 import argparse
 import pyaudio
-import yt_dlp
 from google import genai
 from google.genai import types
 
@@ -67,33 +66,13 @@ def adjust_volume(pcm_data: bytes, volume: float) -> bytes:
         samples[i] = int(samples[i] * volume)
     return samples.tobytes()
 
-async def stream_youtube_audio(url: str, audio_queue: asyncio.Queue, original_playback_queue: asyncio.Queue = None, volume: float = 0.08):
-    """Downloads and demuxes YouTube audio, putting raw PCM bytes into the audio_queue."""
-    print(f"\n[Info] Extracting audio URL from YouTube video: {url}")
-    try:
-        # Run yt_dlp in a thread to keep the event loop responsive
-        loop = asyncio.get_running_loop()
-        
-        def extract():
-            ydl_opts = {
-                'format': 'bestaudio/best',
-                'quiet': True,
-                'no_warnings': True,
-            }
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(url, download=False)
-                return info['url']
-
-        audio_url = await loop.run_in_executor(None, extract)
-    except Exception as e:
-        print(f"[Error] Failed to extract YouTube audio: {e}")
-        return
-
-    print("[Info] Starting audio stream via ffmpeg...")
+async def stream_audio_url(url: str, audio_queue: asyncio.Queue, original_playback_queue: asyncio.Queue = None, volume: float = 0.08):
+    """Streams audio from an HTTP URL, decoding it via ffmpeg and putting raw PCM bytes into the audio_queue."""
+    print(f"\n[Info] Starting audio stream via ffmpeg from: {url}")
     # Spawn ffmpeg to decode stream to raw PCM 16kHz mono 16-bit
     process = await asyncio.create_subprocess_exec(
         'ffmpeg',
-        '-i', audio_url,
+        '-i', url,
         '-f', 's16le',
         '-acodec', 'pcm_s16le',
         '-ar', str(SEND_SAMPLE_RATE),
@@ -139,7 +118,7 @@ async def stream_youtube_audio(url: str, audio_queue: asyncio.Queue, original_pl
                 await process.wait()
             except Exception:
                 pass
-        print("\n[Info] YouTube audio stream finished.")
+        print("\n[Info] Audio stream finished.")
 
 async def send_realtime(session, audio_queue: asyncio.Queue):
     """Sends audio from the input queue to the GenAI session."""
@@ -259,14 +238,14 @@ async def run(url: str, target_lang: str, original_volume: float = 0.08):
             print("[Info] Connected successfully. Ready to stream!")
             async with asyncio.TaskGroup() as tg:
                 stream_task = tg.create_task(
-                    stream_youtube_audio(url, audio_queue_input, original_playback_queue, original_volume)
+                    stream_audio_url(url, audio_queue_input, original_playback_queue, original_volume)
                 )
                 send_task = tg.create_task(send_realtime(session, audio_queue_input))
                 receive_task = tg.create_task(receive_responses(session, audio_queue_output))
                 play_task = tg.create_task(play_audio(audio_queue_output))
                 play_original_task = tg.create_task(play_original_audio(original_playback_queue))
                 
-                # Wait for the YouTube stream to finish reading
+                # Wait for the audio stream to finish reading
                 await stream_task
                 
                 # Wait for all buffered input chunks to be sent to Gemini
@@ -286,8 +265,8 @@ async def run(url: str, target_lang: str, original_volume: float = 0.08):
         print(f"[Error] Live session error: {e}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Stream YouTube video audio to Gemini Live Translate CLI")
-    parser.add_argument("--url", required=True, help="YouTube video URL")
+    parser = argparse.ArgumentParser(description="Stream audio URL to Gemini Live Translate CLI")
+    parser.add_argument("--url", default="https://storage.googleapis.com/generativeai-downloads/gemini-cookbook/audio/gemini-live-translate-sample.wav", help="Audio URL to stream (default: https://storage.googleapis.com/generativeai-downloads/gemini-cookbook/audio/gemini-live-translate-sample.wav)")
     parser.add_argument("--target", default="es", help="Target translation language code (default: es)")
     parser.add_argument("--original-volume", type=float, default=0.08, help="Volume of original background audio (0.0 to 1.0, default: 0.08)")
     args = parser.parse_args()

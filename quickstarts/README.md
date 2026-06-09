@@ -45,6 +45,7 @@ There're multiple ways to call the models using the Gemini API, these other **Ge
 | Quickstart | Description | Open |
 | -------- | ----------- | ---- |
 | [Get started with Live API](./Get_started_LiveAPI.ipynb) | Get started with the live API with this comprehensive overview of its capabilities | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_LiveAPI.ipynb) |
+| [Get started with Live Translation](./Get_started_LiveTranslate.ipynb) | Translate audio streams in real-time using the Live Translation API | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_LiveTranslate.ipynb) |
 | [OpenAI compatibility](./Get_started_OpenAI_Compatibility.ipynb) | Did you know that you could use Gemini using the OpenAI SDK? | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_OpenAI_Compatibility.ipynb) |
 <br>
 

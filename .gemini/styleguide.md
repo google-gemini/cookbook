@@ -70,7 +70,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Only use helper function when you don't have a choice. If it's only a couple of lines, it's usually better to write them
   everytime so that the readers don't have to check the function definition all the time.
 * When selecting a model, use a colab selector for easier maintainability:
-  `MODEL_ID="gemini-2.5-flash" # @param ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-3.1-flash-lite", "gemini-3.5-flash", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}`
+  `MODEL_ID="gemini-3.5-flash" # @param ["gemini-3.1-flash-lite", "gemini-3.5-flash", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}`
 * Some notebooks can also benefit from having a form to update the prompt:
   `prompt = "Detect the 2d bounding boxes of the cupcakes (with “label” as topping description”)"  # @param {type:"string"}`
   or a list of prompts they can choose from:
@@ -96,6 +96,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Keep examples quick and concise.
 * Do not use extra parameters (like temperature) when not needed to keep the focus on what your notebook is illustrating.
 * If you have to use extra-parameters, explain why and why the specific value the first time you do.
+* Any examples using `yt-dlp` or equivalent that are downloading (or streaming) Youtube content are strictly forbidden as it violates [YouTube terms of service](https://www.youtube.com/t/terms#c3e2907ca8).
 
 ## Assets and external data
 

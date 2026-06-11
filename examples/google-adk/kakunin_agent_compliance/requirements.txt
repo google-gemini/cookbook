@@ -1,0 +1,3 @@
+kakunin
+google-antigravity
+python-dotenv

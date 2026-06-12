@@ -13,7 +13,7 @@
 # limitations under the License.
 """
 Example demonstrating cryptographic compliance checking and runtime scope validation
-for the Google Antigravity SDK using Kakunin.
+for the Google Agent Development Kit (ADK) using Kakunin.
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ import os
 import sys
 
 from dotenv import load_dotenv
-from google.antigravity import Agent, LocalAgentConfig
+from google.adk import Agent, LocalAgentConfig
 from kakunin import Kakunin
 from kakunin.exceptions import ScopeViolationError
 from kakunin.integrations.google_antigravity import get_kakunin_hooks
@@ -55,7 +55,7 @@ async def main() -> None:
     print("Registering agent in Kakunin...")
     async with Kakunin(api_key=kak_api_key) as kakunin_client:
         agent_record = await kakunin_client.agents.create(
-            name="Antigravity-Compliance-Trader",
+            name="ADK-Compliance-Trader",
             model="gemini-3.5-flash",
             version="1.0.0",
             model_hash="sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -80,7 +80,7 @@ async def main() -> None:
             hooks=hooks,
         )
 
-        print("\n--- Running Antigravity Agent (Safe Query) ---")
+        print("\n--- Running ADK Agent (Safe Query) ---")
         async with Agent(config=config) as agent:
             try:
                 res = await agent.chat("What is the price of GOOG?")
@@ -88,7 +88,7 @@ async def main() -> None:
             except ScopeViolationError as e:
                 print(f"Blocked by Kakunin: {e}")
 
-            print("\n--- Running Antigravity Agent (Execution Query) ---")
+            print("\n--- Running ADK Agent (Execution Query) ---")
             try:
                 res = await agent.chat("Buy 5 shares of GOOG")
                 print(f"Response: {res}")

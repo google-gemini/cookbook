@@ -29,7 +29,8 @@ Here's a breakdown of the notebooks available and the concepts they cover:
 *   **[`Role_prompting.ipynb`](./Role_prompting.ipynb):** Demonstrates how to assign a specific role to the model to influence responses.
 
 *   **[`Self_ask_prompting.ipynb`](./Self_ask_prompting.ipynb):** Demonstrates a technique where the model asks itself questions to help answer the query.
-
+*   **[`Basic_Code_Review.ipynb`](./Basic_Code_Review.ipynb):** Demonstrates using Gemini for code review (feedback, debugging, and optimization suggestions).
+      
 *   **[`Zero_shot_prompting.ipynb`](./Zero_shot_prompting.ipynb):** Demonstrates prompting the model *without* any specific examples.
 
 ## General Tips

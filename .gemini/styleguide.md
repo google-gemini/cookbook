@@ -1,11 +1,11 @@
 # Gemini Cookbook Python notebooks Style Guide
 
 # Introduction
-This style guide outlines the coding conventions for Python notebooks developped by the Gemini team.
+This style guide outlines the coding conventions for Python notebooks developed by the Gemini team.
 It's based on PEP 8, but with some modifications to address specific needs and
 preferences within our organization.
 
-This guide is mostly about the python content and the notebook, but don't forget to also review the markdown files. In particular, any new notebook should be referenced in the corresponding readmes (at folder level at least, and potentially the one on higer levels).
+This guide is mostly about the python content and the notebook, but don't forget to also review the markdown files. In particular, any new notebook should be referenced in the corresponding readmes (at folder level at least, and potentially the one on higher levels).
 
 # Key Principles
 * **Readability:** Code should be easy to understand for all developers. Since they are notebooks and aimed at teaching
@@ -24,7 +24,7 @@ This guide is mostly about the python content and the notebook, but don't forget
 * There are multiple SDKs to use the Gemini APIs. The correct and most recent one is the [Python genai](https://github.com/googleapis/python-genai) one.
     * `%pip install -U -q 'google-genai>=1.0.0'` is the right way to install the SDK. The version indicated should reflect the minimum version needed to use the features used in the notebook (1.0.0 by default or in doubt).
     * `from google import genai` is the right way to import the official SDK.
-    * `from google.genai import types` is the right way to uimport the types.
+    * `from google.genai import types` is the right way to import the types.
     * `import google.generativeai` is incorrect, this is the old one that was deprecated early 2025.
 
 
@@ -39,7 +39,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Those cells can be either Markdown or python code (or sometimes bash in which case the code cell starts with `%%bash`).
 * The `outputs` do not have to be ignored, but if none of them changed while some code has, it might be a sign that the
   notebook has not been run to check that it works, in which case a warning should be raised;
-* Ideally we want the ouputs to be saved in the notebooks so that one can see what the code does without runnning it. The only exception is when the ouput is tooo large (it contains images or videos for ex.).
+* Ideally we want the outputs to be saved in the notebooks so that one can see what the code does without runnning it. The only exception is when the output is too large (it contains images or videos for ex.).
 * If the `execution_count` has changed to something else than `null`, it usually indicates that the formatting script has not
   been run. A warning should be raised, but only once per notebook. Be very clear that it means that the formatting script must be run, not that the outputs should be removed.
 
@@ -70,11 +70,12 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Only use helper function when you don't have a choice. If it's only a couple of lines, it's usually better to write them
   everytime so that the readers don't have to check the function definition all the time.
 * When selecting a model, use a colab selector for easier maintainability:
-  `MODEL_ID="gemini-2.5-flash" # @param ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.5-pro", "gemini-3.1-flash-lite-preview", "gemini-3-flash-preview", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}`
+  `MODEL_ID="gemini-3.5-flash" # @param ["gemini-3.1-flash-lite", "gemini-3.5-flash", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}`
 * Some notebooks can also benefit from having a form to update the prompt:
   `prompt = "Detect the 2d bounding boxes of the cupcakes (with “label” as topping description”)"  # @param {type:"string"}`
   or a list of prompts they can choose from:
  `prompt = "Draw a square around the fox' shadow"  # @param ["Find the two origami animals.", "Where are the origamis' shadows?","Draw a square around the fox' shadow"] {"allow-input":true}`
+* The API key should always be gathered from the `GEMINI_API_KEY` colab secret. If the code is using the legacy `GOOGLE_API_KEY` secret, ask them to update it.
 
 ## Outputs
 
@@ -96,6 +97,8 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Keep examples quick and concise.
 * Do not use extra parameters (like temperature) when not needed to keep the focus on what your notebook is illustrating.
 * If you have to use extra-parameters, explain why and why the specific value the first time you do.
+* Any examples using `yt-dlp` or equivalent that are downloading (or streaming) Youtube content are strictly forbidden as it violates [YouTube terms of service](https://www.youtube.com/t/terms#c3e2907ca8).
+* Any crypto or blockchain related topics are also forbidden
 
 ## Assets and external data
 

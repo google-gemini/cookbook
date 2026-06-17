@@ -21,7 +21,7 @@ This notebook will show you how to use the native Image-output feature of Gemini
 
 There are now 2 models you can use:
 * `gemini-2.5-flash-image` aka. "nano-banana": Cheap and fast yet powerful. This should be your default choice.
-* `gemini-3-pro-image-preview` aka "nano-banana-pro": More powerful thanks to its **thinking** capabilities and its access to real-world data using **Google Search**. It really shines at creating diagrams and grounded images. And cherry on top, it can create 2K and 4K images!
+* `gemini-3-pro-image` aka "nano-banana-pro": More powerful thanks to its **thinking** capabilities and its access to real-world data using **Google Search**. It really shines at creating diagrams and grounded images. And cherry on top, it can create 2K and 4K images!
 
 These models are really good at:
 * **Maintaining character consistency**: Preserve a subject’s appearance across multiple generated images and scenes
@@ -60,7 +60,7 @@ GoogleGenAI = module.GoogleGenAI;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 MODEL_ID = "gemini-2.5-flash-image";
-PRO_MODEL_ID = "gemini-3-pro-image-preview";
+PRO_MODEL_ID = "gemini-3-pro-image";
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -428,7 +428,7 @@ Certainly! Here is your image:
 /* Markdown (render)
 ## Nano-Banana Pro
 
-Compared to the flash model, the pro version (`gemini-3-pro-image-preview`) is able to go further in understanding your requests since it's a **thinking** model. It's able to use **search grounding** to even better understand the subjects you are talking about and access to up-to-date information.
+Compared to the flash model, the pro version (`gemini-3-pro-image`) is able to go further in understanding your requests since it's a **thinking** model. It's able to use **search grounding** to even better understand the subjects you are talking about and access to up-to-date information.
 
 You'll be able to control the output resolution and generate up to 4K images.
 

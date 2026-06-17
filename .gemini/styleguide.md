@@ -108,6 +108,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
   `prompt = "Detect the 2d bounding boxes of the cupcakes (with “label” as topping description”)"  # @param {type:"string"}`
   or a list of prompts they can choose from:
  `prompt = "Draw a square around the fox' shadow"  # @param ["Find the two origami animals.", "Where are the origamis' shadows?","Draw a square around the fox' shadow"] {"allow-input":true}`
+* The API key should always be gathered from the `GEMINI_API_KEY` colab secret. If the code is using the legacy `GOOGLE_API_KEY` secret, ask them to update it.
 
 ## Outputs
 
@@ -130,6 +131,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Do not use extra parameters (like temperature) when not needed to keep the focus on what your notebook is illustrating.
 * If you have to use extra-parameters, explain why and why the specific value the first time you do.
 * Any examples using `yt-dlp` or equivalent that are downloading (or streaming) Youtube content are strictly forbidden as it violates [YouTube terms of service](https://www.youtube.com/t/terms#c3e2907ca8).
+* Any crypto or blockchain related topics are also forbidden
 
 ## Assets and external data
 

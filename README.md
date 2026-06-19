@@ -4,11 +4,17 @@ This cookbook provides a structured learning path for using the Gemini API, focu
 
 **For comprehensive API documentation, visit [ai.google.dev](https://ai.google.dev/gemini-api/docs).**
 <br><br>
+**For Gemma quickstarts and examples, check out the [Gemma cookbook](https://github.com/google-gemma/cookbook).**
+<br><br>
 
 ---
-> **Gemini 3 Pro**: For the latest on our new model, please check the [Get Started](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3) and the [thinking](./quickstarts/Get_started_thinking.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb#gemini3) guides who include [migration guides](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3migration).
+> **Gemini 3.5 Flash**: For the most recent updates on our latest generation, please check the [Get Started](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3) and the [thinking](./quickstarts/Get_started_thinking.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb#gemini3) guides who include [migration guides](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3migration).
 > 
-> **🍌 Nano-Banana Pro**: Go bananas with our new flagship image generation model with thinking and search grounding and 4K image generation. Get started [here](./quickstarts/Get_Started_Nano_Banana.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb#nano-banana-pro) with a ton of examples!
+> **Agents API**: Create and run your custom agents using the new [Antigravity agent](./quickstarts/Get_started_managed_agents.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_managed_agents.ipynb)!
+> 
+> **🍌 Nano-Banana 2**: Go bananas with our latest image generation model: **Nano-Banana 2**. Get started [here](./quickstarts/Get_Started_Nano_Banana.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb#nano-banana-pro) with 512px, thinking, search and image grounding, and a ton of examples!
+> 
+> **🎶 Lyria 3**: Channel your inner composer with **Lyria 3**. Get started [here](./quickstarts/Get_started_Lyria.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_Lyria.ipynb) with 30s clips and full song generation, image-to-music, and a ton of examples!
 ---
 
 ## Navigating the Cookbook
@@ -24,14 +30,18 @@ We also showcase **Demos** in separate repositories, illustrating end-to-end app
 ## What's New?
 
 Here are the recent additions and updates to the Gemini API and the Cookbook: 
-
-* **🍌 Nano-banana Pro:** Use [Gemini's native image generation](./quickstarts/Get_Started_Nano_Banana.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb) capabilities to edit images with high consistency or generate visual stories. Now with thinking, search grounding and 4K output!
+* **Agents API**: Create and run agents using the [Antigravity agent](./quickstarts/Get_started_managed_agents.ipynb) [![Antigravity agent](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_managed_agents.ipynb) in a controlled environment.
+* **Gemini 3.5 Flash**: Gemini 3.5 Flash is generally available. Learn how to build with the model in the [Getting started cookbook](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb).
+* **Webhooks**: Get real-time notifications for async operations like batch jobs and video generation with the [Webhooks quickstart](./quickstarts/Webhooks.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Webhooks.ipynb).
+* **Inference tiers**: Learn how to use the Priority and Flex tiers in the [Inference tiers guide](./quickstarts/Inference_tiers.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Inference_tiers.ipynb) to help you balance speed, cost, and reliability.
+* **🎶 Lyria 3**: Convert your ideas into [songs](./quickstarts/Get_Started_Lyria.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Lyria.ipynb) with full control over the music structure and more!
+* **🍌 Nano-Banana 2 & Pro:** Use [Gemini's native image generation](./quickstarts/Get_Started_Nano_Banana.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb) capabilities to edit images with high consistency or generate visual stories. Experience **Nano-Banana 2** for high speed or **Nano-Banana Pro** for 4K quality—both now with thinking and search grounding!
 * **File Search:** Discover how to ground generations in your own data in a hosted RAG system with the [File Search quickstart](./quickstarts/File_Search.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/File_Search.ipynb). 
 * **Grounding with Google Maps:** Get started using factual geographical data from 📍 Google Maps in your apps! See the Google Maps section of the [Grounding Guide](./quickstarts/Grounding.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Grounding.ipynb).
 * **Veo 3.1**: Get started with our video generation model with this [Veo guide](./quickstarts/Get_started_Veo.ipynb), including image-to-videos and video extension! [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_Veo.ipynb)
 * **Gemini Robotics-ER 1.5**: Learn about this new Gemini model specifically for spatial understanding and reasoning for [robotics applications](./quickstarts/gemini-robotics-er.ipynb). [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/gemini-robotics-er.ipynb)
 * **Lyria and TTS**: Get started with podcast and music generation with the [TTS](./quickstarts/Get_started_TTS.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_TTS.ipynb) and [Lyria RealTime](./quickstarts/Get_started_LyriaRealTime.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_LyriaRealTime.ipynb) models.
-* **LiveAPI**: Get started with the [multimodal Live API](./quickstarts/Get_started_LiveAPI.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_LiveAPI.ipynb) and unlock new interactivity with Gemini. 
+* **Live API & Live Translation**: Get started with the [multimodal Live API](./quickstarts/Get_started_LiveAPI.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_LiveAPI.ipynb) for low-latency voice/video streaming, or the [Live Translation API](./quickstarts/Get_started_LiveTranslate.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_LiveTranslate.ipynb) to translate audio streams in real-time.
 * **Recently Added Guides:**
   * [Grounding](./quickstarts/Grounding.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Grounding.ipynb): Discover different ways to ground Gemini's answer using different tools, from Google Search to Youtube and URLs and the new [**Maps grounding**](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Grounding.ipynb#maps_grounding) tool. 
   * [Batch API](./quickstarts/Batch_mode.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Batch_mode.ipynb): Use Batch API to send large volume of non-time-sensitive requests to the model and get up to 90% discount. 
@@ -52,14 +62,15 @@ The [quickstarts section](https://github.com/google-gemini/cookbook/tree/main/qu
 We recommend starting with the following:
 
 *   [Authentication](./quickstarts/Authentication.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Authentication.ipynb): Set up your API key for access.
-*   [**Get started**](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb): Get started with Gemini models and the Gemini API, covering basic prompting and multimodal input.
+*   [**Get Started**](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb): Get started with Gemini models and the Gemini API, covering basic prompting and multimodal input.
 <br><br>
 
 Then, explore the other quickstarts tutorials to learn about individual features:
 *  [Get started with Live API](./quickstarts/Get_started_LiveAPI.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_LiveAPI.ipynb): Get started with the live API with this comprehensive overview of its capabilities
+*  [Get started with Live Translation](./quickstarts/Get_started_LiveTranslate.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_LiveTranslate.ipynb): Translate audio streams in real-time using the Live Translation API
 *  [Get started with Veo](./quickstarts/Get_started_Veo.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_Veo.ipynb): Get started with our video generation capabilities 
 *  [Get started with Imagen](./quickstarts/Get_started_imagen.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_imagen.ipynb) and [Native image generation](./quickstarts/Get_Started_Nano_Banana.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb): Get started with our image generation capabilities 
-*  [Grounding](./quickstarts/Grounding.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Grounding.ipynb): use Google Search for grounded responses
+*  [Grounding](./quickstarts/Grounding.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Grounding.ipynb): Use Google Search for grounded responses
 *  [Code execution](./quickstarts/Code_Execution.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Code_Execution.ipynb): Generate and run Python code to solve complex tasks and even output graphs
 *  And [many more](https://github.com/google-gemini/cookbook/tree/main/quickstarts/)
 <br><br>
@@ -72,8 +83,8 @@ These examples demonstrate how to combine multiple Gemini API features or 3rd-pa
 *  [Animated Story Generation](./examples/Animated_Story_Video_Generation_gemini.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Animated_Story_Video_Generation_gemini.ipynb): Create animated videos by combining Gemini's story generation, Imagen, and audio synthesis
 *  [Plotting and mapping Live](./examples/LiveAPI_plotting_and_mapping.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/LiveAPI_plotting_and_mapping.ipynb): Mix *Live API* and *Code execution* to solve complex tasks live
 *  [3D Spatial understanding](./examples/Spatial_understanding_3d.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Spatial_understanding_3d.ipynb): Use Gemini *3D spatial* abilities to understand 3D scenes
-*  [Gradio and live API](./examples/gradio_audio.py): Use gradio to deploy your own instance of the *Live API*
-*  And [many many more](https://github.com/google-gemini/cookbook/tree/main/examples/)
+*  [Gradio and live API](./examples/gradio_audio.py): Use Gradio to deploy your own instance of the *Live API*
+*  And [many more](https://github.com/google-gemini/cookbook/tree/main/examples/)
 <br><br>
 
 ## 3. Demos (End-to-End Applications)
@@ -92,11 +103,10 @@ These fully functional, end-to-end applications showcase the power of Gemini in 
 
 The Gemini API is a REST API. You can call it directly using tools like `curl` (see [REST examples](https://github.com/google-gemini/cookbook/tree/main/quickstarts/rest/) or the great [Postman workspace](https://www.postman.com/ai-on-postman/google-gemini-apis/overview)), or use one of our official SDKs:
 * [Python](https://github.com/googleapis/python-genai)
-* [Go](https://github.com/google/generative-ai-go)
-* [Node.js](https://github.com/google/generative-ai-js)
-* [Dart (Flutter)](https://github.com/google/generative-ai-dart)
-* [Android](https://github.com/google/generative-ai-android)
-* [Swift](https://github.com/google/generative-ai-swift)
+* [Go](https://github.com/googleapis/go-genai)
+* [Node.js](https://github.com/googleapis/js-genai)
+* [Java](https://github.com/googleapis/java-genai)
+* [C#](https://github.com/googleapis/dotnet-genai/)
 <br><br>
 
 ## Get Help

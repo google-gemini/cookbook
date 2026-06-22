@@ -142,9 +142,9 @@ See [`.gemini/styleguide.md`](./.gemini/styleguide.md) for the full list and res
     interaction = client.interactions.create(
         model=MODEL_ID,
         input="Here's my prompt",
-        config={
-            "response_mime_type": "application/json",
-            "response_schema": Schema
+        response_format={
+            "mime_type": "application/json",
+            "schema": Schema
         }
     )
     ```

@@ -22,14 +22,14 @@ This guide is mostly about the python content and the notebook, but don't forget
 ## Common mistakes
 
 * There are multiple SDKs to use the Gemini APIs. The correct and most recent one is the [Python genai](https://github.com/googleapis/python-genai) one.
-    * `%pip install -U -q 'google-genai>=2.0.0'` is the right way to install the SDK. The version indicated should reflect the minimum version needed to use the features used in the notebook (2.0.0 by default or in doubt).
+    * `%pip install -U -q 'google-genai>=2.9.0'` is the right way to install the SDK. The version indicated should reflect the minimum version needed to use the features used in the notebook (2.9.0 by default or in doubt).
     * `from google import genai` is the right way to import the official SDK.
     * `from google.genai import types` is the right way to import the types.
     * `import google.generativeai` is incorrect, this is the old one that was deprecated early 2025.
 
 ## Interactions API
 
-All new quickstart notebooks **must** use the Interactions API (`client.interactions.create()`) instead of the legacy `client.models.generate_content()`. The Interactions API is the primary interface starting with `google-genai>=2.0.0`.
+All new quickstart notebooks **must** use the Interactions API (`client.interactions.create()`) instead of the legacy `client.models.generate_content()`. The Interactions API is the primary interface starting with `google-genai>=2.9.0`.
 
 ### When to use `client.interactions.create()`
 * All standard text generation, multimodal understanding, structured output, function calling, grounding, code execution, thinking, and streaming use cases.
@@ -39,7 +39,6 @@ All new quickstart notebooks **must** use the Interactions API (`client.interact
 The following features are **not yet supported** by the Interactions API and should continue using their dedicated APIs:
 * **Veo (video generation):** Use `client.models.generate_videos()`
 * **Imagen (image generation):** Use `client.models.generate_images()`
-* **Lyria (music generation):** Use the Lyria-specific API
 * **Live API (real-time streaming):** Use `client.live.connect()`
 * **Embeddings:** Use `client.models.embed_content()`
 * **TTS (text-to-speech):** Use the TTS-specific API

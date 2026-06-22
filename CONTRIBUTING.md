@@ -143,6 +143,7 @@ See [`.gemini/styleguide.md`](./.gemini/styleguide.md) for the full list and res
         model=MODEL_ID,
         input="Here's my prompt",
         response_format={
+            "type": "text",
             "mime_type": "application/json",
             "schema": Schema
         }

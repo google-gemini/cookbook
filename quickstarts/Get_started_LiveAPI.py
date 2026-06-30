@@ -46,7 +46,6 @@ python Get_started_LiveAPI.py --mode screen
 """
 
 import asyncio
-import base64
 import io
 import os
 import sys
@@ -75,13 +74,12 @@ RECEIVE_SAMPLE_RATE = 24000
 CHUNK_SIZE = 1024
 
 # --- Model Configuration ---
-MODEL = "models/gemini-2.5-flash-native-audio-preview-12-2025"
+MODEL = "gemini-3.1-flash-live-preview"
 DEFAULT_MODE = "camera"
 
 
 client = genai.Client(
-    api_key=os.environ.get("GEMINI_API_KEY"),
-    http_options={"api_version": "v1beta"},
+    api_key=os.environ.get("GOOGLE_API_KEY"),
 )
 
 # Live session configuration
@@ -91,12 +89,15 @@ CONFIG = types.LiveConnectConfig(
     response_modalities=["AUDIO"],
     speech_config=types.SpeechConfig(
         voice_config=types.VoiceConfig(
-            prebuilt_voice_config=types.PrebuiltVoiceConfig(voice_name = "Zephyr")
+            prebuilt_voice_config=types.PrebuiltVoiceConfig(voice_name="Zephyr")
         )
     ),
+    # Enable transcription of both user speech and model audio output.
+    input_audio_transcription=types.AudioTranscriptionConfig(),
+    output_audio_transcription=types.AudioTranscriptionConfig(),
     context_window_compression=types.ContextWindowCompressionConfig(
-        trigger_tokens = 25600,
-        sliding_window = types.SlidingWindow(target_tokens=12800),
+        trigger_tokens=25600,
+        sliding_window=types.SlidingWindow(target_tokens=12800),
     ),
 )
 
@@ -136,7 +137,7 @@ class AudioVideoLoop:
                 data = await asyncio.to_thread(self.audio_stream.read, CHUNK_SIZE, **kwargs)
                 payload = {
                     "data": data,
-                    "mime_type": "audio/pcm"
+                    "mime_type": "audio/pcm;rate=16000"
                 }
                 # To reduce latency instead of watiing to push in queue we pop oldest item in queue if its full
                 # This helps to keep the audio stream real time
@@ -175,21 +176,33 @@ class AudioVideoLoop:
     async def receive_audio(self):
         """Read from the websocket and write PCM chunks to the output queue."""
         try:
+            # session.receive() yields responses for one turn then returns.
+            # The outer while True re-enters it for every subsequent turn.
             while True:
-                turn = self.session.receive()
-                async for response in turn:
-                    if data := response.data:
-                        self.audio_in_queue.put_nowait(data)
+                async for response in self.session.receive():
+                    server_content = response.server_content
+                    if server_content is None:
                         continue
-                    if text := response.text:
-                        print(text, end="")
 
-                # If you interrupt the model, it sends a turn_complete.
-                # For interruptions to work, we need to stop playback.
-                # So empty out the audio queue because it may have loaded
-                # much more audio than has played yet.
-                while not self.audio_in_queue.empty():
-                    self.audio_in_queue.get_nowait()
+                    # Clear the playback queue on interruption, but don't skip
+                    # the rest of this response — a transcription may arrive
+                    # on the same message.
+                    if server_content.interrupted:
+                        while not self.audio_in_queue.empty():
+                            self.audio_in_queue.get_nowait()
+
+                    # Process ALL parts in each server event — a single event
+                    # can contain multiple content parts simultaneously.
+                    if server_content.model_turn:
+                        for part in server_content.model_turn.parts:
+                            if part.inline_data:
+                                self.audio_in_queue.put_nowait(part.inline_data.data)
+
+                    if server_content.input_transcription:
+                        print(f"\nYou: {server_content.input_transcription.text}", end="")
+
+                    if server_content.output_transcription:
+                        print(f"\nGemini: {server_content.output_transcription.text}", end="")
         except asyncio.CancelledError:
             pass
 
@@ -215,7 +228,7 @@ class AudioVideoLoop:
 
         mime_type = "image/jpeg"
         image_bytes = image_io.read()
-        return {"mime_type": mime_type, "data": base64.b64encode(image_bytes).decode()}
+        return {"mime_type": mime_type, "data": image_bytes}
 
     async def capture_frames(self):
         cap = await asyncio.to_thread(
@@ -249,7 +262,7 @@ class AudioVideoLoop:
 
         mime_type = "image/jpeg"
         image_bytes = image_io.read()
-        return {"mime_type": mime_type, "data": base64.b64encode(image_bytes).decode()}
+        return {"mime_type": mime_type, "data": image_bytes}
 
     async def capture_screen(self):
         try:
@@ -270,15 +283,12 @@ class AudioVideoLoop:
             while True:
                 text = await asyncio.to_thread(
                     input,
-                    "message > ",
+                    "speak or type 'q' to quit > ",
                 )
                 if text.lower() == "q":
                     print("👋 Exiting on user request...")
                     break
-                await self.session.send_client_content(
-                    turns=types.Content(parts=[types.Part(text=text or "")]),
-                    turn_complete=True,
-                )
+                await self.session.send_realtime_input(text=text)
         except asyncio.CancelledError:
             pass
 
@@ -286,10 +296,12 @@ class AudioVideoLoop:
         try:
             while True:
                 msg = await self.out_queue.get()
+                blob = types.Blob(data=msg["data"], mime_type=msg["mime_type"])
                 if msg["mime_type"].startswith("audio/"):
-                    await self.session.send_realtime_input(audio=msg)
+                    await self.session.send_realtime_input(audio=blob)
                 else:
-                    await self.session.send_realtime_input(media=msg)
+                    # Use video= (not the deprecated media=) for image/video frames.
+                    await self.session.send_realtime_input(video=blob)
         except asyncio.CancelledError:
             pass
 

@@ -22,10 +22,42 @@ This guide is mostly about the python content and the notebook, but don't forget
 ## Common mistakes
 
 * There are multiple SDKs to use the Gemini APIs. The correct and most recent one is the [Python genai](https://github.com/googleapis/python-genai) one.
-    * `%pip install -U -q 'google-genai>=1.0.0'` is the right way to install the SDK. The version indicated should reflect the minimum version needed to use the features used in the notebook (1.0.0 by default or in doubt).
+    * `%pip install -U -q 'google-genai>=2.9.0'` is the right way to install the SDK. The version indicated should reflect the minimum version needed to use the features used in the notebook (2.9.0 by default or in doubt).
     * `from google import genai` is the right way to import the official SDK.
     * `from google.genai import types` is the right way to import the types.
     * `import google.generativeai` is incorrect, this is the old one that was deprecated early 2025.
+
+## Interactions API
+
+All new quickstart notebooks **must** use the Interactions API (`client.interactions.create()`) instead of the legacy `client.models.generate_content()`. The Interactions API is the primary interface starting with `google-genai>=2.9.0`.
+
+### When to use `client.interactions.create()`
+* All standard text generation, multimodal understanding, structured output, function calling, grounding, code execution, thinking, and streaming use cases.
+* This is the default — use it unless your notebook falls into one of the exceptions below.
+
+### When it's OK to NOT use the Interactions API
+The following features are **not yet supported** by the Interactions API and should continue using their dedicated APIs:
+* **Veo (video generation):** Use `client.models.generate_videos()`
+* **Imagen (image generation):** Use `client.models.generate_images()`
+* **Live API (real-time streaming):** Use `client.live.connect()`
+* **Embeddings:** Use `client.models.embed_content()`
+* **TTS (text-to-speech):** Use the TTS-specific API
+* **Batch mode:** Use `client.batches`
+* **Caching:** Use `client.caches`
+* **File API:** Use `client.files`
+
+When a notebook uses one of these exceptions, add a brief comment explaining why the Interactions API is not used.
+
+### Response access pattern
+With the Interactions API, access the response text like this:
+```python
+interaction = client.interactions.create(
+    model=MODEL_ID,
+    input="Your prompt here",
+)
+print(interaction.steps[-1].content[0].text)
+```
+Do **not** use `interaction.outputs` — it is deprecated in 2.0.0.
 
 
 ## Hard-coded API keys
@@ -75,6 +107,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
   `prompt = "Detect the 2d bounding boxes of the cupcakes (with “label” as topping description”)"  # @param {type:"string"}`
   or a list of prompts they can choose from:
  `prompt = "Draw a square around the fox' shadow"  # @param ["Find the two origami animals.", "Where are the origamis' shadows?","Draw a square around the fox' shadow"] {"allow-input":true}`
+* The API key should always be gathered from the `GEMINI_API_KEY` colab secret. If the code is using the legacy `GOOGLE_API_KEY` secret, ask them to update it.
 
 ## Outputs
 
@@ -97,6 +130,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Do not use extra parameters (like temperature) when not needed to keep the focus on what your notebook is illustrating.
 * If you have to use extra-parameters, explain why and why the specific value the first time you do.
 * Any examples using `yt-dlp` or equivalent that are downloading (or streaming) Youtube content are strictly forbidden as it violates [YouTube terms of service](https://www.youtube.com/t/terms#c3e2907ca8).
+* Any crypto or blockchain related topics are also forbidden
 
 ## Assets and external data
 
@@ -118,14 +152,14 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * **Use 4 spaces per indentation level.** (PEP 8 recommendation)
 * When a function has multiple parameters, expend it on multiple lines with proper indentation for better readability:
     ```python
-    response = client.models.generate_content(
+    interaction = client.interactions.create(
         model=MODEL_ID,
-        contents="Here's my prompt",
+        input="Here's my prompt",
         config={
             "response_mime_type": "application/json",
             "response_schema": Schema
         }
-    )    
+    )
     ```
 Notice the line break on the first and last lines.
 * Long text variables should use triple double quotes and proper indentation for better readability:
@@ -140,9 +174,9 @@ Notice the line break on the first and last lines.
 Notice the line break on the first and last lines.
 * When a multiline string is used inside a function call, add an extra indent level between the `"""` delimiters and the text body to visually separate the string content from the surrounding code:
     ```python
-    response = client.models.generate_content(
+    interaction = client.interactions.create(
         model=MODEL_ID,
-        contents=[
+        input=[
             audio_file,
             """
                 Analyze this audio file and extract any musical chord

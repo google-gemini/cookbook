@@ -93,6 +93,19 @@ All media files (audio, images, video), datasets, and other external assets used
 
 Please mention the source and license in the markdown cell that introduces the asset. Prefer stable hosting (the cookbook's GCS bucket, Wikimedia Commons, Internet Archive, YouTube) over ephemeral URLs.
 
+## Using the Interactions API
+
+All quickstart notebooks **must** use the Interactions API (`client.interactions.create()`) as of `google-genai>=2.0.0`. This is the primary interface for text generation, multimodal understanding, structured output, function calling, grounding, and more.
+
+Some features are **not yet supported** by the Interactions API and should use their dedicated APIs instead:
+* Video generation (Veo): `client.models.generate_videos()`
+* Image generation (Imagen): `client.models.generate_images()`
+* Live API: `client.live.connect()`
+* Embeddings: `client.models.embed_content()`
+* Music generation (Lyria), TTS, Batch mode, Caching, File API
+
+See [`.gemini/styleguide.md`](./.gemini/styleguide.md) for the full list and response access patterns.
+
 # Detailed Coding and Notebook Guidelines
 ## Notebook Style
 
@@ -126,12 +139,13 @@ Please mention the source and license in the markdown cell that introduces the a
     ```
 * When a function has multiple parameters, expand it onto multiple lines with proper indentation for better readability:
     ```python
-    response = client.models.generate_content(
+    interaction = client.interactions.create(
         model=MODEL_ID,
-        contents="Here's my prompt",
-        config={
-            "response_mime_type": "application/json",
-            "response_schema": Schema
+        input="Here's my prompt",
+        response_format={
+            "type": "text",
+            "mime_type": "application/json",
+            "schema": Schema
         }
     )
     ```

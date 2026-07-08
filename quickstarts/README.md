@@ -5,6 +5,12 @@ This folder contains guides to help you explore all Gemini API features using co
 When you're confident in your Gemini capabilities, the [examples](https://github.com/google-gemini/cookbook/tree/main/examples/) folder will be an endless source of inspiration on how to mix those capabilities together.
 <br><br>
 
+---
+> **Gemini 3**: For the most recent updates on our latest generation, please check the [Get Started](./Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3) and the [thinking](./Get_started_thinking.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb#gemini3) guides who include [migration guides](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini3migration).
+> 
+> **🍌 Nano-Banana 2**: Go bananas with our latest image generation model: **Nano-Banana 2**. Get started [here](./Get_Started_Nano_Banana.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb#nano-banana-pro) with 512px, thinking, search and image grounding, and a ton of examples!
+---
+
 ## Table of contents
 
 If you're new to Gemini API, you should start with these two guides:
@@ -19,6 +25,7 @@ Then learn about how to **Get Started** with the other models that you can use w
 
 | Quickstart | Description | Open |
 | -------- | ----------- | ---- |
+| [Nano-Banana 2 & Pro](./Get_Started_Nano_Banana.ipynb) aka. Gemini Image | Get to know how the Gemini model can directly output images and edit them through multi-turn discussion. Now featuring Gemini 3.1 Flash! | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb) |
 | [Veo](./Get_started_Veo.ipynb) | Get started with video generation using the Veo models. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_Veo.ipynb) |
 | [Imagen](./Get_started_imagen.ipynb) | Get started with our image generation model. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_imagen.ipynb) |
 | [Imagen (REST)](./Get_started_imagen_rest.ipynb) | Get started with our image generation model (REST version). | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_imagen_rest.ipynb) |
@@ -39,11 +46,12 @@ Finally, these guides will deep-dive into specific capabilities of the Gemini mo
 
 | Quickstart | Description | Open |
 | -------- | ----------- | ---- |
-| [Grounding](./Grounding.ipynb) | Learn how to use diffrent ways (Google Search, Youtube, url context) to ground your answers with external sources. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Grounding.ipynb) |
+| [Grounding](./Grounding.ipynb) | Learn how to use diffrent ways (Google Search, Google Maps, Youtube, url context) to ground your answers with external sources. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Grounding.ipynb) |
+| [File Search](./File_Search.ipynb) | Upload and search your data using the hosted RAG capability of the File Search tool. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/File_Search.ipynb) | 
 | [Search Grounding](./Search_Grounding.ipynb) | Deep-dive into the Google search grounding capabilities. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Search_Grounding.ipynb) |
+| [Gemini Robotics-ER 1.5 Preview](./gemini-robotics-er.ipynb) | Learn how to use the Gemini Robotics Embodied Reasoning model for spatial understanding and reasoning| [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/gemini-robotics-er.ipynb) |
 | [Batch-mode](./Batch_mode.ipynb) | Use Batch-mode to send large volume of non-time-sensitive requests to the model and get a 50% discount. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Batch_mode.ipynb) |
 | [Function Calling](./Function_calling.ipynb) | Discover how to have Gemini call you own function and enhaced its capabilites. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Function_calling.ipynb) |
-| [Image-out](./Image_out.ipynb) | Get to know how the Gemini model can directly output images and edit them through multi-turn discussion. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Image_out.ipynb) |
 | [Spatial understanding](./Spatial_understanding.ipynb) | Learn how to use Gemini's spatial understanding capabilities to detect what's in your images, and reason about them | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Spatial_understanding.ipynb) |
 | [Video understanding](./Video_understanding.ipynb) | Learn how to use Gemini's video understanding capabilities to analyze what's in your videos | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Video_understanding.ipynb) |
 | [Get started with Live API tools](./Get_started_LiveAPI_tools.ipynb) | Now you know everything about the Live API, go to the next level and learn how to use tools with it! | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_LiveAPI_tools.ipynb) |

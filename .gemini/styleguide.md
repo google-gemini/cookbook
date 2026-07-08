@@ -19,6 +19,15 @@ This guide is mostly about the python content and the notebook, but don't forget
 
 # Cookbook notebook specific instructions
 
+## Common mistakes
+
+* There are multiple SDKs to use the Gemini APIs. The correct and most recent one is the [Python genai](https://github.com/googleapis/python-genai) one.
+    * `%pip install -U -q 'google-genai>=1.0.0'` is the right way to install the SDK. The version indicated should reflect the minimum version needed to use the features used in the notebook (1.0.0 by default or in doubt).
+    * `from google import genai` is the right way to import the official SDK.
+    * `from google.genai import types` is the right way to uimport the types.
+    * `import google.generativeai` is incorrect, this is the old one that was deprecated early 2025.
+
+
 ## Hard-coded API keys
 
 Very important: notebooks must not contain hard-coded API keys. If you find one, immediately tell the author to cancel their submission, revoke the compromised key, and create a new one. Exposed keys are quickly collected and can lead to unauthorized usage and costs for the author.
@@ -30,8 +39,9 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Those cells can be either Markdown or python code (or sometimes bash in which case the code cell starts with `%%bash`).
 * The `outputs` do not have to be ignored, but if none of them changed while some code has, it might be a sign that the
   notebook has not been run to check that it works, in which case a warning should be raised;
+* Ideally we want the ouputs to be saved in the notebooks so that one can see what the code does without runnning it. The only exception is when the ouput is tooo large (it contains images or videos for ex.).
 * If the `execution_count` has changed to something else than `null`, it usually indicates that the formatting script has not
-  been run. A warning should be raised, but only once per notebook.
+  been run. A warning should be raised, but only once per notebook. Be very clear that it means that the formatting script must be run, not that the outputs should be removed.
 
 ## Notebook style
 
@@ -42,8 +52,8 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
   where `URL` should be `https://colab.research.google.com/github/google-gemini/cookbook/blob/main/` followed by the notebook
   location in the cookbook
 * Include an overview section before any code.
-* use %pip instead of !pip
-* Put the imports when they are first used.
+* use `%pip` instead of `!pip`
+* Put the imports when they are first used. Try to avoid having a big "import" cell at the beginning.
 * Keep code as brief as possible. 
 * Break text cells at headings
 * Break code cells between "building" and "running".
@@ -60,7 +70,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Only use helper function when you don't have a choice. If it's only a couple of lines, it's usually better to write them
   everytime so that the readers don't have to check the function definition all the time.
 * When selecting a model, use a colab selector for easier maintainability:
-  `MODEL_ID="gemini-2.5-flash" # @param ["gemini-2.5-flash-lite","gemini-2.5-flash","gemini-2.5-pro"] {"allow-input":true, isTemplate: true}`
+  `MODEL_ID="gemini-2.5-flash" # @param ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.5-pro", "gemini-3.1-flash-lite-preview", "gemini-3-flash-preview", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}`
 * Some notebooks can also benefit from having a form to update the prompt:
   `prompt = "Detect the 2d bounding boxes of the cupcakes (with “label” as topping description”)"  # @param {type:"string"}`
   or a list of prompts they can choose from:

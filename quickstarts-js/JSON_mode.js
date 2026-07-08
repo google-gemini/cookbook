@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,30 @@
  * limitations under the License.
  */
 
-
 /* Markdown (render)
-# Gemini API: JSON Mode Quickstart
+# Gemini API: JSON Mode and Enum Quickstart
 
+When building applications with the Gemini API, you often need the model's output in a structured format—for example, extracting recipe data to populate a database, or classifying items into predefined categories. JSON mode lets you constrain the model's response to valid JSON, so you can reliably parse the output without fragile string manipulation.
 
-The Gemini API can be used to generate a JSON output if you set the schema that you would like to use.
-
-Two methods are available. You can either set the desired output in the prompt or supply a schema to the model separately.
-
+This guide walks you through two approaches—describing the schema in your prompt vs. supplying it programmatically—and shows how to use Enum constraints for classification tasks.
 
 ## Setup
 ### Install SDK and set-up the client
+
+To interact with Gemini models using JavaScript, you'll need the `@google/genai` library. In standard environments, you can install the SDK using `npm`:
+
+```bash
+npm install @google/genai
+```
+
+Once installed, you can import and initialize the client in your code:
+
+```js
+import { GoogleGenAI } from '@google/genai';
+const ai = new GoogleGenAI({});
+```
+
+In this notebook's interactive environment, the SDK is imported dynamically from a CDN.
 
 ### API Key Configuration
 
@@ -47,13 +59,13 @@ module = await import("https://esm.sh/@google/genai@1.4.0");
 GoogleGenAI = module.GoogleGenAI;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-MODEL_ID = "gemini-2.5-flash" // ["gemini-2.5-flash-lite-preview-06-17", "gemini-2.5-flash", "gemini-2.5-pro"]
+MODEL_ID = "gemini-3.5-flash" // "gemini-3.5-flash", "gemini-3-pro"
 // [CODE ENDS]
 
 /* Markdown (render)
 ## Set your constrained output in the prompt
 
-For this first example just describe the schema you want back in the prompt:
+The simplest approach is to describe the desired output format directly in the prompt. The notation below (`Recipe = {'recipe_name': str}`, `Return: list[Recipe]`) uses Python-style type hints as a shorthand—Gemini understands this convention even in JavaScript contexts since the schema format originates from the Python SDK:
 
 */
 
@@ -67,9 +79,9 @@ prompt = `
 // [CODE ENDS]
 
 /* Markdown (render)
-Now select the model you want to use in this guide, either by selecting one in the list or writing it down. Keep in mind that some models, like the 2.5 ones are thinking models and thus take slightly more time to respond (cf. [thinking notebook](./Get_started_thinking.ipynb) for more details and in particular learn how to switch the thiking off).
+Now select the model you want to use in this guide. Keep in mind that some models, like the 3.5 ones, are thinking models and thus take slightly more time to respond (cf. [thinking notebook](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb) for more details).
 
-Then activate JSON mode by specifying `respose_mime_type` in the `config` parameter:
+Then activate JSON mode by specifying `responseMimeType` as `application/json` in the `config` parameter:
 */
 
 // [CODE STARTS]
@@ -89,16 +101,16 @@ console.log("```\n",rawResponse.text,"\n```")
 ```
  [
   {
-    &quot;recipe_name&quot;: &quot;Chocolate Chip Cookies&quot;
+    "recipe_name": "Chocolate Chip Cookies"
   },
   {
-    &quot;recipe_name&quot;: &quot;Oatmeal Raisin Cookies&quot;
+    "recipe_name": "Oatmeal Raisin Cookies"
   },
   {
-    &quot;recipe_name&quot;: &quot;Peanut Butter Cookies&quot;
+    "recipe_name": "Peanut Butter Cookies"
   },
   {
-    &quot;recipe_name&quot;: &quot;Sugar Cookies&quot;
+    "recipe_name": "Sugar Cookies"
   }
 ] 
 ```
@@ -108,9 +120,9 @@ console.log("```\n",rawResponse.text,"\n```")
 /* Markdown (render)
 ## Supply the schema to the model directly
 
-The newest models (1.5 and beyond) allow you to pass a schema object (or a python type equivalent) directly and the output will strictly follow that schema.
+You can pass a structured schema object directly to the model configuration, ensuring the output strictly adheres to the schema shape. The schema follows the [OpenAPI 3.0 Schema Object](https://spec.openapis.org/oas/v3.0.3#schema-object) format.
 
-Following the same example as the previous section, here's that recipe type:
+Here is a schema definition for a cookie recipe:
 */
 
 // [CODE STARTS]
@@ -130,7 +142,7 @@ recipeSchema = {
 // [CODE ENDS]
 
 /* Markdown (render)
-For this example you want a list of `Recipe` objects, so pass `list[Recipe]` to the `response_schema` field of the `config`.
+To request a list of recipes matching this structure, define the `responseSchema` as an array of the `recipeSchema` object:
 */
 
 // [CODE STARTS]
@@ -154,19 +166,19 @@ console.log("```\n",result.text,"\n```");
 ```
  [
   {
-    &quot;recipe_description&quot;: &quot;A crescent of delicate shortbread, infused with the warm embrace of autumnal pear and a whisper of exotic cardamom, culminating in a celestial experience.&quot;,
-    &quot;recipe_ingredients&quot;: [&quot;Unsalted butter&quot;, &quot;All-purpose flour&quot;, &quot;Powdered sugar&quot;, &quot;Ripe pears&quot;, &quot;Ground cardamom&quot;, &quot;Vanilla bean paste&quot;],
-    &quot;recipe_name&quot;: &quot;Celestial Spiced Pear &amp; Cardamom Crescent&quot;
+    "recipe_description": "A crescent of delicate shortbread, infused with the warm embrace of autumnal pear and a whisper of exotic cardamom, culminating in a celestial experience.",
+    "recipe_ingredients": ["Unsalted butter", "All-purpose flour", "Powdered sugar", "Ripe pears", "Ground cardamom", "Vanilla bean paste"],
+    "recipe_name": "Celestial Spiced Pear & Cardamom Crescent"
   },
   {
-    &quot;recipe_description&quot;: &quot;Rich, dark chocolate cookies with a molten espresso ganache heart, dusted with cocoa for an intensely decadent and sophisticated bite.&quot;,
-    &quot;recipe_ingredients&quot;: [&quot;Dark cocoa powder&quot;, &quot;Unsalted butter&quot;, &quot;Granulated sugar&quot;, &quot;Eggs&quot;, &quot;All-purpose flour&quot;, &quot;Espresso powder&quot;, &quot;Heavy cream&quot;, &quot;Bittersweet chocolate&quot;],
-    &quot;recipe_name&quot;: &quot;Midnight Velvet Espresso Truffle Buttons&quot;
+    "recipe_description": "Rich, dark chocolate cookies with a molten espresso ganache heart, dusted with cocoa for an intensely decadent and sophisticated bite.",
+    "recipe_ingredients": ["Dark cocoa powder", "Unsalted butter", "Granulated sugar", "Eggs", "All-purpose flour", "Espresso powder", "Heavy cream", "Bittersweet chocolate"],
+    "recipe_name": "Midnight Velvet Espresso Truffle Buttons"
   },
   {
-    &quot;recipe_description&quot;: &quot;Crisp, golden honey shortbread adorned with delicate crystallized lavender florets, offering a sweet, aromatic, and truly ethereal indulgence.&quot;,
-    &quot;recipe_ingredients&quot;: [&quot;Unsalted butter&quot;, &quot;All-purpose flour&quot;, &quot;Granulated sugar&quot;, &quot;Honey&quot;, &quot;Culinary lavender&quot;, &quot;Egg yolk&quot;, &quot;Sea salt&quot;],
-    &quot;recipe_name&quot;: &quot;Lavender Honeycomb Dreams&quot;
+    "recipe_description": "Crisp, golden honey shortbread adorned with delicate crystallized lavender florets, offering a sweet, aromatic, and truly ethereal indulgence.",
+    "recipe_ingredients": ["Unsalted butter", "All-purpose flour", "Granulated sugar", "Honey", "Culinary lavender", "Egg yolk", "Sea salt"],
+    "recipe_name": "Lavender Honeycomb Dreams"
   }
 ] 
 ```
@@ -174,21 +186,188 @@ console.log("```\n",result.text,"\n```");
 */
 
 /* Markdown (render)
-It is the recommended method if you're using a compatible model.
+## Enums
+
+If you need the model to choose one option from a set of choices, you can define an enum constraint. 
+
+Let's fetch a sample image of a musical instrument:
+*/
+
+// [CODE STARTS]
+IMAGE_URL = "https://storage.googleapis.com/generativeai-downloads/images/instrument.jpg";
+
+imageBlob = await fetch(IMAGE_URL).then(res => res.blob());
+
+imageDataUrl = await new Promise((resolve) => {
+    reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result.split(',')[1]); // Extract base64 string
+    reader.readAsDataURL(imageBlob);
+});
+// [CODE ENDS]
+
+/* Markdown (render)
+You can pass the enum constraint as the `responseSchema`, and set `responseMimeType` to `text/x.enum` to retrieve only the raw matched value:
+*/
+
+// [CODE STARTS]
+response = await ai.models.generateContent({
+    model: MODEL_ID,
+    contents: [
+        {
+            inlineData: {
+                data: imageDataUrl,
+                mimeType: "image/jpeg"
+            }
+        },
+        "What is the category of this instrument?"
+    ],
+    config: {
+        responseMimeType: "text/x.enum",
+        responseSchema: {
+            type: "string",
+            enum: ["Percussion", "String", "Woodwind", "Brass", "Keyboard"]
+        }
+    }
+});
+
+console.log(response.text);
+// [CODE ENDS]
+
+/* Output Sample
+
+Keyboard
+
+*/
+
+/* Markdown (render)
+Alternatively, you can query enums with `responseMimeType` set to `application/json`, which returns the value in JSON quotes:
+*/
+
+// [CODE STARTS]
+response = await ai.models.generateContent({
+    model: MODEL_ID,
+    contents: [
+        {
+            inlineData: {
+                data: imageDataUrl,
+                mimeType: "image/jpeg"
+            }
+        },
+        "What category of instrument is this?"
+    ],
+    config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+            type: "string",
+            enum: ["Percussion", "String", "Woodwind", "Brass", "Keyboard"]
+        }
+    }
+});
+
+console.log(response.text);
+// [CODE ENDS]
+
+/* Output Sample
+
+"Keyboard"
+
+*/
+
+/* Markdown (render)
+## Using Enums within a JSON Schema
+
+You can also nest Enum schemas inside properties of a larger JSON schema. Let's ask the model for a list of recipe titles and have it label each one with a popularity grade:
+*/
+
+// [CODE STARTS]
+gradedRecipeSchema = {
+  type: "object",
+  properties: {
+    recipe_name: { type: "string" },
+    grade: {
+      type: "string",
+      enum: ["a+", "a", "b", "c", "d", "f"]
+    }
+  },
+  required: ["recipe_name", "grade"]
+};
+
+response = await ai.models.generateContent({
+  model: MODEL_ID,
+  contents: "List about 10 cookie recipes, grade them based on popularity",
+  config: {
+    responseMimeType: "application/json",
+    responseSchema: {
+      type: "array",
+      items: gradedRecipeSchema
+    }
+  }
+});
+
+console.log("```\n",response.text,"\n```")
+// [CODE ENDS]
+
+/* Output Sample
+
+```
+[
+  {
+    "grade": "a+",
+    "recipe_name": "Chocolate Chip Cookies"
+  },
+  {
+    "grade": "a",
+    "recipe_name": "Peanut Butter Cookies"
+  },
+  {
+    "grade": "a",
+    "recipe_name": "Oatmeal Raisin Cookies"
+  },
+  {
+    "grade": "a+",
+    "recipe_name": "Sugar Cookies"
+  },
+  {
+    "grade": "b",
+    "recipe_name": "Snickerdoodle Cookies"
+  },
+  {
+    "grade": "b",
+    "recipe_name": "Gingerbread Cookies"
+  },
+  {
+    "grade": "c",
+    "recipe_name": "Shortbread Cookies"
+  },
+  {
+    "grade": "c",
+    "recipe_name": "Macarons"
+  },
+  {
+    "grade": "b",
+    "recipe_name": "Molasses Cookies"
+  },
+  {
+    "grade": "a",
+    "recipe_name": "No-Bake Cookies"
+  }
+] 
+```
+
 */
 
 /* Markdown (render)
 ## Next Steps
 ### Useful API references:
 
-Check the [structured ouput](https://ai.google.dev/gemini-api/docs/structured-output) documentation or the [`GenerationConfig`](https://ai.google.dev/api/generate-content#generationconfig) API reference for more details
+Check the [structured output](https://ai.google.dev/gemini-api/docs/structured-output) documentation or the [`GenerationConfig`](https://ai.google.dev/api/generate-content#generationconfig) API reference for more details.
 
 ### Related examples
 
 * The constrained output is used in the [Text summarization](https://github.com/google-gemini/cookbook/blob/main/examples/json_capabilities/Text_Summarization.ipynb) example to provide the model a format to summarize a story (genre, characters, etc...)
-* The [Object detection](https://github.com/google-gemini/cookbook/blob/main/examples/Object_detection.ipynb) examples are using the JSON constrained output to uniiformize the output of the detection.
+* The [Object detection](https://github.com/google-gemini/cookbook/blob/main/examples/Object_detection.ipynb) examples are using the JSON constrained output to uniformize the output of the detection.
 
 ### Continue your discovery of the Gemini API
 
-JSON is not the only way to constrain the output of the model, you can also use an [Enum](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Enum.ipynb). [Function calling](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Function_calling.ipynb) and [Code execution](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Code_Execution.ipynb) are other ways to enhance your model by either using your own functions or by letting the model write and run them.
+Structured output is not the only way to guide model behavior. [Function calling](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Function_calling.ipynb) and [Code execution](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Code_Execution.ipynb) are other ways to expand your model's capabilities by integrating external functions or letting it execute code dynamically.
 */

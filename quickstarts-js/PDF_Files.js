@@ -1,3 +1,19 @@
+/**
+ * Copyright 2026 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* Markdown (render)
 # Gemini API: Read a PDF
 
@@ -66,12 +82,12 @@ files/rkz09xjah5hp successfully uploaded!
 /* Markdown (render)
 ## Try it out
 
-Now select the model you want to use in this guide, either by selecting one in the list or writing it down. Keep in mind that some models, like the 2.5 ones are thinking models and thus take slightly more time to respond (cf. [thinking notebook](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb) for more details and in particular learn how to switch the thiking off).
+Now select the model you want to use in this guide, either by selecting one in the list or writing it down. Keep in mind that some models, like the 3.5 ones are thinking models and thus take slightly more time to respond (cf. [thinking notebook](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb) for more details and in particular learn how to switch the thinking off).
 
 */
 
 // [CODE STARTS]
-MODEL_ID = "gemini-2.5-flash" // gemini-2.5-flash-lite","gemini-2.5-flash","gemini-2.5-pro","gemini-2.0-flash"
+MODEL_ID = "gemini-3.5-flash" // "gemini-3.5-flash", "gemini-3-pro"
 // [CODE ENDS]
 
 /* Markdown (render)

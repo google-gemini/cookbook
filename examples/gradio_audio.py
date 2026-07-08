@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2025 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ class GeminiConfig:
     def __init__(self):
         self.api_key = os.getenv(KEY_NAME)
         self.host = "generativelanguage.googleapis.com"
-        self.model = "models/gemini-2.5-flash-lite-preview-06-17"
+        self.model = "models/gemini-3.1-flash-lite-preview"
         self.ws_url = f"wss://{self.host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key={self.api_key}"
 
 class AudioProcessor:
@@ -259,6 +259,6 @@ def registry(
 
 # Launch the Gradio interface
 gr.load(
-    name='gemini-2.5-flash-lite-preview-06-17',
+    name="gemini-3.1-flash-lite-preview",
     src=registry,
 ).launch()

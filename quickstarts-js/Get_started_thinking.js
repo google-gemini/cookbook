@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,9 @@
 /* Markdown (render)
 # Use Gemini thinking
 
-[Gemini 2.5 Flash](https://ai.google.dev/gemini-api/docs/models#gemini-2.5-flash-preview-04-17) and [Gemini 2.5 Pro](https://ai.google.dev/gemini-api/docs/models#gemini-2.5-pro-preview-06-05) are models that are trained to do a [thinking process](https://ai.google.dev/gemini-api/docs/thinking-mode) (or reasoning) before getting to a final answer. As a result,
+<a target="_blank" href="https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts-js/Get_started_thinking.js"><img src="https://colab.research.google.com/assets/colab-badge.svg" height=30/></a>
+
+[Gemini 3.5 Flash](https://ai.google.dev/gemini-api/docs/models) and [Gemini 3 Pro](https://ai.google.dev/gemini-api/docs/models) are models that are trained to do a [thinking process](https://ai.google.dev/gemini-api/docs/thinking-mode) (or reasoning) before getting to a final answer. As a result,
 those models are capable of stronger reasoning capabilities in its responses than previous models.
 
 You'll see examples of those reasoning capabilities with [code understanding](#scrollTo=GAa7sCD7tuMW), [geometry](#scrollTo=ADiJV-fFyjRe) and [math](#scrollTo=EXPPWpt6ttJZ) problems.
@@ -26,15 +28,15 @@ As you will see, the model is exposing its thoughts so you can have a look at it
 
 ## Understanding the thinking models
 
-[Gemini 2.5 models](https://ai.google.dev/gemini-api/docs/thinking) are optimized for complex tasks that need multiple rounds of strategyzing and iteratively solving.
+[Gemini 3.5 models](https://ai.google.dev/gemini-api/docs/thinking) are optimized for complex tasks that need multiple rounds of strategyzing and iteratively solving.
 
-[Gemini 2.5 Flash](https://ai.google.dev/gemini-api/docs/models#gemini-2.5-flash-preview-04-17) in particular, brings the flexibility of using `thinking_budget` - a parameter
+[Gemini 3.5 Flash](https://ai.google.dev/gemini-api/docs/models) in particular, brings the flexibility of using `thinkingBudget` - a parameter
 that offers fine-grained control over the maximum number of tokens a model can generate while thinking. Alternatively, you can designate a precise token allowance for the
-"thinking" stage through the adjusment of the `thinking_budget` parameter. This allowance can vary between 0 and 24576 tokens for 2.5 Flash.
+"thinking" stage through the adjustment of the `thinkingBudget` parameter.
 
 For more information about all Gemini models, check the [documentation](https://ai.google.dev/gemini-api/docs/models/gemini) for extended information on each of them.
 
-On this notebook all examples are using `Gemini 2.5 Pro` and `Gemini 2.5 Flash` with the new `thinking_budget` parameter. For more information about using the `thinking_budget` with the Gemini thinking model, check the [documentation](https://ai.google.dev/gemini-api/docs/thinking).
+On this notebook all examples are using `Gemini 3 Pro` and `Gemini 3.5 Flash` with the new `thinkingBudget` parameter. For more information about using the `thinkingBudget` with the Gemini thinking model, check the [documentation](https://ai.google.dev/gemini-api/docs/thinking).
 
 ## Setup
 ### Install SDK and set-up the client
@@ -59,7 +61,7 @@ module = await import("https://esm.sh/@google/genai@1.4.0");
 GoogleGenAI = module.GoogleGenAI;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-MODEL_ID = "gemini-2.5-flash" // ["gemini-2.5-flash-lite-preview-06-17", "gemini-2.5-flash", "gemini-2.5-pro"]
+MODEL_ID = "gemini-3.5-flash" // "gemini-3.5-flash", "gemini-3-pro"
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -79,7 +81,7 @@ You can start by asking the model to explain a concept and see how it does reaso
 
 Starting with the adaptive `thinking_budget` - which is the default when you don't specify a budget - the model will dynamically adjust the budget based on the complexity of the request.
 
-The animal it should find is a [**Platipus**](https://en.wikipedia.org/wiki/Platypus), but as you'll see it is not the first answer it thinks of depending on how much thinking it does.
+The animal it should find is a [**Platypus**](https://en.wikipedia.org/wiki/Platypus), but as you'll see it is not the first answer it thinks of depending on how much thinking it does.
 */
 
 // [CODE STARTS]
@@ -156,7 +158,7 @@ Total tokens: 1833
 /* Markdown (render)
 ### Disabling the thinking steps
 
-You can also disable the thinking steps by setting the `thinkingBudget` to 0. You'll see that in this case, the model doesn't think of the platipus as a possible answer.
+You can also disable the thinking steps by setting the `thinkingBudget` to 0. You'll see that in this case, the model doesn't think of the platypus as a possible answer.
 */
 
 /* Markdown (render)
@@ -339,9 +341,9 @@ Then you can set a fixed maximum budget (`thinking_budget=4096`, or 4096 tokens)
 
 You can see that, even producing a similar result for the same prompt, the amount of details shared in the answer makes it deeper and more consistent.
 
-**NOTE:** You have different possible budget values for 2.5 Pro and 2.5 Flash:
-- for the Gemini 2.5 Pro, the budgets can be between `128` and `32768`
-- for the Gemini 2.5 Flash, the budgets can be between `0` (disabling the thinking process) to `24576`
+**NOTE:** You have different possible budget values for 3 Pro and 3.5 Flash:
+- for the Gemini 3 Pro, the budgets can be between `128` and `32768`
+- for the Gemini 3.5 Flash, the budgets can be between `0` (disabling the thinking process) to `24576`
 */
 
 // [CODE STARTS]
@@ -571,7 +573,7 @@ The area of the overlapping region is **9Ï€/4**.
 /* Markdown (render)
 ### Solving brain teasers
 
-Here's another brain teaser based on an image, this time it looks like a mathematical problem, but it cannot actually be solved mathematically. If you check the toughts of the model you'll see that it will realize it and come up with an out-of-the-box solution.
+Here's another brain teaser based on an image, this time it looks like a mathematical problem, but it cannot actually be solved mathematically. If you check the thoughts of the model you'll see that it will realize it and come up with an out-of-the-box solution.
 
 In this case, you are fixing a value to the `thinkingBudget` so the model will use up to 24576 tokens for the thinking step.
 */
@@ -730,7 +732,7 @@ Numbers used: 8, 7, 10, 5. Each number is used only once.
 
 Summaries of the model's thinking reveal its internal problem-solving pathway. Users can leverage this feature to check the model's strategy and remain informed during complex tasks.
 
-For more details about Gemini 2.5 thinking capabilities, take a look at the [Gemini models thinking guide](https://ai.google.dev/gemini-api/docs/thinking#summaries).
+For more details about Gemini 3.5 thinking capabilities, take a look at the [Gemini models thinking guide](https://ai.google.dev/gemini-api/docs/thinking#summaries).
 */
 
 // [CODE STARTS]
@@ -876,7 +878,7 @@ prompt = `
   Is one of them linear?
 `;
 
-thinking_budget = 4096;
+thinkingBudget = 4096;
 
 response = await ai.models.generateContent({
   model: MODEL_ID,
@@ -888,7 +890,7 @@ response = await ai.models.generateContent({
       }
     ],
     thinkingConfig: {
-      thinkingBudget: thinking_budget
+      thinkingBudget: thinkingBudget
     }
   }
 });
@@ -1194,8 +1196,8 @@ Here are some of the most significant scientific breakthroughs announced last mo
 /* Markdown (render)
 # Next Steps
 
-Try Gemini 2.5 Pro Experimental in
-[Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.5-pro), and learn more about [Prompting for thinking models](https://ai.google.dev/gemini-api/docs/prompting-with-thinking).
+Try Gemini 3 Pro in
+[Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-3-pro), and learn more about [Prompting for thinking models](https://ai.google.dev/gemini-api/docs/prompting-with-thinking).
 
 For more examples of the Gemini capabilities, check the other [Cookbook examples](https://github.com/google-gemini/cookbook). You'll learn how to use the [Live API](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb), juggle with [multiple tools](https://github.com/google-gemini/cookbook/blob/main/examples/LiveAPI_plotting_and_mapping.ipynb) or use Gemini [spatial understanding](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Spatial_understanding.ipynb) abilities.
 */

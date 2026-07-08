@@ -15,7 +15,7 @@ EOF
 cmd="${1:-}"; shift || true
 case "$cmd" in
   test)
-    NB_ARG=""
+    NB_ARGS=()
     AI_COMPARE="${AI_COMPARE:-0}"
     TIMEOUT="900"
     KERNEL="python3"
@@ -25,9 +25,24 @@ case "$cmd" in
         --ai-compare) AI_COMPARE=1 ;;
         --timeout=*) TIMEOUT="${a#*=}" ;;
         --kernel=*) KERNEL="${a#*=}" ;;
-        *.ipynb) NB_ARG="$a" ;;
+        *)
+          if [[ "$a" != *.ipynb ]]; then
+            echo "Error: Only .ipynb files are supported: $a" >&2
+            exit 1
+          fi
+          IFS=',' read -r -a parts <<< "$a"
+          for part in "${parts[@]}"; do
+            if [[ "$part" != *.ipynb ]]; then
+              echo "Error: Only .ipynb files are supported: $part" >&2
+              exit 1
+            fi
+            NB_ARGS+=("$part")
+          done
+          ;;
       esac
     done
+
+    NB_ARG=$(IFS=,; echo "${NB_ARGS[*]}")
 
     if [[ -n "$NB_ARG" ]]; then export NB="$NB_ARG"; fi
     export AI_COMPARE="$AI_COMPARE"

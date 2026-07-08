@@ -1,4 +1,4 @@
-# Copyright 2025 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os, re, json, time, pathlib, subprocess, nbformat, requests, sys
+import os
+import re
+import json
+import time
+import pathlib
+import subprocess
+import nbformat
+import requests
+import sys
+
 from nbclient import NotebookClient
 from nbclient.exceptions import CellExecutionError
 
@@ -41,7 +50,10 @@ def _ensure_requirements(nb_path):
     except ImportError:
         inst = _run([os.sys.executable, "-m", "pip", "install", "pipreqsnb"])
         if inst.returncode:
-            print(f"[pip install] warn: install failed for pipreqsnb:\n{inst.stdout}\n{inst.stderr}")
+            print(
+                "[pip install] warn: install failed for "
+                f"pipreqsnb:\n{inst.stdout}\n{inst.stderr}"
+            )
             return
 
     req_out = REPORTS / f"reqs.txt"
@@ -51,7 +63,7 @@ def _ensure_requirements(nb_path):
     inst = _run([os.sys.executable, "-m", "pip", "install", "-r", str(req_out)])
     if inst.returncode:
         print(f"[pip install] warn: install failed for {req_out}:\n{inst.stdout}\n{inst.stderr}")
-    _run(["rm", str(req_out)])
+    req_out.unlink(missing_ok=True)
 
 _USERDATA_RE = re.compile(r"userdata\.get\s*\(\s*(['\"])([^'\"]+)\1\s*(?:,\s*([^)]+))?\s*\)")
 
@@ -61,7 +73,12 @@ def _patch_colab_userdata(nb):
         src = cell.source or ""
         lines, had_os = [], False
         for line in src.splitlines():
-            if line.strip().startswith(("from google.colab import userdata", "import google.colab")): continue
+            colab_imports = (
+                "from google.colab import userdata",
+                "import google.colab"
+            )
+            if line.strip().startswith(colab_imports):
+                continue
             if re.match(r"^\s*import\s+os(\s|$)", line): had_os = True
             lines.append(line)
         src = "\n".join(lines)
@@ -82,6 +99,8 @@ def _summarize_outputs(outputs):
         if ot == "stream": buf.append(out.get("text", ""))
         elif ot in ("execute_result", "display_data"):
             data = out.get("data", {})
+            if any(k.startswith("image/") for k in data):
+                img_count += 1
             text = data.get("text/plain") or ""
             buf.append("".join(text) if isinstance(text, list) else str(text))
         elif ot == "error": err = {"ename": out.get("ename"), "evalue": out.get("evalue")}
@@ -93,12 +112,16 @@ def _collect_cell_snapshots(nb):
             for i, c in enumerate(nb.cells)]
 
 def _gemini_compare_batches(file_name, diffs, batch_size=20, progress_callback=None):
-    if not diffs: return [], []
+    if not diffs:
+        return []
     api_key = os.getenv("GOOGLE_API_KEY")
-    if not api_key: return [], ["<AI compare skipped: GOOGLE_API_KEY missing>"]
+    if not api_key:
+        print("<AI compare skipped: GOOGLE_API_KEY missing>", file=sys.stderr)
+        return []
 
-    model = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+    model = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
+    base = "https://generativelanguage.googleapis.com"
+    url = f"{base}/v1beta/models/{model}:generateContent?key={api_key}"
     system_text = ("""
         You are an output-diff judge for notebook cells. Given code, OLD output, and NEW output, 
         classify each cell into EXACTLY one of:
@@ -125,7 +148,7 @@ def _gemini_compare_batches(file_name, diffs, batch_size=20, progress_callback=N
         t = re.sub(r",\s*(\]|\})", r"\1", t)
         return json.loads(t)
 
-    results, raw_texts = [], []
+    results = []
     total_batches = (len(diffs) + batch_size - 1) // batch_size
     for i in range(0, len(diffs), batch_size):
         if progress_callback:
@@ -138,8 +161,21 @@ def _gemini_compare_batches(file_name, diffs, batch_size=20, progress_callback=N
 
         payload = {
             "system_instruction": {"parts": [{"text": system_text}]},
-            "contents": [{"role": "user", "parts": [{"text": f"File: {file_name}\nEvaluate these cells:\n\n{''.join(blocks)}"}]}],
-            "generationConfig": {"temperature": 0.1, "maxOutputTokens": 8192, "response_mime_type": "application/json"}
+            "contents": [{
+                "role": "user",
+                "parts": [{
+                    "text": (
+                        f"File: {file_name}\n"
+                        f"Evaluate these cells:\n\n"
+                        f"{''.join(blocks)}"
+                    )
+                }]
+            }],
+            "generationConfig": {
+                "temperature": 0.1,
+                "maxOutputTokens": 8192,
+                "response_mime_type": "application/json"
+            }
         }
 
         try:
@@ -151,12 +187,26 @@ def _gemini_compare_batches(file_name, diffs, batch_size=20, progress_callback=N
 
             for item in parsed:
                 idx = int(item.get("index"))
-                raw_bucket = (item.get("bucket") or "").strip().lower()
-                bucket = ("ok_cells" if raw_bucket in ("ok", "same", "almost_same", "ok_cells") else
-                         "slightly_changed" if raw_bucket in ("slightly", "slightly_changed") else "wrong")
-                results.append({"index": idx, "bucket": bucket, "note": (item.get("note") or "").strip()})
+                raw_bucket = (
+                    item.get("bucket") or ""
+                ).strip().lower()
+                if raw_bucket in (
+                    "ok", "same", "almost_same", "ok_cells"
+                ):
+                    bucket = "ok_cells"
+                elif raw_bucket in (
+                    "slightly", "slightly_changed"
+                ):
+                    bucket = "slightly_changed"
+                else:
+                    bucket = "wrong"
+                results.append({
+                    "index": idx,
+                    "bucket": bucket,
+                    "note": (item.get("note") or "").strip()
+                })
         except Exception as e:
-            raw_texts.append(f"<AI compare error: {e}>")
+            print(f"<AI compare error: {e}>", file=sys.stderr)
 
     return results
 
@@ -218,7 +268,9 @@ class TestProgressUI:
             file_rel = str(pathlib.Path(r["file"]).relative_to(ROOT))
             if ai_compare:
                 buckets = r.get("buckets", {})
-                ok, slight, wrong = len(buckets.get("ok_cells", {})), len(buckets.get("slightly_changed", {})), len(buckets.get("wrong", {}))
+                ok = len(buckets.get("ok_cells", {}))
+                slight = len(buckets.get("slightly_changed", {}))
+                wrong = len(buckets.get("wrong", {}))
                 if status == 'running':
                     ok_str, slight_str, wrong_str = ('...', '...', '...')
                 elif status == 'passed':
@@ -291,7 +343,10 @@ def run_notebook_test(nb_path, ui):
             if not r: continue
             bucket = r["bucket"]
             file_report["buckets"].setdefault(bucket, {})[str(d["index"])] = {
-                "cell_code": d["code"], "old_text": d["old_text"], "new_text": d["new_text"], "ai_note": (r.get("note") or "")[:280]
+                "cell_code": d["code"],
+                "old_text": d["old_text"],
+                "new_text": d["new_text"],
+                "ai_note": (r.get("note") or "")[:280]
             }
 
     (REPORTS / f"{rel}.compare.json").write_text(json.dumps(file_report, indent=2), encoding="utf-8")

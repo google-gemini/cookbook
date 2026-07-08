@@ -1,4 +1,4 @@
-# Copyright 2025 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ print(f"Retrieved file {get_file.display_name} as: {get_file.uri}")
 
 # Generate content using the client.models API
 prompt = "Describe the image with a creative description"
-model_name = "gemini-2.0-flash"
+model_name = "gemini-2.5-flash"
 response = client.models.generate_content(
     model=model_name,
     contents=[

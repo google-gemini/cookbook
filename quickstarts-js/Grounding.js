@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,11 +45,11 @@ ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 */
 
 // [CODE STARTS]
-module = await import("https://esm.sh/@google/genai@1.4.0");
-GoogleGenAI = module.GoogleGenAI;
-ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const module = await import("https://esm.sh/@google/genai@1.4.0");
+const GoogleGenAI = module.GoogleGenAI;
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-MODEL_ID = "gemini-2.5-flash" // ["gemini-2.5-flash-lite-preview-06-17", "gemini-2.5-flash", "gemini-2.5-pro"]
+const MODEL_ID = "gemini-3.5-flash" // "gemini-3.5-flash", "gemini-3-pro"
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -58,12 +58,11 @@ Google Search grounding is particularly useful for queries that require current 
 */
 
 // [CODE STARTS]
-response = await ai.models.generateContent({
+let response = await ai.models.generateContent({
     model: MODEL_ID,
     contents: 'What was the latest Indian Premier League match and who won?',
     config: { tools: [{ googleSearch: {} }] },
-}
-);
+});
 
 
 console.log(`Response:\n ${response.text}`);
@@ -127,10 +126,10 @@ You do need to explicitly declare the video URL you want the model to process as
 */
 
 // [CODE STARTS]
-ytLink = "https://www.youtube.com/watch?v=XV1kOFo1C8M";
+const ytLink = "https://www.youtube.com/watch?v=XV1kOFo1C8M";
 
 response = await ai.models.generateContent({
-    model:MODEL_ID,
+    model: MODEL_ID,
     contents:[
         {
             fileData: {
@@ -141,25 +140,24 @@ response = await ai.models.generateContent({
             text: "Summarize this video.",
         },
     ]
-}
-);
+});
 
 console.log(response.text);
 // [CODE ENDS]
 
 /* Output Sample
 
-The video introduces &quot;Gemma Chess,&quot; a new application of Google DeepMind&#x27;s Gemma language model to enhance the game of chess. Ju-yeong Ji from Google DeepMind explains that while traditional chess engines excel at calculating optimal moves (like AlphaZero), Gemma aims to bring a &quot;new dimension&quot; to the game by leveraging its natural language understanding and generation capabilities.
+The video introduces "Gemma Chess," a new application of Google DeepMind's Gemma language model to enhance the game of chess. Ju-yeong Ji from Google DeepMind explains that while traditional chess engines excel at calculating optimal moves (like AlphaZero), Gemma aims to bring a "new dimension" to the game by leveraging its natural language understanding and generation capabilities.
 
-Here&#x27;s how Gemma can be applied:
+Here's how Gemma can be applied:
 
-1.  **Explainer:** Gemma can analyze complex chess games (like the Kasparov vs. Deep Blue match) and translate technical move sequences and engine outputs into plain, understandable text. It can explain *why* certain moves are strategically or tactically significant, detailing the &quot;big ideas&quot; and potential dangers, helping players quickly grasp key takeaways from games.
+1.  **Explainer:** Gemma can analyze complex chess games (like the Kasparov vs. Deep Blue match) and translate technical move sequences and engine outputs into plain, understandable text. It can explain why certain moves are strategically or tactically significant, detailing the "big ideas" and potential dangers, helping players quickly grasp key takeaways from games.
 
 2.  **Storytellers:** Gemma can generate engaging narratives about chess games. By analyzing the moves, player information, and tournament context, it can write a descriptive story of how a match unfolded, bringing the game to life in a more human and interesting way than just looking at move notation.
 
-3.  **Supporting Chess Learning:** Gemma can act as a personal chess coach. Users can ask questions about chess concepts (e.g., &quot;What is the Sicilian Defense?&quot;), and Gemma will explain them in detail, even tailoring the explanation to the user&#x27;s skill level (beginner, intermediate, advanced) and preferred language (demonstrated with Korean). It can provide insights into strategy, tactics, and historical context, and even suggest areas for improvement.
+3.  **Supporting Chess Learning:** Gemma can act as a personal chess coach. Users can ask questions about chess concepts (e.g., "What is the Sicilian Defense?"), and Gemma will explain them in detail, even tailoring the explanation to the user's skill level (beginner, intermediate, advanced) and preferred language (demonstrated with Korean). It can provide insights into strategy, tactics, and historical context, and even suggest areas for improvement.
 
-The video highlights that Gemma&#x27;s strength lies in its ability to understand, explain, and communicate like humans, offering a more intuitive approach to chess learning and analysis by combining the analytical power of traditional chess AI with its own linguistic abilities through function calls. This creates a more accessible, engaging, and personalized chess experience for players of all levels.
+The video highlights that Gemma's strength lies in its ability to understand, explain, and communicate like humans, offering a more intuitive approach to chess learning and analysis by combining the analytical power of traditional chess AI with its own linguistic abilities through function calls. This creates a more accessible, engaging, and personalized chess experience for players of all levels.
 
 */
 
@@ -185,36 +183,36 @@ Gemma models, as large language models (LLMs) from Google, are primarily designe
 However, Gemma models can be incredibly helpful in chess in several **indirect and supportive ways**, leveraging their language capabilities:
 
 1.  **Learning and Education:**
-    *   **Explaining Concepts:** Gemma can explain complex chess concepts (e.g., &quot;what is Zugzwang?&quot;, &quot;explain the concept of pawn structure,&quot; &quot;what is the difference between strategy and tactics?&quot;).
-    *   **Opening Explanations:** It can describe various chess openings, their main ideas, common traps, and typical plans (e.g., &quot;Tell me about the King&#x27;s Indian Defense,&quot; &quot;What are the main lines of the Ruy Lopez?&quot;).
-    *   **Endgame Principles:** It can explain fundamental endgame principles (e.g., &quot;Explain the concept of opposition in king and pawn endgames,&quot; &quot;How do you checkmate with a king and rook?&quot;).
+    *   **Explaining Concepts:** Gemma can explain complex chess concepts (e.g., "what is Zugzwang?", "explain the concept of pawn structure," "what is the difference between strategy and tactics?").
+    *   **Opening Explanations:** It can describe various chess openings, their main ideas, common traps, and typical plans (e.g., "Tell me about the King's Indian Defense," "What are the main lines of the Ruy Lopez?").
+    *   **Endgame Principles:** It can explain fundamental endgame principles (e.g., "Explain the concept of opposition in king and pawn endgames," "How do you checkmate with a king and rook?").
     *   **Rules and Etiquette:** Answering questions about chess rules, tournament etiquette, or common chess terms.
 
 2.  **Post-Game Analysis (Textual Interpretation):**
-    *   **Summarizing Engine Analysis:** If you provide engine analysis (e.g., &quot;Stockfish said my move Qg4 was a blunder, why?&quot;), Gemma could help interpret *why* it was a blunder by explaining the underlying strategic or tactical reasons, translating complex engine output into understandable language.
-    *   **Identifying Strategic Themes:** After a game, you could describe certain positions or the flow of the game, and Gemma might help identify recurring strategic themes or common mistakes you made (e.g., &quot;I often lose when I have an isolated queen&#x27;s pawn, what are common plans for and against it?&quot;).
-    *   **Explaining Variations:** If you&#x27;re studying a PGN, Gemma could help clarify specific variations or lines, giving you human-readable explanations.
+    *   **Summarizing Engine Analysis:** If you provide engine analysis (e.g., "Stockfish said my move Qg4 was a blunder, why?"), Gemma could help interpret why it was a blunder by explaining the underlying strategic or tactical reasons, translating complex engine output into understandable language.
+    *   **Identifying Strategic Themes:** After a game, you could describe certain positions or the flow of the game, and Gemma might help identify recurring strategic themes or common mistakes you made (e.g., "I often lose when I have an isolated queen's pawn, what are common plans for and against it?").
+    *   **Explaining Variations:** If you're studying a PGN, Gemma could help clarify specific variations or lines, giving you human-readable explanations.
 
 3.  **Opening and Endgame Study Material Generation:**
-    *   **Generating Study Questions:** &quot;Give me 5 questions about tactical motifs.&quot;
-    *   **Creating Explanations:** &quot;Write a short paragraph explaining how to play with the initiative.&quot;
-    *   **Summarizing Opponent Styles (if provided data):** If you feed it a player&#x27;s games (or a summary of their style), Gemma could synthesize a textual description of their preferences, common openings, or tactical tendencies.
+    *   **Generating Study Questions:** "Give me 5 questions about tactical motifs."
+    *   **Creating Explanations:** "Write a short paragraph explaining how to play with the initiative."
+    *   **Summarizing Opponent Styles (if provided data):** If you feed it a player's games (or a summary of their style), Gemma could synthesize a textual description of their preferences, common openings, or tactical tendencies.
 
 4.  **Content Creation:**
     *   **Writing Articles/Blogs:** Generating content for chess blogs, articles, or lesson plans on specific topics.
-    *   **Drafting Chess Puzzles (Descriptions):** Creating the *description* or *setup* for chess puzzles, though not necessarily solving them or generating the FEN directly (unless specifically fine-tuned for it).
+    *   **Drafting Chess Puzzles (Descriptions):** Creating the description or setup for chess puzzles, though not necessarily solving them or generating the FEN directly (unless specifically fine-tuned for it).
     *   **Scripting Tutorials:** Helping draft scripts for video tutorials or instructional material.
 
 5.  **Strategic Brainstorming and Conceptual Understanding:**
-    *   **Pros and Cons:** Discussing the pros and cons of specific strategic decisions or piece placements (e.g., &quot;What are the advantages and disadvantages of trading queens early?&quot;).
-    *   **Hypothetical Scenarios:** Exploring hypothetical &quot;what if&quot; scenarios in a strategic sense, explaining potential outcomes based on common chess principles.
+    *   **Pros and Cons:** Discussing the pros and cons of specific strategic decisions or piece placements (e.g., "What are the advantages and disadvantages of trading queens early?").
+    *   **Hypothetical Scenarios:** Exploring hypothetical "what if" scenarios in a strategic sense, explaining potential outcomes based on common chess principles.
 
 **Limitations to keep in mind:**
 
-*   **Not a Chess Engine:** Gemma cannot calculate moves, evaluate positions numerically, or play chess itself. It doesn&#x27;t &quot;understand&quot; the game in the way a chess engine does.
+*   **Not a Chess Engine:** Gemma cannot calculate moves, evaluate positions numerically, or play chess itself. It doesn't "understand" the game in the way a chess engine does.
 *   **Relies on Training Data:** Its knowledge is based on the data it was trained on. While vast, it might not have the most up-to-date analysis of very recent games or cutting-edge theoretical lines unless specifically fine-tuned.
 *   **Can Hallucinate:** Like all LLMs, Gemma can sometimes generate plausible-sounding but incorrect information. Always cross-reference critical chess advice.
-*   **No Real-Time Game Play:** It cannot assist you *during* a live game or provide real-time move suggestions.
+*   **No Real-Time Game Play:** It cannot assist you during a live game or provide real-time move suggestions.
 
 In essence, Gemma models act as a powerful **linguistic assistant** for chess players, helping them learn, understand, analyze, and create content related to the game, rather than directly improving their in-game performance through calculation.
 
@@ -225,14 +223,14 @@ And then you can ask the same question, now having the YouTube video as context 
 */
 
 // [CODE STARTS]
-ytLink = "https://www.youtube.com/watch?v=XV1kOFo1C8M";
+const ytLink2 = "https://www.youtube.com/watch?v=XV1kOFo1C8M";
 
 response = await ai.models.generateContent({
     model: MODEL_ID,
     contents: [
         {
             fileData: {
-                fileUri: ytLink,
+                fileUri: ytLink2,
             },
         },
         {
@@ -247,11 +245,11 @@ console.log(response.text);
 
 /* Output Sample
 
-Based on the video, Gemma models can bring a new dimension to chess by leveraging their natural language understanding and generation capabilities, rather than directly replacing powerful chess engines like AlphaZero. Here&#x27;s how:
+Based on the video, Gemma models can bring a new dimension to chess by leveraging their natural language understanding and generation capabilities, rather than directly replacing powerful chess engines like AlphaZero. Here's how:
 
 1.  **Explaining and Analyzing Moves:**
     *   **Problem:** Traditional chess engines output technical numbers and complex move sequences that can be hard for humans to understand.
-    *   **Gemma&#x27;s Solution:** Gemma can take this technical output, combine it with the actual moves, and turn it into plain, understandable text. It can explain:
+    *   **Gemma's Solution:** Gemma can take this technical output, combine it with the actual moves, and turn it into plain, understandable text. It can explain:
         *   Why a specific move is good.
         *   The big strategic ideas behind moves.
         *   Potential dangers or tactical implications.
@@ -264,14 +262,14 @@ Based on the video, Gemma models can bring a new dimension to chess by leveragin
     *   **Benefit:** This humanizes the game, bringing it to life in a way that mere move notation cannot, making historical or personal games more engaging and memorable.
 
 3.  **Supporting Chess Learning:**
-    *   **Role:** Gemma can act as a &quot;super helpful study buddy&quot; or a &quot;personal chess coach.&quot;
-    *   **How:** Users can ask Gemma questions about chess concepts (e.g., &quot;What is the Sicilian Defense?&quot;, &quot;Explain a passed pawn&quot;) in natural language, even in different languages like Korean. Gemma can then:
-        *   Provide clear and concise explanations tailored to the user&#x27;s skill level (beginner, intermediate, advanced).
+    *   **Role:** Gemma can act as a "super helpful study buddy" or a "personal chess coach."
+    *   **How:** Users can ask Gemma questions about chess concepts (e.g., "What is the Sicilian Defense?", "Explain a passed pawn") in natural language, even in different languages like Korean. Gemma can then:
+        *   Provide clear and concise explanations tailored to the user's skill level (beginner, intermediate, advanced).
         *   Point out areas where the user might need to improve.
     *   **Benefit:** This offers a readily available, intelligent encyclopedia and coaching tool, making learning complex chess ideas more intuitive and personalized.
 
 **Underlying Mechanism (Function Calling):**
-The video demonstrates that Gemma achieves these capabilities by using &quot;function calls&quot; to interact with external chess engines. For instance, to identify the &quot;optimal next move,&quot; Gemma calls a `get_best_move()` function which likely interfaces with a traditional chess engine. Gemma then takes the engine&#x27;s output and uses its linguistic abilities to interpret and explain it in a human-friendly way.
+The video demonstrates that Gemma achieves these capabilities by using "function calls" to interact with external chess engines. For instance, to identify the "optimal next move," Gemma calls a `get_best_move()` function which likely interfaces with a traditional chess engine. Gemma then takes the engine's output and uses its linguistic abilities to interpret and explain it in a human-friendly way.
 
 In essence, Gemma enhances the chess experience by bridging the gap between raw computational power and human understanding, making chess more approachable, engaging, and educational.
 
@@ -286,7 +284,7 @@ URL Context is effective because it allows the models to base its responses and 
 */
 
 // [CODE STARTS]
-prompt = `
+const promptText = `
     based on https://ai.google.dev/gemini-api/docs/models, what are the key
     differences between Gemini 1.5, Gemini 2.0 and Gemini 2.5 models?
     Create a markdown table comparing the differences.
@@ -294,7 +292,7 @@ prompt = `
 
 response = await ai.models.generateContent({
     model: MODEL_ID,
-    contents: [{ text: prompt }],
+    contents: [{ text: promptText }],
     config: {
         tools: [{ urlContext: {} }],
     },
@@ -306,11 +304,11 @@ console.log(response.text);
 
 /* Output Sample
 
-The browsed page provides details on &quot;Gemini 2.5 Pro&quot;, &quot;Gemini 2.5 Flash&quot;, &quot;Gemini 2.5 Flash-Lite Preview&quot;, &quot;Gemini 2.0 Flash&quot;, &quot;Gemini 2.0 Flash-Lite&quot;, &quot;Gemini 1.5 Flash&quot;, and &quot;Gemini 1.5 Pro&quot;. There is no explicit &quot;Gemini 2.0&quot; or &quot;Gemini 2.5&quot; model as a general category, but rather specific variants like &quot;Flash&quot; and &quot;Pro&quot; under those versions.
+The browsed page provides details on "Gemini 2.5 Pro", "Gemini 2.5 Flash", "Gemini 2.5 Flash-Lite Preview", "Gemini 2.0 Flash", "Gemini 2.0 Flash-Lite", "Gemini 1.5 Flash", and "Gemini 1.5 Pro". There is no explicit "Gemini 2.0" or "Gemini 2.5" model as a general category, but rather specific variants like "Flash" and "Pro" under those versions.
 
 I will focus on the most prominent models from each major version mentioned: Gemini 1.5 Pro, Gemini 2.0 Flash (as it seems to be the primary 2.0 model mentioned), and Gemini 2.5 Pro.
 
-Here&#x27;s a comparison table based on the information from the provided URL:
+Here's a comparison table based on the information from the provided URL:
 
 | Feature/Model          | Gemini 1.5 Pro                                          | Gemini 2.0 Flash                                                              | Gemini 2.5 Pro                                                  |
 | :--------------------- | :---------------------------------------------------------- | :-------------------------------------------------------------------------------- | :------------------------------------------------------------------ |
@@ -334,14 +332,14 @@ As a reference, you can see how the answer would be without the URL context, usi
 */
 
 // [CODE STARTS]
-prompt = `
+const promptText2 = `
     what are the key differences between Gemini 1.5, Gemini 2.0 and Gemini 2.5
     models? Create a markdown table comparing the differences.
 `;
 
 response = await ai.models.generateContent({
     model: MODEL_ID,
-    contents: [{ text: prompt }],
+    contents: [{ text: promptText2 }],
 });
 
 console.log(response.text);
@@ -349,7 +347,7 @@ console.log(response.text);
 
 /* Output Sample
 
-It&#x27;s important to clarify the naming convention for Google&#x27;s Gemini models. As of my last update, Google has not publicly announced distinct models named &quot;Gemini 2.0&quot; or &quot;Gemini 2.5&quot; as major version increments following the pattern you might expect (e.g., 1.0 -&gt; 1.5 -&gt; 2.0).
+It's important to clarify the naming convention for Google's Gemini models. As of my last update, Google has not publicly announced distinct models named "Gemini 2.0" or "Gemini 2.5" as major version increments following the pattern you might expect (e.g., 1.0 -> 1.5 -> 2.0).
 
 The primary progression and current publicly available models are:
 
@@ -357,32 +355,32 @@ The primary progression and current publicly available models are:
 2.  **Gemini 1.5 Pro:** A significant leap forward, particularly known for its massive context window.
 3.  **Gemini 1.5 Flash:** A lighter, faster, and more cost-effective version of Gemini 1.5 Pro, optimized for high-volume, lower-latency use cases.
 
-It&#x27;s possible that &quot;Gemini 2.0&quot; or &quot;Gemini 2.5&quot; might refer to internal development names, future anticipated releases, or a misunderstanding of the current public model lineage.
+It's possible that "Gemini 2.0" or "Gemini 2.5" might refer to internal development names, future anticipated releases, or a misunderstanding of the current public model lineage.
 
 Therefore, I will compare **Gemini 1.0**, **Gemini 1.5 Pro**, and **Gemini 1.5 Flash**, as these are the actual distinct versions available for comparison.
 
-Here&#x27;s a markdown table comparing these models:
+Here's a markdown table comparing these models:
 
 ## Comparison of Gemini Models (1.0, 1.5 Pro, 1.5 Flash)
 
 | Feature / Model       | Gemini 1.0 (Original)                                  | Gemini 1.5 Pro                                                        | Gemini 1.5 Flash                                                            |
 | :-------------------- | :----------------------------------------------------- | :-------------------------------------------------------------------- | :-------------------------------------------------------------------------- |
 | **Status/Release**    | Initial public release (Dec 2023)                     | Major upgrade, generally available (Feb 2024 initial preview)         | Faster, more efficient version of 1.5 (Apr 2024)                            |
-| **Key Innovation**    | Google&#x27;s first truly multimodal foundation model      | **Massive context window**, native multimodal long-context processing | Optimized for **speed and cost** with large context                        |
+| **Key Innovation**    | Google's first truly multimodal foundation model      | **Massive context window**, native multimodal long-context processing | Optimized for **speed and cost** with large context                        |
 | **Context Window**    | ~32K tokens                                           | **1 million tokens (standard)**, up to 2 million tokens (preview)     | 1 million tokens                                                            |
 | **Modality**          | Multimodal (text, images, audio, video understanding) | Multimodal (text, images, audio, video understanding)                 | Multimodal (text, images, audio, video understanding)                       |
-| **Performance**       | Strong general capabilities, good reasoning, coding    | State-of-the-art long-context reasoning, highly capable, robust       | Very capable, but optimized for speed, so might be slightly less &quot;deep&quot; than Pro for very complex, multi-turn reasoning, but still excellent. |
+| **Performance**       | Strong general capabilities, good reasoning, coding    | State-of-the-art long-context reasoning, highly capable, robust       | Very capable, but optimized for speed, so might be slightly less "deep" than Pro for very complex, multi-turn reasoning, but still excellent. |
 | **Speed/Cost**        | Standard                                             | Higher cost, focused on high-quality, complex tasks                   | **Significantly faster and cheaper** than 1.5 Pro                         |
-| **Use Cases**         | General-purpose assistant, content generation, summarization | Deep code analysis, long document summarization, video processing, large dataset analysis, complex R&amp;D, advanced agents | Building agents, fast real-time applications, large-scale data processing, conversational AI, high-volume use cases, real-time analytics |
+| **Use Cases**         | General-purpose assistant, content generation, summarization | Deep code analysis, long document summarization, video processing, large dataset analysis, complex R&D, advanced agents | Building agents, fast real-time applications, large-scale data processing, conversational AI, high-volume use cases, real-time analytics |
 | **Availability**      | Gemini Advanced (formerly Bard), Google AI Studio, Vertex AI API | Google AI Studio, Vertex AI API                                       | Google AI Studio, Vertex AI API                                             |
 
 **In Summary:**
 
 *   **Gemini 1.0** was the groundbreaking initial release, establishing multimodal capabilities.
-*   **Gemini 1.5 Pro** is the current flagship, defined by its industry-leading massive context window and advanced multimodal understanding. It&#x27;s for high-quality, complex tasks requiring deep analysis.
-*   **Gemini 1.5 Flash** is a strategic variant of 1.5 Pro, sacrificing a tiny fraction of the &quot;Pro&quot; model&#x27;s peak reasoning depth for immense gains in speed and cost-efficiency, making it ideal for scalable, real-time applications.
+*   **Gemini 1.5 Pro** is the current flagship, defined by its industry-leading massive context window and advanced multimodal understanding. It's for high-quality, complex tasks requiring deep analysis.
+*   **Gemini 1.5 Flash** is a strategic variant of 1.5 Pro, sacrificing a tiny fraction of the "Pro" model's peak reasoning depth for immense gains in speed and cost-efficiency, making it ideal for scalable, real-time applications.
 
-There is no public information about a &quot;Gemini 2.0&quot; or &quot;Gemini 2.5&quot; as of now. The numbering `1.5` indicates a significant upgrade within the `1.x` series, rather than a completely new major version `2.0`.
+There is no public information about a "Gemini 2.0" or "Gemini 2.5" as of now. The numbering `1.5` indicates a significant upgrade within the `1.x` series, rather than a completely new major version `2.0`.
 
 */
 

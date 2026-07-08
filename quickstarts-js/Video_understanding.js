@@ -1,16 +1,49 @@
+/**
+ * Copyright 2026 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* Markdown (render)
 # Video understanding with Gemini
 
 Gemini has from the begining been a multimodal model, capable of analyzing all sorts of medias using its [long context window](https://developers.googleblog.com/en/new-features-for-the-gemini-api-and-google-ai-studio/).
 
-[Gemini models](https://ai.google.dev/gemini-api/docs/models/) bring video analysis to a whole new level as illustrated in [this video](https://www.youtube.com/watch?v=Mot-JEU26GQ):
+[Gemini models](https://ai.google.dev/gemini-api/docs/models/) bring video analysis to a whole new level as illustrated in this video:
+
+[![Gemini Video Analysis Demo](https://img.youtube.com/vi/Mot-JEU26GQ/0.jpg)](https://www.youtube.com/watch?v=Mot-JEU26GQ)
 
 This notebook will show you how to easily use Gemini to perform the same kind of video analysis. Each of them has different prompts that you can select using the dropdown, also feel free to experiment with your own.
 
-You can also check the [live demo](https://aistudio.google.com/apps/bundled/video_analyzer) and try it on your own videos on [AI Studio](https://aistudio.google.com/apps/bundled/video_analyzer).
+You can also check the live demo and try it on your own videos on [AI Studio](https://aistudio.google.com/apps/bundled/video_analyzer).
 
 ## Setup
 ### Install SDK and set-up the client
+
+To interact with Gemini models using JavaScript, you'll need to use the `@google/genai` library. In standard environments, you can install the SDK using `npm`:
+
+```bash
+npm install @google/genai
+```
+
+Once installed, you can import and initialize the client in your code:
+
+```js
+import { GoogleGenAI } from '@google/genai';
+const ai = new GoogleGenAI({});
+```
+
+In this notebook's interactive environment, the SDK is imported dynamically from a CDN.
 
 ### API Key Configuration
 
@@ -37,14 +70,14 @@ ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 /* Markdown (render)
 ### Select the Gemini model
 
-Video understanding works best with Gemini 2.5 models. You can also select former models to compare their behavior but it is recommended to use at least the 2.0 ones.
+Video understanding works best with Gemini 3.5 models.
 
 For more information about all Gemini models, check the [documentation](https://ai.google.dev/gemini-api/docs/models/gemini) for extended information on each of them.
 
 */
 
 // [CODE STARTS]
-MODEL_ID = "gemini-2.5-flash" // "gemini-2.5-flash", "gemini-2.5-pro","gemini-2.0-flash","gemini-2.5-flash-lite-preview-06-17" 
+MODEL_ID = "gemini-3.5-flash" // "gemini-3.5-flash", "gemini-3-pro" 
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -230,7 +263,7 @@ Here&#x27;s the transcription of the sticky notes, organized into categories:
 /* Markdown (render)
 # Structure information
 
-Gemini 2.0 is not only able to read text but also to reason and structure about real world objects. Like in this video about a display of ceramics with handwritten prices and notes.
+Gemini 3.5 is not only able to read text but also to reason and structure about real world objects. Like in this video about a display of ceramics with handwritten prices and notes.
 
 <video controls width="500"><source src="https://storage.googleapis.com/generativeai-downloads/videos/Pottery.mp4" type="video/mp4"></video>
 */

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2025 Google LLC
+# Copyright 2026 Google LLC
 #
 # Written by:
 #   - Freddy Boulton (https://github.com/freddyaboulton)
@@ -113,7 +113,7 @@ class GeminiHandler(AsyncStreamHandler):
             ),
         )
         async with client.aio.live.connect(
-            model="gemini-2.5-flash-lite-preview-06-17", config=config
+            model="gemini-2.5-flash-lite", config=config
         ) as session:
             async for audio in session.start_stream(
                 stream=self.stream(), mime_type="audio/pcm"

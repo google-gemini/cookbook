@@ -47,7 +47,6 @@ Some old examples are still using the legacy SDK, they should still work and are
 * [Classify text with embeddings](./Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.
 * [Clustering with embeddings](./clustering_with_embeddings.ipynb): Perform clustering on text datasets using embeddings.
 * [Guess the shape](./Guess_the_shape.ipynb): A simple example of using images in prompts.
-* [Object detection](./Object_detection.ipynb): Extensive examples with object detection, including with multiple classes, OCR, visual question answering, and even an interactive demo.
 * [Search Wikipedia with ReAct](./Search_Wikipedia_using_ReAct.ipynb): Use ReAct prompting with Gemini Flash to search Wikipedia interactively.
 * [Story writing with prompt chaining.ipynb](./Story_Writing_with_Prompt_Chaining.ipynb): Write a story using two powerful tools: prompt chaining and iterative generation.
 * [Tag and Caption images](./Tag_and_caption_images.ipynb): Use the Gemini model's vision capabilities and the embedding model to add tags and captions to images of pieces of clothing.

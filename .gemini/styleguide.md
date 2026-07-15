@@ -9,7 +9,7 @@ This guide is mostly about the python content and the notebook, but don't forget
 
 # Key Principles
 * **Readability:** Code should be easy to understand for all developers. Since they are notebooks and aimed at teaching
-  how to use Gemini and its API/SDK, the focus should be on writting didactic and easy-to-read code while limiting the
+  how to use Gemini and its API/SDK, the focus should be on writing didactic and easy-to-read code while limiting the
   back and forth with the documentation or within the notebook.
 * **Maintainability:** Code should be easy to modify and extend. In particular it must be easy to switch the models used.
 * **Consistency:** Adhering to a consistent style across all projects improves

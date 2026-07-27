@@ -38,6 +38,7 @@ This is a collection of fun and helpful examples for the Gemini API.
 | [Gemini MultimodalBot Text & Image Tutorial](./Gemini_MultimodalBot_Text_Image_Tutorial.ipynb) | Learn how to use Gemini's multimodal capabilities to process both text and image inputs. | Multimodal | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Gemini_MultimodalBot_Text_Image_Tutorial.ipynb) |
 | [EU AI Act Compliance with Agent Module](./Agent_Module_EU_AI_Act_Compliance.ipynb) | Use Gemini function calling with Agent Module API for EU AI Act compliance checking | Function Calling, Tools | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Agent_Module_EU_AI_Act_Compliance.ipynb) |
 | [GitHub issue analyzer](./GitHub_issue_analyzer.ipynb) | Use Gemini API to interact with PyGitHub API and extract useful insights from this repository | Gemini API, Tools | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/GitHub_issue_analyzer.ipynb) |
+| [Multimodal Semantic Search](./Multimodal_Semantic_Search.ipynb) | Multimodal semantic search and cross-modal retrieval across text and images using `gemini-embedding-2`. | Embeddings, Multimodal | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/examples/Multimodal_Semantic_Search.ipynb) |
 ---
 <br>
 Some old examples are still using the legacy SDK, they should still work and are still worth checking to get ideas:
@@ -47,7 +48,6 @@ Some old examples are still using the legacy SDK, they should still work and are
 * [Classify text with embeddings](./Classify_text_with_embeddings.ipynb): Use embeddings from the Gemini API with Keras.
 * [Clustering with embeddings](./clustering_with_embeddings.ipynb): Perform clustering on text datasets using embeddings.
 * [Guess the shape](./Guess_the_shape.ipynb): A simple example of using images in prompts.
-* [Object detection](./Object_detection.ipynb): Extensive examples with object detection, including with multiple classes, OCR, visual question answering, and even an interactive demo.
 * [Search Wikipedia with ReAct](./Search_Wikipedia_using_ReAct.ipynb): Use ReAct prompting with Gemini Flash to search Wikipedia interactively.
 * [Story writing with prompt chaining.ipynb](./Story_Writing_with_Prompt_Chaining.ipynb): Write a story using two powerful tools: prompt chaining and iterative generation.
 * [Tag and Caption images](./Tag_and_caption_images.ipynb): Use the Gemini model's vision capabilities and the embedding model to add tags and captions to images of pieces of clothing.

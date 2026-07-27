@@ -113,7 +113,7 @@ class GeminiHandler(AsyncStreamHandler):
             ),
         )
         async with client.aio.live.connect(
-            model="gemini-3.5-flash", config=config
+            model="gemini-3.6-flash", config=config
         ) as session:
             async for audio in session.start_stream(
                 stream=self.stream(), mime_type="audio/pcm"

@@ -9,7 +9,7 @@ This guide is mostly about the python content and the notebook, but don't forget
 
 # Key Principles
 * **Readability:** Code should be easy to understand for all developers. Since they are notebooks and aimed at teaching
-  how to use Gemini and its API/SDK, the focus should be on writting didactic and easy-to-read code while limiting the
+  how to use Gemini and its API/SDK, the focus should be on writing didactic and easy-to-read code while limiting the
   back and forth with the documentation or within the notebook.
 * **Maintainability:** Code should be easy to modify and extend. In particular it must be easy to switch the models used.
 * **Consistency:** Adhering to a consistent style across all projects improves
@@ -102,7 +102,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Only use helper function when you don't have a choice. If it's only a couple of lines, it's usually better to write them
   everytime so that the readers don't have to check the function definition all the time.
 * When selecting a model, use a colab selector for easier maintainability:
-  `MODEL_ID="gemini-3.5-flash" # @param ["gemini-3.1-flash-lite", "gemini-3.5-flash", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}`
+  `MODEL_ID="gemini-3.6-flash" # @param ["gemini-3.1-flash-lite", "gemini-3.5-flash-lite", "gemini-3.6-flash", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}`
 * Some notebooks can also benefit from having a form to update the prompt:
   `prompt = "Detect the 2d bounding boxes of the cupcakes (with “label” as topping description”)"  # @param {type:"string"}`
   or a list of prompts they can choose from:

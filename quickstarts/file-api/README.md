@@ -14,7 +14,7 @@ Ready to get started? Learn the essentials of uploading files and using them in 
 
 [Audio Colab](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Audio.ipynb)
 
-[Video Colab](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video.ipynb)
+[Video Colab](https://github.com/google-gemini/cookbook/blob/main/quickstarts/Video_understanding.ipynb)
 
 
 ## Python Sample

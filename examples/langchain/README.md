@@ -10,4 +10,7 @@ This is a collection of fun examples for the Gemini API used with [LangChain](ht
 * [Question Answering using LangChain and Chroma](https://github.com/google-gemini/cookbook/blob/main/examples/langchain/Gemini_LangChain_QA_Chroma_WebLoad.ipynb): Learn how to interface Gemini, LangChain and [Chroma](https://docs.trychroma.com/). 
 * [Question Answering using LangChain and Pinecone](https://github.com/google-gemini/cookbook/blob/main/examples/langchain/Gemini_LangChain_QA_Pinecone_WebLoad.ipynb): Learn how to interface Gemini, LangChain and [Pinecone](https://app.pinecone.io/). 
 
+* [SQL Agent using Gemini API and LangChain](https://github.com/google-gemini/cookbook/blob/main/examples/langchain/SQL_Agent_Gemini_LangChain.ipynb): Build an autonomous SQL Agent that answers natural language questions about a SQLite database using Gemini API and LangChain.
+
 There are even more examples in the [examples](https://github.com/google-gemini/cookbook/tree/main/examples) and [quickstarts](https://github.com/google-gemini/cookbook/tree/main/quickstarts) folders.
+

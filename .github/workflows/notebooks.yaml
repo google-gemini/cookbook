@@ -10,6 +10,9 @@ on:
   # Allow manual runs
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   # Format all notebooks.
   nbfmt:

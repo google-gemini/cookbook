@@ -1,0 +1,62 @@
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+usage:
+  cookbook test [path/to/notebook.ipynb] [--ai-compare] [--timeout=900] [--kernel=python3]
+
+notes:
+  - If no notebook path is provided, it runs ALL notebooks.
+  - --ai-compare sets AI_COMPARE=1 (uses your GOOGLE_API_KEY).
+  - Outputs go to reports/*.compare.json
+EOF
+}
+
+cmd="${1:-}"; shift || true
+case "$cmd" in
+  test)
+    NB_ARGS=()
+    AI_COMPARE="${AI_COMPARE:-0}"
+    TIMEOUT="900"
+    KERNEL="python3"
+
+    for a in "$@"; do
+      case "$a" in
+        --ai-compare) AI_COMPARE=1 ;;
+        --timeout=*) TIMEOUT="${a#*=}" ;;
+        --kernel=*) KERNEL="${a#*=}" ;;
+        *)
+          if [[ "$a" != *.ipynb ]]; then
+            echo "Error: Only .ipynb files are supported: $a" >&2
+            exit 1
+          fi
+          IFS=',' read -r -a parts <<< "$a"
+          for part in "${parts[@]}"; do
+            if [[ "$part" != *.ipynb ]]; then
+              echo "Error: Only .ipynb files are supported: $part" >&2
+              exit 1
+            fi
+            NB_ARGS+=("$part")
+          done
+          ;;
+      esac
+    done
+
+    NB_ARG=$(IFS=,; echo "${NB_ARGS[*]}")
+
+    if [[ -n "$NB_ARG" ]]; then export NB="$NB_ARG"; fi
+    export AI_COMPARE="$AI_COMPARE"
+    export NB_TIMEOUT="$TIMEOUT"
+    export NB_KERNEL="$KERNEL"
+
+    exec python tests/test_nbclient.py
+    ;;
+  ""|-h|--help|help)
+    usage
+    ;;
+  *)
+    echo "Unknown subcommand: $cmd" >&2
+    usage
+    exit 2
+    ;;
+esac

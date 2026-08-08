@@ -1,0 +1,95 @@
+name: Weekly Notebook Tests
+
+on:
+  schedule:
+    # Run every Sunday at midnight
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  test-notebooks:
+    name: Run and Compare Notebooks
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-state: '3.10'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests nbformat nbclient jupyter
+
+    - name: Run Tests
+      env:
+        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        AI_COMPARE: "1"
+      run: |
+        chmod +x ./cookbook
+        ./cookbook test --ai-compare
+
+    - name: Upload Reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: notebook-test-reports
+        path: reports/
+
+    - name: Create or Update Weekly Issue
+      if: always()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          let reportContent = '### Weekly Notebook Execution Report\n\n';
+          reportContent += `Run Date: ${new Date().toUTCString()}\n`;
+          reportContent += `Action Run URL: ${context.payload.repository.html_url}/actions/runs/${context.runId}\n\n`;
+          
+          let hasFailures = false;
+          const reportsDir = path.join(process.env.GITHUB_WORKSPACE, 'reports');
+          
+          if (fs.existsSync(reportsDir)) {
+            const files = fs.readdirSync(reportsDir);
+            reportContent += '| Notebook | Status | Duration (s) | OK | Slightly Changed | Wrong |\n';
+            reportContent += '| --- | --- | --- | --- | --- | --- |\n';
+            
+            for (const file of files) {
+              if (file.endsWith('.compare.json')) {
+                const data = JSON.parse(fs.readFileSync(path.join(reportsDir, file), 'utf8'));
+                const fileRel = data.file.split('/').pop();
+                const okCount = Object.keys(data.buckets.ok_cells || {}).length;
+                const slightCount = Object.keys(data.buckets.slightly_changed || {}).length;
+                const wrongCount = Object.keys(data.buckets.wrong || {}).length;
+                
+                if (data.status === 'failed') {
+                  hasFailures = true;
+                }
+                
+                reportContent += `| ${fileRel} | ${data.status === 'passed' ? '✅ Passed' : '❌ Failed'} | ${data.duration_sec} | ${okCount} | ${slightCount} | ${wrongCount} |\n`;
+              }
+            }
+          } else {
+            reportContent += 'No test reports found. The test suite failed to initialize or execute.\n';
+            hasFailures = true;
+          }
+          
+          const issueTitle = `Weekly Notebook Test Report - ${new Date().toISOString().split('T')[0]}`;
+          
+          await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: issueTitle,
+            body: reportContent,
+            labels: ['notebook-testing', hasFailures ? 'failed' : 'passed']
+          });

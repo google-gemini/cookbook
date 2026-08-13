@@ -167,7 +167,7 @@ See [`.gemini/styleguide.md`](./.gemini/styleguide.md) for the full list and res
 * If you *must* use extra parameters, explain *why* they are needed and the reasoning behind the specific value the first time you use them.
 * When selecting a model, use a Colab form selector for easier maintainability:
     ```python
-    MODEL_ID="gemini-3.6-flash" # @param ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-3.5-flash-lite", "gemini-3.6-flash", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}
+    MODEL_ID="gemini-3.7-flash" # @param ["gemini-3.7-flash", "gemini-2.5-pro", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}
     ```
 * Some notebooks can benefit from having a form to update the prompt:
     ```python
@@ -178,7 +178,7 @@ See [`.gemini/styleguide.md`](./.gemini/styleguide.md) for the full list and res
     prompt = "Draw a square around the fox' shadow"  # @param ["Find the two origami animals.", "Where are the origamis' shadows?","Draw a square around the fox' shadow"] {"allow-input":true}
     ```
 * To ensure notebook text remains accurate, present model metadata (like context window size) by executing code, not by hardcoding it in Markdown.
-    * Example: Instead of writing "This model has a 1M token context window", display the output of `client.models.get('models/gemini-2.5-flash').input_token_limit`.
+    * Example: Instead of writing "This model has a 1M token context window", display the output of `client.models.get('models/gemini-3.7-flash').input_token_limit`.
 
 ## Naming Conventions
 

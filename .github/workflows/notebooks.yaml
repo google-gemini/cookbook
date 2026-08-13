@@ -10,16 +10,20 @@ on:
   # Allow manual runs
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   # Format all notebooks.
   nbfmt:
     name: Notebook format
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       with:
         fetch-depth: 0  # Get *full* history
-    - uses: actions/setup-python@v4
+        persist-credentials: false
+    - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
     - name: Install tensorflow-docs
       run: python3 -m pip install -U git+https://github.com/tensorflow/docs
     - name: Fetch main branch
@@ -46,10 +50,11 @@ jobs:
     name: Notebook lint
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       with:
         fetch-depth: 0  # Get *full* history
-    - uses: actions/setup-python@v4
+        persist-credentials: false
+    - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
     - name: Install tensorflow-docs
       run: python3 -m pip install -U git+https://github.com/tensorflow/docs
     - name: Fetch main branch

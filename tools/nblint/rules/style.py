@@ -1,3 +1,17 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """Style and language lint rules for Gemini API Cookbook notebooks.
 
 This module implements style rules tailored for Gemini developer documentation:
@@ -102,19 +116,15 @@ def check_second_person(
             if any(ign_pat.search(line) for ign_pat in config.SECOND_PERSON_IGNORE_LINE_PATTERNS):
                 continue
                 
-            # Strip markdown links and inline code before testing
+            # Strip markdown links, inline code, and quoted strings before testing
             cleaned_line = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', line)
             cleaned_line = re.sub(r'`[^`]+`', '', cleaned_line)
+            cleaned_line = re.sub(r'"[^"]*"', '', cleaned_line)
+            cleaned_line = re.sub(r"'[^']*'", '', cleaned_line)
             
             for word, alt in config.SECOND_PERSON_WORDLIST.items():
-                pattern = rf"(?<!\w)\b{word}\b(?!\w)"
+                pattern = rf"\b{word}\b"
                 if re.search(pattern, cleaned_line, re.IGNORECASE):
-                    # Double check it's not inside quotes
-                    if '"' in line or "'" in line:
-                        # If the entire line is inside a quote/example prompt, ignore
-                        if re.search(rf'["\'].*?\b{word}\b.*?["\']', line, re.IGNORECASE):
-                            continue
-                            
                     violations.append(
                         f"Cell {cell_idx}, line {line_idx + 1}: "
                         f"Prefer second person ('{alt}') instead of first person ('{word}'). Found: '{line.strip()}'"

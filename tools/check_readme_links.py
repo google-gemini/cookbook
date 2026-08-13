@@ -1,4 +1,19 @@
 #!/usr/bin/env python3
+
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """README Link Checker for Gemini API Cookbook Notebooks.
 
 This script ensures that all Jupyter and Colab notebooks (.ipynb) in the repository
@@ -91,23 +106,28 @@ def get_candidate_readmes(notebook_path: pathlib.Path) -> List[pathlib.Path]:
     Returns:
         List of existing README Path objects in priority order.
     """
+    try:
+        notebook_path = pathlib.Path(notebook_path).resolve().relative_to(repo_root)
+    except ValueError:
+        notebook_path = pathlib.Path(notebook_path)
+
     candidates = []
     
     # 1. Immediate parent directory README
-    parent_readme = notebook_path.parent / "README.md"
+    parent_readme = repo_root / notebook_path.parent / "README.md"
     if parent_readme.exists():
         candidates.append(parent_readme)
         
     # 2. Top-level section README (e.g. quickstarts/README.md or examples/README.md)
     parts = notebook_path.parts
     if len(parts) > 1:
-        top_section = pathlib.Path(parts[0])
+        top_section = repo_root / parts[0]
         top_readme = top_section / "README.md"
         if top_readme.exists() and top_readme not in candidates:
             candidates.append(top_readme)
             
     # 3. Root README
-    root_readme = pathlib.Path("README.md")
+    root_readme = repo_root / "README.md"
     if root_readme.exists() and root_readme not in candidates:
         candidates.append(root_readme)
         

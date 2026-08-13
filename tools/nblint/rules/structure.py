@@ -1,3 +1,17 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """Structural lint rules for Gemini API Cookbook notebooks.
 
 This module implements lint checks verifying essential notebook structure:
@@ -110,10 +124,13 @@ def check_colab_button(
         return []
         
     cells = notebook_data.get("cells", [])
-    expected_rel_path = str(file_path).replace("\\", "/")
-    # If path starts with current directory ./ strip it
-    if expected_rel_path.startswith("./"):
-        expected_rel_path = expected_rel_path[2:]
+    try:
+        repo_root = pathlib.Path(__file__).resolve().parent.parent.parent.parent
+        expected_rel_path = pathlib.Path(file_path).resolve().relative_to(repo_root).as_posix()
+    except ValueError:
+        expected_rel_path = str(file_path).replace("\\", "/")
+        if expected_rel_path.startswith("./"):
+            expected_rel_path = expected_rel_path[2:]
         
     expected_url = f"{config.COLAB_BASE_URL}/{repo}/blob/{branch}/{expected_rel_path}"
     

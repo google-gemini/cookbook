@@ -1,3 +1,17 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """Centralized configuration for Gemini API Cookbook linting and formatting tools.
 
 This module provides all configurable parameters, regular expressions, wordlists,
@@ -162,13 +176,13 @@ def get_model_sort_key(model_name: str) -> int:
     # 2. Preview / Experimental penalty
     preview_penalty = 500 if ("preview" in cleaned or "exp" in cleaned or "experimental" in cleaned) else 0
     
-    # 3. Version number extraction (e.g. 2.5 -> 25, 3.1 -> 31)
+    # 3. Version number extraction (e.g. 2.5 -> 205, 3.1 -> 301)
     version_match = re.search(r'gemini-(\d+)(?:\.(\d+))?', cleaned)
     version_score = 0
     if version_match:
         major = int(version_match.group(1))
         minor = int(version_match.group(2)) if version_match.group(2) else 0
-        version_score = major * 10 + minor
+        version_score = major * 100 + minor
         
     return tier_score + preview_penalty + version_score
 

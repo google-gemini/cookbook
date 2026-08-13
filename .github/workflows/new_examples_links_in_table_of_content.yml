@@ -30,5 +30,7 @@ jobs:
             .github/**
       - name: Check README links
         if: steps.changed-files.outputs.any_changed == 'true'
+        env:
+          CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
-          python3 tools/check_readme_links.py ${{ steps.changed-files.outputs.all_changed_files }}
+          python3 tools/check_readme_links.py $CHANGED_FILES

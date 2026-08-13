@@ -63,7 +63,7 @@ ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 The models available through the Gemini API have context windows that are measured in tokens. These define how much input you can provide, and how much output the model can generate, and combined are referred to as the "context window". This information is available directly through [the API](https://ai.google.dev/api/rest/v1/models/get) and in the [models](https://ai.google.dev/models/gemini) documentation.
 
-In this example you can see the `gemini-2.5-flash` model has an 1M tokens context window. If you need more, Pro models have an even bigger 2M tokens context window.
+In this example you can see the `gemini-3.7-flash` model has an 1M tokens context window. If you need more, Pro models have an even bigger 2M tokens context window.
 */
 
 // [CODE STARTS]
@@ -100,7 +100,7 @@ For more information about all Gemini models, check the [documentation](https://
 */
 
 // [CODE STARTS]
-MODEL_ID = "gemini-3.7-flash"; // e.g., "gemini-3.5-flash-lite", "gemini-3.1-pro-preview"
+MODEL_ID = "gemini-3.7-flash"; // e.g., "gemini-3.7-flash", "gemini-3.1-pro-preview"
 // [CODE ENDS]
 
 /* Markdown (render)

@@ -57,7 +57,7 @@ module = await import("https://esm.sh/@google/genai@1.4.0");
 GoogleGenAI = module.GoogleGenAI;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-MODEL_ID = "gemini-3.7-flash"; // "gemini-2.5-flash""gemini-2.5-pro", "gemini-3.5-flash-lite", "gemini-3.7-flash", "gemini-3.1-pro-preview"
+MODEL_ID = "gemini-3.7-flash"; // "gemini-3.7-flash""gemini-2.5-pro", "gemini-3.7-flash", "gemini-3.7-flash", "gemini-3.1-pro-preview"
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -1026,7 +1026,7 @@ Key announcements and demonstrations include:
     *   **Google Photos:** Gemini can perform highly contextual searches, like asking to &quot;show me how Lucia&#x27;s swimming has progressed,&quot; compiling relevant photos and summaries.
 *   **Project Astra (AI Agents):** Google unveiled Project Astra, their vision for a future universal AI agent. This agent can perceive and understand its environment through sight and sound in real-time, performing complex reasoning, planning, and memory tasks across different software and systems under user supervision. Demos highlighted its ability to explain code, remember where items like glasses were left, and engage in conversational, multimodal interactions.
 *   **New Gemini Models:**
-    *   **Gemini 1.5 Flash:** A new, lighter-weight model designed for speed and efficiency, making it cost-effective for large-scale applications while retaining multimodal reasoning and long-context capabilities.
+    *   **Gemini 3.7 Flash:** A new, lighter-weight model designed for speed and efficiency, making it cost-effective for large-scale applications while retaining multimodal reasoning and long-context capabilities.
     *   **Gemini Nano with Multimodality:** Coming to Pixel phones later this year, this model will enable devices to understand the world through sights, sounds, and spoken language, offering context-aware assistance.
 *   **Generative Media:**
     *   **Veo:** A new advanced generative video model capable of creating high-quality 1080p videos from text, image, and video prompts, demonstrating impressive detail and cinematic styles, with the ability to extend generated clips.

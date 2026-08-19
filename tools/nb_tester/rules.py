@@ -71,6 +71,7 @@ class NotebookRuleSet:
     notebook_timeout_sec: int = 600
     default_strategy: str = "semantic_llm"
     cell_rules: List[CellRule] = field(default_factory=list)
+    param_overrides: Dict[str, Any] = field(default_factory=dict)
 
 
 class RulesEngine:
@@ -90,30 +91,36 @@ class RulesEngine:
         self._load_rules()
 
     def _load_rules(self) -> None:
-        """Loads rules from the YAML file if present."""
-        if self.rules_file.exists():
-            try:
-                with open(self.rules_file, "r", encoding="utf-8") as f:
-                    self.raw_rules = yaml.safe_load(f) or {}
-                logger.debug(f"Loaded rules from {self.rules_file}")
-            except Exception as e:
-                logger.error(f"Failed to parse rules file {self.rules_file}: {e}")
-                self.raw_rules = {}
-        else:
-            logger.warning(f"Rules file {self.rules_file} not found; using defaults.")
+        """Reads and parses YAML rules file."""
+        if not self.rules_file.exists():
+            logger.warning(f"Rules file not found at {self.rules_file}. Using default empty rule set.")
+            return
+        try:
+            with open(self.rules_file, "r", encoding="utf-8") as f:
+                self.raw_rules = yaml.safe_load(f) or {}
+            logger.debug(f"Loaded rules for {len(self.raw_rules.get('notebooks', {}))} notebook(s).")
+        except Exception as e:
+            logger.error(f"Failed to parse rules file {self.rules_file}: {e}")
+            self.raw_rules = {}
 
-    def get_notebook_rules(self, relative_path: str) -> NotebookRuleSet:
+    def get_notebook_rules(self, notebook_path: str) -> NotebookRuleSet:
         """
-        Retrieves the rule set for a specific notebook.
+        Resolves the configuration rules for a given notebook path.
         
         Args:
-            relative_path: Relative POSIX path of the notebook (e.g. 'quickstarts/Chat.ipynb').
+            notebook_path: Relative or absolute path of the notebook.
             
         Returns:
-            NotebookRuleSet with all notebook-level and cell-level directives.
+            NotebookRuleSet with resolved rules.
         """
+        rel_path = str(pathlib.Path(notebook_path).as_posix()).lstrip("/")
+        # Normalize relative path against repo root if absolute
+        repo_root_str = str(self.config.REPO_ROOT.as_posix()).rstrip("/")
+        if rel_path.startswith(repo_root_str):
+            rel_path = rel_path[len(repo_root_str):].lstrip("/")
+
         global_defs = self.raw_rules.get("global_defaults", {})
-        nb_rules_dict = self.raw_rules.get("notebooks", {}).get(relative_path, {})
+        nb_rules_dict = self.raw_rules.get("notebooks", {}).get(rel_path, {})
 
         cell_timeout = nb_rules_dict.get(
             "cell_timeout_sec",
@@ -140,8 +147,10 @@ class RulesEngine:
                 description=cr.get("description")
             ))
 
+        param_overrides = nb_rules_dict.get("param_overrides", {})
+
         return NotebookRuleSet(
-            notebook_path=relative_path,
+            notebook_path=rel_path,
             skip_notebook=nb_rules_dict.get("skip_notebook", False),
             skip_reason=nb_rules_dict.get("skip_reason"),
             allow_dynamic_exec=nb_rules_dict.get("allow_dynamic_exec", False),
@@ -149,7 +158,8 @@ class RulesEngine:
             cell_timeout_sec=cell_timeout,
             notebook_timeout_sec=nb_timeout,
             default_strategy=default_strat,
-            cell_rules=parsed_cell_rules
+            cell_rules=parsed_cell_rules,
+            param_overrides=param_overrides
         )
 
     def resolve_cell_action_and_strategy(

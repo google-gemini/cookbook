@@ -144,17 +144,42 @@ class NotebookExecutor:
 
         # Create working copy of notebook
         exec_nb = copy.deepcopy(orig_nb)
+
+        # Preprocess cells in memory to automatically enable interactive confirmation checkboxes (e.g. I_am_aware_that_...)
+        for cell in exec_nb.cells:
+            if cell.cell_type == "code" and cell.source:
+                # Auto-enable any I_am_aware_that_... boolean variables
+                cell.source = re.sub(
+                    r"(I_am_aware_that_\w+\s*=\s*)False\b",
+                    r"\g<1>True",
+                    cell.source,
+                    flags=re.IGNORECASE
+                )
+                # Apply any explicit rule parameter overrides
+                for var_name, var_val in rule_set.param_overrides.items():
+                    val_repr = repr(var_val)
+                    cell.source = re.sub(
+                        rf"^({re.escape(var_name)}\s*=\s*).+$",
+                        rf"\g<1>{val_repr}",
+                        cell.source,
+                        flags=re.MULTILINE
+                    )
         
         # Inject Colab Mock Preamble
         api_key = self.config.get_api_key() or ""
         mock_source = (
-            "import sys, os\n"
+            "import sys, os, pathlib\n"
             "from unittest.mock import MagicMock\n"
             "_mock_colab = MagicMock()\n"
             f"_mock_colab.userdata.get.side_effect = lambda k: os.getenv(k, {api_key!r} if k in ('GEMINI_API_KEY', 'GOOGLE_API_KEY') else None)\n"
             "sys.modules['google.colab'] = _mock_colab\n"
             "sys.modules['google.colab.userdata'] = _mock_colab.userdata\n"
             f"os.environ['GEMINI_API_KEY'] = {api_key!r}\n"
+            "# Automatically touch flag files for bash/REST notebooks\n"
+            "try:\n"
+            "    pathlib.Path('I_am_aware_that_veo_is_a_paid_feature').touch(exist_ok=True)\n"
+            "except Exception:\n"
+            "    pass\n"
         )
         mock_cell = nbformat.v4.new_code_cell(source=mock_source)
         exec_nb.cells.insert(0, mock_cell)

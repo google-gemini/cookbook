@@ -31,6 +31,7 @@ Use Cases:
 
 import ast
 import re
+from urllib.parse import urlparse
 from dataclasses import dataclass, field
 from typing import List, Optional
 import nbformat
@@ -191,13 +192,27 @@ class NotebookStaticSecurityScanner:
             # Check for unverified external curl/wget data upload
             if re.search(r"!(?:curl|wget)\s+", line_str, re.IGNORECASE):
                 if re.search(r"(?:-d|--data|--upload-file|-F|--form|\$GEMINI|\$API)", line_str, re.IGNORECASE):
-                    # Check if targeting allowed Google domains
-                    if not any(domain in line_str for domain in self.ALLOWED_CURL_DOMAINS):
+                    # Extract and strictly validate URL destination hosts
+                    urls = re.findall(r'https?://[^\s\'"<>]+', line_str, flags=re.IGNORECASE)
+                    if urls:
+                        for url in urls:
+                            parsed = urlparse(url)
+                            hostname = (parsed.hostname or "").lower()
+                            if not any(hostname == domain or hostname.endswith("." + domain) for domain in self.ALLOWED_CURL_DOMAINS):
+                                findings.append(SecurityFinding(
+                                    cell_index=cell_idx,
+                                    severity="CRITICAL",
+                                    category="SHELL_MAGIC",
+                                    message=f"Shell curl/wget sending data or API keys to non-whitelisted host: {hostname}",
+                                    code_snippet=line_str,
+                                    line_number=line_num
+                                ))
+                    else:
                         findings.append(SecurityFinding(
                             cell_index=cell_idx,
                             severity="CRITICAL",
                             category="SHELL_MAGIC",
-                            message="Shell curl/wget sending data or API keys to non-whitelisted domain",
+                            message="Shell curl/wget sending data or API keys with unverified destination host",
                             code_snippet=line_str,
                             line_number=line_num
                         ))

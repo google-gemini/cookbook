@@ -113,11 +113,10 @@ class RulesEngine:
         Returns:
             NotebookRuleSet with resolved rules.
         """
-        rel_path = str(pathlib.Path(notebook_path).as_posix()).lstrip("/")
-        # Normalize relative path against repo root if absolute
-        repo_root_str = str(self.config.REPO_ROOT.as_posix()).rstrip("/")
-        if rel_path.startswith(repo_root_str):
-            rel_path = rel_path[len(repo_root_str):].lstrip("/")
+        try:
+            rel_path = str(pathlib.Path(notebook_path).resolve().relative_to(self.config.REPO_ROOT.resolve()).as_posix())
+        except ValueError:
+            rel_path = str(pathlib.Path(notebook_path).as_posix()).lstrip("/")
 
         global_defs = self.raw_rules.get("global_defaults", {})
         nb_rules_dict = self.raw_rules.get("notebooks", {}).get(rel_path, {})

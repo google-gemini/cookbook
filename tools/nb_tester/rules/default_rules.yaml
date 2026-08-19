@@ -73,3 +73,8 @@ notebooks:
     allow_dynamic_exec: true
     allow_security_demo: true
     description: "Demonstrates live plotting and mapping using code execution tools"
+
+  examples/prompting/Basic_Code_Generation.ipynb:
+    allow_dynamic_exec: true
+    allow_security_demo: true
+    description: "Demonstrates generating and executing Python code via exec()"

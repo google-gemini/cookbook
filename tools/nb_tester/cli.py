@@ -107,7 +107,7 @@ def discover_notebooks(
                 )
                 files = [line.strip() for line in res_upstream.stdout.splitlines() if line.strip().endswith(".ipynb")]
             if not files:
-                # Fallback to local uncommitted git diff
+                # Fallback to local uncommitted git diff and untracked files
                 res2 = subprocess.run(
                     ["git", "diff", "--name-only", "HEAD", "*.ipynb"],
                     cwd=str(repo_root),
@@ -117,7 +117,21 @@ def discover_notebooks(
                 )
                 if res2.returncode != 0 and res2.stderr:
                     logger.debug(f"git diff HEAD returned code {res2.returncode}: {res2.stderr.strip()}")
-                files = [line.strip() for line in res2.stdout.splitlines() if line.strip().endswith(".ipynb")]
+                
+                res_untracked = subprocess.run(
+                    ["git", "ls-files", "--others", "--exclude-standard", "*.ipynb"],
+                    cwd=str(repo_root),
+                    capture_output=True,
+                    text=True,
+                    check=False
+                )
+                
+                file_set = set()
+                if res2.returncode == 0:
+                    file_set.update(line.strip() for line in res2.stdout.splitlines() if line.strip().endswith(".ipynb"))
+                if res_untracked.returncode == 0:
+                    file_set.update(line.strip() for line in res_untracked.stdout.splitlines() if line.strip().endswith(".ipynb"))
+                files = list(file_set)
 
             resolved_files = [(repo_root / f).resolve() for f in files if (repo_root / f).exists()]
             logger.info(f"Discovered {len(resolved_files)} changed notebook(s) via git diff.")

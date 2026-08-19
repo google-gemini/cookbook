@@ -110,7 +110,13 @@ class GeminiOutputJudge:
 
         # If new output is completely empty
         if not new_output.strip():
-            # Check if the code is definition-only (import, class, def, assignment)
+            if old_output.strip():
+                return SemanticComparisonResult(
+                    verdict="REGRESSION",
+                    explanation="New output is empty, but the reference output was not empty.",
+                    is_regression=True
+                )
+            # Both old and new outputs are empty: verify if code produces output
             code_lines = [l.strip() for l in source_code.splitlines() if l.strip() and not l.strip().startswith("#")]
             has_print_or_call = any(
                 "print(" in l or "display(" in l or "interaction" in l or "generate" in l or "show(" in l

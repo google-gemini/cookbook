@@ -190,7 +190,7 @@ class NotebookStaticSecurityScanner:
 
             # Check for unverified external curl/wget data upload
             if re.search(r"!(?:curl|wget)\s+", line_str, re.IGNORECASE):
-                if re.search(r"(?:-d|--data|--upload-file|\$GEMINI|\$API)", line_str, re.IGNORECASE):
+                if re.search(r"(?:-d|--data|--upload-file|-F|--form|\$GEMINI|\$API)", line_str, re.IGNORECASE):
                     # Check if targeting allowed Google domains
                     if not any(domain in line_str for domain in self.ALLOWED_CURL_DOMAINS):
                         findings.append(SecurityFinding(

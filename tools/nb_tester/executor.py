@@ -151,7 +151,7 @@ class NotebookExecutor:
             "import sys, os\n"
             "from unittest.mock import MagicMock\n"
             "_mock_colab = MagicMock()\n"
-            f"_mock_colab.userdata.get.side_effect = lambda k: os.getenv(k, {api_key!r})\n"
+            f"_mock_colab.userdata.get.side_effect = lambda k: os.getenv(k, {api_key!r} if k in ('GEMINI_API_KEY', 'GOOGLE_API_KEY') else None)\n"
             "sys.modules['google.colab'] = _mock_colab\n"
             "sys.modules['google.colab.userdata'] = _mock_colab.userdata\n"
             f"os.environ['GEMINI_API_KEY'] = {api_key!r}\n"

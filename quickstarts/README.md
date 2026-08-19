@@ -22,6 +22,7 @@ If you're new to Gemini API, you should start with these two guides:
 | Quickstart | Description | Open |
 | -------- | ----------- | ---- |
 | [Authentication](./Authentication.ipynb) | Start here to learn how you can set up your API key so you can get access to the Gemini API. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Authentication.ipynb) |
+| [Authentication with OAuth](./Authentication_with_OAuth.ipynb) | Learn how to authenticate with the Gemini API using OAuth 2.0. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Authentication_with_OAuth.ipynb) |
 | [Get Started](./Get_started.ipynb) | Learn how to make your first calls to the Gemini API and get a quick overview of everything it can do. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb) |
 <br>
 

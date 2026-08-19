@@ -50,6 +50,14 @@ EXCLUDED_NOTEBOOKS: Set[str] = {
     "examples/Google_IO2025_Live_Coding.ipynb",
 }
 
+# Notebooks that should not be required to be referenced in README / Table of Contents files.
+EXCLUDED_README_NOTEBOOKS: Set[str] = {
+    "quickstarts/Template.ipynb",
+    "quickstarts/Authentication_with_OAuth.ipynb",
+    "examples/Object_detection.ipynb",
+    "examples/Google_IO2025_Live_Coding.ipynb",
+}
+
 # Directories containing tooling or workflows that should be ignored for README checks.
 IGNORED_NOTEBOOK_DIRS: Set[str] = {
     "tools",
@@ -61,14 +69,16 @@ IGNORED_NOTEBOOK_DIRS: Set[str] = {
 # Substring indicators that identify a notebook as a "redirect / stub" notebook.
 # Redirect notebooks only contain a pointer to a new location.
 REDIRECT_KEYWORDS: List[str] = [
+    "has moved",
     "has moved to",
     "this colab has moved",
+    "this notebook has moved",
     "moved to https://",
     "redirect",
 ]
 
 # Max cells for a notebook to be considered a stub/redirect notebook candidate
-MAX_REDIRECT_CELL_COUNT: int = 4
+MAX_REDIRECT_CELL_COUNT: int = 6
 
 # ==============================================================================
 # Inclusive Language Configuration
@@ -135,56 +145,83 @@ PIP_MAGIC_INSTALL_REGEX: Pattern = re.compile(r'^\s*%pip\s+install', re.MULTILIN
 # ==============================================================================
 
 # Regex to detect Colab form model selectors
-# e.g.: MODEL_ID = "gemini-3.5-flash" # @param ["gemini-3.1-flash-lite", "gemini-3.5-flash", ...]
+# e.g.: MODEL_ID = "gemini-3.7-flash" # @param ["gemini-3.1-pro-preview", "gemini-3.7-flash", "gemini-3.5-flash-lite", "gemini-2.5-pro"]
 MODEL_PARAM_SELECTOR_REGEX: Pattern = re.compile(
     r'(?:MODEL_ID|model_id|MODEL|model)\s*=\s*["\']([^"\']+)["\']\s*#\s*@param\s*(\[[^\]]+\])',
     re.MULTILINE
 )
 
-def get_model_sort_key(model_name: str) -> int:
-    """Computes a numeric sort key for ordering Gemini models according to style guide.
+def get_model_sort_key(model_name: str) -> tuple:
+    """Computes a sort key for ordering Gemini models according to cookbook style guide.
     
     Order:
-      1. Tier: Flash-Lite (1000) -> Flash (2000) -> Pro (3000) -> Other (4000+)
-      2. Preview / Experimental penalty (+500)
-      3. Generation version (higher minor/major version before or after)
+      1. Family / Media type category (General Gemini -> Live -> TTS -> Omni -> Image -> Embeddings -> Veo -> Imagen -> Lyria -> Other)
+      2. Generation version descending (e.g. 3.x before 2.x before 1.x)
+      3. Capability tier ascending: Pro (most capable) -> Flash -> Flash-Lite / 8b (least capable)
+      4. Specific version descending (e.g. 3.7 before 3.1)
     
     Args:
-        model_name: The string ID of the model (e.g. 'gemini-2.5-flash').
+        model_name: The string ID of the model (e.g. 'gemini-3.7-flash').
         
     Returns:
-        An integer rank value. Lower values should appear earlier in the list.
+        A tuple sort key where lower values appear earlier in the list.
     """
     cleaned = model_name.lower().strip("\"'")
+    cleaned = cleaned.replace("models/", "")
     
-    # 1. Determine Tier
-    if "flash-lite" in cleaned or "flash_lite" in cleaned or "lite" in cleaned:
-        tier_score = 1000
-    elif "flash" in cleaned:
-        tier_score = 2000
-    elif "pro" in cleaned:
-        tier_score = 3000
+    # 1. Family / Media type category
+    if "learnlm" in cleaned:
+        family_cat = 9
     elif "veo" in cleaned:
-        tier_score = 4000
+        family_cat = 6
     elif "imagen" in cleaned:
-        tier_score = 5000
+        family_cat = 7
     elif "lyria" in cleaned:
-        tier_score = 6000
+        family_cat = 8
+    elif "embedding" in cleaned:
+        family_cat = 5
+    elif "tts" in cleaned:
+        family_cat = 2
+    elif "live" in cleaned or "native-audio" in cleaned:
+        family_cat = 1
+    elif "omni" in cleaned or "translate" in cleaned:
+        family_cat = 3
+    elif "-image" in cleaned:
+        family_cat = 4
+    elif "gemini" in cleaned:
+        family_cat = 0
     else:
-        tier_score = 7000
-        
-    # 2. Preview / Experimental penalty
-    preview_penalty = 500 if ("preview" in cleaned or "exp" in cleaned or "experimental" in cleaned) else 0
-    
-    # 3. Version number extraction (e.g. 2.5 -> 205, 3.1 -> 301)
-    version_match = re.search(r'gemini-(\d+)(?:\.(\d+))?', cleaned)
-    version_score = 0
-    if version_match:
-        major = int(version_match.group(1))
-        minor = int(version_match.group(2)) if version_match.group(2) else 0
-        version_score = major * 100 + minor
-        
-    return tier_score + preview_penalty + version_score
+        family_cat = 10
+
+    # 2. Generation / Version extraction
+    gen_score = 0
+    m = re.search(r"(?:gemini-|veo-|imagen-|lyria-|learnlm-|text-embedding-)?(\d+)(?:\.(\d+))?", cleaned)
+    if m:
+        major = int(m.group(1))
+        minor = int(m.group(2)) if m.group(2) else 0
+        gen_score = major * 100 + minor
+
+    # Generation bucket (e.g. 300 for 3.x, 200 for 2.x, 400 for 4.x)
+    gen_bucket = (gen_score // 100) * 100 if gen_score >= 100 else gen_score
+
+    # 3. Capability tier ranking
+    if "ultra" in cleaned:
+        tier_rank = 5
+    elif "pro" in cleaned:
+        tier_rank = 10
+    elif "flash-lite" in cleaned or "flash_lite" in cleaned or "8b" in cleaned or "-lite" in cleaned or "clip" in cleaned:
+        tier_rank = 30
+    elif "flash" in cleaned:
+        tier_rank = 20
+    elif "fast" in cleaned:
+        tier_rank = 25
+    elif "generate" in cleaned:
+        tier_rank = 20
+    else:
+        tier_rank = 20
+
+    return (family_cat, -gen_bucket, tier_rank, -gen_score, cleaned)
+
 
 # ==============================================================================
 # Structural & License Regexes

@@ -92,6 +92,23 @@ def parse_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def to_repo_relative_path(p: pathlib.Path) -> pathlib.Path:
+    """Converts any path to a path relative to the repository root."""
+    try:
+        return pathlib.Path(p).resolve().relative_to(repo_root)
+    except ValueError:
+        return pathlib.Path(p)
+
+
+def to_repo_relative_str(p: pathlib.Path) -> str:
+    """Converts a path to a normalized posix string relative to the repository root."""
+    rel = to_repo_relative_path(p)
+    s = str(rel).replace("\\", "/")
+    if s.startswith("./"):
+        s = s[2:]
+    return s
+
+
 def get_candidate_readmes(notebook_path: pathlib.Path) -> List[pathlib.Path]:
     """Finds all candidate README.md files where a notebook could be linked.
     
@@ -104,31 +121,27 @@ def get_candidate_readmes(notebook_path: pathlib.Path) -> List[pathlib.Path]:
         notebook_path: Path to the notebook file.
         
     Returns:
-        List of existing README Path objects in priority order.
+        List of existing README Path objects relative to repo root in priority order.
     """
-    try:
-        notebook_path = pathlib.Path(notebook_path).resolve().relative_to(repo_root)
-    except ValueError:
-        notebook_path = pathlib.Path(notebook_path)
-
-    candidates = []
+    rel_path = to_repo_relative_path(notebook_path)
+    candidates: List[pathlib.Path] = []
     
     # 1. Immediate parent directory README
-    parent_readme = repo_root / notebook_path.parent / "README.md"
-    if parent_readme.exists():
+    parent_readme = rel_path.parent / "README.md"
+    if (repo_root / parent_readme).exists():
         candidates.append(parent_readme)
         
     # 2. Top-level section README (e.g. quickstarts/README.md or examples/README.md)
-    parts = notebook_path.parts
+    parts = rel_path.parts
     if len(parts) > 1:
-        top_section = repo_root / parts[0]
+        top_section = pathlib.Path(parts[0])
         top_readme = top_section / "README.md"
-        if top_readme.exists() and top_readme not in candidates:
+        if (repo_root / top_readme).exists() and top_readme not in candidates:
             candidates.append(top_readme)
             
     # 3. Root README
-    root_readme = repo_root / "README.md"
-    if root_readme.exists() and root_readme not in candidates:
+    root_readme = pathlib.Path("README.md")
+    if (repo_root / root_readme).exists() and root_readme not in candidates:
         candidates.append(root_readme)
         
     return candidates
@@ -143,20 +156,19 @@ def is_notebook_linked(notebook_path: pathlib.Path) -> Tuple[bool, List[str]]:
     Returns:
         A tuple of (is_linked: bool, found_in_readmes: List[str]).
     """
-    normalized_path_str = str(notebook_path).replace("\\", "/")
-    if normalized_path_str.startswith("./"):
-        normalized_path_str = normalized_path_str[2:]
+    rel_path = to_repo_relative_path(notebook_path)
+    normalized_path_str = to_repo_relative_str(notebook_path)
         
-    filename = notebook_path.name
-    stem = notebook_path.stem
-    candidate_readmes = get_candidate_readmes(notebook_path)
+    filename = rel_path.name
+    candidate_readmes = get_candidate_readmes(rel_path)
     
     found_in = []
-    for readme_path in candidate_readmes:
+    for readme_rel in candidate_readmes:
+        full_readme_path = repo_root / readme_rel
         try:
-            content = readme_path.read_text(encoding="utf-8")
+            content = full_readme_path.read_text(encoding="utf-8")
         except Exception as e:
-            logger.warning("Failed to read %s: %s", readme_path, e)
+            logger.warning("Failed to read %s: %s", to_repo_relative_str(readme_rel), e)
             continue
             
         # Match patterns:
@@ -171,21 +183,21 @@ def is_notebook_linked(notebook_path: pathlib.Path) -> Tuple[bool, List[str]]:
             f"(./{filename})" in content or
             f"/{filename}" in content
         ):
-            found_in.append(str(readme_path))
+            found_in.append(to_repo_relative_str(readme_rel))
             
     return (len(found_in) > 0, found_in)
 
 
 def check_notebook_links(
     file_paths: List[pathlib.Path],
-    excluded_files: Set[str],
+    excluded_files: Set[str] = getattr(config, "EXCLUDED_README_NOTEBOOKS", config.EXCLUDED_NOTEBOOKS),
     ignored_dirs: Set[str] = config.IGNORED_NOTEBOOK_DIRS
 ) -> Tuple[List[pathlib.Path], List[Tuple[pathlib.Path, List[pathlib.Path]]]]:
     """Evaluates link presence for a collection of notebooks across any repo folder.
     
     Args:
         file_paths: List of notebook paths to evaluate.
-        excluded_files: Set of file names or paths to ignore (e.g. templates).
+        excluded_files: Set of file names or paths to ignore (e.g. templates, stubs).
         ignored_dirs: Set of tooling / infrastructure directory names to ignore (e.g. tools, .github).
         
     Returns:
@@ -195,28 +207,27 @@ def check_notebook_links(
     unlinked = []
     
     for nb in file_paths:
-        normalized_str = str(nb).replace("\\", "/")
-        if normalized_str.startswith("./"):
-            normalized_str = normalized_str[2:]
+        rel_nb = to_repo_relative_path(nb)
+        normalized_str = to_repo_relative_str(nb)
             
         # Check if located in an ignored directory (e.g. tools/, .github/)
-        if any(part in ignored_dirs for part in nb.parts):
-            logger.info("Skipping notebook in ignored directory: %s", nb)
+        if any(part in ignored_dirs for part in rel_nb.parts):
+            logger.info("Skipping notebook in ignored directory: %s", normalized_str)
             continue
             
         # Check exclusions
         if any(excl in normalized_str for excl in excluded_files):
-            logger.info("Skipping excluded notebook: %s", nb)
+            logger.info("Skipping excluded notebook: %s", normalized_str)
             continue
             
-        is_linked, found_readmes = is_notebook_linked(nb)
+        is_linked, found_readmes = is_notebook_linked(rel_nb)
         if is_linked:
-            logger.info("Notebook '%s' is linked in: %s", nb, ", ".join(found_readmes))
-            linked.append(nb)
+            logger.info("Notebook '%s' is linked in: %s", normalized_str, ", ".join(found_readmes))
+            linked.append(rel_nb)
         else:
-            candidates = get_candidate_readmes(nb)
-            logger.warning("Notebook '%s' is NOT linked in any candidate README", nb)
-            unlinked.append((nb, candidates))
+            candidates = get_candidate_readmes(rel_nb)
+            logger.warning("Notebook '%s' is NOT linked in any candidate README", normalized_str)
+            unlinked.append((rel_nb, candidates))
             
     return linked, unlinked
 
@@ -229,7 +240,7 @@ def main() -> int:
     if args.all or not args.files:
         all_candidates = glob.glob("**/*.ipynb", recursive=True)
         target_files = sorted([
-            pathlib.Path(f) for f in all_candidates
+            to_repo_relative_path(pathlib.Path(f)) for f in all_candidates
             if not any(part in config.IGNORED_NOTEBOOK_DIRS for part in pathlib.Path(f).parts)
         ])
     else:
@@ -239,11 +250,11 @@ def main() -> int:
             if expanded:
                 for f in expanded:
                     if f.endswith(".ipynb"):
-                        target_files.append(pathlib.Path(f))
+                        target_files.append(to_repo_relative_path(pathlib.Path(f)))
             else:
                 p = pathlib.Path(pat)
                 if p.exists() and p.suffix == ".ipynb":
-                    target_files.append(p)
+                    target_files.append(to_repo_relative_path(p))
         target_files = sorted(list(set(target_files)))
 
     if not target_files:
@@ -252,21 +263,23 @@ def main() -> int:
 
     print(f"Checking README links for {len(target_files)} notebook(s)...\n")
 
-    linked, unlinked = check_notebook_links(target_files, config.EXCLUDED_NOTEBOOKS)
+    exclusion_set = getattr(config, "EXCLUDED_README_NOTEBOOKS", config.EXCLUDED_NOTEBOOKS)
+    linked, unlinked = check_notebook_links(target_files, exclusion_set)
 
     for nb in linked:
-        print(f"{COLOR_GREEN}[LINKED]{COLOR_RESET} {nb}")
+        print(f"{COLOR_GREEN}[LINKED]{COLOR_RESET} {to_repo_relative_str(nb)}")
 
     if unlinked:
         print("\n" + "=" * 60)
         print(f"{COLOR_RED}[UNLINKED NOTEBOOKS]{COLOR_RESET} The following notebooks are not linked in any README.md:")
         for nb, candidates in unlinked:
-            candidate_str = ", ".join(str(c) for c in candidates) if candidates else "README.md"
-            print(f"  - {COLOR_BOLD}{nb}{COLOR_RESET}")
+            rel_nb_str = to_repo_relative_str(nb)
+            candidate_str = ", ".join(to_repo_relative_str(c) for c in candidates) if candidates else "README.md"
+            print(f"  - {COLOR_BOLD}{rel_nb_str}{COLOR_RESET}")
             print(f"    Expected in one of: {candidate_str}")
             # GitHub Actions annotation format if running in CI
             if os.getenv("GITHUB_ACTIONS") == "true":
-                print(f"::warning file={nb}::Link to '{nb}' not found in {candidate_str}")
+                print(f"::warning file={rel_nb_str}::Link to '{rel_nb_str}' not found in {candidate_str}")
 
         print("\nPlease add links in the corresponding section README.md (e.g. Table of Contents).")
         print("=" * 60)

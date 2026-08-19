@@ -48,6 +48,6 @@ tools/
 ## 4. Model Hierarchy & Ordering Logic
 
 In `tools/config.py`, the model selector rule sorts models using `get_model_sort_key()`:
-- **Tiers**: Flash-Lite (rank 1000) $\rightarrow$ Flash (rank 2000) $\rightarrow$ Pro (rank 3000) $\rightarrow$ Domain-specific (Veo/Imagen/Lyria).
-- **Release Status**: Stable (rank +0) precedes Preview / Experimental (rank +500).
-- **Version**: Ordered chronologically (e.g. 2.5 $\rightarrow$ 3.0 $\rightarrow$ 3.5 $\rightarrow$ 3.7).
+- **Capability Tiers**: Models are ordered from most capable to least capable: Pro $\rightarrow$ Flash $\rightarrow$ Flash-Lite $\rightarrow$ Domain-specific (Live/Veo/Imagen/Lyria).
+- **Generations**: Current generation models (e.g. Gemini 3.x) precede previous generations (e.g. Gemini 2.5).
+- **Stable Fallbacks**: When a current-generation Pro model is in preview (e.g. `gemini-3.1-pro-preview`), the previous generation stable Pro model (`gemini-2.5-pro`) is included as a fallback.

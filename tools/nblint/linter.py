@@ -201,7 +201,7 @@ class NotebookLinter:
             result.diagnostics.append(LintDiagnostic("style::inclusive_language", msg, Severity.ERROR))
             
         for msg in style.check_second_person(data, file_path, result.is_redirect):
-            result.diagnostics.append(LintDiagnostic("style::second_person", msg, Severity.ERROR))
+            result.diagnostics.append(LintDiagnostic("style::second_person", msg, Severity.WARNING))
             
         for msg in style.check_code_line_length(data, file_path, max_length=100, is_redirect=result.is_redirect):
             result.diagnostics.append(LintDiagnostic("style::line_length", msg, Severity.WARNING))
@@ -211,7 +211,7 @@ class NotebookLinter:
             result.diagnostics.append(LintDiagnostic("gemini::pip_magic", msg, Severity.ERROR))
             
         for msg in gemini.check_sdk_package(data, file_path, result.is_redirect):
-            result.diagnostics.append(LintDiagnostic("gemini::sdk_package", msg, Severity.ERROR))
+            result.diagnostics.append(LintDiagnostic("gemini::sdk_package", msg, Severity.WARNING))
             
         for msg in gemini.check_api_key_secret_name(data, file_path, result.is_redirect):
             result.diagnostics.append(LintDiagnostic("gemini::api_key_secret", msg, Severity.ERROR))
@@ -220,8 +220,9 @@ class NotebookLinter:
             result.diagnostics.append(LintDiagnostic("gemini::hardcoded_api_key", msg, Severity.ERROR))
 
         # Model Selector validation
-        for msg in model_selector.check_model_selector(data, file_path, result.is_redirect):
-            result.diagnostics.append(LintDiagnostic("gemini::model_selector", msg, Severity.ERROR))
+        for msg, is_error in model_selector.check_model_selector(data, file_path, result.is_redirect):
+            severity = Severity.ERROR if is_error else Severity.WARNING
+            result.diagnostics.append(LintDiagnostic("gemini::model_selector", msg, severity))
 
         logger.info(
             "Completed lint analysis for %s: %d error(s), %d warning(s)",

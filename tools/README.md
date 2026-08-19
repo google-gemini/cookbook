@@ -80,10 +80,10 @@ python tools/check_readme_links.py --all
 - **`gemini::model_selector`**:
   - Verifies that model selectors use the canonical Colab form pattern:
     ```python
-    MODEL_ID = "gemini-3.5-flash" # @param ["gemini-3.1-flash-lite", "gemini-3.5-flash", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}
+    MODEL_ID = "gemini-3.7-flash" # @param ["gemini-3.1-pro-preview", "gemini-3.7-flash", "gemini-3.5-flash-lite", "gemini-2.5-pro"] {"allow-input":true, isTemplate: true}
     ```
   - Verifies that the default assigned model exists in the option list.
-  - Verifies that models in the list are sorted in logical order: **Flash-Lite $\rightarrow$ Flash $\rightarrow$ Pro**, with **Stable preceding Preview**.
+  - Verifies that models in the list are sorted in logical order from most capable to least capable: **current generation (Pro $\rightarrow$ Flash $\rightarrow$ Flash-Lite)**, followed by **previous generation (e.g. Pro 2.5)**.
 
 ---
 

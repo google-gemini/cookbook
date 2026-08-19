@@ -150,59 +150,73 @@ class GeminiOutputJudge:
             f"--- NEW GENERATED OUTPUT ---\n{new_output[:self.config.MAX_OUTPUT_CHARS_FOR_DIFF]}\n"
         )
 
-        gen_config = types.GenerateContentConfig(
-            system_instruction=system_instruction,
-            temperature=0.0,
-            response_mime_type="application/json",
-            response_schema=SemanticComparisonResult
+        models_to_try = self.config.OUTPUT_JUDGE_FALLBACKS or [self.config.OUTPUT_JUDGE_MODEL]
+        max_retries = self.config.MAX_API_RETRIES
+        base_delay = self.config.RETRY_INITIAL_DELAY_SEC
+        backoff = self.config.RETRY_BACKOFF_FACTOR
+
+        last_error = None
+        for model_name in models_to_try:
+            gen_config = types.GenerateContentConfig(
+                system_instruction=system_instruction,
+                temperature=0.0,
+                response_mime_type="application/json",
+                response_schema=SemanticComparisonResult
+            )
+            parameters_dict = {
+                "temperature": 0.0,
+                "response_mime_type": "application/json",
+                "model": model_name
+            }
+
+            for attempt in range(1, max_retries + 1):
+                t0 = time.time()
+                try:
+                    logger.debug(f"⚖️ AI Judge evaluating cell {cell_index} in {notebook_path} using {model_name} (attempt {attempt}/{max_retries})...")
+                    response = self.client.models.generate_content(
+                        model=model_name,
+                        contents=user_prompt,
+                        config=gen_config
+                    )
+                    duration = time.time() - t0
+
+                    raw_text = response.text or "{}"
+                    log_llm_call(
+                        feature="OutputJudge",
+                        model=model_name,
+                        prompt=user_prompt,
+                        parameters=parameters_dict,
+                        response=raw_text,
+                        duration_sec=duration,
+                        metadata={"notebook": notebook_path, "cell_index": cell_index, "attempt": attempt}
+                    )
+
+                    data = json.loads(raw_text)
+                    result = SemanticComparisonResult(**data)
+                    return result
+
+                except Exception as e:
+                    duration = time.time() - t0
+                    last_error = e
+                    logger.warning(f"AI Judge evaluation failed on {model_name} (attempt {attempt}/{max_retries}): {e}")
+                    log_llm_call(
+                        feature="OutputJudge",
+                        model=model_name,
+                        prompt=user_prompt,
+                        parameters=parameters_dict,
+                        response=f"ERROR: {e}",
+                        duration_sec=duration,
+                        metadata={"notebook": notebook_path, "cell_index": cell_index, "attempt": attempt, "error": str(e)}
+                    )
+                    if attempt < max_retries:
+                        delay = base_delay * (backoff ** (attempt - 1))
+                        time.sleep(delay)
+                    else:
+                        logger.warning(f"Exhausted retries on {model_name}. Attempting next judge fallback...")
+
+        # Default to slight variation to avoid blocking on transient judge errors
+        return SemanticComparisonResult(
+            verdict="SLIGHT_VARIATION",
+            explanation=f"Judge evaluation failed across all models ({last_error}); marked as variation.",
+            is_regression=False
         )
-
-        parameters_dict = {
-            "temperature": 0.0,
-            "response_mime_type": "application/json",
-            "model": model_name
-        }
-
-        t0 = time.time()
-        try:
-            logger.debug(f"⚖️ AI Judge evaluating cell {cell_index} in {notebook_path}...")
-            response = self.client.models.generate_content(
-                model=model_name,
-                contents=user_prompt,
-                config=gen_config
-            )
-            duration = time.time() - t0
-
-            raw_text = response.text or "{}"
-            log_llm_call(
-                feature="OutputJudge",
-                model=model_name,
-                prompt=user_prompt,
-                parameters=parameters_dict,
-                response=raw_text,
-                duration_sec=duration,
-                metadata={"notebook": notebook_path, "cell_index": cell_index}
-            )
-
-            data = json.loads(raw_text)
-            result = SemanticComparisonResult(**data)
-            return result
-
-        except Exception as e:
-            duration = time.time() - t0
-            logger.error(f"Error during AI Judge evaluation of cell {cell_index}: {e}")
-            log_llm_call(
-                feature="OutputJudge",
-                model=model_name,
-                prompt=user_prompt,
-                parameters=parameters_dict,
-                response=f"ERROR: {e}",
-                duration_sec=duration,
-                metadata={"notebook": notebook_path, "cell_index": cell_index, "error": str(e)}
-            )
-            # Default to slight variation to avoid blocking on transient judge errors
-            return SemanticComparisonResult(
-                verdict="SLIGHT_VARIATION",
-                explanation=f"Judge evaluation failed ({e}); marked as variation.",
-                is_regression=False
-            )

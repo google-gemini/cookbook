@@ -143,8 +143,12 @@ class NotebookStaticSecurityScanner:
     def _scan_regex_rules(self, source: str, cell_idx: int, findings: List[SecurityFinding]) -> None:
         """Runs regex patterns against raw cell source."""
         lines = source.splitlines()
+        is_shell_cell = len(lines) > 0 and lines[0].strip().startswith(("%%bash", "%%sh", "%%script", "%%zsh"))
         for line_num, line in enumerate(lines, 1):
             line_str = line.strip()
+            # If inside a shell cell magic, treat commands as shell lines
+            if is_shell_cell and line_num > 1 and not line_str.startswith("!"):
+                line_str = "!" + line_str
             # Check for secrets
             for pattern, msg in self.SECRET_PATTERNS:
                 if pattern.search(line_str):
@@ -240,16 +244,19 @@ class NotebookStaticSecurityScanner:
                         line_number=node.lineno
                     ))
 
-                # Method calls: os.environ.items() dumps
+                # Method calls: os.environ.items() or direct environ.items() dumps
                 elif isinstance(func, ast.Attribute):
-                    if isinstance(func.value, ast.Attribute) and func.value.attr == "environ":
-                        if func.attr in ("items", "values", "copy", "to_dict"):
-                            snippet = clean_lines[node.lineno - 1] if 0 <= node.lineno - 1 < len(clean_lines) else "os.environ dump"
-                            findings.append(SecurityFinding(
-                                cell_index=cell_idx,
-                                severity="HIGH",
-                                category="ENV_DUMP",
-                                message="Full environment dump via os.environ is suspicious.",
-                                code_snippet=snippet.strip(),
-                                line_number=node.lineno
-                            ))
+                    is_environ = (
+                        (isinstance(func.value, ast.Attribute) and func.value.attr == "environ")
+                        or (isinstance(func.value, ast.Name) and func.value.id == "environ")
+                    )
+                    if is_environ and func.attr in ("items", "values", "copy", "to_dict"):
+                        snippet = clean_lines[node.lineno - 1] if 0 <= node.lineno - 1 < len(clean_lines) else "os.environ dump"
+                        findings.append(SecurityFinding(
+                            cell_index=cell_idx,
+                            severity="HIGH",
+                            category="ENV_DUMP",
+                            message="Full environment dump via os.environ is suspicious.",
+                            code_snippet=snippet.strip(),
+                            line_number=node.lineno
+                        ))

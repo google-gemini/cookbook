@@ -42,9 +42,25 @@ class TesterConfig:
 
     # Models
     # User rule: If specified, trust model names and centralize all LLM model references.
-    SECURITY_AUDITOR_MODEL: str = "gemini-2.5-flash"
-    OUTPUT_JUDGE_MODEL: str = "gemini-2.5-flash"
-    GROUNDED_VERIFIER_MODEL: str = "gemini-2.5-flash"
+    SECURITY_AUDITOR_MODEL: str = "gemini-3.1-pro-preview"
+    SECURITY_AUDITOR_FALLBACKS: List[str] = field(
+        default_factory=lambda: ["gemini-3.1-pro-preview", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-2.5-pro"]
+    )
+
+    OUTPUT_JUDGE_MODEL: str = "gemini-3.5-flash-lite"
+    OUTPUT_JUDGE_FALLBACKS: List[str] = field(
+        default_factory=lambda: ["gemini-3.5-flash-lite", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-2.5-flash"]
+    )
+
+    GROUNDED_VERIFIER_MODEL: str = "gemini-3.7-flash"
+    GROUNDED_VERIFIER_FALLBACKS: List[str] = field(
+        default_factory=lambda: ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-2.5-flash"]
+    )
+
+    # Retry & Fallback Configuration
+    MAX_API_RETRIES: int = 3
+    RETRY_INITIAL_DELAY_SEC: float = 2.0
+    RETRY_BACKOFF_FACTOR: float = 2.0
 
     # API Keys & Auth
     # Strictly use GEMINI_API_KEY environment variable.

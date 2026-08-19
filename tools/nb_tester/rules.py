@@ -182,7 +182,7 @@ class RulesEngine:
         for rule in nb_rules.cell_rules:
             if rule.target_index is not None and rule.target_index == cell_index:
                 return rule
-            if rule.match_pattern and re.search(re.escape(rule.match_pattern), cell_source):
+            if rule.match_pattern and rule.match_pattern in cell_source:
                 return rule
 
         # 3. Fallback to notebook default

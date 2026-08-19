@@ -133,7 +133,7 @@ class TestReporter:
             # Custom encoder helper
             def _clean_dict(obj):
                 if hasattr(obj, "__dict__"):
-                    return asdict(obj)
+                    return obj.__dict__
                 return str(obj)
 
             with open(target, "w", encoding="utf-8") as f:

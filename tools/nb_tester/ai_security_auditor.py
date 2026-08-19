@@ -105,8 +105,8 @@ class AISecurityAuditor:
                 f"{self.config.API_KEY_ENV_VAR} is not set."
             )
             return SafetyAuditReport(
-                safety_verdict="SUSPICIOUS",
-                risk_score=5,
+                safety_verdict="SKIPPED",
+                risk_score=0,
                 summary="AI Security Audit skipped due to missing API key.",
                 external_domains_contacted=[],
                 flagged_risks=[]
@@ -137,65 +137,81 @@ class AISecurityAuditor:
             f"{all_code_text}"
         )
 
-        model_name = self.config.SECURITY_AUDITOR_MODEL
-        gen_config = types.GenerateContentConfig(
-            system_instruction=system_instruction,
-            temperature=0.0,
-            response_mime_type="application/json",
-            response_schema=SafetyAuditReport
+        models_to_try = self.config.SECURITY_AUDITOR_FALLBACKS or [self.config.SECURITY_AUDITOR_MODEL]
+        max_retries = self.config.MAX_API_RETRIES
+        base_delay = self.config.RETRY_INITIAL_DELAY_SEC
+        backoff = self.config.RETRY_BACKOFF_FACTOR
+
+        last_error = None
+        for model_name in models_to_try:
+            gen_config = types.GenerateContentConfig(
+                system_instruction=system_instruction,
+                temperature=0.0,
+                response_mime_type="application/json",
+                response_schema=SafetyAuditReport
+            )
+            parameters_dict = {
+                "temperature": 0.0,
+                "response_mime_type": "application/json",
+                "model": model_name
+            }
+
+            for attempt in range(1, max_retries + 1):
+                t0 = time.time()
+                try:
+                    logger.info(
+                        f"🛡️ Running Gemini AI Security Audit on {notebook_path} using {model_name} "
+                        f"(attempt {attempt}/{max_retries})..."
+                    )
+                    response = self.client.models.generate_content(
+                        model=model_name,
+                        contents=user_content,
+                        config=gen_config
+                    )
+                    duration = time.time() - t0
+                    raw_text = response.text or "{}"
+                    log_llm_call(
+                        feature="AISecurityAuditor",
+                        model=model_name,
+                        prompt=user_content,
+                        parameters=parameters_dict,
+                        response=raw_text,
+                        duration_sec=duration,
+                        metadata={"notebook": notebook_path, "attempt": attempt}
+                    )
+
+                    report_data = json.loads(raw_text)
+                    report = SafetyAuditReport(**report_data)
+                    logger.info(
+                        f"🛡️ Security Audit Result for {notebook_path} [{model_name}]: "
+                        f"Verdict={report.safety_verdict}, RiskScore={report.risk_score}/10"
+                    )
+                    return report
+
+                except Exception as e:
+                    duration = time.time() - t0
+                    last_error = e
+                    logger.warning(f"AI Security Audit failed with {model_name} (attempt {attempt}/{max_retries}): {e}")
+                    log_llm_call(
+                        feature="AISecurityAuditor",
+                        model=model_name,
+                        prompt=user_content,
+                        parameters=parameters_dict,
+                        response=f"ERROR: {e}",
+                        duration_sec=duration,
+                        metadata={"notebook": notebook_path, "attempt": attempt, "error": str(e)}
+                    )
+                    if attempt < max_retries:
+                        delay = base_delay * (backoff ** (attempt - 1))
+                        time.sleep(delay)
+                    else:
+                        logger.warning(f"Exhausted retries on {model_name}. Attempting next fallback model...")
+
+        logger.error(f"All AI Security Audit models failed for {notebook_path}: {last_error}")
+        return SafetyAuditReport(
+            safety_verdict="SUSPICIOUS",
+            risk_score=6,
+            summary=f"Security audit encountered an evaluation error across all models: {last_error}",
+            external_domains_contacted=[],
+            flagged_risks=[]
         )
-
-        parameters_dict = {
-            "temperature": 0.0,
-            "response_mime_type": "application/json",
-            "model": model_name
-        }
-
-        t0 = time.time()
-        try:
-            logger.info(f"🛡️ Running Gemini AI Security Audit on {notebook_path} using {model_name}...")
-            response = self.client.models.generate_content(
-                model=model_name,
-                contents=user_content,
-                config=gen_config
-            )
-            duration = time.time() - t0
-
-            raw_text = response.text or "{}"
-            log_llm_call(
-                feature="AISecurityAuditor",
-                model=model_name,
-                prompt=user_content,
-                parameters=parameters_dict,
-                response=raw_text,
-                duration_sec=duration,
-                metadata={"notebook": notebook_path}
-            )
-
-            report_data = json.loads(raw_text)
-            report = SafetyAuditReport(**report_data)
-            logger.info(
-                f"🛡️ Security Audit Result for {notebook_path}: "
-                f"Verdict={report.safety_verdict}, RiskScore={report.risk_score}/10"
-            )
-            return report
-
-        except Exception as e:
-            duration = time.time() - t0
-            logger.error(f"Error during AI security audit for {notebook_path}: {e}")
-            log_llm_call(
-                feature="AISecurityAuditor",
-                model=model_name,
-                prompt=user_content,
-                parameters=parameters_dict,
-                response=f"ERROR: {e}",
-                duration_sec=duration,
-                metadata={"notebook": notebook_path, "error": str(e)}
-            )
-            return SafetyAuditReport(
-                safety_verdict="SUSPICIOUS",
-                risk_score=6,
-                summary=f"Security audit encountered an evaluation error: {e}",
-                external_domains_contacted=[],
-                flagged_risks=[]
-            )

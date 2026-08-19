@@ -93,7 +93,19 @@ def discover_notebooks(
                 text=True,
                 check=False
             )
+            if res.returncode != 0 and res.stderr:
+                logger.debug(f"git diff origin/main...HEAD returned code {res.returncode}: {res.stderr.strip()}")
             files = [line.strip() for line in res.stdout.splitlines() if line.strip().endswith(".ipynb")]
+            if not files:
+                # Fallback to upstream/main
+                res_upstream = subprocess.run(
+                    ["git", "diff", "--name-only", "upstream/main...HEAD", "*.ipynb"],
+                    cwd=str(repo_root),
+                    capture_output=True,
+                    text=True,
+                    check=False
+                )
+                files = [line.strip() for line in res_upstream.stdout.splitlines() if line.strip().endswith(".ipynb")]
             if not files:
                 # Fallback to local uncommitted git diff
                 res2 = subprocess.run(
@@ -103,6 +115,8 @@ def discover_notebooks(
                     text=True,
                     check=False
                 )
+                if res2.returncode != 0 and res2.stderr:
+                    logger.debug(f"git diff HEAD returned code {res2.returncode}: {res2.stderr.strip()}")
                 files = [line.strip() for line in res2.stdout.splitlines() if line.strip().endswith(".ipynb")]
 
             resolved_files = [(repo_root / f).resolve() for f in files if (repo_root / f).exists()]

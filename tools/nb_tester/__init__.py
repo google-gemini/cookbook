@@ -19,4 +19,7 @@ This package provides security scanning, isolated kernel execution,
 output regression comparison with Gemini LLM judge, and Google Search Grounding verification.
 """
 
-__version__ = "1.0.0"
+from .model_override import ModelOverrideTransformer
+
+__version__ = "1.1.0"
+__all__ = ["ModelOverrideTransformer"]

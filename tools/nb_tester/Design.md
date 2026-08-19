@@ -59,8 +59,41 @@ flowchart TD
 
 ---
 
-## 4. Observability & Developer Experience
+## 4. In-Memory Dynamic Model Overriding (`--model <name>`)
 
-- **Config Centralization**: All models (`SECURITY_AUDITOR_MODEL`, `OUTPUT_JUDGE_MODEL`, `GROUNDED_VERIFIER_MODEL`), timeouts, and thresholds reside in `config.py`.
+To test entire test suites or individual tutorials against candidate models (e.g. `gemini-3.7-flash`, `gemini-3.1-pro-preview`) without permanently modifying repository notebooks, `nb_tester` integrates an in-memory AST and regex transformer:
+
+```
+                      ┌─────────────────────────────────────┐
+                      │   Original Notebook (.ipynb file)   │
+                      │  (MODEL_ID = "gemini-2.5-flash")    │
+                      └──────────────────┬──────────────────┘
+                                         │ (Deepcopy in memory)
+                                         ▼
+                      ┌─────────────────────────────────────┐
+                      │    ModelOverrideTransformer        │
+                      │  - Rewrites assignments to MODEL_ID │
+                      │  - Rewrites Colab @param dropdowns  │
+                      │  - Generates kernel preamble        │
+                      └──────────────────┬──────────────────┘
+                                         │
+                                         ▼
+                      ┌─────────────────────────────────────┐
+                      │    Ephemeral IPython Kernel         │
+                      │  (MODEL_ID = "<override_model>")    │
+                      │  (os.environ["MODEL_ID"] = "...")   │
+                      └─────────────────────────────────────┘
+```
+
+### Safety & Integrity Guarantees:
+- **Zero Disk Mutation**: All AST transformations occur exclusively on in-memory `NotebookNode` copies. Original `.ipynb` files on disk are never altered.
+- **Full Assignment Coverage**: Matches single quotes, double quotes, Colab `# @param` forms, type annotations, and chained assignments.
+- **Preamble Injection**: Injects `MODEL_ID` and environment variables before cell 0 to ensure immediate environment readiness.
+
+---
+
+## 5. Observability & Developer Experience
+
+- **Config Centralization**: All models (`SECURITY_AUDITOR_MODEL`, `OUTPUT_JUDGE_MODEL`, `GROUNDED_VERIFIER_MODEL`, `OVERRIDE_MODEL`), timeouts, and thresholds reside in `config.py`.
 - **LLM Observability**: Every single call to Gemini logs the prompt, generation parameters, response, and duration.
 - **Dry-Run Capability**: Every feature can be validated using `--dry-run` without touching network or filesystem state.

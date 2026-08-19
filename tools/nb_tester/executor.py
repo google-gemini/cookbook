@@ -47,6 +47,7 @@ from nbclient.exceptions import CellTimeoutError, CellExecutionError
 from .config import GLOBAL_CONFIG, TesterConfig
 from .logger import logger
 from .rules import RulesEngine, NotebookRuleSet, CellRule
+from .model_override import ModelOverrideTransformer
 
 
 @dataclass
@@ -89,6 +90,7 @@ class NotebookExecutor:
         """
         self.config = config or GLOBAL_CONFIG
         self.rules_engine = rules_engine or RulesEngine(config=self.config)
+        self.model_transformer = ModelOverrideTransformer(override_model=self.config.OVERRIDE_MODEL)
 
     def execute_notebook(
         self,
@@ -165,9 +167,14 @@ class NotebookExecutor:
                         cell.source,
                         flags=re.MULTILINE
                     )
-        
+
+        # Apply Model Override across all cells if active
+        if self.model_transformer.is_active():
+            self.model_transformer.transform_notebook(exec_nb, notebook_path=rel_path)
+
         # Inject Colab Mock Preamble
         api_key = self.config.get_api_key() or ""
+        override_preamble = self.model_transformer.generate_preamble_code()
         mock_source = (
             "import sys, os, pathlib\n"
             "from unittest.mock import MagicMock\n"
@@ -176,6 +183,7 @@ class NotebookExecutor:
             "sys.modules['google.colab'] = _mock_colab\n"
             "sys.modules['google.colab.userdata'] = _mock_colab.userdata\n"
             f"os.environ['GEMINI_API_KEY'] = {api_key!r}\n"
+            f"{override_preamble}"
             "# Automatically touch flag files for bash/REST notebooks\n"
             "try:\n"
             "    pathlib.Path('I_am_aware_that_veo_is_a_paid_feature').touch(exist_ok=True)\n"
@@ -315,11 +323,15 @@ class NotebookExecutor:
         rule_set: NotebookRuleSet
     ) -> NotebookExecutionResult:
         """Simulates execution for dry-run verification."""
+        sim_nb = copy.deepcopy(nb)
+        if self.model_transformer.is_active():
+            self.model_transformer.transform_notebook(sim_nb, notebook_path=rel_path)
+
         records = []
         code_count = 0
         skip_count = 0
 
-        for i, cell in enumerate(nb.cells):
+        for i, cell in enumerate(sim_nb.cells):
             if cell.cell_type == "code":
                 code_count += 1
                 source = cell.source or ""
@@ -354,5 +366,5 @@ class NotebookExecutor:
             skipped_cells_count=skip_count,
             first_error_message=None,
             cell_records=records,
-            executed_nb_copy=nb
+            executed_nb_copy=sim_nb
         )

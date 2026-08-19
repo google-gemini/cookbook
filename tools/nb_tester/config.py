@@ -98,6 +98,7 @@ class TesterConfig:
     VERBOSE: bool = False
     SKIP_AI_JUDGE: bool = False
     SECURITY_ONLY: bool = False
+    OVERRIDE_MODEL: Optional[str] = None
 
     def get_api_key(self) -> Optional[str]:
         """

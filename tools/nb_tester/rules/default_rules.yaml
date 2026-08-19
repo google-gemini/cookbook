@@ -1,0 +1,75 @@
+# Copyright 2026 Google LLC
+# Default Testing & Exception Rules for Gemini API Cookbook Notebooks
+
+# Global defaults across all notebooks unless overridden
+global_defaults:
+  cell_timeout_sec: 90
+  notebook_timeout_sec: 600
+  default_strategy: "semantic_llm"
+
+# Specific notebook overrides
+notebooks:
+  quickstarts/Counting_Tokens.ipynb:
+    cell_timeout_sec: 60
+    cells:
+      - match: "client.models.count_tokens"
+        strategy: "exact_or_fuzzy"
+        description: "Token counting outputs are deterministic integers"
+
+  quickstarts/Grounding.ipynb:
+    cells:
+      - match: "client.models.generate_content"
+        strategy: "grounded_factual"
+        description: "Live search grounded responses may evolve over time; double check with Google Search"
+
+  quickstarts/Search_Grounding.ipynb:
+    allow_dynamic_exec: true
+    allow_security_demo: true
+    cells:
+      - match: "client.models.generate_content"
+        strategy: "grounded_factual"
+        description: "Verify factual correctness of live Google Search results"
+
+  quickstarts/JSON_mode.ipynb:
+    cells:
+      - match: "response_mime_type=\"application/json\""
+        strategy: "schema_validation"
+        description: "Validates JSON structure conformance"
+
+  quickstarts/Interactive_Chat.ipynb:
+    cells:
+      - match: "input("
+        action: "skip"
+        reason: "Interactive user input cell cannot execute in headless CI"
+
+  quickstarts/Authentication_with_OAuth.ipynb:
+    skip_notebook: true
+    skip_reason: "Requires interactive browser OAuth login flow"
+
+  quickstarts/Get_started_Veo.ipynb:
+    cell_timeout_sec: 180
+    description: "Video generation takes longer than text generation"
+
+  quickstarts/Get_started_Deep_Research.ipynb:
+    cell_timeout_sec: 1800
+    notebook_timeout_sec: 2400
+    description: "Deep Research queries can take up to 30+ minutes"
+
+  quickstarts/Get_started_thinking.ipynb:
+    cell_timeout_sec: 300
+    notebook_timeout_sec: 1200
+    description: "Extended thinking generation chains can take up to 5 minutes per cell"
+
+  quickstarts/Get_started_Omni.ipynb:
+    cell_timeout_sec: 300
+    notebook_timeout_sec: 1200
+    description: "Omni multimodal model processing"
+
+  examples/gemini_google_adk_model_guardrails.ipynb:
+    allow_security_demo: true
+    description: "Demonstrates model guardrails against prompt injection and backdoors"
+
+  examples/LiveAPI_plotting_and_mapping.ipynb:
+    allow_dynamic_exec: true
+    allow_security_demo: true
+    description: "Demonstrates live plotting and mapping using code execution tools"

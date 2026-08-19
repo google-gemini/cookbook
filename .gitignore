@@ -15,3 +15,5 @@
 # Python cache artifacts
 **/__pycache__/
 *.pyc
+.jetski_venv/
+reports/

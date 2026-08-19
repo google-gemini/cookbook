@@ -17,7 +17,7 @@
 This module validates the Colab form model selectors:
   - Form format validation: Verifies `# @param ["gemini-...", ...] {"allow-input":true, isTemplate: true}`.
   - Model ordering verification: Ensures models are sorted logically according to the cookbook styleguide:
-    Flash-Lite -> Flash -> Pro, with Stable models preceding Preview/Experimental models.
+    From most capable to least capable (current generation: Pro -> Flash -> Flash-Lite, followed by previous generation).
   - Default selection check: Validates that the default assigned MODEL_ID exists in the selector options.
 
 Use Cases:
@@ -25,7 +25,7 @@ Use Cases:
   - Ensuring new models can be batch-updated cleanly without syntax breakages.
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 import json
 import logging
 import pathlib
@@ -40,7 +40,7 @@ def check_model_selector(
     notebook_data: Dict[str, Any],
     file_path: pathlib.Path,
     is_redirect: bool = False
-) -> List[str]:
+) -> List[Tuple[str, bool]]:
     """Validates that model selectors follow the canonical Colab form pattern and ordering.
     
     Args:
@@ -49,13 +49,13 @@ def check_model_selector(
         is_redirect: Whether the notebook is a stub redirecting elsewhere.
         
     Returns:
-        A list of lint violation messages.
+        A list of tuples (violation_message, is_error).
     """
     logger.debug("Checking model selector in %s", file_path)
     if is_redirect:
         return []
         
-    violations = []
+    violations: List[Tuple[str, bool]] = []
     cells = notebook_data.get("cells", [])
     
     for cell_idx, cell in enumerate(cells):
@@ -74,33 +74,36 @@ def check_model_selector(
                 options_list = json.loads(formatted_json)
             except Exception as e:
                 violations.append(
-                    f"Cell {cell_idx}: Malformed model selector list '{options_json}': {e}"
+                    (f"Cell {cell_idx}: Malformed model selector list '{options_json}': {e}", True)
                 )
                 continue
                 
             if not isinstance(options_list, list) or len(options_list) == 0:
                 violations.append(
-                    f"Cell {cell_idx}: Model selector @param must contain a non-empty list of model names."
+                    (f"Cell {cell_idx}: Model selector @param must contain a non-empty list of model names.", True)
                 )
                 continue
                 
-            # 2. Check if default model is present in the list
-            clean_default = default_model.strip("\"'")
-            clean_options = [opt.strip("\"'") for opt in options_list]
+            # 2. Check if default model is present in the list (strip prefix if present)
+            clean_default = default_model.strip("\"'").replace("models/", "")
+            clean_options = [opt.strip("\"'").replace("models/", "") for opt in options_list]
             if clean_default not in clean_options:
                 violations.append(
-                    f"Cell {cell_idx}: Default model '{clean_default}' is not listed in the selector options: {clean_options}."
+                    (f"Cell {cell_idx}: Default model '{clean_default}' is not listed in the selector options: {clean_options}.", True)
                 )
                 
-            # 3. Check model ordering (Lite -> Flash -> Pro, Stable -> Preview)
+            # 3. Check model ordering (Most capable -> Least capable: Pro -> Flash -> Flash-Lite)
             sort_keys = [config.get_model_sort_key(opt) for opt in clean_options]
             if sort_keys != sorted(sort_keys):
                 # Suggest sorted list
                 sorted_options = sorted(clean_options, key=config.get_model_sort_key)
                 violations.append(
-                    f"Cell {cell_idx}: Model list in selector is not ordered according to styleguide (Lite -> Flash -> Pro, Stable -> Preview).\n"
-                    f"  Current order:  {clean_options}\n"
-                    f"  Expected order: {sorted_options}"
+                    (
+                        f"Cell {cell_idx}: Model list in selector is not ordered according to styleguide (Pro -> Flash -> Flash-Lite, current generation before previous).\n"
+                        f"  Current order:  {clean_options}\n"
+                        f"  Expected order: {sorted_options}",
+                        False
+                    )
                 )
                 
     return violations

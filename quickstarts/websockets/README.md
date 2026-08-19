@@ -16,3 +16,5 @@ Explore Gemini’s capabilities through the following notebooks you can run thro
 
 * [Live API starter](./Get_started_LiveAPI.ipynb) \- Overview of the Multimodal Live API using websockets
 * [Live API tool use](./Get_started_LiveAPI_tools.ipynb) \- Overview of tool use in the Live API with websockets
+* [Live API streaming in Colab](./LiveAPI_streaming_in_colab.ipynb) \- Interactive streaming with the Live API in Colab
+* [Lyria RealTime websockets](./Get_started_LyriaRealTime_websockets.ipynb) \- Real-time music generation using websockets

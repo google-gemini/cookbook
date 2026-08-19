@@ -130,6 +130,10 @@ class NotebookFormatter:
                 # Skip empty cells
                 continue
                 
+            # If Colab badge cell, clean accidental literal escaped newlines (e.g. </a>\n)
+            if cell.get("cell_type") == "markdown" and any("colab-badge.svg" in line for line in source):
+                source = [re.sub(r'</a>\\+n', '</a>', line) for line in source]
+
             cell["source"] = source
             cell_count += 1
             

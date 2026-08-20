@@ -57,6 +57,9 @@ class TesterConfig:
         default_factory=lambda: ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-2.5-flash"]
     )
 
+    # Dynamic Model Override for Notebook Execution (CLI --model / -m)
+    MODEL_OVERRIDE: Optional[str] = None
+
     # Retry & Fallback Configuration
     MAX_API_RETRIES: int = 3
     RETRY_INITIAL_DELAY_SEC: float = 2.0

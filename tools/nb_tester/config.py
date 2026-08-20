@@ -67,8 +67,8 @@ class TesterConfig:
     API_KEY_ENV_VAR: str = "GEMINI_API_KEY"
 
     # Execution Timeouts & Limits
-    DEFAULT_CELL_TIMEOUT_SEC: int = 90
-    DEFAULT_NOTEBOOK_TIMEOUT_SEC: int = 600
+    DEFAULT_CELL_TIMEOUT_SEC: int = 240
+    DEFAULT_NOTEBOOK_TIMEOUT_SEC: int = 1200
     MAX_OUTPUT_CHARS_FOR_DIFF: int = 4000
     MAX_PROMPT_CHARS_FOR_LOG: int = 1500
 

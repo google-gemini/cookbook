@@ -1,3 +1,20 @@
 # Call the Gemini API with cURL
 
 These examples show you how to call the Gemini API using `curl`. You can run them in Colab, or copy/paste the commands into your terminal.
+
+| Quickstart | Description | Open |
+| -------- | ----------- | ---- |
+| [Audio](./Audio_REST.ipynb) | Process audio files with the REST API. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/rest/Audio_REST.ipynb) |
+| [Caching](./Caching_REST.ipynb) | Cache context to reduce cost and latency using REST. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/rest/Caching_REST.ipynb) |
+| [Embeddings](./Embeddings_REST.ipynb) | Generate text embeddings using REST. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/rest/Embeddings_REST.ipynb) |
+| [Function calling](./Function_calling_REST.ipynb) | Perform function calling with cURL and REST. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/rest/Function_calling_REST.ipynb) |
+| [Function calling config](./Function_calling_config_REST.ipynb) | Configure function calling modes with REST. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/rest/Function_calling_config_REST.ipynb) |
+| [Image generation](./Imagen_REST.ipynb) | Generate images with Imagen using the REST API. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/rest/Imagen_REST.ipynb) |
+| [JSON mode](./JSON_mode_REST.ipynb) | Enforce JSON output format with REST. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/rest/JSON_mode_REST.ipynb) |
+| [Models](./Models_REST.ipynb) | List and retrieve model metadata with REST. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/rest/Models_REST.ipynb) |
+| [Prompting](./Prompting_REST.ipynb) | Send text and multimodal prompts with REST. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/rest/Prompting_REST.ipynb) |
+| [Safety](./Safety_REST.ipynb) | Configure safety settings with REST. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/rest/Safety_REST.ipynb) |
+| [Search Grounding](./Search_Grounding.ipynb) | Ground responses with Google Search via REST. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/rest/Search_Grounding.ipynb) |
+| [Streaming](./Streaming_REST.ipynb) | Stream responses in real-time with REST. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/rest/Streaming_REST.ipynb) |
+| [System instructions](./System_instructions_REST.ipynb) | Set system instructions using REST. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/rest/System_instructions_REST.ipynb) |
+| [Video](./Video_REST.ipynb) | Process video files with REST. | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/rest/Video_REST.ipynb) |

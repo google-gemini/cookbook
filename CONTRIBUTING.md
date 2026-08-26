@@ -37,43 +37,34 @@ Adding a new guide often involves lots of detailed reviews and we want to make s
 When you're ready, start by using the [notebook
 template](./quickstarts/Template.ipynb) and following the guidance within.
 
-Before submitting your notebook, it's recommended to run linting and formatting tools locally to ensure consistency and adherence to style guidelines.
+Before submitting your notebook, run the in-repo formatting and linting tools to ensure consistency and adherence to style guidelines.
 
-1. Install Dependencies:
+1. Format the Notebook:
 
-First, install the necessary packages using pip:
+Use the `nbfmt` tool to automatically format your notebook:
 
 ```bash
-pip install -U tensorflow-docs
+python tools/nbfmt_cli.py path/to/notebook.ipynb
 ```
 
-2. Format the Notebook:
+2. Lint the Notebook:
 
-Use the nbfmt tool from tensorflow-docs to automatically format your notebook:
+Use the `nblint` tool to check for structure, style, SDK best practices, and model selector formatting:
 
-```
-python -m tensorflow_docs.tools.nbfmt path/to/notebook
-```
-
-Replace `path/to/notebook` with the actual path to your notebook file.
-
-3. Lint the Notebook:
-
-Use the nblint tool to check for style and consistency issues:
-
-```
-python -m tensorflow_docs.tools.nblint \
-            --styles=google,tensorflow \
-            --arg=repo:google-gemini/cookbook \
-            --arg=branch:main \
-            --exclude_lint=tensorflow::button_download \
-            --exclude_lint=tensorflow::button_website \
-            --arg=base_url:https://ai.google.dev/ \
-            --exclude_lint=tensorflow::button_github \
-            path/to/notebook
+```bash
+python tools/nblint_cli.py path/to/notebook.ipynb
 ```
 
-Replace `path/to/notebook` with the actual path to your notebook file.
+You can also run both tools on all modified notebooks or entire directories:
+```bash
+# Test formatting compliance (like CI does)
+python tools/nbfmt_cli.py --test quickstarts/**/*.ipynb
+
+# Lint all notebooks
+python tools/nblint_cli.py quickstarts/**/*.ipynb examples/**/*.ipynb
+```
+
+See [`tools/README.md`](./tools/README.md) for full documentation and options.
 
 ## Things we consider
 
@@ -167,7 +158,7 @@ See [`.gemini/styleguide.md`](./.gemini/styleguide.md) for the full list and res
 * If you *must* use extra parameters, explain *why* they are needed and the reasoning behind the specific value the first time you use them.
 * When selecting a model, use a Colab form selector for easier maintainability:
     ```python
-    MODEL_ID="gemini-3.6-flash" # @param ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-3.5-flash-lite", "gemini-3.6-flash", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}
+    MODEL_ID = "gemini-3.7-flash" # @param ["gemini-3.1-pro-preview", "gemini-3.7-flash", "gemini-3.5-flash-lite", "gemini-2.5-pro"] {"allow-input": true, "isTemplate": true}
     ```
 * Some notebooks can benefit from having a form to update the prompt:
     ```python
@@ -178,7 +169,7 @@ See [`.gemini/styleguide.md`](./.gemini/styleguide.md) for the full list and res
     prompt = "Draw a square around the fox' shadow"  # @param ["Find the two origami animals.", "Where are the origamis' shadows?","Draw a square around the fox' shadow"] {"allow-input":true}
     ```
 * To ensure notebook text remains accurate, present model metadata (like context window size) by executing code, not by hardcoding it in Markdown.
-    * Example: Instead of writing "This model has a 1M token context window", display the output of `client.models.get('models/gemini-2.5-flash').input_token_limit`.
+    * Example: Instead of writing "This model has a 1M token context window", display the output of `client.models.get('models/gemini-3.7-flash').input_token_limit`.
 
 ## Naming Conventions
 
@@ -210,7 +201,7 @@ See [`.gemini/styleguide.md`](./.gemini/styleguide.md) for the full list and res
 
 ## GitHub Workflow
 
-* Be consistent about how you save your notebooks (e.g., with ToC open, potentially omitting outputs) to keep JSON diffs manageable. Tools like [`nbfmt` and `nblint`](https://github.com/tensorflow/docs/blob/master/tools/tensorflow_docs/tools/README.md) can help enforce consistency.
+* Be consistent about how you save your notebooks (e.g., with ToC open, potentially omitting outputs) to keep JSON diffs manageable. In-repo tools like [`nbfmt` and `nblint`](./tools/README.md) help enforce consistency.
 * Consider setting the "Omit code cell output when saving this notebook" option if outputs (like inline images) make diffs too large for GitHub.
 * [ReviewNB.com](http://reviewnb.com) can assist with reviewing notebook diffs in pull requests.
 * Use the [Open in Colab](https://chrome.google.com/webstore/detail/open-in-colab/iogfkhleblhcpcekbiedikdehleodpjo) browser extension to easily open GitHub notebooks in Colab.

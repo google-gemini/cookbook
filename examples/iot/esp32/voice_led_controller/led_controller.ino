@@ -273,7 +273,7 @@ void sendAudio() {
   client.setInsecure();
   HTTPClient http;
 
-  if (http.begin(client, "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + API_KEY)) {
+  if (http.begin(client, "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.7-flash:generateContent?key=" + API_KEY)) {
     http.addHeader("Content-Type", "application/json");
 
     File file = SD.open("/request-tmp.json", FILE_READ);

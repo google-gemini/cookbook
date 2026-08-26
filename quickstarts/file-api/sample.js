@@ -48,7 +48,7 @@ async function run(filePath, fileDisplayName) {
 
     // Make Gemini API LLM call
     const prompt = "Describe the image with a creative description";
-    const model = "models/gemini-2.5-flash";
+    const model = "models/gemini-3.7-flash";
     const contents = {
       contents:[
         {

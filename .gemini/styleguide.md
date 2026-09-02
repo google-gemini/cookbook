@@ -49,14 +49,22 @@ The following features are **not yet supported** by the Interactions API and sho
 When a notebook uses one of these exceptions, add a brief comment explaining why the Interactions API is not used.
 
 ### Response access pattern
-With the Interactions API, access the response text like this:
+With the Interactions API, **always use the convenience properties** to access outputs:
+* `interaction.output_text` for text responses
+* `interaction.output_image` for generated images
+* `interaction.output_audio` for audio responses
+
+Example:
 ```python
 interaction = client.interactions.create(
     model=MODEL_ID,
     input="Your prompt here",
 )
-print(interaction.steps[-1].content[0].text)
+display(Markdown(interaction.output_text))
 ```
+
+> **Note on `steps` access:** Do not access steps directly (e.g. `interaction.steps[-1].content[0].text`) in standard notebooks. The only exception is in introductory "Get Started" tutorials (such as `quickstarts/Get_started.ipynb`), where the underlying anatomy of `steps` and `content` items is explicitly explained to learners before introducing the convenience properties.
+
 Do **not** use `interaction.outputs` — it is deprecated in 2.0.0.
 
 

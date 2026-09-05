@@ -3,8 +3,8 @@
 
 # Global defaults across all notebooks unless overridden
 global_defaults:
-  cell_timeout_sec: 90
-  notebook_timeout_sec: 600
+  cell_timeout_sec: 240
+  notebook_timeout_sec: 1200
   default_strategy: "semantic_llm"
 
 # Specific notebook overrides
@@ -23,6 +23,8 @@ notebooks:
         description: "Live search grounded responses may evolve over time; double check with Google Search"
 
   quickstarts/Search_Grounding.ipynb:
+    cell_timeout_sec: 360
+    notebook_timeout_sec: 1200
     allow_dynamic_exec: true
     allow_security_demo: true
     cells:
@@ -46,8 +48,13 @@ notebooks:
     skip_notebook: true
     skip_reason: "Requires interactive browser OAuth login flow"
 
+  quickstarts/Webhooks.ipynb:
+    skip_notebook: true
+    skip_reason: "Requires live webhook receiver server endpoint"
+
   quickstarts/Get_started_Veo.ipynb:
-    cell_timeout_sec: 180
+    cell_timeout_sec: 300
+    notebook_timeout_sec: 1200
     description: "Video generation takes longer than text generation"
 
   quickstarts/Get_started_Deep_Research.ipynb:
@@ -56,14 +63,43 @@ notebooks:
     description: "Deep Research queries can take up to 30+ minutes"
 
   quickstarts/Get_started_thinking.ipynb:
-    cell_timeout_sec: 300
+    cell_timeout_sec: 600
+    notebook_timeout_sec: 1800
+    description: "Extended thinking generation chains can take up to 10 minutes per cell"
+
+  quickstarts/Get_started_thinking_REST.ipynb:
+    cell_timeout_sec: 360
     notebook_timeout_sec: 1200
-    description: "Extended thinking generation chains can take up to 5 minutes per cell"
+    description: "Thinking REST endpoint multi-turn analysis"
 
   quickstarts/Get_started_Omni.ipynb:
-    cell_timeout_sec: 300
+    cell_timeout_sec: 360
     notebook_timeout_sec: 1200
     description: "Omni multimodal model processing"
+
+  quickstarts/Video_understanding.ipynb:
+    cell_timeout_sec: 360
+    notebook_timeout_sec: 1200
+    description: "Video upload, processing, and multi-turn frame analysis"
+
+  quickstarts/Inference_tiers.ipynb:
+    cell_timeout_sec: 360
+    notebook_timeout_sec: 1200
+    description: "Multi-tier model benchmarking and latency comparison"
+
+  quickstarts/Get_started.ipynb:
+    cell_timeout_sec: 300
+    notebook_timeout_sec: 1200
+    description: "Full tour of multimodal features across large files"
+
+  examples/Virtual_Try_On.ipynb:
+    skip_notebook: true
+    skip_reason: "Requires interactive Colab Vertex AI auth (auth.authenticate_user)"
+
+  examples/Book_illustration.ipynb:
+    cell_timeout_sec: 360
+    notebook_timeout_sec: 1800
+    description: "Multimodal audio, TTS, image generation, and MoviePy mix"
 
   examples/gemini_google_adk_model_guardrails.ipynb:
     allow_security_demo: true

@@ -149,13 +149,24 @@ class NotebookExecutor:
         # Preprocess cells in memory to automatically enable interactive confirmation checkboxes (e.g. I_am_aware_that_...)
         for cell in exec_nb.cells:
             if cell.cell_type == "code" and cell.source:
-                # Auto-enable any I_am_aware_that_... boolean variables
+                # Auto-enable any I_am_aware_that_... or I_understand_this_is_a_paid_... boolean variables
                 cell.source = re.sub(
-                    r"(I_am_aware_that_\w+\s*=\s*)False\b",
+                    r"((?:I_am_aware_that_|I_understand_this_is_a_paid_)\w*\s*=\s*)False\b",
                     r"\g<1>True",
                     cell.source,
                     flags=re.IGNORECASE
                 )
+                # Apply dynamic CLI model override if specified (--model / -m)
+                if self.config.MODEL_OVERRIDE:
+                    model_vars = ("MODEL_ID", "MODEL", "FAST_MODEL", "DEEP_MODEL", "GEMINI_MODEL_ID", "LIVE_MODEL")
+                    for var_name in model_vars:
+                        val_repr = repr(self.config.MODEL_OVERRIDE)
+                        cell.source = re.sub(
+                            rf"^({re.escape(var_name)}\s*=\s*).+$",
+                            rf"\g<1>{val_repr}",
+                            cell.source,
+                            flags=re.MULTILINE
+                        )
                 # Apply any explicit rule parameter overrides
                 for var_name, var_val in rule_set.param_overrides.items():
                     val_repr = repr(var_val)

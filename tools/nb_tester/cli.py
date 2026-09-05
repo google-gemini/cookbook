@@ -368,6 +368,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     group.add_argument("--changed", "-c", action="store_true", help="Test only notebooks modified in git diff.")
     group.add_argument("--all", "-a", action="store_true", help="Test all notebooks in quickstarts and examples.")
 
+    parser.add_argument("--model", "-m", type=str, help="Override default model identifier (e.g. gemini-3.1-pro-preview) across tested notebooks.")
     parser.add_argument("--dry-run", action="store_true", help="Simulate tests without altering state or invoking kernel.")
     parser.add_argument("--security-only", action="store_true", help="Run static & AI security audits only.")
     parser.add_argument("--skip-ai-judge", action="store_true", help="Skip semantic AI output diffing.")
@@ -383,6 +384,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     config.SECURITY_ONLY = args.security_only
     config.SKIP_AI_JUDGE = args.skip_ai_judge
     config.VERBOSE = args.verbose
+    if args.model:
+        config.MODEL_OVERRIDE = args.model
     if args.rules_file:
         config.DEFAULT_RULES_PATH = pathlib.Path(args.rules_file).resolve()
 

@@ -75,6 +75,9 @@ REDIRECT_KEYWORDS: List[str] = [
     "this notebook has moved",
     "moved to https://",
     "redirect",
+    "this notebook has moved",
+    "has moved",
+    "moved!",
 ]
 
 # Max cells for a notebook to be considered a stub/redirect notebook candidate

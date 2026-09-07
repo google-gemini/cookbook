@@ -178,8 +178,8 @@ class RulesEngine:
         Returns:
             Resolved CellRule indicating action, strategy, and timeout.
         """
-        # 1. Automatic heuristic: cell containing input() should be skipped unless explicitly overridden
-        if "input(" in cell_source and not any(r.target_index == cell_index for r in nb_rules.cell_rules):
+        # 1. Automatic heuristic: cell containing interactive input() should be skipped unless explicitly overridden
+        if re.search(r"\binput\s*\(", cell_source) and not any(r.target_index == cell_index for r in nb_rules.cell_rules):
             return CellRule(
                 target_index=cell_index,
                 action="skip",

@@ -371,6 +371,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser.add_argument("--dry-run", action="store_true", help="Simulate tests without altering state or invoking kernel.")
     parser.add_argument("--security-only", action="store_true", help="Run static & AI security audits only.")
     parser.add_argument("--skip-ai-judge", action="store_true", help="Skip semantic AI output diffing.")
+    parser.add_argument("--model", "-m", type=str, help="Override MODEL_ID with a specific Gemini model name across all executed notebook cells.")
+    parser.add_argument("--override-model", type=str, dest="model", help=argparse.SUPPRESS)
     parser.add_argument("--workers", "-w", type=int, default=1, help="Number of concurrent worker threads.")
     parser.add_argument("--rules-file", type=str, help="Path to custom YAML rules file.")
     parser.add_argument("--output-json", type=str, help="Custom output path for JSON test report.")
@@ -383,11 +385,14 @@ def main(argv: Optional[List[str]] = None) -> int:
     config.SECURITY_ONLY = args.security_only
     config.SKIP_AI_JUDGE = args.skip_ai_judge
     config.VERBOSE = args.verbose
+    config.OVERRIDE_MODEL = args.model
     if args.rules_file:
         config.DEFAULT_RULES_PATH = pathlib.Path(args.rules_file).resolve()
 
     setup_logger(verbose=args.verbose)
     logger.info("🔧 Initializing Notebook Testing & Regression Suite...")
+    if config.OVERRIDE_MODEL:
+        logger.info(f"🎯 Model Override Active: enforcing MODEL_ID = '{config.OVERRIDE_MODEL}' across all notebooks")
 
     # Validate configuration
     issues = config.validate()

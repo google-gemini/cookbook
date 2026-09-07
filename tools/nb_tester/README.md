@@ -17,11 +17,13 @@ An automated, security-gated test runner and semantic regression evaluator desig
    - For real-time and time-evolving queries (e.g. sports scores, weather, current events), uses Gemini with the Google Search tool to double-check that new answers are factually true today.
 4. **📋 Declarative Rules & Exception Registry (`rules/default_rules.yaml`)**:
    - Easily configure cell-level actions (e.g. skipping interactive `input()` cells) and per-notebook timeouts.
-5. **📊 CI & Pull Request Integration**:
+5. **🎯 Dynamic Model Identifier Override (`--model <name>`)**:
+   - Test the entire cookbook (or specific notebooks) against candidate or pre-release models (e.g. `gemini-3.7-flash`, `gemini-3.1-pro-preview`) by dynamically overriding `MODEL_ID` in memory across all executed cells without touching disk.
+6. **📊 CI & Pull Request Integration**:
    - Generates persistent JSON reports under `reports/` and auto-appends formatted Markdown tables to `$GITHUB_STEP_SUMMARY`.
    - Returns clean exit codes (`0` on pass, `1` on failure) for automated gating.
-6. **🔍 Dry-Run Mode**:
-   - Test rule configurations, AST checks, and syntax parsing without altering files, spinning up kernels, or consuming API tokens.
+7. **🔍 Dry-Run Mode**:
+   - Test rule configurations, AST checks, model overrides, and syntax parsing without altering files, spinning up kernels, or consuming API tokens.
 
 ---
 
@@ -48,7 +50,16 @@ python3 -m tools.nb_tester.cli --notebook quickstarts/Counting_Tokens.ipynb
 python3 -m tools.nb_tester.cli --changed
 ```
 
-### 5. Run Full Suite in Parallel
+### 5. Test Notebooks with Dynamic Model Override
+```bash
+# Run a specific quickstart against a candidate/preview model
+python3 -m tools.nb_tester.cli --notebook quickstarts/Get_started_thinking.ipynb --model gemini-3.1-pro-preview
+
+# Run all quickstarts with model override in parallel
+python3 -m tools.nb_tester.cli --all --model gemini-3.7-flash --workers 4
+```
+
+### 6. Run Full Suite in Parallel
 ```bash
 python3 -m tools.nb_tester.cli --all --workers 4
 ```
@@ -90,6 +101,7 @@ tools/nb_tester/
 ├── security_scanner.py   # Level 1: Deterministic AST & regex scanner
 ├── ai_security_auditor.py# Level 2: Gemini AI Semantic Security Auditor
 ├── rules.py              # Declarative rules engine and matcher
+├── model_override.py     # In-memory MODEL_ID override transformer & preamble injector
 ├── executor.py           # nbclient kernel executor with in-memory Colab mock
 ├── comparator.py         # Output snapshot extractor and strategy router
 ├── llm_judge.py          # Level 3: Semantic output regression judge

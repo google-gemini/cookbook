@@ -55,6 +55,11 @@ notebooks:
     notebook_timeout_sec: 2400
     description: "Deep Research queries can take up to 30+ minutes"
 
+  quickstarts/Get_Started_Nano_Banana.ipynb:
+    cell_timeout_sec: 180
+    notebook_timeout_sec: 1800
+    description: "Image generation and multi-turn image editing"
+
   quickstarts/Get_started_thinking.ipynb:
     cell_timeout_sec: 300
     notebook_timeout_sec: 1200

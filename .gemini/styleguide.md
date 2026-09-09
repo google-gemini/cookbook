@@ -102,7 +102,10 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Only use helper function when you don't have a choice. If it's only a couple of lines, it's usually better to write them
   everytime so that the readers don't have to check the function definition all the time.
 * When selecting a model, use a colab selector for easier maintainability:
-  `MODEL_ID="gemini-3.7-flash" # @param ["gemini-3.7-flash", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}`
+  `MODEL_ID = "gemini-3.8-flash"  # @param ["gemini-3.1-pro-preview", "gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-2.5-pro"] {"allow-input": true, "isTemplate": true}`
+  * Always use double quotes `"` for string values and list items.
+  * Always format the configuration dictionary as valid JSON (with double-quoted keys like `{"allow-input": true, "isTemplate": true}`).
+  * Variable naming: `MODEL_ID` is standard for new notebooks. For existing notebooks that already use `MODEL` or `model_name` across downstream cells, keeping the existing variable name is fully compliant and encouraged to prevent broken references.
 * Some notebooks can also benefit from having a form to update the prompt:
   `prompt = "Detect the 2d bounding boxes of the cupcakes (with “label” as topping description”)"  # @param {type:"string"}`
   or a list of prompts they can choose from:

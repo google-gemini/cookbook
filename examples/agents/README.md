@@ -1,4 +1,4 @@
-﻿# Production Asynchronous Tool Loop & Edge Inference Cascade
+# Production Asynchronous Tool Loop & Edge Inference Cascade
 
 This directory contains production-grade recipes and patterns for building advanced agentic workflows and cyber-physical systems using the official **Google GenAI SDK** (`google-genai`).
 

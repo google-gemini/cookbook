@@ -175,7 +175,7 @@ class ConcordiaEmbodiedGM:
         self.directive_callback = directive_callback
 
         # Initialize Gemini Client if available
-        api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+        api_key = os.environ.get("GEMINI_API_KEY")
         if GENAI_AVAILABLE and api_key:
             try:
                 self.client = genai.Client()
@@ -217,8 +217,9 @@ class ConcordiaEmbodiedGM:
                     response = await http_client.post(endpoint, json={"directive": payload}, headers=headers, timeout=2.0)
                     if response.status_code == 200:
                         return response.json()
-            except Exception:
-                pass  # Fallback to local dispatch log
+            except Exception as e:
+                print(f"[ConcordiaGM] HTTP dispatch to {endpoint} failed: {e}")
+                # Fallback to local dispatch log
 
         return {"status": "dispatched_locally", "directive": payload}
 
@@ -254,14 +255,16 @@ class ConcordiaEmbodiedGM:
                     response_json_schema=ActionEvaluationSchema,
                     temperature=0.7
                 )
-                response = await asyncio.to_thread(
-                    self.client.models.generate_content,
+                interaction = await asyncio.to_thread(
+                    self.client.interactions.create,
                     model=self.model_name,
-                    contents=prompt,
-                    config=config
+                    input=prompt,
+                    config=config,
                 )
-                if response and response.text:
-                    evaluation = ActionEvaluationSchema.model_validate_json(response.text)
+                if interaction and interaction.steps and interaction.steps[-1].content:
+                    step_content = interaction.steps[-1].content
+                    response_text = step_content[0].text if isinstance(step_content, list) else (getattr(step_content, "text", "") or (step_content.parts[0].text if hasattr(step_content, "parts") and step_content.parts else str(step_content)))
+                    evaluation = ActionEvaluationSchema.model_validate_json(response_text)
                     await self._apply_evaluation(player_name, evaluation)
                     return evaluation
             except Exception as e:
@@ -391,14 +394,16 @@ class ConcordiaEmbodiedGM:
                     response_json_schema=CompanionBanterSchema,
                     temperature=0.8
                 )
-                response = await asyncio.to_thread(
-                    self.client.models.generate_content,
+                interaction = await asyncio.to_thread(
+                    self.client.interactions.create,
                     model=self.model_name,
-                    contents=prompt,
-                    config=config
+                    input=prompt,
+                    config=config,
                 )
-                if response and response.text:
-                    return CompanionBanterSchema.model_validate_json(response.text)
+                if interaction and interaction.steps and interaction.steps[-1].content:
+                    step_content = interaction.steps[-1].content
+                    response_text = step_content[0].text if isinstance(step_content, list) else (getattr(step_content, "text", "") or (step_content.parts[0].text if hasattr(step_content, "parts") and step_content.parts else str(step_content)))
+                    return CompanionBanterSchema.model_validate_json(response_text)
             except Exception as e:
                 print(f"[ConcordiaGM Banter LLM Error]: {e}")
 

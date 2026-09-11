@@ -156,7 +156,7 @@ class TestAsyncToolLoop:
     @pytest.mark.asyncio
     async def test_multi_turn_async_loop_with_thought_preservation(self):
         """
-        Mocks Gemini 3 multi-turn reasoning with thought parts and verifies:
+        Mocks Gemini 3 multi-turn reasoning via client.interactions.create and verifies:
         1. Function calls are resolved asynchronously.
         2. Thought signatures and content parts are preserved in turn history.
         3. Automatic function calling is disabled.
@@ -170,7 +170,7 @@ class TestAsyncToolLoop:
             await asyncio.sleep(0.01)
             return {"sensor_id": sensor_id, "temp_c": 38.5}
 
-        # Setup Mock SDK Client
+        # Setup Mock SDK Client with Interactions API
         mock_client = MagicMock()
 
         # Turn 1: Model generates thought + tool call
@@ -186,29 +186,35 @@ class TestAsyncToolLoop:
 
         fc_obj = types.FunctionCall(name="get_temperature", args={"sensor_id": "temp_01"})
         
-        turn1_candidate = types.Candidate(
+        class MockInteractionStep:
+            def __init__(self, content, function_calls=None):
+                self.content = content
+                self.function_calls = function_calls
+
+        class MockInteraction:
+            def __init__(self, steps):
+                self.steps = steps
+
+        turn1_step = MockInteractionStep(
             content=types.Content(
                 role="model",
                 parts=[MockThoughtPart(), MockToolCallPart()]
-            )
+            ),
+            function_calls=[fc_obj]
         )
-        turn1_response = MagicMock()
-        turn1_response.candidates = [turn1_candidate]
-        turn1_response.function_calls = [fc_obj]
+        turn1_interaction = MockInteraction([turn1_step])
 
         # Turn 2: Model receives tool result and produces final answer
-        turn2_candidate = types.Candidate(
+        turn2_step = MockInteractionStep(
             content=types.Content(
                 role="model",
                 parts=[types.Part.from_text(text="Sensor temp_01 is operating at 38.5 C, which is normal.")]
-            )
+            ),
+            function_calls=None
         )
-        turn2_response = MagicMock()
-        turn2_response.candidates = [turn2_candidate]
-        turn2_response.function_calls = None
-        turn2_response.text = "Sensor temp_01 is operating at 38.5 C, which is normal."
+        turn2_interaction = MockInteraction([turn2_step])
 
-        mock_client.models.generate_content.side_effect = [turn1_response, turn2_response]
+        mock_client.interactions.create.side_effect = [turn1_interaction, turn2_interaction]
 
         engine = AsyncToolExecutionEngine(
             client=mock_client,
@@ -235,15 +241,15 @@ class TestAsyncToolLoop:
         assert len(tool_turns) == 1
         assert tool_turns[0].parts[0].function_response.name == "get_temperature"
 
-        # Verify generate_content config had AFC disabled
-        assert mock_client.models.generate_content.call_count == 2
-        first_call_args = mock_client.models.generate_content.call_args_list[0]
+        # Verify interactions.create config had AFC disabled
+        assert mock_client.interactions.create.call_count == 2
+        first_call_args = mock_client.interactions.create.call_args_list[0]
         gen_config = first_call_args.kwargs.get("config") or first_call_args[1].get("config")
         assert gen_config.automatic_function_calling.disable is True
 
     @pytest.mark.asyncio
     async def test_multi_turn_async_loop_with_final_structured_schema(self):
-        """Verifies unconstrained tool calling followed by structured Pydantic schema synthesis on final turn."""
+        """Verifies unconstrained tool calling followed by structured Pydantic schema synthesis via interactions.create."""
         from google.genai import types
 
         registry = AsyncToolRegistry()
@@ -254,39 +260,45 @@ class TestAsyncToolLoop:
 
         mock_client = MagicMock()
 
+        class MockInteractionStep:
+            def __init__(self, content, function_calls=None):
+                self.content = content
+                self.function_calls = function_calls
+
+        class MockInteraction:
+            def __init__(self, steps):
+                self.steps = steps
+
         # Turn 1: Tool call
         fc_obj = types.FunctionCall(name="fetch_metric", args={})
-        turn1_candidate = types.Candidate(
+        turn1_step = MockInteractionStep(
             content=types.Content(
                 role="model",
                 parts=[types.Part(function_call=fc_obj)]
-            )
+            ),
+            function_calls=[fc_obj]
         )
-        turn1_res = MagicMock()
-        turn1_res.candidates = [turn1_candidate]
-        turn1_res.function_calls = [fc_obj]
+        turn1_int = MockInteraction([turn1_step])
 
         # Turn 2: Final text response (no more tool calls)
-        turn2_candidate = types.Candidate(
+        turn2_step = MockInteractionStep(
             content=types.Content(
                 role="model",
                 parts=[types.Part.from_text(text="Data gathered.")]
-            )
+            ),
+            function_calls=None
         )
-        turn2_res = MagicMock()
-        turn2_res.candidates = [turn2_candidate]
-        turn2_res.function_calls = None
-        turn2_res.text = "Data gathered."
+        turn2_int = MockInteraction([turn2_step])
 
         # Final structured turn
         structured_json = json.dumps({"summary": "Battery efficiency optimal.", "metric_val": 94.2})
-        final_struct_res = MagicMock()
-        final_struct_res.text = structured_json
-        final_struct_res.candidates = [
-            types.Candidate(content=types.Content(role="model", parts=[types.Part.from_text(text=structured_json)]))
-        ]
+        final_struct_step = MockInteractionStep(
+            content=[types.Part.from_text(text=structured_json)],
+            function_calls=None
+        )
+        final_struct_int = MockInteraction([final_struct_step])
 
-        mock_client.models.generate_content.side_effect = [turn1_res, turn2_res, final_struct_res]
+        mock_client.interactions.create.side_effect = [turn1_int, turn2_int, final_struct_int]
 
         engine = AsyncToolExecutionEngine(
             client=mock_client,
@@ -305,10 +317,44 @@ class TestAsyncToolLoop:
         assert "optimal" in result.structured_output.summary
 
         # Verify that final turn had response_mime_type="application/json" and schema
-        final_call_args = mock_client.models.generate_content.call_args_list[-1]
+        final_call_args = mock_client.interactions.create.call_args_list[-1]
         final_config = final_call_args.kwargs.get("config") or final_call_args[1].get("config")
         assert final_config.response_mime_type == "application/json"
         assert final_config.response_json_schema == MockPydanticReport
+
+    @pytest.mark.asyncio
+    async def test_multi_turn_async_loop_fallback_to_models_generate_content(self):
+        """Verifies backward compatibility fallback to client.models.generate_content when interactions is absent."""
+        from google.genai import types
+
+        registry = AsyncToolRegistry()
+
+        @registry.register
+        async def ping() -> dict:
+            return {"status": "pong"}
+
+        mock_client = MagicMock(spec=["models"])
+
+        fc_obj = types.FunctionCall(name="ping", args={})
+        turn1_candidate = types.Candidate(content=types.Content(role="model", parts=[types.Part(function_call=fc_obj)]))
+        turn1_res = MagicMock(candidates=[turn1_candidate], function_calls=[fc_obj])
+
+        turn2_candidate = types.Candidate(content=types.Content(role="model", parts=[types.Part.from_text(text="All systems go.")]))
+        turn2_res = MagicMock(candidates=[turn2_candidate], function_calls=None, text="All systems go.")
+
+        mock_client.models.generate_content.side_effect = [turn1_res, turn2_res]
+
+        engine = AsyncToolExecutionEngine(
+            client=mock_client,
+            registry=registry,
+            max_tool_turns=3
+        )
+
+        result = await engine.run(prompt="Ping test.")
+        assert result.turns_taken == 2
+        assert len(result.function_calls_executed) == 1
+        assert result.final_text == "All systems go."
+        assert mock_client.models.generate_content.call_count == 2
 
 
 # =============================================================================
@@ -580,3 +626,59 @@ class TestConcordiaEmbodiedGM:
         assert "c1" in speakers or "c2" in speakers
         for t in banter.turns:
             assert t.gesture in ("wave", "bow", "cheer", "dance", "point", "chin_rest_thinking")
+
+    @pytest.mark.asyncio
+    async def test_concordia_gm_with_interactions(self):
+        """Verifies ConcordiaEmbodiedGM executes client.interactions.create for action evaluation and banter."""
+        mock_client = MagicMock()
+
+        eval_data = {
+            "narrative_outcome": "Alice launched micro-drones.",
+            "score_delta": 35,
+            "gravity_update": [0.0, -9.81, 0.0],
+            "skybox_update": "cyberpunk neon disco lasers",
+            "party_triggered": True,
+            "avatar_action": "dance",
+            "avatar_speech": "Let's party!"
+        }
+        eval_json = json.dumps(eval_data)
+
+        banter_data = {
+            "banter_topic": "Robotics",
+            "turns": [
+                {
+                    "speaker_id": "gemma_01",
+                    "speaker_name": "Gemma",
+                    "speech": "Autonomous navigation is locked at 25Hz.",
+                    "emotion": "proud",
+                    "gesture": "cheer"
+                }
+            ],
+            "environmental_effect": "laser_pulse"
+        }
+        banter_json = json.dumps(banter_data)
+
+        class MockStep:
+            def __init__(self, text):
+                self.content = [MagicMock(text=text)]
+
+        class MockInteraction:
+            def __init__(self, text):
+                self.steps = [MockStep(text)]
+
+        mock_client.interactions.create.side_effect = [
+            MockInteraction(eval_json),
+            MockInteraction(banter_json)
+        ]
+
+        gm = ConcordiaEmbodiedGM()
+        gm.client = mock_client
+
+        eval_res = await gm.evaluate_player_action("Alice", "Alice launches micro drones")
+        assert eval_res.score_delta == 35
+        assert eval_res.avatar_action == "dance"
+
+        banter_res = await gm.generate_companion_banter("Robotics", [{"id": "gemma_01", "name": "Gemma"}])
+        assert banter_res.banter_topic == "Robotics"
+        assert banter_res.turns[0].speaker_id == "gemma_01"
+        assert mock_client.interactions.create.call_count == 2

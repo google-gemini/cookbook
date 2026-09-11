@@ -311,29 +311,54 @@ class AsyncToolExecutionEngine:
             gen_config = types.GenerateContentConfig(**config_kwargs)
 
             # Invoke model asynchronously in a non-blocking worker thread
-            response = await asyncio.to_thread(
-                self.client.models.generate_content,
-                model=target_model,
-                contents=contents,
-                config=gen_config
-            )
+            if hasattr(self.client, "interactions") and hasattr(self.client.interactions, "create"):
+                interaction = await asyncio.to_thread(
+                    self.client.interactions.create,
+                    model=target_model,
+                    input=contents,
+                    config=gen_config,
+                )
 
-            if not response or not response.candidates:
-                break
+                if not interaction or not interaction.steps:
+                    break
 
-            candidate = response.candidates[0]
-            model_content = candidate.content
+                last_step = interaction.steps[-1]
+                model_content = last_step.content
 
-            # PRESERVE GEMINI 3 THOUGHT SIGNATURE:
-            # Append model's exact candidate content to history to maintain thought_signature
-            if model_content:
-                contents.append(model_content)
+                # PRESERVE GEMINI 3 THOUGHT SIGNATURE:
+                # Append model's exact candidate content to history to maintain thought_signature
+                if model_content:
+                    contents.append(model_content)
 
-            # Check if model requested function calls
-            function_calls = response.function_calls
-            if not function_calls:
-                # No more function calls, we have the model's text response!
-                break
+                # Check if model requested function calls
+                function_calls = getattr(last_step, "function_calls", None)
+                if not function_calls:
+                    # No more function calls, we have the model's text response!
+                    break
+            else:
+                response = await asyncio.to_thread(
+                    self.client.models.generate_content,
+                    model=target_model,
+                    contents=contents,
+                    config=gen_config
+                )
+
+                if not response or not response.candidates:
+                    break
+
+                candidate = response.candidates[0]
+                model_content = candidate.content
+
+                # PRESERVE GEMINI 3 THOUGHT SIGNATURE:
+                # Append model's exact candidate content to history to maintain thought_signature
+                if model_content:
+                    contents.append(model_content)
+
+                # Check if model requested function calls
+                function_calls = response.function_calls
+                if not function_calls:
+                    # No more function calls, we have the model's text response!
+                    break
 
             # Execute all requested function calls concurrently
             async def _run_single_tool(fc):
@@ -384,32 +409,54 @@ class AsyncToolExecutionEngine:
 
             final_config = types.GenerateContentConfig(**final_config_kwargs)
             
-            final_response = await asyncio.to_thread(
-                self.client.models.generate_content,
-                model=target_model,
-                contents=contents,
-                config=final_config
-            )
-            
-            if final_response and final_response.text:
-                final_text = final_response.text
-                if final_response.candidates and final_response.candidates[0].content:
-                    contents.append(final_response.candidates[0].content)
-                try:
-                    structured_obj = response_schema.model_validate_json(final_text)
-                except Exception:
+            if hasattr(self.client, "interactions") and hasattr(self.client.interactions, "create"):
+                final_interaction = await asyncio.to_thread(
+                    self.client.interactions.create,
+                    model=target_model,
+                    input=contents,
+                    config=final_config,
+                )
+                
+                if final_interaction and final_interaction.steps and final_interaction.steps[-1].content:
+                    step_content = final_interaction.steps[-1].content
+                    final_text = step_content[0].text if isinstance(step_content, list) else (getattr(step_content, "text", "") or (step_content.parts[0].text if hasattr(step_content, "parts") and step_content.parts else str(step_content)))
+                    contents.append(step_content)
                     try:
-                        structured_obj = json.loads(final_text)
-                    except Exception:
-                        structured_obj = None
-        else:
-            # Extract final text from the last candidate
-            if contents and contents[-1].role == "model":
-                parts = contents[-1].parts
-                text_parts = [p.text for p in parts if getattr(p, "text", None) and not getattr(p, "thought", False)]
-                final_text = "\n".join(text_parts) if text_parts else (response.text or "")
+                        structured_obj = response_schema.model_validate_json(final_text)
+                    except (ValueError, TypeError, json.JSONDecodeError):
+                        try:
+                            structured_obj = json.loads(final_text)
+                        except (ValueError, TypeError, json.JSONDecodeError):
+                            structured_obj = None
             else:
-                final_text = response.text if (response and hasattr(response, "text")) else ""
+                final_response = await asyncio.to_thread(
+                    self.client.models.generate_content,
+                    model=target_model,
+                    contents=contents,
+                    config=final_config
+                )
+                
+                if final_response and final_response.text:
+                    final_text = final_response.text
+                    if final_response.candidates and final_response.candidates[0].content:
+                        contents.append(final_response.candidates[0].content)
+                    try:
+                        structured_obj = response_schema.model_validate_json(final_text)
+                    except (ValueError, TypeError, json.JSONDecodeError):
+                        try:
+                            structured_obj = json.loads(final_text)
+                        except (ValueError, TypeError, json.JSONDecodeError):
+                            structured_obj = None
+        else:
+            # Extract final text from the last candidate or step
+            if contents and getattr(contents[-1], "role", None) == "model":
+                parts = getattr(contents[-1], "parts", [])
+                text_parts = [p.text for p in parts if getattr(p, "text", None) and not getattr(p, "thought", False)]
+                final_text = "\n".join(text_parts) if text_parts else ""
+            elif contents and isinstance(contents[-1], list) and len(contents[-1]) > 0 and hasattr(contents[-1][0], "text"):
+                final_text = contents[-1][0].text
+            else:
+                final_text = ""
 
         elapsed_ms = (time.perf_counter() - start_time) * 1000.0
 
@@ -480,7 +527,7 @@ async def main():
     print("GEMINI COOKBOOK: Multi-Turn Async Tool Calling Loop")
     print("=" * 80)
 
-    if not GENAI_AVAILABLE or not (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")):
+    if not GENAI_AVAILABLE or not os.environ.get("GEMINI_API_KEY"):
         print("[Notice] GEMINI_API_KEY not set or google-genai not available. Running in mock demonstration mode.")
         return
 

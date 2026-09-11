@@ -57,6 +57,24 @@ Z_SCORES = {
     "q90": 1.28155,
 }
 
+# -----------------------------------------------------------------------------
+# Default Battery Equivalent Circuit Model (2-RC ECM) Parameters (24V Pack)
+# -----------------------------------------------------------------------------
+DEFAULT_BATTERY_R0_OHMS: float = 0.045       # Ohmic internal resistance (Ohms)
+DEFAULT_BATTERY_R1_OHMS: float = 0.025       # RC1 Polarization resistance (Ohms)
+DEFAULT_BATTERY_C1_FARADS: float = 200.0     # RC1 Capacitance (Farads), tau1 = R1*C1 = 5.0s
+DEFAULT_BATTERY_R2_OHMS: float = 0.035       # RC2 Polarization resistance (Ohms)
+DEFAULT_BATTERY_C2_FARADS: float = 1200.0    # RC2 Capacitance (Farads), tau2 = R2*C2 = 42.0s
+DEFAULT_BATTERY_FULL_VOLTAGE: float = 28.5   # Full charge open-circuit voltage (V)
+
+# -----------------------------------------------------------------------------
+# Default H-Bridge / Motor Inverter Thermal Model Parameters
+# -----------------------------------------------------------------------------
+DEFAULT_MOSFET_ON_RESISTANCE_OHMS: float = 0.008   # 8 mOhm MOSFET on-resistance per bridge leg
+DEFAULT_GATE_SWITCHING_LOSS_WATTS: float = 0.85    # 850mW gate switching losses at 20kHz PWM
+DEFAULT_THERMAL_CAPACITY_J_PER_K: float = 45.0     # Thermal heat capacity (J/K)
+DEFAULT_THERMAL_RESISTANCE_K_PER_W: float = 2.2    # Thermal resistance to ambient (K/W)
+
 
 # =============================================================================
 # 1. TIER 3: STATISTICAL FORECASTING (HOLT-WINTERS & KALMAN FILTER)
@@ -259,14 +277,14 @@ class PhysicsAndBrownianForecaster:
         avg_i = float(np.mean(i_arr[-10:])) if len(i_arr) >= 10 else (float(i_arr[-1]) if len(i_arr) > 0 else 2.5)
 
         # 24V Pack Parameters (7S Li-ion or 8S LiFePO4)
-        r0 = 0.045     # Ohmic internal resistance (Ohms)
-        r1 = 0.025     # RC1 Polarization resistance
-        c1 = 200.0     # RC1 Capacitance (Farads), tau1 = R1*C1 = 5.0s
-        r2 = 0.035     # RC2 Polarization resistance
-        c2 = 1200.0    # RC2 Capacitance (Farads), tau2 = R2*C2 = 42.0s
+        r0 = DEFAULT_BATTERY_R0_OHMS
+        r1 = DEFAULT_BATTERY_R1_OHMS
+        c1 = DEFAULT_BATTERY_C1_FARADS
+        r2 = DEFAULT_BATTERY_R2_OHMS
+        c2 = DEFAULT_BATTERY_C2_FARADS
 
-        # Estimate Current SoC from Open-Circuit Voltage (Linear 21.0V to 28.5V)
-        soc_now = max(0.0, min(100.0, (current_v - lvc_cutoff_v) / (28.5 - lvc_cutoff_v) * 100.0))
+        # Estimate Current SoC from Open-Circuit Voltage (Linear 21.0V to DEFAULT_BATTERY_FULL_VOLTAGE)
+        soc_now = max(0.0, min(100.0, (current_v - lvc_cutoff_v) / (DEFAULT_BATTERY_FULL_VOLTAGE - lvc_cutoff_v) * 100.0))
 
         steps = max(1, int(horizon_seconds / dt))
         v_forecast = []
@@ -340,10 +358,10 @@ class PhysicsAndBrownianForecaster:
         t_now = float(t_arr[-1]) if len(t_arr) > 0 else 28.5
         i_rms = float(np.mean(np.abs(i_arr[-10:]))) if len(i_arr) > 0 else 3.0
 
-        r_mosfet = 0.008       # 8 mOhm MOSFET on-resistance per bridge leg
-        p_switching = 0.85      # 850mW gate switching losses at 20kHz PWM
-        c_th = 45.0            # Thermal heat capacity (J/K)
-        r_th = 2.2             # Thermal resistance to ambient (K/W)
+        r_mosfet = DEFAULT_MOSFET_ON_RESISTANCE_OHMS
+        p_switching = DEFAULT_GATE_SWITCHING_LOSS_WATTS
+        c_th = DEFAULT_THERMAL_CAPACITY_J_PER_K
+        r_th = DEFAULT_THERMAL_RESISTANCE_K_PER_W
 
         p_heat = (i_rms ** 2) * r_mosfet * 2.0 + p_switching
         t_steady = ambient_temp_c + p_heat * r_th
@@ -505,6 +523,9 @@ class TimesFMUnifiedEngine:
             )
             self.tier1_ready = True
             logger.info("[Tier 1] 🟢 TimesFM 2.5 PyTorch model ready!")
+        except ImportError:
+            logger.info("[Tier 1 Notice] TimesFM PyTorch dependencies not found. Falling back.")
+            self.tier1_ready = False
         except Exception as e:
             logger.info(f"[Tier 1 Notice] TimesFM PyTorch engine not active ({type(e).__name__}). Falling back.")
             self.tier1_ready = False
@@ -521,6 +542,9 @@ class TimesFMUnifiedEngine:
                 logger.info("[Tier 2] 🟢 ONNX Runtime DirectML / CPU session initialized!")
             else:
                 self.tier2_ready = False
+        except ImportError:
+            logger.info("[Tier 2 Notice] ONNX Runtime dependencies not found. Falling back.")
+            self.tier2_ready = False
         except Exception as e:
             logger.info(f"[Tier 2 Notice] ONNX Runtime not active ({type(e).__name__}). Falling back.")
             self.tier2_ready = False

@@ -16,7 +16,7 @@
 
 This module provides the core lint orchestration logic:
   - Reading and parsing Jupyter / Colab notebooks (.ipynb).
-  - Evaluating notebooks against structure, style, SDK best practices, and model selector rules.
+  - Evaluating notebooks against syntax, structure, style, SDK best practices, and model selector rules.
   - Automatically identifying redirected / stub notebooks and applying appropriate lenient rules.
   - Filtering out explicitly excluded files.
   - Generating human-readable console reports and machine-actionable exit statuses.
@@ -35,7 +35,7 @@ import logging
 import pathlib
 
 from tools import config
-from tools.nblint.rules import gemini, model_selector, structure, style
+from tools.nblint.rules import gemini, model_selector, structure, style, syntax
 
 logger = logging.getLogger(__name__)
 
@@ -183,6 +183,10 @@ class NotebookLinter:
         result.is_redirect = self.is_redirect_notebook(data, file_path)
 
         # 4. Execute Rule Suites
+        # Syntax rules
+        for msg in syntax.check_code_cell_syntax(data, file_path, result.is_redirect):
+            result.diagnostics.append(LintDiagnostic("syntax::code_cell", msg, Severity.ERROR))
+
         # Structure rules
         for msg in structure.check_copyright(data, file_path, result.is_redirect):
             result.diagnostics.append(LintDiagnostic("structure::copyright", msg, Severity.ERROR))

@@ -375,6 +375,12 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser.add_argument("--override-model", type=str, dest="model", help=argparse.SUPPRESS)
     parser.add_argument("--workers", "-w", type=int, default=1, help="Number of concurrent worker threads.")
     parser.add_argument("--rules-file", type=str, help="Path to custom YAML rules file.")
+    parser.add_argument(
+        "--max-retries",
+        type=int,
+        default=None,
+        help="Maximum retry attempts per failed cell (default: 3).",
+    )
     parser.add_argument("--output-json", type=str, help="Custom output path for JSON test report.")
     parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose debug logging.")
 
@@ -386,6 +392,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     config.SKIP_AI_JUDGE = args.skip_ai_judge
     config.VERBOSE = args.verbose
     config.OVERRIDE_MODEL = args.model
+    if args.max_retries is not None:
+        config.DEFAULT_CELL_MAX_RETRIES = max(0, args.max_retries)
     if args.rules_file:
         config.DEFAULT_RULES_PATH = pathlib.Path(args.rules_file).resolve()
 

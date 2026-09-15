@@ -24,6 +24,8 @@ An automated, security-gated test runner and semantic regression evaluator desig
    - Returns clean exit codes (`0` on pass, `1` on failure) for automated gating.
 7. **🔍 Dry-Run Mode**:
    - Test rule configurations, AST checks, model overrides, and syntax parsing without altering files, spinning up kernels, or consuming API tokens.
+8. **🔁 Automatic Cell-Level Retry & Exponential Backoff**:
+   - Automatically retries failed cells (up to 3 times by default with exponential backoff) on transient API errors (429, 503, timeouts) before failing, preventing flaky CI runs while skipping non-retryable syntax errors. Configurable via `--max-retries` CLI flag or `rules/default_rules.yaml`.
 
 ---
 

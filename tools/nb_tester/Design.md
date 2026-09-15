@@ -44,6 +44,7 @@ flowchart TD
 - **No Secret Exposure in Untrusted PRs**: Automated PR checks run zero-secret static AST analysis. Live execution requires explicit maintainer gating.
 - **In-Memory Mocking**: The `google.colab` mock is injected only in the kernel memory at runtime. Notebook files on disk are never altered.
 - **Strict Per-Cell Timeouts**: Prevents infinite loops or stalled network requests from blocking CI pipelines.
+- **Cell-Level Retry & Exponential Backoff**: Transient errors (429 rate limits, 503 unavailable, network timeouts) are automatically retried up to 3 times before failing, while non-retryable syntax errors fail immediately.
 
 ---
 

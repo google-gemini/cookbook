@@ -240,43 +240,88 @@ class NotebookExecutor:
                         ))
                         continue
 
-                    # Execute cell
-                    cell_t0 = time.time()
+                    # Execute cell with configurable retries
+                    cell_max_retries = (
+                        rule.max_retries
+                        if rule.max_retries is not None
+                        else getattr(rule_set, "cell_max_retries", 3)
+                    )
+                    backoff_delay = getattr(rule_set, "cell_retry_backoff_sec", 2.0)
+
+                    cell_duration = 0.0
                     cell_error = None
-                    try:
-                        client.execute_cell(cell, real_idx)
-                    except CellTimeoutError as te:
-                        cell_error = {
-                            "ename": "CellTimeoutError",
-                            "evalue": f"Cell timed out after {rule_set.cell_timeout_sec}s",
-                            "traceback": [str(te)]
-                        }
-                    except Exception as ex:
-                        cell_error = {
-                            "ename": type(ex).__name__,
-                            "evalue": str(ex),
-                            "traceback": [str(ex)]
-                        }
+                    outputs = []
 
-                    cell_duration = time.time() - cell_t0
-                    executed_count += 1
+                    total_attempts = 1 + max(0, cell_max_retries)
+                    for attempt in range(1, total_attempts + 1):
+                        cell_t0 = time.time()
+                        cell_error = None
+                        if attempt > 1:
+                            cell["outputs"] = []
 
-                    # Extract error from cell outputs if not caught above
-                    outputs = cell.get("outputs", [])
-                    for out in outputs:
-                        if out.get("output_type") == "error":
+                        try:
+                            client.execute_cell(cell, real_idx)
+                        except CellTimeoutError as te:
                             cell_error = {
-                                "ename": out.get("ename", "Error"),
-                                "evalue": out.get("evalue", ""),
-                                "traceback": out.get("traceback", [])
+                                "ename": "CellTimeoutError",
+                                "evalue": f"Cell timed out after {rule_set.cell_timeout_sec}s",
+                                "traceback": [str(te)],
                             }
+                        except Exception as ex:
+                            cell_error = {
+                                "ename": type(ex).__name__,
+                                "evalue": str(ex),
+                                "traceback": [str(ex)],
+                            }
+
+                        cell_duration += (time.time() - cell_t0)
+
+                        # Extract error from cell outputs if not caught above
+                        outputs = cell.get("outputs", [])
+                        for out in outputs:
+                            if out.get("output_type") == "error":
+                                cell_error = {
+                                    "ename": out.get("ename", "Error"),
+                                    "evalue": out.get("evalue", ""),
+                                    "traceback": out.get("traceback", []),
+                                }
+                                break
+
+                        if not cell_error:
+                            if attempt > 1:
+                                logger.info(
+                                    f"  ✅ Cell {cell_in_orig_nb} passed on retry attempt "
+                                    f"{attempt - 1}/{cell_max_retries}"
+                                )
+                            else:
+                                logger.debug(
+                                    f"  ✅ Cell {cell_in_orig_nb} completed in {cell_duration:.2f}s"
+                                )
                             break
+
+                        # Do not retry on pure syntax or indentation errors,
+                        # or when maximum attempts are exhausted.
+                        if (
+                            cell_error["ename"] in ("SyntaxError", "IndentationError")
+                            or attempt >= total_attempts
+                        ):
+                            break
+
+                        sleep_sec = backoff_delay * (2 ** (attempt - 1))
+                        err_name = cell_error["ename"]
+                        err_val = cell_error["evalue"][:80]
+                        logger.warning(
+                            f"  ⚠️ Cell {cell_in_orig_nb} failed on attempt {attempt}/"
+                            f"{total_attempts} ({err_name}: {err_val}). "
+                            f"Retrying in {sleep_sec:.1f}s..."
+                        )
+                        time.sleep(sleep_sec)
+
+                    executed_count += 1
 
                     if cell_error and not first_error:
                         first_error = f"Cell {cell_in_orig_nb} failed: {cell_error['ename']}: {cell_error['evalue']}"
                         logger.error(f"  ❌ {first_error}")
-                    else:
-                        logger.debug(f"  ✅ Cell {cell_in_orig_nb} completed in {cell_duration:.2f}s")
 
                     cell_records.append(CellExecutionRecord(
                         cell_index=cell_in_orig_nb,

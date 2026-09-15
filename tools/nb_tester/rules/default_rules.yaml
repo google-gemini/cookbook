@@ -6,6 +6,8 @@ global_defaults:
   cell_timeout_sec: 90
   notebook_timeout_sec: 600
   default_strategy: "semantic_llm"
+  cell_max_retries: 3
+  cell_retry_backoff_sec: 2.0
 
 # Specific notebook overrides
 notebooks:

@@ -55,6 +55,7 @@ class CellRule:
     action: str = "run"  # 'run' or 'skip'
     strategy: str = "semantic_llm"
     timeout_sec: Optional[int] = None
+    max_retries: Optional[int] = None
     reason: Optional[str] = None
     description: Optional[str] = None
 
@@ -70,6 +71,8 @@ class NotebookRuleSet:
     cell_timeout_sec: int = 90
     notebook_timeout_sec: int = 600
     default_strategy: str = "semantic_llm"
+    cell_max_retries: int = 3
+    cell_retry_backoff_sec: float = 2.0
     cell_rules: List[CellRule] = field(default_factory=list)
     param_overrides: Dict[str, Any] = field(default_factory=dict)
 
@@ -133,6 +136,20 @@ class RulesEngine:
             "default_strategy",
             global_defs.get("default_strategy", "semantic_llm")
         )
+        cell_max_retries = nb_rules_dict.get(
+            "cell_max_retries",
+            global_defs.get(
+                "cell_max_retries",
+                getattr(self.config, "DEFAULT_CELL_MAX_RETRIES", 3),
+            ),
+        )
+        cell_retry_backoff_sec = nb_rules_dict.get(
+            "cell_retry_backoff_sec",
+            global_defs.get(
+                "cell_retry_backoff_sec",
+                getattr(self.config, "DEFAULT_CELL_RETRY_BACKOFF_SEC", 2.0),
+            ),
+        )
 
         parsed_cell_rules = []
         for cr in nb_rules_dict.get("cells", []):
@@ -142,6 +159,7 @@ class RulesEngine:
                 action=cr.get("action", "run"),
                 strategy=cr.get("strategy", default_strat),
                 timeout_sec=cr.get("timeout_sec"),
+                max_retries=cr.get("max_retries"),
                 reason=cr.get("reason"),
                 description=cr.get("description")
             ))
@@ -157,6 +175,8 @@ class RulesEngine:
             cell_timeout_sec=cell_timeout,
             notebook_timeout_sec=nb_timeout,
             default_strategy=default_strat,
+            cell_max_retries=cell_max_retries,
+            cell_retry_backoff_sec=cell_retry_backoff_sec,
             cell_rules=parsed_cell_rules,
             param_overrides=param_overrides
         )
@@ -184,6 +204,7 @@ class RulesEngine:
                 target_index=cell_index,
                 action="skip",
                 strategy="ignore_output",
+                max_retries=0,
                 reason="Automatic heuristic: cell contains interactive input()"
             )
 
@@ -199,5 +220,6 @@ class RulesEngine:
             target_index=cell_index,
             action="run",
             strategy=nb_rules.default_strategy,
-            timeout_sec=nb_rules.cell_timeout_sec
+            timeout_sec=nb_rules.cell_timeout_sec,
+            max_retries=nb_rules.cell_max_retries
         )

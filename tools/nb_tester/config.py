@@ -61,6 +61,8 @@ class TesterConfig:
     MAX_API_RETRIES: int = 3
     RETRY_INITIAL_DELAY_SEC: float = 2.0
     RETRY_BACKOFF_FACTOR: float = 2.0
+    DEFAULT_CELL_MAX_RETRIES: int = 3
+    DEFAULT_CELL_RETRY_BACKOFF_SEC: float = 2.0
 
     # API Keys & Auth
     # Strictly use GEMINI_API_KEY environment variable.

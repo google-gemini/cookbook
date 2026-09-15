@@ -84,6 +84,12 @@ All media files (audio, images, video), datasets, and other external assets used
 
 Please mention the source and license in the markdown cell that introduces the asset. Prefer stable hosting (the cookbook's GCS bucket, Wikimedia Commons, Internet Archive, YouTube) over ephemeral URLs.
 
+## Dependencies and SDKs
+
+Use the official `google-genai` SDK for Gemini API capabilities whenever it supports the feature being demonstrated. Keep dependencies minimal and avoid adding wrapper or orchestration frameworks solely for functionality available in `google-genai`.
+
+Notebooks specifically demonstrating a third-party ecosystem integration may use that integration's library. Place these notebooks in the relevant integration directory and ensure each example provides clear technical learning value rather than promotional content.
+
 ## Using the Interactions API
 
 All quickstart notebooks **must** use the Interactions API (`client.interactions.create()`) as of `google-genai>=2.0.0`. This is the primary interface for text generation, multimodal understanding, structured output, function calling, grounding, and more.

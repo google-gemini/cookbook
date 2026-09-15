@@ -88,7 +88,7 @@ Please mention the source and license in the markdown cell that introduces the a
 
 Use the official `google-genai` SDK for Gemini API capabilities whenever it supports the feature being demonstrated. Keep dependencies minimal and avoid adding wrapper or orchestration frameworks solely for functionality available in `google-genai`.
 
-Notebooks specifically demonstrating a third-party ecosystem integration may use that integration's library. Place these notebooks in the relevant integration directory and ensure the example provides clear technical learning value rather than promotional content.
+Notebooks specifically demonstrating a third-party ecosystem integration may use that integration's library. Place these notebooks in the relevant integration directory and ensure each example provides clear technical learning value rather than promotional content.
 
 ## Using the Interactions API
 

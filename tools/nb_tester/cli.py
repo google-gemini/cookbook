@@ -22,7 +22,8 @@ Supported Options:
 - `--notebook <path>`: Run tests on a specific notebook file.
 - `--changed`: Automatically detect and test only notebooks modified in the current git branch.
 - `--all`: Discover and test all `.ipynb` files across quickstarts and examples.
-- `--dry-run`: Validate syntax, scan security rules, and simulate execution without running kernels or calling APIs.
+- `--dry-run`: Validate syntax, scan security rules, and simulate execution without running kernels
+  or calling APIs.
 - `--security-only`: Run static AST and Gemini AI security audits without executing code.
 - `--skip-ai-judge`: Run kernel execution and error checks, skipping semantic output diffing.
 - `--workers <N>`: Run notebook tests in parallel.
@@ -57,17 +58,17 @@ def discover_notebooks(
     repo_root: pathlib.Path,
     target_notebook: Optional[Union[str, List[str]]] = None,
     changed_only: bool = False,
-    all_notebooks: bool = False
+    all_notebooks: bool = False,
 ) -> List[pathlib.Path]:
     """
     Discovers notebooks to test based on CLI selection mode.
-    
+
     Args:
         repo_root: Root repository path.
         target_notebook: Optional specific path or list of paths.
         changed_only: If True, discover notebooks modified in git diff.
         all_notebooks: If True, discover all notebooks in quickstarts and examples.
-        
+
     Returns:
         List of resolved Path objects for target notebooks.
     """
@@ -91,11 +92,18 @@ def discover_notebooks(
                 cwd=str(repo_root),
                 capture_output=True,
                 text=True,
-                check=False
+                check=False,
             )
             if res.returncode != 0 and res.stderr:
-                logger.debug(f"git diff origin/main...HEAD returned code {res.returncode}: {res.stderr.strip()}")
-            files = [line.strip() for line in res.stdout.splitlines() if line.strip().endswith(".ipynb")]
+                err_msg = res.stderr.strip()
+                logger.debug(
+                    f"git diff origin/main...HEAD returned code {res.returncode}: {err_msg}"
+                )
+            files = [
+                line.strip()
+                for line in res.stdout.splitlines()
+                if line.strip().endswith(".ipynb")
+            ]
             if not files:
                 # Fallback to upstream/main
                 res_upstream = subprocess.run(
@@ -103,9 +111,13 @@ def discover_notebooks(
                     cwd=str(repo_root),
                     capture_output=True,
                     text=True,
-                    check=False
+                    check=False,
                 )
-                files = [line.strip() for line in res_upstream.stdout.splitlines() if line.strip().endswith(".ipynb")]
+                files = [
+                    line.strip()
+                    for line in res_upstream.stdout.splitlines()
+                    if line.strip().endswith(".ipynb")
+                ]
             if not files:
                 # Fallback to local uncommitted git diff and untracked files
                 res2 = subprocess.run(
@@ -113,27 +125,38 @@ def discover_notebooks(
                     cwd=str(repo_root),
                     capture_output=True,
                     text=True,
-                    check=False
+                    check=False,
                 )
                 if res2.returncode != 0 and res2.stderr:
-                    logger.debug(f"git diff HEAD returned code {res2.returncode}: {res2.stderr.strip()}")
-                
+                    err_msg2 = res2.stderr.strip()
+                    logger.debug(f"git diff HEAD returned code {res2.returncode}: {err_msg2}")
+
                 res_untracked = subprocess.run(
                     ["git", "ls-files", "--others", "--exclude-standard", "*.ipynb"],
                     cwd=str(repo_root),
                     capture_output=True,
                     text=True,
-                    check=False
+                    check=False,
                 )
-                
+
                 file_set = set()
                 if res2.returncode == 0:
-                    file_set.update(line.strip() for line in res2.stdout.splitlines() if line.strip().endswith(".ipynb"))
+                    file_set.update(
+                        line.strip()
+                        for line in res2.stdout.splitlines()
+                        if line.strip().endswith(".ipynb")
+                    )
                 if res_untracked.returncode == 0:
-                    file_set.update(line.strip() for line in res_untracked.stdout.splitlines() if line.strip().endswith(".ipynb"))
+                    file_set.update(
+                        line.strip()
+                        for line in res_untracked.stdout.splitlines()
+                        if line.strip().endswith(".ipynb")
+                    )
                 files = list(file_set)
 
-            resolved_files = [(repo_root / f).resolve() for f in files if (repo_root / f).exists()]
+            resolved_files = [
+                (repo_root / f).resolve() for f in files if (repo_root / f).exists()
+            ]
             logger.info(f"Discovered {len(resolved_files)} changed notebook(s) via git diff.")
             return resolved_files
         except Exception as e:
@@ -204,7 +227,9 @@ def test_single_notebook(
         orig_nb, rel_path, allow_dynamic_exec=rule_set.allow_dynamic_exec
     )
     if not static_res.is_safe:
-        critical_findings = [f.message for f in static_res.findings if f.severity in ("CRITICAL", "HIGH")]
+        critical_findings = [
+            f.message for f in static_res.findings if f.severity in ("CRITICAL", "HIGH")
+        ]
         reason = f"Static Security Block: {'; '.join(critical_findings[:2])}"
         logger.error(f"🚨 {rel_path}: {reason}")
         return SingleNotebookReport(
@@ -219,12 +244,16 @@ def test_single_notebook(
             executed_cells=0,
             skipped_cells=0,
             regressions_count=0,
-            failure_reason=reason
+            failure_reason=reason,
         )
 
     # 2. Level 2: Gemini AI Security Audit
     ai_audit: SafetyAuditReport = ai_auditor.audit_notebook(orig_nb, rel_path)
-    if (ai_audit.safety_verdict == "UNSAFE" or ai_audit.risk_score > config.MAX_ALLOWED_RISK_SCORE) and not rule_set.allow_security_demo:
+    is_unsafe = (
+        ai_audit.safety_verdict == "UNSAFE"
+        or ai_audit.risk_score > config.MAX_ALLOWED_RISK_SCORE
+    )
+    if is_unsafe and not rule_set.allow_security_demo:
         reason = f"AI Security Block (Risk {ai_audit.risk_score}/10): {ai_audit.summary}"
         logger.error(f"🚨 {rel_path}: {reason}")
         return SingleNotebookReport(
@@ -239,10 +268,13 @@ def test_single_notebook(
             executed_cells=0,
             skipped_cells=0,
             regressions_count=0,
-            failure_reason=reason
+            failure_reason=reason,
         )
-    elif rule_set.allow_security_demo and (ai_audit.safety_verdict == "UNSAFE" or ai_audit.risk_score > config.MAX_ALLOWED_RISK_SCORE):
-        logger.info(f"🛡️ Security exception allowed by rule for demo: {rel_path} (Risk {ai_audit.risk_score}/10)")
+    elif rule_set.allow_security_demo and is_unsafe:
+        logger.info(
+            f"🛡️ Security exception allowed by rule for demo: {rel_path} "
+            f"(Risk {ai_audit.risk_score}/10)"
+        )
 
     # If security-only flag is set, stop here
     if config.SECURITY_ONLY:
@@ -257,7 +289,7 @@ def test_single_notebook(
             total_cells=len(orig_nb.cells),
             executed_cells=0,
             skipped_cells=0,
-            regressions_count=0
+            regressions_count=0,
         )
 
     # 3. Execution Phase
@@ -277,7 +309,7 @@ def test_single_notebook(
             executed_cells=0,
             skipped_cells=0,
             regressions_count=0,
-            failure_reason=exec_res.first_error_message
+            failure_reason=exec_res.first_error_message,
         )
 
     if exec_res.status == "failed":
@@ -293,7 +325,7 @@ def test_single_notebook(
             executed_cells=exec_res.executed_cells_count,
             skipped_cells=exec_res.skipped_cells_count,
             regressions_count=1,
-            failure_reason=exec_res.first_error_message
+            failure_reason=exec_res.first_error_message,
         )
 
     # 4. Output Comparison & Regression Judging
@@ -316,13 +348,14 @@ def test_single_notebook(
                 strategy=cell_rule.strategy,
                 old_outputs=orig_c.get("outputs", []),
                 new_outputs=exec_c.get("outputs", []),
-                notebook_path=rel_path
+                notebook_path=rel_path,
             )
             cell_reports.append(comp_report)
             if comp_report.is_regression:
                 regressions += 1
                 logger.warning(
-                    f"⚠️ Regression in {rel_path} Cell {idx} ({comp_report.strategy}): {comp_report.explanation}"
+                    f"⚠️ Regression in {rel_path} Cell {idx} ({comp_report.strategy}): "
+                    f"{comp_report.explanation}"
                 )
 
     overall_status = "PASSED"
@@ -364,16 +397,41 @@ def main(argv: Optional[List[str]] = None) -> int:
         description="Automated Notebook Security, Execution & Regression Testing Suite"
     )
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("--notebook", "-n", type=str, nargs="+", help="Specific notebook path(s) to test.")
-    group.add_argument("--changed", "-c", action="store_true", help="Test only notebooks modified in git diff.")
-    group.add_argument("--all", "-a", action="store_true", help="Test all notebooks in quickstarts and examples.")
+    group.add_argument(
+        "--notebook", "-n", type=str, nargs="+", help="Specific notebook path(s) to test."
+    )
+    group.add_argument(
+        "--changed", "-c", action="store_true", help="Test only notebooks modified in git diff."
+    )
+    group.add_argument(
+        "--all", "-a", action="store_true", help="Test all notebooks in quickstarts and examples."
+    )
 
-    parser.add_argument("--dry-run", action="store_true", help="Simulate tests without altering state or invoking kernel.")
-    parser.add_argument("--security-only", action="store_true", help="Run static & AI security audits only.")
-    parser.add_argument("--skip-ai-judge", action="store_true", help="Skip semantic AI output diffing.")
-    parser.add_argument("--model", "-m", type=str, help="Override MODEL_ID with a specific Gemini model name across all executed notebook cells.")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Simulate tests without altering state or invoking kernel.",
+    )
+    parser.add_argument(
+        "--security-only",
+        action="store_true",
+        help="Run static & AI security audits only.",
+    )
+    parser.add_argument(
+        "--skip-ai-judge",
+        action="store_true",
+        help="Skip semantic AI output diffing.",
+    )
+    parser.add_argument(
+        "--model",
+        "-m",
+        type=str,
+        help="Override MODEL_ID with a specific Gemini model name across all cells.",
+    )
     parser.add_argument("--override-model", type=str, dest="model", help=argparse.SUPPRESS)
-    parser.add_argument("--workers", "-w", type=int, default=1, help="Number of concurrent worker threads.")
+    parser.add_argument(
+        "--workers", "-w", type=int, default=1, help="Number of concurrent worker threads."
+    )
     parser.add_argument("--rules-file", type=str, help="Path to custom YAML rules file.")
     parser.add_argument(
         "--max-retries",
@@ -382,7 +440,9 @@ def main(argv: Optional[List[str]] = None) -> int:
         help="Maximum retry attempts per failed cell (default: 3).",
     )
     parser.add_argument("--output-json", type=str, help="Custom output path for JSON test report.")
-    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose debug logging.")
+    parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Enable verbose debug logging."
+    )
 
     args = parser.parse_args(argv)
 
@@ -393,14 +453,23 @@ def main(argv: Optional[List[str]] = None) -> int:
     config.VERBOSE = args.verbose
     config.OVERRIDE_MODEL = args.model
     if args.max_retries is not None:
-        config.DEFAULT_CELL_MAX_RETRIES = max(0, args.max_retries)
+        config.OVERRIDE_MAX_RETRIES = max(0, args.max_retries)
+        config.DEFAULT_CELL_MAX_RETRIES = config.OVERRIDE_MAX_RETRIES
     if args.rules_file:
         config.DEFAULT_RULES_PATH = pathlib.Path(args.rules_file).resolve()
 
     setup_logger(verbose=args.verbose)
     logger.info("🔧 Initializing Notebook Testing & Regression Suite...")
     if config.OVERRIDE_MODEL:
-        logger.info(f"🎯 Model Override Active: enforcing MODEL_ID = '{config.OVERRIDE_MODEL}' across all notebooks")
+        logger.info(
+            f"🎯 Model Override Active: enforcing MODEL_ID = '{config.OVERRIDE_MODEL}' "
+            "across all notebooks"
+        )
+    if config.OVERRIDE_MAX_RETRIES is not None:
+        logger.info(
+            f"🔄 Max Retries Override Active: max_retries = {config.OVERRIDE_MAX_RETRIES} "
+            "per failed cell"
+        )
 
     # Validate configuration
     issues = config.validate()

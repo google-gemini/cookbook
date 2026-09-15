@@ -80,10 +80,14 @@ class NotebookRuleSet:
 class RulesEngine:
     """Loads and evaluates rules against notebooks and cells."""
 
-    def __init__(self, rules_file: Optional[pathlib.Path] = None, config: Optional[TesterConfig] = None):
+    def __init__(
+        self,
+        rules_file: Optional[pathlib.Path] = None,
+        config: Optional[TesterConfig] = None,
+    ):
         """
         Initializes the Rules Engine.
-        
+
         Args:
             rules_file: Path to YAML rules file.
             config: Optional TesterConfig instance.
@@ -96,12 +100,15 @@ class RulesEngine:
     def _load_rules(self) -> None:
         """Reads and parses YAML rules file."""
         if not self.rules_file.exists():
-            logger.warning(f"Rules file not found at {self.rules_file}. Using default empty rule set.")
+            logger.warning(
+                f"Rules file not found at {self.rules_file}. Using default empty rule set."
+            )
             return
         try:
             with open(self.rules_file, "r", encoding="utf-8") as f:
                 self.raw_rules = yaml.safe_load(f) or {}
-            logger.debug(f"Loaded rules for {len(self.raw_rules.get('notebooks', {}))} notebook(s).")
+            nb_count = len(self.raw_rules.get("notebooks", {}))
+            logger.debug(f"Loaded rules for {nb_count} notebook(s).")
         except Exception as e:
             logger.error(f"Failed to parse rules file {self.rules_file}: {e}")
             self.raw_rules = {}
@@ -109,15 +116,17 @@ class RulesEngine:
     def get_notebook_rules(self, notebook_path: str) -> NotebookRuleSet:
         """
         Resolves the configuration rules for a given notebook path.
-        
+
         Args:
             notebook_path: Relative or absolute path of the notebook.
-            
+
         Returns:
             NotebookRuleSet with resolved rules.
         """
         try:
-            rel_path = str(pathlib.Path(notebook_path).resolve().relative_to(self.config.REPO_ROOT.resolve()).as_posix())
+            repo_root = self.config.REPO_ROOT.resolve()
+            nb_resolved = pathlib.Path(notebook_path).resolve()
+            rel_path = str(nb_resolved.relative_to(repo_root).as_posix())
         except ValueError:
             rel_path = str(pathlib.Path(notebook_path).as_posix()).lstrip("/")
 
@@ -126,23 +135,27 @@ class RulesEngine:
 
         cell_timeout = nb_rules_dict.get(
             "cell_timeout_sec",
-            global_defs.get("cell_timeout_sec", self.config.DEFAULT_CELL_TIMEOUT_SEC)
+            global_defs.get("cell_timeout_sec", self.config.DEFAULT_CELL_TIMEOUT_SEC),
         )
         nb_timeout = nb_rules_dict.get(
             "notebook_timeout_sec",
-            global_defs.get("notebook_timeout_sec", self.config.DEFAULT_NOTEBOOK_TIMEOUT_SEC)
+            global_defs.get("notebook_timeout_sec", self.config.DEFAULT_NOTEBOOK_TIMEOUT_SEC),
         )
         default_strat = nb_rules_dict.get(
             "default_strategy",
-            global_defs.get("default_strategy", "semantic_llm")
+            global_defs.get("default_strategy", "semantic_llm"),
         )
-        cell_max_retries = nb_rules_dict.get(
-            "cell_max_retries",
-            global_defs.get(
-                "cell_max_retries",
-                getattr(self.config, "DEFAULT_CELL_MAX_RETRIES", 3),
-            ),
-        )
+
+        override_retries = getattr(self.config, "OVERRIDE_MAX_RETRIES", None)
+        if override_retries is not None:
+            cell_max_retries = override_retries
+        elif "cell_max_retries" in nb_rules_dict:
+            cell_max_retries = nb_rules_dict["cell_max_retries"]
+        elif "cell_max_retries" in global_defs:
+            cell_max_retries = global_defs["cell_max_retries"]
+        else:
+            cell_max_retries = getattr(self.config, "DEFAULT_CELL_MAX_RETRIES", 3)
+
         cell_retry_backoff_sec = nb_rules_dict.get(
             "cell_retry_backoff_sec",
             global_defs.get(
@@ -161,7 +174,7 @@ class RulesEngine:
                 timeout_sec=cr.get("timeout_sec"),
                 max_retries=cr.get("max_retries"),
                 reason=cr.get("reason"),
-                description=cr.get("description")
+                description=cr.get("description"),
             ))
 
         param_overrides = nb_rules_dict.get("param_overrides", {})
@@ -178,48 +191,86 @@ class RulesEngine:
             cell_max_retries=cell_max_retries,
             cell_retry_backoff_sec=cell_retry_backoff_sec,
             cell_rules=parsed_cell_rules,
-            param_overrides=param_overrides
+            param_overrides=param_overrides,
         )
 
     def resolve_cell_action_and_strategy(
         self,
         nb_rules: NotebookRuleSet,
         cell_index: int,
-        cell_source: str
+        cell_source: str,
     ) -> CellRule:
         """
         Resolves the specific rule matching a given cell by index or content pattern.
-        
+
         Args:
             nb_rules: The NotebookRuleSet for the parent notebook.
             cell_index: 0-based cell index.
             cell_source: Raw Python source of the cell.
-            
+
         Returns:
-            Resolved CellRule indicating action, strategy, and timeout.
+            Resolved CellRule indicating action, strategy, timeout, and max retries.
         """
-        # 1. Automatic heuristic: cell containing interactive input() should be skipped unless explicitly overridden
-        if re.search(r"\binput\s*\(", cell_source) and not any(r.target_index == cell_index for r in nb_rules.cell_rules):
+        # 1. Automatic heuristic: cell containing interactive input() should be skipped
+        #    unless explicitly overridden by a cell rule matching this index or pattern.
+        has_explicit_rule = any(
+            (r.target_index == cell_index)
+            or (r.match_pattern and r.match_pattern in cell_source)
+            for r in nb_rules.cell_rules
+        )
+        if re.search(r"\binput\s*\(", cell_source) and not has_explicit_rule:
             return CellRule(
                 target_index=cell_index,
                 action="skip",
                 strategy="ignore_output",
                 max_retries=0,
-                reason="Automatic heuristic: cell contains interactive input()"
+                reason="Automatic heuristic: cell contains interactive input()",
             )
 
-        # 2. Check explicit cell rules in rule set
+        override_retries = getattr(self.config, "OVERRIDE_MAX_RETRIES", None)
+
+        # 2. Check explicit cell rules in rule set (return a fresh copy with defaults resolved)
         for rule in nb_rules.cell_rules:
-            if rule.target_index is not None and rule.target_index == cell_index:
-                return rule
-            if rule.match_pattern and rule.match_pattern in cell_source:
-                return rule
+            matched = (
+                (rule.target_index is not None and rule.target_index == cell_index)
+                or (rule.match_pattern and rule.match_pattern in cell_source)
+            )
+            if matched:
+                resolved_retries = (
+                    override_retries
+                    if override_retries is not None
+                    else (
+                        rule.max_retries
+                        if rule.max_retries is not None
+                        else nb_rules.cell_max_retries
+                    )
+                )
+                resolved_timeout = (
+                    rule.timeout_sec
+                    if rule.timeout_sec is not None
+                    else nb_rules.cell_timeout_sec
+                )
+                return CellRule(
+                    match_pattern=rule.match_pattern,
+                    target_index=cell_index,
+                    action=rule.action,
+                    strategy=rule.strategy,
+                    timeout_sec=resolved_timeout,
+                    max_retries=resolved_retries,
+                    reason=rule.reason,
+                    description=rule.description,
+                )
 
         # 3. Fallback to notebook default
+        default_retries = (
+            override_retries
+            if override_retries is not None
+            else nb_rules.cell_max_retries
+        )
         return CellRule(
             target_index=cell_index,
             action="run",
             strategy=nb_rules.default_strategy,
             timeout_sec=nb_rules.cell_timeout_sec,
-            max_retries=nb_rules.cell_max_retries
+            max_retries=default_retries,
         )

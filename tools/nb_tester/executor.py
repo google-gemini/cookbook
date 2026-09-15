@@ -21,11 +21,15 @@ isolated IPython kernel using `nbclient`.
 Key Features:
 - **Zero-Disk-Tampering Colab Mock**: Injects a virtual `google.colab` module directly
   into the kernel's memory space upon startup so that `userdata.get('GEMINI_API_KEY')`
-  transparently resolves to `os.environ['GEMINI_API_KEY']` without modifying the original notebook files.
+  transparently resolves to `os.environ['GEMINI_API_KEY']` without modifying the original
+  notebook files.
 - **Granular Cell Execution & Timeouts**: Executes code cells individually with configurable
-  timeouts, capturing execution errors (`ename`, `evalue`, `traceback`) without crashing the test runner.
-- **Skip Directive Handling**: Gracefully skips cells flagged by the RulesEngine (e.g. `input()` prompts).
-- **Dry-Run Support**: Inspects cell syntax and simulates execution without spinning up kernels or calling APIs.
+  timeouts, capturing execution errors (`ename`, `evalue`, `traceback`) without crashing
+  the test runner.
+- **Skip Directive Handling**: Gracefully skips cells flagged by the RulesEngine
+  (e.g. `input()` prompts).
+- **Dry-Run Support**: Inspects cell syntax and simulates execution without spinning up
+  kernels or calling APIs.
 
 Use Cases:
 1. Running notebooks in headless CI environments with full API authentication.
@@ -80,30 +84,36 @@ class NotebookExecutionResult:
 class NotebookExecutor:
     """Handles isolated kernel setup, mock injection, and cell execution."""
 
-    def __init__(self, config: Optional[TesterConfig] = None, rules_engine: Optional[RulesEngine] = None):
+    def __init__(
+        self,
+        config: Optional[TesterConfig] = None,
+        rules_engine: Optional[RulesEngine] = None,
+    ):
         """
         Initializes the Notebook Executor.
-        
+
         Args:
             config: Optional TesterConfig instance.
             rules_engine: Optional RulesEngine instance.
         """
         self.config = config or GLOBAL_CONFIG
         self.rules_engine = rules_engine or RulesEngine(config=self.config)
-        self.model_transformer = ModelOverrideTransformer(override_model=self.config.OVERRIDE_MODEL)
+        self.model_transformer = ModelOverrideTransformer(
+            override_model=self.config.OVERRIDE_MODEL
+        )
 
     def execute_notebook(
         self,
         nb_path: pathlib.Path,
-        rule_set: Optional[NotebookRuleSet] = None
+        rule_set: Optional[NotebookRuleSet] = None,
     ) -> NotebookExecutionResult:
         """
         Executes a single notebook from disk and returns detailed execution records.
-        
+
         Args:
             nb_path: Absolute or relative Path to the .ipynb file.
             rule_set: Optional pre-resolved NotebookRuleSet.
-            
+
         Returns:
             NotebookExecutionResult with status, timings, and cell snapshots.
         """
@@ -114,7 +124,8 @@ class NotebookExecutor:
         rule_set = rule_set or self.rules_engine.get_notebook_rules(rel_path)
 
         if rule_set.skip_notebook:
-            logger.info(f"⏭️ Skipping notebook {rel_path}: {rule_set.skip_reason or 'Marked to skip'}")
+            reason_msg = rule_set.skip_reason or "Marked to skip"
+            logger.info(f"⏭️ Skipping notebook {rel_path}: {reason_msg}")
             return NotebookExecutionResult(
                 notebook_path=rel_path,
                 status="skipped",
@@ -122,7 +133,7 @@ class NotebookExecutor:
                 total_code_cells=0,
                 executed_cells_count=0,
                 skipped_cells_count=0,
-                first_error_message=rule_set.skip_reason
+                first_error_message=rule_set.skip_reason,
             )
 
         # Read notebook
@@ -137,7 +148,7 @@ class NotebookExecutor:
                 total_code_cells=0,
                 executed_cells_count=0,
                 skipped_cells_count=0,
-                first_error_message=f"Failed to parse notebook JSON: {e}"
+                first_error_message=f"Failed to parse notebook JSON: {e}",
             )
 
         # Handle Dry-Run
@@ -148,15 +159,15 @@ class NotebookExecutor:
         # Create working copy of notebook
         exec_nb = copy.deepcopy(orig_nb)
 
-        # Preprocess cells in memory to automatically enable interactive confirmation checkboxes (e.g. I_am_aware_that_...)
+        # Preprocess cells in memory to enable interactive confirmation checkboxes
+        # (e.g. I_am_aware_that_... or I_understand_this_is_a_paid_...)
         for cell in exec_nb.cells:
             if cell.cell_type == "code" and cell.source:
-                # Auto-enable any I_am_aware_that_... or I_understand_this_is_a_paid_... boolean variables
                 cell.source = re.sub(
                     r"((?:I_am_aware_that_|I_understand_this_is_a_paid_)\w*\s*=\s*)False\b",
                     r"\g<1>True",
                     cell.source,
-                    flags=re.IGNORECASE
+                    flags=re.IGNORECASE,
                 )
                 # Apply any explicit rule parameter overrides
                 for var_name, var_val in rule_set.param_overrides.items():
@@ -165,7 +176,7 @@ class NotebookExecutor:
                         rf"^({re.escape(var_name)}\s*=\s*).+$",
                         rf"\g<1>{val_repr}",
                         cell.source,
-                        flags=re.MULTILINE
+                        flags=re.MULTILINE,
                     )
 
         # Apply Model Override across all cells if active
@@ -179,7 +190,9 @@ class NotebookExecutor:
             "import sys, os, pathlib\n"
             "from unittest.mock import MagicMock\n"
             "_mock_colab = MagicMock()\n"
-            f"_mock_colab.userdata.get.side_effect = lambda k: os.getenv(k, {api_key!r} if k in ('GEMINI_API_KEY', 'GOOGLE_API_KEY') else None)\n"
+            "_mock_colab.userdata.get.side_effect = lambda k: os.getenv(\n"
+            f"    k, {api_key!r} if k in ('GEMINI_API_KEY', 'GOOGLE_API_KEY') else None\n"
+            ")\n"
             "sys.modules['google.colab'] = _mock_colab\n"
             "sys.modules['google.colab.userdata'] = _mock_colab.userdata\n"
             f"os.environ['GEMINI_API_KEY'] = {api_key!r}\n"
@@ -198,8 +211,8 @@ class NotebookExecutor:
             exec_nb,
             timeout=rule_set.cell_timeout_sec,
             kernel_name="python3",
-            allow_errors=True,  # Capture errors in cell outputs without tearing down kernel early
-            resources={"metadata": {"path": working_dir}}
+            allow_errors=True,
+            resources={"metadata": {"path": working_dir}},
         )
 
         cell_records: List[CellExecutionRecord] = []
@@ -208,10 +221,14 @@ class NotebookExecutor:
         skipped_count = 0
         t_start = time.time()
 
-        code_cells_with_idx = [(i, c) for i, c in enumerate(exec_nb.cells) if c.cell_type == "code"]
+        code_cells_with_idx = [
+            (i, c) for i, c in enumerate(exec_nb.cells) if c.cell_type == "code"
+        ]
         total_code_cells = len(code_cells_with_idx) - 1  # Excluding mock preamble
 
-        logger.info(f"🚀 Starting execution of {rel_path} ({total_code_cells} code cells)...")
+        logger.info(
+            f"🚀 Starting execution of {rel_path} ({total_code_cells} code cells)..."
+        )
 
         try:
             with client.setup_kernel():
@@ -228,7 +245,8 @@ class NotebookExecutor:
                     )
 
                     if rule.action == "skip":
-                        logger.info(f"  ⏭️ Cell {cell_in_orig_nb} SKIPPED: {rule.reason or 'Rule directive'}")
+                        skip_msg = rule.reason or "Rule directive"
+                        logger.info(f"  ⏭️ Cell {cell_in_orig_nb} SKIPPED: {skip_msg}")
                         skipped_count += 1
                         cell_records.append(CellExecutionRecord(
                             cell_index=cell_in_orig_nb,
@@ -236,11 +254,18 @@ class NotebookExecutor:
                             source_code=source,
                             action_taken="skipped",
                             strategy="ignore_output",
-                            duration_sec=0.0
+                            duration_sec=0.0,
                         ))
                         continue
 
-                    # Execute cell with configurable retries
+                    # Execute cell with configurable retries and per-cell timeout
+                    cell_timeout = (
+                        rule.timeout_sec
+                        if rule.timeout_sec is not None
+                        else rule_set.cell_timeout_sec
+                    )
+                    client.timeout = cell_timeout
+
                     cell_max_retries = (
                         rule.max_retries
                         if rule.max_retries is not None
@@ -264,7 +289,7 @@ class NotebookExecutor:
                         except CellTimeoutError as te:
                             cell_error = {
                                 "ename": "CellTimeoutError",
-                                "evalue": f"Cell timed out after {rule_set.cell_timeout_sec}s",
+                                "evalue": f"Cell timed out after {cell_timeout}s",
                                 "traceback": [str(te)],
                             }
                         except Exception as ex:
@@ -320,7 +345,9 @@ class NotebookExecutor:
                     executed_count += 1
 
                     if cell_error and not first_error:
-                        first_error = f"Cell {cell_in_orig_nb} failed: {cell_error['ename']}: {cell_error['evalue']}"
+                        err_e = cell_error["ename"]
+                        err_v = cell_error["evalue"]
+                        first_error = f"Cell {cell_in_orig_nb} failed: {err_e}: {err_v}"
                         logger.error(f"  ❌ {first_error}")
 
                     cell_records.append(CellExecutionRecord(
@@ -331,7 +358,7 @@ class NotebookExecutor:
                         strategy=rule.strategy,
                         duration_sec=round(cell_duration, 3),
                         error=cell_error,
-                        outputs=copy.deepcopy(outputs)
+                        outputs=copy.deepcopy(outputs),
                     ))
 
         except Exception as kernel_exc:

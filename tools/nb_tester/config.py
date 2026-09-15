@@ -44,17 +44,34 @@ class TesterConfig:
     # User rule: If specified, trust model names and centralize all LLM model references.
     SECURITY_AUDITOR_MODEL: str = "gemini-3.1-pro-preview"
     SECURITY_AUDITOR_FALLBACKS: List[str] = field(
-        default_factory=lambda: ["gemini-3.1-pro-preview", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-2.5-pro"]
+        default_factory=lambda: [
+            "gemini-3.1-pro-preview",
+            "gemini-3.8-flash",
+            "gemini-3.7-flash",
+            "gemini-3.6-flash",
+            "gemini-2.5-pro",
+        ]
     )
 
     OUTPUT_JUDGE_MODEL: str = "gemini-3.5-flash-lite"
     OUTPUT_JUDGE_FALLBACKS: List[str] = field(
-        default_factory=lambda: ["gemini-3.5-flash-lite", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-2.5-flash"]
+        default_factory=lambda: [
+            "gemini-3.5-flash-lite",
+            "gemini-3.8-flash",
+            "gemini-3.7-flash",
+            "gemini-3.6-flash",
+            "gemini-2.5-flash",
+        ]
     )
 
-    GROUNDED_VERIFIER_MODEL: str = "gemini-3.7-flash"
+    GROUNDED_VERIFIER_MODEL: str = "gemini-3.8-flash"
     GROUNDED_VERIFIER_FALLBACKS: List[str] = field(
-        default_factory=lambda: ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-2.5-flash"]
+        default_factory=lambda: [
+            "gemini-3.8-flash",
+            "gemini-3.7-flash",
+            "gemini-3.6-flash",
+            "gemini-2.5-flash",
+        ]
     )
 
     # Retry & Fallback Configuration
@@ -86,7 +103,9 @@ class TesterConfig:
         default_factory=lambda: pathlib.Path(__file__).resolve().parents[2]
     )
     DEFAULT_RULES_PATH: pathlib.Path = field(
-        default_factory=lambda: pathlib.Path(__file__).resolve().parent / "rules" / "default_rules.yaml"
+        default_factory=lambda: (
+            pathlib.Path(__file__).resolve().parent / "rules" / "default_rules.yaml"
+        )
     )
     REPORTS_DIR: pathlib.Path = field(
         default_factory=lambda: pathlib.Path(__file__).resolve().parents[2] / "reports"
@@ -101,6 +120,7 @@ class TesterConfig:
     SKIP_AI_JUDGE: bool = False
     SECURITY_ONLY: bool = False
     OVERRIDE_MODEL: Optional[str] = None
+    OVERRIDE_MAX_RETRIES: Optional[int] = None
 
     def get_api_key(self) -> Optional[str]:
         """

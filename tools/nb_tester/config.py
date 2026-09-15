@@ -46,6 +46,7 @@ class TesterConfig:
     SECURITY_AUDITOR_FALLBACKS: List[str] = field(
         default_factory=lambda: [
             "gemini-3.1-pro-preview",
+            "gemini-3.8-flash",
             "gemini-3.7-flash",
             "gemini-3.6-flash",
             "gemini-2.5-pro",
@@ -56,15 +57,21 @@ class TesterConfig:
     OUTPUT_JUDGE_FALLBACKS: List[str] = field(
         default_factory=lambda: [
             "gemini-3.5-flash-lite",
+            "gemini-3.8-flash",
             "gemini-3.7-flash",
             "gemini-3.6-flash",
             "gemini-2.5-flash",
         ]
     )
 
-    GROUNDED_VERIFIER_MODEL: str = "gemini-3.7-flash"
+    GROUNDED_VERIFIER_MODEL: str = "gemini-3.8-flash"
     GROUNDED_VERIFIER_FALLBACKS: List[str] = field(
-        default_factory=lambda: ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-2.5-flash"]
+        default_factory=lambda: [
+            "gemini-3.8-flash",
+            "gemini-3.7-flash",
+            "gemini-3.6-flash",
+            "gemini-2.5-flash",
+        ]
     )
 
     # Retry & Fallback Configuration

@@ -212,9 +212,13 @@ class RulesEngine:
             Resolved CellRule indicating action, strategy, timeout, and max retries.
         """
         # 1. Automatic heuristic: cell containing interactive input() should be skipped
-        #    unless explicitly overridden by a cell rule matching this index.
-        has_explicit_idx = any(r.target_index == cell_index for r in nb_rules.cell_rules)
-        if re.search(r"\binput\s*\(", cell_source) and not has_explicit_idx:
+        #    unless explicitly overridden by a cell rule matching this index or pattern.
+        has_explicit_rule = any(
+            (r.target_index == cell_index)
+            or (r.match_pattern and r.match_pattern in cell_source)
+            for r in nb_rules.cell_rules
+        )
+        if re.search(r"\binput\s*\(", cell_source) and not has_explicit_rule:
             return CellRule(
                 target_index=cell_index,
                 action="skip",

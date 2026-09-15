@@ -22,7 +22,7 @@ To install the dependencies for this script, run:
 pip install google-genai opencv-python pyaudio pillow mss
 ```
 
-Before running this script, ensure the `GOOGLE_API_KEY` environment
+Before running this script, ensure the `GEMINI_API_KEY` environment
 variable is set to the api-key you obtained from Google AI Studio.
 
 Important: **Use headphones**. This script uses the system default audio
@@ -74,12 +74,12 @@ RECEIVE_SAMPLE_RATE = 24000
 CHUNK_SIZE = 1024
 
 # --- Model Configuration ---
-MODEL = "gemini-3.1-flash-live-preview"
+MODEL = "gemini-3.8-live"
 DEFAULT_MODE = "camera"
 
 
 client = genai.Client(
-    api_key=os.environ.get("GOOGLE_API_KEY"),
+    api_key=os.environ.get("GEMINI_API_KEY", os.environ.get("GOOGLE_API_KEY")),
 )
 
 # Live session configuration

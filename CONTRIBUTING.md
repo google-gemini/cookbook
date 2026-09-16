@@ -86,7 +86,7 @@ Please mention the source and license in the markdown cell that introduces the a
 
 ## Dependencies and SDKs
 
-Use the official `google-genai` SDK for Gemini API capabilities whenever it supports the feature being demonstrated. Keep dependencies minimal and avoid adding wrapper or orchestration frameworks solely for functionality available in `google-genai`.
+Keep dependencies minimal. Do not add wrapper or orchestration frameworks solely for functionality available in the official `google-genai` SDK.
 
 Notebooks specifically demonstrating a third-party ecosystem integration may use that integration's library. Place these notebooks in the relevant integration directory and ensure each example provides clear technical learning value rather than promotional content.
 

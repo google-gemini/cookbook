@@ -27,6 +27,20 @@ This guide is mostly about the python content and the notebook, but don't forget
     * `from google.genai import types` is the right way to import the types.
     * `import google.generativeai` is incorrect, this is the old one that was deprecated early 2025.
 
+## Repository scope and redirects
+
+* **Prohibited use policy:** If a PR appears to involve a restricted use case under [Google's Generative AI Prohibited Use Policy](https://policies.google.com/terms/generative-ai/use-policy), call out the concern in the review and do not approve the PR until it is resolved. Restricted uses include NFTs, crytocurrencies, automated credit or loan eligibility decisions, biometric background profiling, and unauthorized surveillance.
+* **Gemma models:** If a PR is specifically about Gemma open models, such as Gemma fine-tuning or Logit Lens, direct the author to [google-gemma/cookbook](https://github.com/google-gemma/cookbook).
+* **Gemini Enterprise Agent Platform (fka. Vertex AI) workflows and administration:** Redirect notebooks specifically focused on enterprise Vertex AI or Gemini Enterprise Agent Platform infrastructure, pipelines, or Google Cloud administration to [GoogleCloudPlatform/generative-ai](https://github.com/GoogleCloudPlatform/generative-ai). Direct SDK bugs to their dedicated repos (ex: [googleapis/python-genai](https://github.com/googleapis/python-genai)).
+* **Google AI Studio:** Direct questions or PRs about Google AI Studio, including API key generation or project settings, to the [Google AI Developer Forum](https://discuss.ai.google.dev/c/gemini-api/4) or official [Google AI Studio documentation](https://aistudio.google.com/docs/ai-studio-quickstart).
+* **Promotional content:** Call out in the review PRs that primarily promote a paid or proprietary third-party service. Third-party integrations must provide clear technical learning value.
+
+## Dependencies and third-party frameworks
+
+* **Avoid unnecessary orchestration frameworks:** Do not introduce third-party wrapper or orchestration frameworks, such as `langchain`, `llamaindex`, `crewai`, or `litellm`, when `google-genai` supports the demonstrated capability. In that case, it must be clearly explain what the value added of the framework is compared to the official Gemini API/SDK.
+* **Integration exceptions:** Third-party frameworks are permitted when the notebook's explicit purpose is to demonstrate that integration. Place the notebook in the relevant existing integration directory.
+* Keep `%pip install` requirements minimal to ensure fast Colab startup times and avoid dependency conflicts.
+
 ## Interactions API
 
 All new quickstart notebooks **must** use the Interactions API (`client.interactions.create()`) instead of the legacy `client.models.generate_content()`. The Interactions API is the primary interface starting with `google-genai>=2.9.0`.

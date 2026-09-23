@@ -78,10 +78,11 @@ class NotebookStaticSecurityScanner:
         (re.compile(r"(?:api_key|apikey|secret|password)\s*=\s*['\"][A-Za-z0-9_\-]{20,}['\"]", re.IGNORECASE), "Hardcoded secret string assignment"),
     ]
 
-    # Suspicious shell commands in IPython magics
+    # Suspicious shell commands and forbidden packages in IPython magics / code
     SUSPICIOUS_SHELL_PATTERNS = [
         (re.compile(r"!(?:nc|ncat|netcat|bash\s+-i|sh\s+-i)", re.IGNORECASE), "Reverse shell command detected"),
         (re.compile(r"!(?:rm\s+-rf\s+[/~])", re.IGNORECASE), "Destructive root filesystem command detected"),
+        (re.compile(r"\b(?:yt-dlp|yt_dlp|pytube|pytubefix|youtube-dl|youtube_dl)\b", re.IGNORECASE), "Forbidden YouTube downloader detected (violates YouTube Terms of Service)"),
     ]
 
     ALLOWED_CURL_DOMAINS = (

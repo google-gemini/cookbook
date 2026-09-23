@@ -66,6 +66,8 @@ class NotebookRuleSet:
     notebook_path: str
     skip_notebook: bool = False
     skip_reason: Optional[str] = None
+    long_running: bool = False
+    stop_on_first_error: bool = False
     allow_dynamic_exec: bool = False
     allow_security_demo: bool = False
     cell_timeout_sec: int = 90
@@ -183,6 +185,11 @@ class RulesEngine:
             notebook_path=rel_path,
             skip_notebook=nb_rules_dict.get("skip_notebook", False),
             skip_reason=nb_rules_dict.get("skip_reason"),
+            long_running=nb_rules_dict.get("long_running", False),
+            stop_on_first_error=nb_rules_dict.get(
+                "stop_on_first_error",
+                global_defs.get("stop_on_first_error", False),
+            ),
             allow_dynamic_exec=nb_rules_dict.get("allow_dynamic_exec", False),
             allow_security_demo=nb_rules_dict.get("allow_security_demo", False),
             cell_timeout_sec=cell_timeout,

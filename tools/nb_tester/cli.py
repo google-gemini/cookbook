@@ -57,6 +57,8 @@ from .reporter import TestReporter, SingleNotebookReport, SuiteReport
 def discover_notebooks(
     repo_root: pathlib.Path,
     target_notebook: Optional[Union[str, List[str]]] = None,
+    target_dirs: Optional[List[str]] = None,
+    quickstarts_only: bool = False,
     changed_only: bool = False,
     all_notebooks: bool = False,
 ) -> List[pathlib.Path]:
@@ -66,6 +68,8 @@ def discover_notebooks(
     Args:
         repo_root: Root repository path.
         target_notebook: Optional specific path or list of paths.
+        target_dirs: Optional directory or list of directories to search exclusively.
+        quickstarts_only: If True, only search inside quickstarts/.
         changed_only: If True, discover notebooks modified in git diff.
         all_notebooks: If True, discover all notebooks in quickstarts and examples.
 
@@ -83,6 +87,22 @@ def discover_notebooks(
             else:
                 logger.error(f"Target notebook not found: {nb_path}")
         return found_list
+
+    if target_dirs or quickstarts_only:
+        dirs_to_scan = list(target_dirs or [])
+        if quickstarts_only and "quickstarts" not in dirs_to_scan:
+            dirs_to_scan.append("quickstarts")
+        found = []
+        for d in dirs_to_scan:
+            dir_path = pathlib.Path(d)
+            resolved_dir = dir_path if dir_path.is_absolute() else (repo_root / dir_path).resolve()
+            if not resolved_dir.exists() or not resolved_dir.is_dir():
+                logger.error(f"Target directory not found: {d}")
+                continue
+            for p in resolved_dir.glob("**/*.ipynb"):
+                if ".ipynb_checkpoints" not in str(p) and not p.name.startswith("."):
+                    found.append(p)
+        return sorted(set(found))
 
     if changed_only:
         try:
@@ -401,6 +421,18 @@ def main(argv: Optional[List[str]] = None) -> int:
         "--notebook", "-n", type=str, nargs="+", help="Specific notebook path(s) to test."
     )
     group.add_argument(
+        "--dir",
+        "-d",
+        type=str,
+        nargs="+",
+        help="Specific directory/directories to scan for notebooks (e.g. --dir quickstarts).",
+    )
+    group.add_argument(
+        "--quickstarts-only",
+        action="store_true",
+        help="Shortcut to test only notebooks inside quickstarts/.",
+    )
+    group.add_argument(
         "--changed", "-c", action="store_true", help="Test only notebooks modified in git diff."
     )
     group.add_argument(
@@ -423,10 +455,20 @@ def main(argv: Optional[List[str]] = None) -> int:
         help="Skip semantic AI output diffing.",
     )
     parser.add_argument(
+        "--fail-fast",
+        action="store_true",
+        help="Stop executing remaining cells in a notebook after the first cell error (default: False).",
+    )
+    parser.add_argument(
+        "--skip-long-notebooks",
+        action="store_true",
+        help="Skip notebooks tagged as long_running in the rules file (e.g. Batch_mode, File_API, Veo).",
+    )
+    parser.add_argument(
         "--model",
         "-m",
         type=str,
-        help="Override MODEL_ID with a specific Gemini model name across all cells.",
+        help="Override MODEL_ID with a specific Gemini model name across matching model families.",
     )
     parser.add_argument("--override-model", type=str, dest="model", help=argparse.SUPPRESS)
     parser.add_argument(
@@ -450,6 +492,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     config.DRY_RUN = args.dry_run
     config.SECURITY_ONLY = args.security_only
     config.SKIP_AI_JUDGE = args.skip_ai_judge
+    config.FAIL_FAST = args.fail_fast
+    config.SKIP_LONG_NOTEBOOKS = args.skip_long_notebooks
     config.VERBOSE = args.verbose
     config.OVERRIDE_MODEL = args.model
     if args.max_retries is not None:
@@ -463,8 +507,12 @@ def main(argv: Optional[List[str]] = None) -> int:
     if config.OVERRIDE_MODEL:
         logger.info(
             f"🎯 Model Override Active: enforcing MODEL_ID = '{config.OVERRIDE_MODEL}' "
-            "across all notebooks"
+            "across matching model families"
         )
+    if config.FAIL_FAST:
+        logger.info("⚡ Fail-Fast Mode Active: stopping notebook execution on first cell error")
+    if config.SKIP_LONG_NOTEBOOKS:
+        logger.info("⏭️ Skip Long Notebooks Active: skipping notebooks marked long_running=true")
     if config.OVERRIDE_MAX_RETRIES is not None:
         logger.info(
             f"🔄 Max Retries Override Active: max_retries = {config.OVERRIDE_MAX_RETRIES} "
@@ -480,8 +528,10 @@ def main(argv: Optional[List[str]] = None) -> int:
     notebooks = discover_notebooks(
         repo_root=config.REPO_ROOT,
         target_notebook=args.notebook,
+        target_dirs=args.dir,
+        quickstarts_only=args.quickstarts_only,
         changed_only=args.changed,
-        all_notebooks=args.all
+        all_notebooks=args.all,
     )
 
     if not notebooks:

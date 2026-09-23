@@ -54,6 +54,9 @@ EXCLUDED_NOTEBOOKS: Set[str] = {
 EXCLUDED_README_NOTEBOOKS: Set[str] = {
     "quickstarts/Template.ipynb",
     "quickstarts/Authentication_with_OAuth.ipynb",
+    "quickstarts/Get_started_imagen.ipynb",
+    "quickstarts/Get_started_imagen_rest.ipynb",
+    "quickstarts/rest/Imagen_REST.ipynb",
     "examples/Object_detection.ipynb",
     "examples/Google_IO2025_Live_Coding.ipynb",
 }

@@ -219,6 +219,18 @@ def check_notebook_links(
         if any(excl in normalized_str for excl in excluded_files):
             logger.info("Skipping excluded notebook: %s", normalized_str)
             continue
+
+        # Automatically skip redirect stub notebooks
+        try:
+            import json
+            from tools.nblint.linter import NotebookLinter
+            with open(repo_root / rel_nb, "r", encoding="utf-8") as f:
+                nb_data = json.load(f)
+            if NotebookLinter().is_redirect_notebook(nb_data, rel_nb):
+                logger.info("Skipping redirect stub notebook: %s", normalized_str)
+                continue
+        except Exception:
+            pass
             
         is_linked, found_readmes = is_notebook_linked(rel_nb)
         if is_linked:

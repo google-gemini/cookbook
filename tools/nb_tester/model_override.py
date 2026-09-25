@@ -60,22 +60,72 @@ from .logger import logger
 
 
 class ModelOverrideTransformer:
-    """Transforms notebook cells in-memory to override MODEL_ID assignments."""
+    """Transforms notebook cells in-memory to override MODEL_ID assignments when model families match."""
 
-    # Matches assignments to MODEL_ID, MODEL_NAME, model_id with string literals or templates
+    # Matches assignments to MODEL_ID, MODEL_NAME, MODEL, model_id, model with quoted string literals only
     MODEL_ASSIGNMENT_PATTERN = re.compile(
-        r"^(\s*(?:[\w\.]+\s*=\s*)*(?:MODEL_ID|MODEL_NAME|model_id)(?:\s*:\s*[^=]+)?\s*=\s*)(?:\"[^\"]*\"|\'[^\']*\'|[\w\.\-]+)(.*)$",
+        r"^(\s*(?:[\w\.]+\s*=\s*)*(?:MODEL_ID|MODEL_NAME|MODEL|model_id|model)(?:\s*:\s*[^=]+)?\s*=\s*)(?:\"([^\"]+)\"|\'([^\']+)\')(.*)$",
         re.MULTILINE
     )
+
+    @staticmethod
+    def classify_model_family(model_name: str) -> str:
+        """
+        Classifies a Gemini/GenAI model identifier into its functional family.
+        This prevents overriding specialized models (e.g., -live, -tts, -image, embedding)
+        with a standard text model unless the override model belongs to the same family.
+
+        Args:
+            model_name: The model identifier string (with or without 'models/' prefix).
+
+        Returns:
+            Canonical family string (e.g., 'text', 'live', 'tts', 'image', 'embedding', etc.).
+        """
+        clean = (model_name or "").strip().lower()
+        if clean.startswith("models/"):
+            clean = clean[len("models/"):]
+
+        if "live-translate" in clean:
+            return "live-translate"
+        if "transcribe-live" in clean:
+            return "transcribe-live"
+        if "-live" in clean or clean.startswith("gemini-live"):
+            return "live"
+        if "transcribe" in clean:
+            return "transcribe"
+        if "tts" in clean:
+            return "tts"
+        if "image" in clean or clean.startswith("imagen") or "nano-banana" in clean:
+            return "image"
+        if "embedding" in clean or clean == "aqa":
+            return "embedding"
+        if clean.startswith("veo"):
+            return "veo"
+        if clean.startswith("lyria"):
+            return "lyria"
+        if "robotics" in clean:
+            return "robotics"
+        if "computer-use" in clean:
+            return "computer-use"
+        if "deep-research" in clean:
+            return "deep-research"
+        if "omni" in clean:
+            return "omni"
+        if "learnlm" in clean:
+            return "learnlm"
+        return "text"
 
     def __init__(self, override_model: Optional[str] = None):
         """
         Initializes the ModelOverrideTransformer.
 
         Args:
-            override_model: The Gemini model identifier to enforce across all notebook cells.
+            override_model: The Gemini model identifier to enforce across compatible notebook cells.
         """
         self.override_model = override_model.strip() if override_model else None
+        self.override_family = (
+            self.classify_model_family(self.override_model) if self.override_model else None
+        )
 
     def is_active(self) -> bool:
         """
@@ -88,7 +138,8 @@ class ModelOverrideTransformer:
 
     def transform_cell_source(self, source: str, cell_index: int = 0) -> Tuple[str, int]:
         """
-        Transforms a single code cell's source string to replace model assignments.
+        Transforms a single code cell's source string to replace compatible model assignments.
+        Only overrides a model assignment if its family matches `self.override_family`.
 
         Args:
             source: Raw Python source code of the cell.
@@ -104,11 +155,27 @@ class ModelOverrideTransformer:
 
         def _replace_match(match: re.Match) -> str:
             nonlocal replacements
-            replacements += 1
             prefix = match.group(1)
-            suffix = match.group(2)
+            current_model = match.group(2) or match.group(3) or ""
+            suffix = match.group(4)
             original_match = match.group(0).strip()
-            new_line = f'{prefix}"{self.override_model}"{suffix}'
+
+            current_family = self.classify_model_family(current_model)
+            if current_family != self.override_family:
+                logger.info(
+                    f"  ⏭️ [Model Override Preserved] Cell {cell_index}: "
+                    f"keeping '{current_model}' (family='{current_family}') because override "
+                    f"'{self.override_model}' is family='{self.override_family}'"
+                )
+                return match.group(0)
+
+            replacements += 1
+            # Preserve 'models/' prefix if original model had it and override doesn't
+            target_model = self.override_model
+            if current_model.startswith("models/") and not target_model.startswith("models/"):
+                target_model = f"models/{target_model}"
+
+            new_line = f'{prefix}"{target_model}"{suffix}'
             logger.info(
                 f"  🔄 [Model Override] Cell {cell_index}: "
                 f"'{original_match}' -> '{new_line.strip()}'"
@@ -150,7 +217,7 @@ class ModelOverrideTransformer:
             )
         else:
             logger.debug(
-                f"ℹ️ No explicit MODEL_ID assignments found to override in '{notebook_path}'."
+                f"ℹ️ No compatible '{self.override_family}' MODEL_ID assignments found to override in '{notebook_path}'."
             )
 
         return nb, total_overrides
@@ -166,7 +233,7 @@ class ModelOverrideTransformer:
             return ""
 
         return (
-            f"# Injected by ModelOverrideTransformer\n"
+            f"# Injected by ModelOverrideTransformer (family={self.override_family!r})\n"
             f"MODEL_ID = {self.override_model!r}\n"
             f"MODEL_NAME = {self.override_model!r}\n"
             f"model_id = {self.override_model!r}\n"

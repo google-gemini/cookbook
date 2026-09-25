@@ -17,8 +17,9 @@ An automated, security-gated test runner and semantic regression evaluator desig
    - For real-time and time-evolving queries (e.g. sports scores, weather, current events), uses Gemini with the Google Search tool to double-check that new answers are factually true today.
 4. **📋 Declarative Rules & Exception Registry (`rules/default_rules.yaml`)**:
    - Easily configure cell-level actions (e.g. skipping interactive `input()` cells) and per-notebook timeouts.
-5. **🎯 Dynamic Model Identifier Override (`--model <name>`)**:
-   - Test the entire cookbook (or specific notebooks) against candidate or pre-release models (e.g. `gemini-3.7-flash`, `gemini-3.1-pro-preview`) by dynamically overriding `MODEL_ID` in memory across all executed cells without touching disk.
+5. **🎯 Family-Aware Dynamic Model Identifier Override (`--model <name>`)**:
+   - Test the entire cookbook (or specific notebooks) against candidate or pre-release models (e.g. `gemini-3.8-flash`, `gemini-3.1-pro-preview`) by dynamically overriding `MODEL_ID` in memory across compatible cells without touching disk.
+   - Automatically preserves specialized non-text models (`-live`, `-tts`, `-image`, `embedding`, `veo`, `lyria`, `transcribe`) unless the override model itself belongs to that same model family.
 6. **📊 CI & Pull Request Integration**:
    - Generates persistent JSON reports under `reports/` and auto-appends formatted Markdown tables to `$GITHUB_STEP_SUMMARY`.
    - Returns clean exit codes (`0` on pass, `1` on failure) for automated gating.
@@ -26,6 +27,19 @@ An automated, security-gated test runner and semantic regression evaluator desig
    - Test rule configurations, AST checks, model overrides, and syntax parsing without altering files, spinning up kernels, or consuming API tokens.
 8. **🔁 Automatic Cell-Level Retry & Exponential Backoff**:
    - Automatically retries failed cells (up to 3 times by default with exponential backoff) on transient API errors (429, 503, timeouts) before failing, preventing flaky CI runs while skipping non-retryable syntax errors. Configurable via `--max-retries` CLI flag or `rules/default_rules.yaml`.
+
+---
+
+## 🛠️ System Prerequisites (Local Execution)
+
+In Google Colab, `ffmpeg`, `jq`, and `curl` are pre-installed in the default runtime container (and `poppler-utils` is installed via `!apt-get install -y -q poppler-utils` inside `quickstarts/PDF_Files.ipynb`).
+
+When running `tools/nb_tester` locally on a Linux/macOS workstation or headless CI runner (where notebooks do not execute as `root`), install the following system packages first so audio, video, PDF (`pdf2image` / `pdftoppm`), and REST (`curl` + `jq`) notebooks execute cleanly:
+
+```bash
+# Ubuntu / Debian / gLinux
+sudo apt-get update && sudo apt-get install -y ffmpeg poppler-utils jq curl
+```
 
 ---
 

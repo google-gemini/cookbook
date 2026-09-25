@@ -103,6 +103,10 @@ notebooks:
     skip_notebook: true
     skip_reason: "Requires interactive Colab Vertex AI auth (auth.authenticate_user)"
 
+  examples/Google_IO2025_Live_Coding.ipynb:
+    skip_notebook: true
+    skip_reason: "Historical event notebook kept frozen with original Google I/O 2025 models"
+
   examples/Book_illustration.ipynb:
     cell_timeout_sec: 360
     notebook_timeout_sec: 1800

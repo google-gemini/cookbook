@@ -102,6 +102,47 @@ class NotebookExecutor:
             override_model=self.config.OVERRIDE_MODEL
         )
 
+    @staticmethod
+    def _is_transient_error(cell_error: Dict[str, Any]) -> bool:
+        """
+        Determines whether a cell error is a transient infrastructure/network failure
+        worth retrying, rather than a deterministic code/model/timeout error.
+        """
+        ename = (cell_error.get("ename") or "").strip()
+        evalue = (cell_error.get("evalue") or "").strip()
+        tb_str = "\n".join(cell_error.get("traceback") or [])
+        combined = f"{ename}: {evalue}\n{tb_str}"
+
+        # Never retry cell timeouts or deterministic Python exceptions
+        if ename in (
+            "CellTimeoutError",
+            "SyntaxError",
+            "IndentationError",
+            "NameError",
+            "TypeError",
+            "KeyError",
+            "AttributeError",
+            "ImportError",
+            "ModuleNotFoundError",
+            "FileNotFoundError",
+            "ZeroDivisionError",
+        ):
+            return False
+
+        # Transient HTTP / gRPC / socket / File API eventual-consistency patterns
+        transient_patterns = (
+            r"\b(?:429|500|502|503|504)\b",
+            r"\b(?:UNAVAILABLE|RESOURCE_EXHAUSTED|DEADLINE_EXCEEDED|INTERNAL)\b",
+            r"\b(?:ServerError|TooManyRequests|RateLimitError)\b",
+            r"\b(?:ConnectionResetError|ConnectionError|RemoteDisconnected|ReadTimeout|ConnectTimeout|IncompleteRead|SSLError)\b",
+            r"403\s+PERMISSION_DENIED.*File\s+\S+\s+does\s+not\s+exist",
+        )
+        for pat in transient_patterns:
+            if re.search(pat, combined, re.IGNORECASE | re.DOTALL):
+                return True
+
+        return False
+
     def execute_notebook(
         self,
         nb_path: pathlib.Path,
@@ -134,6 +175,21 @@ class NotebookExecutor:
                 executed_cells_count=0,
                 skipped_cells_count=0,
                 first_error_message=rule_set.skip_reason,
+            )
+
+        if getattr(rule_set, "long_running", False) and getattr(
+            self.config, "SKIP_LONG_NOTEBOOKS", False
+        ):
+            reason_msg = "Skipped long-running notebook (--skip-long-notebooks)"
+            logger.info(f"⏭️ Skipping notebook {rel_path}: {reason_msg}")
+            return NotebookExecutionResult(
+                notebook_path=rel_path,
+                status="skipped",
+                total_duration_sec=0.0,
+                total_code_cells=0,
+                executed_cells_count=0,
+                skipped_cells_count=0,
+                first_error_message=reason_msg,
             )
 
         # Read notebook
@@ -236,6 +292,20 @@ class NotebookExecutor:
                 client.execute_cell(exec_nb.cells[0], 0)
 
                 for orig_idx, (real_idx, cell) in enumerate(code_cells_with_idx[1:], start=1):
+                    elapsed_nb = time.time() - t_start
+                    if (
+                        rule_set.notebook_timeout_sec
+                        and elapsed_nb > rule_set.notebook_timeout_sec
+                    ):
+                        timeout_msg = (
+                            f"Notebook timed out after {elapsed_nb:.1f}s "
+                            f"(limit: {rule_set.notebook_timeout_sec}s)"
+                        )
+                        if not first_error:
+                            first_error = timeout_msg
+                        logger.error(f"  ⏱️ {timeout_msg}")
+                        break
+
                     source = cell.source or ""
                     # 0-based index in original notebook
                     cell_in_orig_nb = real_idx - 1
@@ -324,10 +394,9 @@ class NotebookExecutor:
                                 )
                             break
 
-                        # Do not retry on pure syntax or indentation errors,
-                        # or when maximum attempts are exhausted.
+                        # Only retry on transient network/infrastructure errors
                         if (
-                            cell_error["ename"] in ("SyntaxError", "IndentationError")
+                            not self._is_transient_error(cell_error)
                             or attempt >= total_attempts
                         ):
                             break
@@ -360,6 +429,16 @@ class NotebookExecutor:
                         error=cell_error,
                         outputs=copy.deepcopy(outputs),
                     ))
+
+                    if cell_error and (
+                        getattr(self.config, "FAIL_FAST", False)
+                        or getattr(rule_set, "stop_on_first_error", False)
+                    ):
+                        logger.info(
+                            f"  ⏭️ Stopping execution of {rel_path} early "
+                            f"(--fail-fast triggered on Cell {cell_in_orig_nb})"
+                        )
+                        break
 
         except Exception as kernel_exc:
             if not first_error:

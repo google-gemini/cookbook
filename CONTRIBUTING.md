@@ -84,6 +84,8 @@ All media files (audio, images, video), datasets, and other external assets used
 
 Please mention the source and license in the markdown cell that introduces the asset. Prefer stable hosting (the cookbook's GCS bucket, Wikimedia Commons, Internet Archive, YouTube) over ephemeral URLs.
 
+* **Strictly no YouTube downloaders (`yt-dlp`, `pytube`, `pytubefix`, `youtube-dl`, etc.)**: Never use third-party tools or libraries to download, rip, or stream YouTube videos or audio, as this violates the [YouTube Terms of Service](https://www.youtube.com/t/terms#c3e2907ca8) and will fail CI checks. Instead, pass YouTube URLs directly to the Gemini API natively using `file_uri` (e.g., `types.Part.from_uri(file_uri="https://www.youtube.com/watch?v=...", mime_type="video/mp4")`).
+
 ## Dependencies and SDKs
 
 Keep dependencies minimal. Do not add wrapper or orchestration frameworks solely for functionality available in the official `google-genai` SDK.

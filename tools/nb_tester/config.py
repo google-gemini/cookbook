@@ -119,6 +119,8 @@ class TesterConfig:
     VERBOSE: bool = False
     SKIP_AI_JUDGE: bool = False
     SECURITY_ONLY: bool = False
+    FAIL_FAST: bool = False
+    SKIP_LONG_NOTEBOOKS: bool = False
     OVERRIDE_MODEL: Optional[str] = None
     OVERRIDE_MAX_RETRIES: Optional[int] = None
 

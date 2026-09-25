@@ -223,6 +223,9 @@ class NotebookLinter:
         for msg in gemini.check_no_hardcoded_api_keys(data, file_path, result.is_redirect):
             result.diagnostics.append(LintDiagnostic("gemini::hardcoded_api_key", msg, Severity.ERROR))
 
+        for msg in gemini.check_no_youtube_downloaders(data, file_path, result.is_redirect):
+            result.diagnostics.append(LintDiagnostic("gemini::forbidden_youtube_downloader", msg, Severity.ERROR))
+
         # Model Selector validation
         for msg, is_error in model_selector.check_model_selector(data, file_path, result.is_redirect):
             severity = Severity.ERROR if is_error else Severity.WARNING

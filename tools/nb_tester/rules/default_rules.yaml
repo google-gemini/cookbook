@@ -55,11 +55,43 @@ notebooks:
     skip_reason: "Requires live webhook receiver server endpoint"
 
   quickstarts/Get_started_Veo.ipynb:
-    cell_timeout_sec: 300
-    notebook_timeout_sec: 1200
+    long_running: true
+    cell_timeout_sec: 600
+    notebook_timeout_sec: 1500
     description: "Video generation takes longer than text generation"
 
+  quickstarts/Get_started_Veo_REST.ipynb:
+    long_running: true
+    cell_timeout_sec: 600
+    notebook_timeout_sec: 1500
+    description: "REST Veo video generation and polling"
+
+  quickstarts/Batch_mode.ipynb:
+    long_running: true
+    cell_timeout_sec: 600
+    notebook_timeout_sec: 1800
+    description: "Asynchronous Batch API job polling can take 5-15 minutes"
+
+  quickstarts/File_API.ipynb:
+    long_running: true
+    cell_timeout_sec: 600
+    notebook_timeout_sec: 1500
+    description: "Uploads and processes a 45-minute video via File API"
+
+  quickstarts/Get_started_Lyria.ipynb:
+    long_running: true
+    cell_timeout_sec: 360
+    notebook_timeout_sec: 1200
+    description: "Real-time Lyria music generation streaming"
+
+  quickstarts/Tuning.ipynb:
+    long_running: true
+    cell_timeout_sec: 600
+    notebook_timeout_sec: 1800
+    description: "Model tuning job creation and training loop"
+
   quickstarts/Get_started_Deep_Research.ipynb:
+    long_running: true
     cell_timeout_sec: 1800
     notebook_timeout_sec: 2400
     description: "Deep Research queries can take up to 30+ minutes"
@@ -85,8 +117,9 @@ notebooks:
     description: "Omni multimodal model processing"
 
   quickstarts/Video_understanding.ipynb:
-    cell_timeout_sec: 360
-    notebook_timeout_sec: 1200
+    long_running: true
+    cell_timeout_sec: 600
+    notebook_timeout_sec: 1500
     description: "Video upload, processing, and multi-turn frame analysis"
 
   quickstarts/Inference_tiers.ipynb:

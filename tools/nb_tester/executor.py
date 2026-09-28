@@ -21,11 +21,15 @@ isolated IPython kernel using `nbclient`.
 Key Features:
 - **Zero-Disk-Tampering Colab Mock**: Injects a virtual `google.colab` module directly
   into the kernel's memory space upon startup so that `userdata.get('GEMINI_API_KEY')`
-  transparently resolves to `os.environ['GEMINI_API_KEY']` without modifying the original notebook files.
+  transparently resolves to `os.environ['GEMINI_API_KEY']` without modifying the original
+  notebook files.
 - **Granular Cell Execution & Timeouts**: Executes code cells individually with configurable
-  timeouts, capturing execution errors (`ename`, `evalue`, `traceback`) without crashing the test runner.
-- **Skip Directive Handling**: Gracefully skips cells flagged by the RulesEngine (e.g. `input()` prompts).
-- **Dry-Run Support**: Inspects cell syntax and simulates execution without spinning up kernels or calling APIs.
+  timeouts, capturing execution errors (`ename`, `evalue`, `traceback`) without crashing
+  the test runner.
+- **Skip Directive Handling**: Gracefully skips cells flagged by the RulesEngine
+  (e.g. `input()` prompts).
+- **Dry-Run Support**: Inspects cell syntax and simulates execution without spinning up
+  kernels or calling APIs.
 
 Use Cases:
 1. Running notebooks in headless CI environments with full API authentication.
@@ -47,6 +51,7 @@ from nbclient.exceptions import CellTimeoutError, CellExecutionError
 from .config import GLOBAL_CONFIG, TesterConfig
 from .logger import logger
 from .rules import RulesEngine, NotebookRuleSet, CellRule
+from .model_override import ModelOverrideTransformer
 
 
 @dataclass
@@ -79,29 +84,77 @@ class NotebookExecutionResult:
 class NotebookExecutor:
     """Handles isolated kernel setup, mock injection, and cell execution."""
 
-    def __init__(self, config: Optional[TesterConfig] = None, rules_engine: Optional[RulesEngine] = None):
+    def __init__(
+        self,
+        config: Optional[TesterConfig] = None,
+        rules_engine: Optional[RulesEngine] = None,
+    ):
         """
         Initializes the Notebook Executor.
-        
+
         Args:
             config: Optional TesterConfig instance.
             rules_engine: Optional RulesEngine instance.
         """
         self.config = config or GLOBAL_CONFIG
         self.rules_engine = rules_engine or RulesEngine(config=self.config)
+        self.model_transformer = ModelOverrideTransformer(
+            override_model=self.config.OVERRIDE_MODEL
+        )
+
+    @staticmethod
+    def _is_transient_error(cell_error: Dict[str, Any]) -> bool:
+        """
+        Determines whether a cell error is a transient infrastructure/network failure
+        worth retrying, rather than a deterministic code/model/timeout error.
+        """
+        ename = (cell_error.get("ename") or "").strip()
+        evalue = (cell_error.get("evalue") or "").strip()
+        tb_str = "\n".join(cell_error.get("traceback") or [])
+        combined = f"{ename}: {evalue}\n{tb_str}"
+
+        # Never retry cell timeouts or deterministic Python exceptions
+        if ename in (
+            "CellTimeoutError",
+            "SyntaxError",
+            "IndentationError",
+            "NameError",
+            "TypeError",
+            "KeyError",
+            "AttributeError",
+            "ImportError",
+            "ModuleNotFoundError",
+            "FileNotFoundError",
+            "ZeroDivisionError",
+        ):
+            return False
+
+        # Transient HTTP / gRPC / socket / File API eventual-consistency patterns
+        transient_patterns = (
+            r"\b(?:429|500|502|503|504)\b",
+            r"\b(?:UNAVAILABLE|RESOURCE_EXHAUSTED|DEADLINE_EXCEEDED|INTERNAL)\b",
+            r"\b(?:ServerError|TooManyRequests|RateLimitError)\b",
+            r"\b(?:ConnectionResetError|ConnectionError|RemoteDisconnected|ReadTimeout|ConnectTimeout|IncompleteRead|SSLError)\b",
+            r"403\s+PERMISSION_DENIED.*File\s+\S+\s+does\s+not\s+exist",
+        )
+        for pat in transient_patterns:
+            if re.search(pat, combined, re.IGNORECASE | re.DOTALL):
+                return True
+
+        return False
 
     def execute_notebook(
         self,
         nb_path: pathlib.Path,
-        rule_set: Optional[NotebookRuleSet] = None
+        rule_set: Optional[NotebookRuleSet] = None,
     ) -> NotebookExecutionResult:
         """
         Executes a single notebook from disk and returns detailed execution records.
-        
+
         Args:
             nb_path: Absolute or relative Path to the .ipynb file.
             rule_set: Optional pre-resolved NotebookRuleSet.
-            
+
         Returns:
             NotebookExecutionResult with status, timings, and cell snapshots.
         """
@@ -112,7 +165,8 @@ class NotebookExecutor:
         rule_set = rule_set or self.rules_engine.get_notebook_rules(rel_path)
 
         if rule_set.skip_notebook:
-            logger.info(f"⏭️ Skipping notebook {rel_path}: {rule_set.skip_reason or 'Marked to skip'}")
+            reason_msg = rule_set.skip_reason or "Marked to skip"
+            logger.info(f"⏭️ Skipping notebook {rel_path}: {reason_msg}")
             return NotebookExecutionResult(
                 notebook_path=rel_path,
                 status="skipped",
@@ -120,7 +174,22 @@ class NotebookExecutor:
                 total_code_cells=0,
                 executed_cells_count=0,
                 skipped_cells_count=0,
-                first_error_message=rule_set.skip_reason
+                first_error_message=rule_set.skip_reason,
+            )
+
+        if getattr(rule_set, "long_running", False) and getattr(
+            self.config, "SKIP_LONG_NOTEBOOKS", False
+        ):
+            reason_msg = "Skipped long-running notebook (--skip-long-notebooks)"
+            logger.info(f"⏭️ Skipping notebook {rel_path}: {reason_msg}")
+            return NotebookExecutionResult(
+                notebook_path=rel_path,
+                status="skipped",
+                total_duration_sec=0.0,
+                total_code_cells=0,
+                executed_cells_count=0,
+                skipped_cells_count=0,
+                first_error_message=reason_msg,
             )
 
         # Read notebook
@@ -135,7 +204,7 @@ class NotebookExecutor:
                 total_code_cells=0,
                 executed_cells_count=0,
                 skipped_cells_count=0,
-                first_error_message=f"Failed to parse notebook JSON: {e}"
+                first_error_message=f"Failed to parse notebook JSON: {e}",
             )
 
         # Handle Dry-Run
@@ -146,15 +215,15 @@ class NotebookExecutor:
         # Create working copy of notebook
         exec_nb = copy.deepcopy(orig_nb)
 
-        # Preprocess cells in memory to automatically enable interactive confirmation checkboxes (e.g. I_am_aware_that_...)
+        # Preprocess cells in memory to enable interactive confirmation checkboxes
+        # (e.g. I_am_aware_that_... or I_understand_this_is_a_paid_...)
         for cell in exec_nb.cells:
             if cell.cell_type == "code" and cell.source:
-                # Auto-enable any I_am_aware_that_... boolean variables
                 cell.source = re.sub(
-                    r"(I_am_aware_that_\w+\s*=\s*)False\b",
+                    r"((?:I_am_aware_that_|I_understand_this_is_a_paid_)\w*\s*=\s*)False\b",
                     r"\g<1>True",
                     cell.source,
-                    flags=re.IGNORECASE
+                    flags=re.IGNORECASE,
                 )
                 # Apply any explicit rule parameter overrides
                 for var_name, var_val in rule_set.param_overrides.items():
@@ -163,19 +232,27 @@ class NotebookExecutor:
                         rf"^({re.escape(var_name)}\s*=\s*).+$",
                         rf"\g<1>{val_repr}",
                         cell.source,
-                        flags=re.MULTILINE
+                        flags=re.MULTILINE,
                     )
-        
+
+        # Apply Model Override across all cells if active
+        if self.model_transformer.is_active():
+            self.model_transformer.transform_notebook(exec_nb, notebook_path=rel_path)
+
         # Inject Colab Mock Preamble
         api_key = self.config.get_api_key() or ""
+        override_preamble = self.model_transformer.generate_preamble_code()
         mock_source = (
             "import sys, os, pathlib\n"
             "from unittest.mock import MagicMock\n"
             "_mock_colab = MagicMock()\n"
-            f"_mock_colab.userdata.get.side_effect = lambda k: os.getenv(k, {api_key!r} if k in ('GEMINI_API_KEY', 'GOOGLE_API_KEY') else None)\n"
+            "_mock_colab.userdata.get.side_effect = lambda k: os.getenv(\n"
+            f"    k, {api_key!r} if k in ('GEMINI_API_KEY', 'GOOGLE_API_KEY') else None\n"
+            ")\n"
             "sys.modules['google.colab'] = _mock_colab\n"
             "sys.modules['google.colab.userdata'] = _mock_colab.userdata\n"
             f"os.environ['GEMINI_API_KEY'] = {api_key!r}\n"
+            f"{override_preamble}"
             "# Automatically touch flag files for bash/REST notebooks\n"
             "try:\n"
             "    pathlib.Path('I_am_aware_that_veo_is_a_paid_feature').touch(exist_ok=True)\n"
@@ -190,8 +267,8 @@ class NotebookExecutor:
             exec_nb,
             timeout=rule_set.cell_timeout_sec,
             kernel_name="python3",
-            allow_errors=True,  # Capture errors in cell outputs without tearing down kernel early
-            resources={"metadata": {"path": working_dir}}
+            allow_errors=True,
+            resources={"metadata": {"path": working_dir}},
         )
 
         cell_records: List[CellExecutionRecord] = []
@@ -200,10 +277,14 @@ class NotebookExecutor:
         skipped_count = 0
         t_start = time.time()
 
-        code_cells_with_idx = [(i, c) for i, c in enumerate(exec_nb.cells) if c.cell_type == "code"]
+        code_cells_with_idx = [
+            (i, c) for i, c in enumerate(exec_nb.cells) if c.cell_type == "code"
+        ]
         total_code_cells = len(code_cells_with_idx) - 1  # Excluding mock preamble
 
-        logger.info(f"🚀 Starting execution of {rel_path} ({total_code_cells} code cells)...")
+        logger.info(
+            f"🚀 Starting execution of {rel_path} ({total_code_cells} code cells)..."
+        )
 
         try:
             with client.setup_kernel():
@@ -211,6 +292,20 @@ class NotebookExecutor:
                 client.execute_cell(exec_nb.cells[0], 0)
 
                 for orig_idx, (real_idx, cell) in enumerate(code_cells_with_idx[1:], start=1):
+                    elapsed_nb = time.time() - t_start
+                    if (
+                        rule_set.notebook_timeout_sec
+                        and elapsed_nb > rule_set.notebook_timeout_sec
+                    ):
+                        timeout_msg = (
+                            f"Notebook timed out after {elapsed_nb:.1f}s "
+                            f"(limit: {rule_set.notebook_timeout_sec}s)"
+                        )
+                        if not first_error:
+                            first_error = timeout_msg
+                        logger.error(f"  ⏱️ {timeout_msg}")
+                        break
+
                     source = cell.source or ""
                     # 0-based index in original notebook
                     cell_in_orig_nb = real_idx - 1
@@ -220,7 +315,8 @@ class NotebookExecutor:
                     )
 
                     if rule.action == "skip":
-                        logger.info(f"  ⏭️ Cell {cell_in_orig_nb} SKIPPED: {rule.reason or 'Rule directive'}")
+                        skip_msg = rule.reason or "Rule directive"
+                        logger.info(f"  ⏭️ Cell {cell_in_orig_nb} SKIPPED: {skip_msg}")
                         skipped_count += 1
                         cell_records.append(CellExecutionRecord(
                             cell_index=cell_in_orig_nb,
@@ -228,47 +324,100 @@ class NotebookExecutor:
                             source_code=source,
                             action_taken="skipped",
                             strategy="ignore_output",
-                            duration_sec=0.0
+                            duration_sec=0.0,
                         ))
                         continue
 
-                    # Execute cell
-                    cell_t0 = time.time()
+                    # Execute cell with configurable retries and per-cell timeout
+                    cell_timeout = (
+                        rule.timeout_sec
+                        if rule.timeout_sec is not None
+                        else rule_set.cell_timeout_sec
+                    )
+                    client.timeout = cell_timeout
+
+                    cell_max_retries = (
+                        rule.max_retries
+                        if rule.max_retries is not None
+                        else getattr(rule_set, "cell_max_retries", 3)
+                    )
+                    backoff_delay = getattr(rule_set, "cell_retry_backoff_sec", 2.0)
+
+                    cell_duration = 0.0
                     cell_error = None
-                    try:
-                        client.execute_cell(cell, real_idx)
-                    except CellTimeoutError as te:
-                        cell_error = {
-                            "ename": "CellTimeoutError",
-                            "evalue": f"Cell timed out after {rule_set.cell_timeout_sec}s",
-                            "traceback": [str(te)]
-                        }
-                    except Exception as ex:
-                        cell_error = {
-                            "ename": type(ex).__name__,
-                            "evalue": str(ex),
-                            "traceback": [str(ex)]
-                        }
+                    outputs = []
 
-                    cell_duration = time.time() - cell_t0
-                    executed_count += 1
+                    total_attempts = 1 + max(0, cell_max_retries)
+                    for attempt in range(1, total_attempts + 1):
+                        cell_t0 = time.time()
+                        cell_error = None
+                        if attempt > 1:
+                            cell["outputs"] = []
 
-                    # Extract error from cell outputs if not caught above
-                    outputs = cell.get("outputs", [])
-                    for out in outputs:
-                        if out.get("output_type") == "error":
+                        try:
+                            client.execute_cell(cell, real_idx)
+                        except CellTimeoutError as te:
                             cell_error = {
-                                "ename": out.get("ename", "Error"),
-                                "evalue": out.get("evalue", ""),
-                                "traceback": out.get("traceback", [])
+                                "ename": "CellTimeoutError",
+                                "evalue": f"Cell timed out after {cell_timeout}s",
+                                "traceback": [str(te)],
                             }
+                        except Exception as ex:
+                            cell_error = {
+                                "ename": type(ex).__name__,
+                                "evalue": str(ex),
+                                "traceback": [str(ex)],
+                            }
+
+                        cell_duration += (time.time() - cell_t0)
+
+                        # Extract error from cell outputs if not caught above
+                        outputs = cell.get("outputs", [])
+                        for out in outputs:
+                            if out.get("output_type") == "error":
+                                cell_error = {
+                                    "ename": out.get("ename", "Error"),
+                                    "evalue": out.get("evalue", ""),
+                                    "traceback": out.get("traceback", []),
+                                }
+                                break
+
+                        if not cell_error:
+                            if attempt > 1:
+                                logger.info(
+                                    f"  ✅ Cell {cell_in_orig_nb} passed on retry attempt "
+                                    f"{attempt - 1}/{cell_max_retries}"
+                                )
+                            else:
+                                logger.debug(
+                                    f"  ✅ Cell {cell_in_orig_nb} completed in {cell_duration:.2f}s"
+                                )
                             break
 
+                        # Only retry on transient network/infrastructure errors
+                        if (
+                            not self._is_transient_error(cell_error)
+                            or attempt >= total_attempts
+                        ):
+                            break
+
+                        sleep_sec = backoff_delay * (2 ** (attempt - 1))
+                        err_name = cell_error["ename"]
+                        err_val = cell_error["evalue"][:80]
+                        logger.warning(
+                            f"  ⚠️ Cell {cell_in_orig_nb} failed on attempt {attempt}/"
+                            f"{total_attempts} ({err_name}: {err_val}). "
+                            f"Retrying in {sleep_sec:.1f}s..."
+                        )
+                        time.sleep(sleep_sec)
+
+                    executed_count += 1
+
                     if cell_error and not first_error:
-                        first_error = f"Cell {cell_in_orig_nb} failed: {cell_error['ename']}: {cell_error['evalue']}"
+                        err_e = cell_error["ename"]
+                        err_v = cell_error["evalue"]
+                        first_error = f"Cell {cell_in_orig_nb} failed: {err_e}: {err_v}"
                         logger.error(f"  ❌ {first_error}")
-                    else:
-                        logger.debug(f"  ✅ Cell {cell_in_orig_nb} completed in {cell_duration:.2f}s")
 
                     cell_records.append(CellExecutionRecord(
                         cell_index=cell_in_orig_nb,
@@ -278,8 +427,18 @@ class NotebookExecutor:
                         strategy=rule.strategy,
                         duration_sec=round(cell_duration, 3),
                         error=cell_error,
-                        outputs=copy.deepcopy(outputs)
+                        outputs=copy.deepcopy(outputs),
                     ))
+
+                    if cell_error and (
+                        getattr(self.config, "FAIL_FAST", False)
+                        or getattr(rule_set, "stop_on_first_error", False)
+                    ):
+                        logger.info(
+                            f"  ⏭️ Stopping execution of {rel_path} early "
+                            f"(--fail-fast triggered on Cell {cell_in_orig_nb})"
+                        )
+                        break
 
         except Exception as kernel_exc:
             if not first_error:
@@ -315,11 +474,15 @@ class NotebookExecutor:
         rule_set: NotebookRuleSet
     ) -> NotebookExecutionResult:
         """Simulates execution for dry-run verification."""
+        sim_nb = copy.deepcopy(nb)
+        if self.model_transformer.is_active():
+            self.model_transformer.transform_notebook(sim_nb, notebook_path=rel_path)
+
         records = []
         code_count = 0
         skip_count = 0
 
-        for i, cell in enumerate(nb.cells):
+        for i, cell in enumerate(sim_nb.cells):
             if cell.cell_type == "code":
                 code_count += 1
                 source = cell.source or ""
@@ -354,5 +517,5 @@ class NotebookExecutor:
             skipped_cells_count=skip_count,
             first_error_message=None,
             cell_records=records,
-            executed_nb_copy=nb
+            executed_nb_copy=sim_nb
         )

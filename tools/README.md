@@ -59,6 +59,9 @@ python tools/check_readme_links.py --all
 
 ## 2. Lint Rules Reference
 
+### Python Syntax Rules (`tools/nblint/rules/syntax.py`)
+- **`syntax::code_cell`**: Parses every code cell with `ast.parse` (after neutralizing IPython magics, shell escapes, and skipping `%%` cell magics) and reports the cell index and line of any `SyntaxError`.
+
 ### Structure Rules (`tools/nblint/rules/structure.py`)
 - **`structure::copyright`**: Verifies that cell 0 contains a valid Google / Gemini copyright statement (`##### Copyright 2026 Google LLC.`).
 - **`structure::license`**: Verifies that the notebook contains a collapsed Apache 2.0 license code cell with `# @title Licensed under the Apache License`.

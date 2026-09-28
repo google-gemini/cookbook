@@ -27,6 +27,20 @@ This guide is mostly about the python content and the notebook, but don't forget
     * `from google.genai import types` is the right way to import the types.
     * `import google.generativeai` is incorrect, this is the old one that was deprecated early 2025.
 
+## Repository scope and redirects
+
+* **Prohibited use policy:** If a PR appears to involve a restricted use case under [Google's Generative AI Prohibited Use Policy](https://policies.google.com/terms/generative-ai/use-policy), call out the concern in the review and do not approve the PR until it is resolved. Restricted uses include NFTs, crytocurrencies, automated credit or loan eligibility decisions, biometric background profiling, and unauthorized surveillance.
+* **Gemma models:** If a PR is specifically about Gemma open models, such as Gemma fine-tuning or Logit Lens, direct the author to [google-gemma/cookbook](https://github.com/google-gemma/cookbook).
+* **Gemini Enterprise Agent Platform (fka. Vertex AI) workflows and administration:** Redirect notebooks specifically focused on enterprise Vertex AI or Gemini Enterprise Agent Platform infrastructure, pipelines, or Google Cloud administration to [GoogleCloudPlatform/generative-ai](https://github.com/GoogleCloudPlatform/generative-ai). Direct SDK bugs to their dedicated repos (ex: [googleapis/python-genai](https://github.com/googleapis/python-genai)).
+* **Google AI Studio:** Direct questions or PRs about Google AI Studio, including API key generation or project settings, to the [Google AI Developer Forum](https://discuss.ai.google.dev/c/gemini-api/4) or official [Google AI Studio documentation](https://aistudio.google.com/docs/ai-studio-quickstart).
+* **Promotional content:** Call out in the review PRs that primarily promote a paid or proprietary third-party service. Third-party integrations must provide clear technical learning value.
+
+## Dependencies and third-party frameworks
+
+* **Avoid unnecessary orchestration frameworks:** Do not introduce third-party wrapper or orchestration frameworks, such as `langchain`, `llamaindex`, `crewai`, or `litellm`, when `google-genai` supports the demonstrated capability. In that case, it must be clearly explain what the value added of the framework is compared to the official Gemini API/SDK.
+* **Integration exceptions:** Third-party frameworks are permitted when the notebook's explicit purpose is to demonstrate that integration. Place the notebook in the relevant existing integration directory.
+* Keep `%pip install` requirements minimal to ensure fast Colab startup times and avoid dependency conflicts.
+
 ## Interactions API
 
 All new quickstart notebooks **must** use the Interactions API (`client.interactions.create()`) instead of the legacy `client.models.generate_content()`. The Interactions API is the primary interface starting with `google-genai>=2.9.0`.
@@ -49,14 +63,22 @@ The following features are **not yet supported** by the Interactions API and sho
 When a notebook uses one of these exceptions, add a brief comment explaining why the Interactions API is not used.
 
 ### Response access pattern
-With the Interactions API, access the response text like this:
+With the Interactions API, **always use the convenience properties** to access outputs:
+* `interaction.output_text` for text responses
+* `interaction.output_image` for generated images
+* `interaction.output_audio` for audio responses
+
+Example:
 ```python
 interaction = client.interactions.create(
     model=MODEL_ID,
     input="Your prompt here",
 )
-print(interaction.steps[-1].content[0].text)
+display(Markdown(interaction.output_text))
 ```
+
+> **Note on `steps` access:** Do not access steps directly (e.g. `interaction.steps[-1].content[0].text`) in standard notebooks. The only exception is in introductory "Get Started" tutorials (such as `quickstarts/Get_started.ipynb`), where the underlying anatomy of `steps` and `content` items is explicitly explained to learners before introducing the convenience properties.
+
 Do **not** use `interaction.outputs` — it is deprecated in 2.0.0.
 
 
@@ -102,7 +124,10 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Only use helper function when you don't have a choice. If it's only a couple of lines, it's usually better to write them
   everytime so that the readers don't have to check the function definition all the time.
 * When selecting a model, use a colab selector for easier maintainability:
-  `MODEL_ID="gemini-3.7-flash" # @param ["gemini-3.7-flash", "gemini-3.1-pro-preview"] {"allow-input":true, isTemplate: true}`
+  `MODEL_ID = "gemini-3.8-flash"  # @param ["gemini-3.1-pro-preview", "gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-2.5-pro"] {"allow-input": true, "isTemplate": true}`
+  * Always use double quotes `"` for string values and list items.
+  * Always format the configuration dictionary as valid JSON (with double-quoted keys like `{"allow-input": true, "isTemplate": true}`).
+  * Variable naming: `MODEL_ID` is standard for new notebooks. For existing notebooks that already use `MODEL` or `model_name` across downstream cells, keeping the existing variable name is fully compliant and encouraged to prevent broken references.
 * Some notebooks can also benefit from having a form to update the prompt:
   `prompt = "Detect the 2d bounding boxes of the cupcakes (with “label” as topping description”)"  # @param {type:"string"}`
   or a list of prompts they can choose from:
@@ -129,7 +154,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Keep examples quick and concise.
 * Do not use extra parameters (like temperature) when not needed to keep the focus on what your notebook is illustrating.
 * If you have to use extra-parameters, explain why and why the specific value the first time you do.
-* Any examples using `yt-dlp` or equivalent that are downloading (or streaming) Youtube content are strictly forbidden as it violates [YouTube terms of service](https://www.youtube.com/t/terms#c3e2907ca8).
+* **Strictly Forbidden (Blocking Review Error)**: Any examples using `yt-dlp`, `yt_dlp`, `pytube`, `pytubefix`, `youtube-dl`, `youtube_dl`, or equivalent tools that download, rip, or stream YouTube content are strictly forbidden as they violate the [YouTube Terms of Service](https://www.youtube.com/t/terms#c3e2907ca8). Always reject any PR introducing them and instruct the author to pass YouTube URLs natively to the Gemini API via `file_uri` (e.g., `types.Part.from_uri(file_uri="https://www.youtube.com/watch?v=...", mime_type="video/mp4")`).
 * Any crypto or blockchain related topics are also forbidden
 
 ## Assets and external data

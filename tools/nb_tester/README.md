@@ -17,11 +17,29 @@ An automated, security-gated test runner and semantic regression evaluator desig
    - For real-time and time-evolving queries (e.g. sports scores, weather, current events), uses Gemini with the Google Search tool to double-check that new answers are factually true today.
 4. **📋 Declarative Rules & Exception Registry (`rules/default_rules.yaml`)**:
    - Easily configure cell-level actions (e.g. skipping interactive `input()` cells) and per-notebook timeouts.
-5. **📊 CI & Pull Request Integration**:
+5. **🎯 Family-Aware Dynamic Model Identifier Override (`--model <name>`)**:
+   - Test the entire cookbook (or specific notebooks) against candidate or pre-release models (e.g. `gemini-3.8-flash`, `gemini-3.1-pro-preview`) by dynamically overriding `MODEL_ID` in memory across compatible cells without touching disk.
+   - Automatically preserves specialized non-text models (`-live`, `-tts`, `-image`, `embedding`, `veo`, `lyria`, `transcribe`) unless the override model itself belongs to that same model family.
+6. **📊 CI & Pull Request Integration**:
    - Generates persistent JSON reports under `reports/` and auto-appends formatted Markdown tables to `$GITHUB_STEP_SUMMARY`.
    - Returns clean exit codes (`0` on pass, `1` on failure) for automated gating.
-6. **🔍 Dry-Run Mode**:
-   - Test rule configurations, AST checks, and syntax parsing without altering files, spinning up kernels, or consuming API tokens.
+7. **🔍 Dry-Run Mode**:
+   - Test rule configurations, AST checks, model overrides, and syntax parsing without altering files, spinning up kernels, or consuming API tokens.
+8. **🔁 Automatic Cell-Level Retry & Exponential Backoff**:
+   - Automatically retries failed cells (up to 3 times by default with exponential backoff) on transient API errors (429, 503, timeouts) before failing, preventing flaky CI runs while skipping non-retryable syntax errors. Configurable via `--max-retries` CLI flag or `rules/default_rules.yaml`.
+
+---
+
+## 🛠️ System Prerequisites (Local Execution)
+
+In Google Colab, `ffmpeg`, `jq`, and `curl` are pre-installed in the default runtime container (and `poppler-utils` is installed via `!apt-get install -y -q poppler-utils` inside `quickstarts/PDF_Files.ipynb`).
+
+When running `tools/nb_tester` locally on a Linux/macOS workstation or headless CI runner (where notebooks do not execute as `root`), install the following system packages first so audio, video, PDF (`pdf2image` / `pdftoppm`), and REST (`curl` + `jq`) notebooks execute cleanly:
+
+```bash
+# Ubuntu / Debian / gLinux
+sudo apt-get update && sudo apt-get install -y ffmpeg poppler-utils jq curl
+```
 
 ---
 
@@ -48,7 +66,16 @@ python3 -m tools.nb_tester.cli --notebook quickstarts/Counting_Tokens.ipynb
 python3 -m tools.nb_tester.cli --changed
 ```
 
-### 5. Run Full Suite in Parallel
+### 5. Test Notebooks with Dynamic Model Override
+```bash
+# Run a specific quickstart against a candidate/preview model
+python3 -m tools.nb_tester.cli --notebook quickstarts/Get_started_thinking.ipynb --model gemini-3.1-pro-preview
+
+# Run all quickstarts with model override in parallel
+python3 -m tools.nb_tester.cli --all --model gemini-3.7-flash --workers 4
+```
+
+### 6. Run Full Suite in Parallel
 ```bash
 python3 -m tools.nb_tester.cli --all --workers 4
 ```
@@ -90,6 +117,7 @@ tools/nb_tester/
 ├── security_scanner.py   # Level 1: Deterministic AST & regex scanner
 ├── ai_security_auditor.py# Level 2: Gemini AI Semantic Security Auditor
 ├── rules.py              # Declarative rules engine and matcher
+├── model_override.py     # In-memory MODEL_ID override transformer & preamble injector
 ├── executor.py           # nbclient kernel executor with in-memory Colab mock
 ├── comparator.py         # Output snapshot extractor and strategy router
 ├── llm_judge.py          # Level 3: Semantic output regression judge

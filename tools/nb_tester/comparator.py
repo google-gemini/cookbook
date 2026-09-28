@@ -121,6 +121,14 @@ class OutputComparator:
                 }
 
         combined_text = "\n".join(t.strip() for t in text_parts if t.strip()).strip()
+        if not combined_text:
+            if image_count > 0:
+                combined_text = f"<Image: {image_count} image(s)>"
+            elif audio_count > 0:
+                combined_text = f"<Audio: {audio_count} audio item(s)>"
+            elif html_present:
+                combined_text = "<HTML content rendered>"
+
         return CellOutputSnapshot(
             text_content=combined_text,
             image_count=image_count,

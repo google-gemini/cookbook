@@ -71,6 +71,7 @@ class SuiteReport:
     skipped_count: int
     dry_run: bool
     total_duration_sec: float
+    override_model: Optional[str] = None
     notebook_reports: List[SingleNotebookReport] = field(default_factory=list)
 
 
@@ -114,6 +115,7 @@ class TestReporter:
             skipped_count=skipped,
             dry_run=self.config.DRY_RUN,
             total_duration_sec=round(total_duration, 2),
+            override_model=self.config.OVERRIDE_MODEL,
             notebook_reports=notebook_reports
         )
 
@@ -155,10 +157,12 @@ class TestReporter:
         if not step_summary_path:
             return
 
+        model_info = f"**Model Override:** `{suite_report.override_model}` | " if suite_report.override_model else ""
         md_lines = [
             f"# 🧪 Gemini API Cookbook Notebook Test Report",
             f"",
             f"**Status:** {'✅ PASSED' if suite_report.failed_count == 0 else '❌ FAILED'} | "
+            f"{model_info}"
             f"**Total:** {suite_report.total_notebooks} | "
             f"**Passed:** {suite_report.passed_count} | "
             f"**Failed:** {suite_report.failed_count} | "
@@ -197,6 +201,8 @@ class TestReporter:
         """
         logger.info("\n" + "=" * 80)
         logger.info(f"📊 TEST SUITE SUMMARY (Duration: {suite_report.total_duration_sec}s)")
+        if suite_report.override_model:
+            logger.info(f"🎯 Target Model Override: {suite_report.override_model}")
         logger.info(
             f"Total: {suite_report.total_notebooks} | "
             f"Passed: {suite_report.passed_count} | "

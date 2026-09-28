@@ -3,9 +3,11 @@
 
 # Global defaults across all notebooks unless overridden
 global_defaults:
-  cell_timeout_sec: 90
-  notebook_timeout_sec: 600
+  cell_timeout_sec: 240
+  notebook_timeout_sec: 1200
   default_strategy: "semantic_llm"
+  cell_max_retries: 3
+  cell_retry_backoff_sec: 2.0
 
 # Specific notebook overrides
 notebooks:
@@ -23,6 +25,8 @@ notebooks:
         description: "Live search grounded responses may evolve over time; double check with Google Search"
 
   quickstarts/Search_Grounding.ipynb:
+    cell_timeout_sec: 360
+    notebook_timeout_sec: 1200
     allow_dynamic_exec: true
     allow_security_demo: true
     cells:
@@ -46,24 +50,100 @@ notebooks:
     skip_notebook: true
     skip_reason: "Requires interactive browser OAuth login flow"
 
+  quickstarts/Webhooks.ipynb:
+    skip_notebook: true
+    skip_reason: "Requires live webhook receiver server endpoint"
+
   quickstarts/Get_started_Veo.ipynb:
-    cell_timeout_sec: 180
+    long_running: true
+    cell_timeout_sec: 600
+    notebook_timeout_sec: 1500
     description: "Video generation takes longer than text generation"
 
+  quickstarts/Get_started_Veo_REST.ipynb:
+    long_running: true
+    cell_timeout_sec: 600
+    notebook_timeout_sec: 1500
+    description: "REST Veo video generation and polling"
+
+  quickstarts/Batch_mode.ipynb:
+    long_running: true
+    cell_timeout_sec: 600
+    notebook_timeout_sec: 1800
+    description: "Asynchronous Batch API job polling can take 5-15 minutes"
+
+  quickstarts/File_API.ipynb:
+    long_running: true
+    cell_timeout_sec: 600
+    notebook_timeout_sec: 1500
+    description: "Uploads and processes a 45-minute video via File API"
+
+  quickstarts/Get_started_Lyria.ipynb:
+    long_running: true
+    cell_timeout_sec: 360
+    notebook_timeout_sec: 1200
+    description: "Real-time Lyria music generation streaming"
+
+  quickstarts/Tuning.ipynb:
+    long_running: true
+    cell_timeout_sec: 600
+    notebook_timeout_sec: 1800
+    description: "Model tuning job creation and training loop"
+
   quickstarts/Get_started_Deep_Research.ipynb:
+    long_running: true
     cell_timeout_sec: 1800
     notebook_timeout_sec: 2400
     description: "Deep Research queries can take up to 30+ minutes"
 
+  quickstarts/Get_Started_Nano_Banana.ipynb:
+    cell_timeout_sec: 180
+    notebook_timeout_sec: 1800
+    description: "Image generation and multi-turn image editing"
+
   quickstarts/Get_started_thinking.ipynb:
-    cell_timeout_sec: 300
+    cell_timeout_sec: 600
+    notebook_timeout_sec: 1800
+    description: "Extended thinking generation chains can take up to 10 minutes per cell"
+
+  quickstarts/Get_started_thinking_REST.ipynb:
+    cell_timeout_sec: 360
     notebook_timeout_sec: 1200
-    description: "Extended thinking generation chains can take up to 5 minutes per cell"
+    description: "Thinking REST endpoint multi-turn analysis"
 
   quickstarts/Get_started_Omni.ipynb:
-    cell_timeout_sec: 300
+    cell_timeout_sec: 360
     notebook_timeout_sec: 1200
     description: "Omni multimodal model processing"
+
+  quickstarts/Video_understanding.ipynb:
+    long_running: true
+    cell_timeout_sec: 600
+    notebook_timeout_sec: 1500
+    description: "Video upload, processing, and multi-turn frame analysis"
+
+  quickstarts/Inference_tiers.ipynb:
+    cell_timeout_sec: 360
+    notebook_timeout_sec: 1200
+    description: "Multi-tier model benchmarking and latency comparison"
+
+  quickstarts/Get_started.ipynb:
+    cell_timeout_sec: 300
+    notebook_timeout_sec: 1200
+    description: "Full tour of multimodal features across large files"
+
+  examples/Virtual_Try_On.ipynb:
+    skip_notebook: true
+    skip_reason: "Requires interactive Colab Vertex AI auth (auth.authenticate_user)"
+
+  examples/Google_IO2025_Live_Coding.ipynb:
+    skip_notebook: true
+    skip_reason: "Historical event notebook kept frozen with original Google I/O 2025 models"
+
+  examples/Book_illustration.ipynb:
+    cell_timeout_sec: 360
+    notebook_timeout_sec: 1800
+    description: "Multimodal audio, TTS, image generation, and MoviePy mix"
 
   examples/gemini_google_adk_model_guardrails.ipynb:
     allow_security_demo: true

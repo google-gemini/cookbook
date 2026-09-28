@@ -177,3 +177,48 @@ def check_no_hardcoded_api_keys(
                 break
             
     return violations
+
+
+FORBIDDEN_YOUTUBE_DOWNLOADER_REGEX = re.compile(
+    r"\b(?:yt-dlp|yt_dlp|pytube|pytubefix|youtube-dl|youtube_dl)\b",
+    re.IGNORECASE,
+)
+
+
+def check_no_youtube_downloaders(
+    notebook_data: Dict[str, Any],
+    file_path: pathlib.Path,
+    is_redirect: bool = False
+) -> List[str]:
+    """Ensures notebooks do not install or import YouTube downloader tools (yt-dlp, pytube, pytubefix, youtube-dl).
+    
+    Args:
+        notebook_data: Parsed JSON content of the notebook.
+        file_path: Path to the notebook file.
+        is_redirect: Whether the notebook is a stub redirecting elsewhere.
+        
+    Returns:
+        A list of lint violation messages.
+    """
+    logger.debug("Scanning for forbidden YouTube downloaders in %s", file_path)
+    if is_redirect:
+        return []
+
+    violations = []
+    cells = notebook_data.get("cells", [])
+
+    for cell_idx, cell in enumerate(cells):
+        if cell.get("cell_type") != "code":
+            continue
+        src = "".join(cell.get("source", []))
+        match = FORBIDDEN_YOUTUBE_DOWNLOADER_REGEX.search(src)
+        if match:
+            pkg = match.group(0)
+            violations.append(
+                f"Cell {cell_idx}: Forbidden YouTube downloader '{pkg}' detected. "
+                f"Downloading or streaming YouTube content via third-party tools (yt-dlp, pytube, pytubefix, youtube-dl) "
+                f"violates the YouTube Terms of Service. Pass YouTube URLs directly to the Gemini API via 'file_uri' instead."
+            )
+
+    return violations
+

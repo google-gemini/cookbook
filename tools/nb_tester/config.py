@@ -44,31 +44,50 @@ class TesterConfig:
     # User rule: If specified, trust model names and centralize all LLM model references.
     SECURITY_AUDITOR_MODEL: str = "gemini-3.1-pro-preview"
     SECURITY_AUDITOR_FALLBACKS: List[str] = field(
-        default_factory=lambda: ["gemini-3.1-pro-preview", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-2.5-pro"]
+        default_factory=lambda: [
+            "gemini-3.1-pro-preview",
+            "gemini-3.8-flash",
+            "gemini-3.7-flash",
+            "gemini-3.6-flash",
+            "gemini-2.5-pro",
+        ]
     )
 
     OUTPUT_JUDGE_MODEL: str = "gemini-3.5-flash-lite"
     OUTPUT_JUDGE_FALLBACKS: List[str] = field(
-        default_factory=lambda: ["gemini-3.5-flash-lite", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-2.5-flash"]
+        default_factory=lambda: [
+            "gemini-3.5-flash-lite",
+            "gemini-3.8-flash",
+            "gemini-3.7-flash",
+            "gemini-3.6-flash",
+            "gemini-2.5-flash",
+        ]
     )
 
-    GROUNDED_VERIFIER_MODEL: str = "gemini-3.7-flash"
+    GROUNDED_VERIFIER_MODEL: str = "gemini-3.8-flash"
     GROUNDED_VERIFIER_FALLBACKS: List[str] = field(
-        default_factory=lambda: ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-2.5-flash"]
+        default_factory=lambda: [
+            "gemini-3.8-flash",
+            "gemini-3.7-flash",
+            "gemini-3.6-flash",
+            "gemini-2.5-flash",
+        ]
     )
 
     # Retry & Fallback Configuration
     MAX_API_RETRIES: int = 3
     RETRY_INITIAL_DELAY_SEC: float = 2.0
     RETRY_BACKOFF_FACTOR: float = 2.0
+    DEFAULT_CELL_MAX_RETRIES: int = 3
+    DEFAULT_CELL_RETRY_BACKOFF_SEC: float = 2.0
 
     # API Keys & Auth
     # Strictly use GEMINI_API_KEY environment variable.
     API_KEY_ENV_VAR: str = "GEMINI_API_KEY"
 
     # Execution Timeouts & Limits
-    DEFAULT_CELL_TIMEOUT_SEC: int = 90
-    DEFAULT_NOTEBOOK_TIMEOUT_SEC: int = 600
+    DEFAULT_CELL_TIMEOUT_SEC: int = 240
+    DEFAULT_NOTEBOOK_TIMEOUT_SEC: int = 1200
     MAX_OUTPUT_CHARS_FOR_DIFF: int = 4000
     MAX_PROMPT_CHARS_FOR_LOG: int = 1500
 
@@ -84,7 +103,9 @@ class TesterConfig:
         default_factory=lambda: pathlib.Path(__file__).resolve().parents[2]
     )
     DEFAULT_RULES_PATH: pathlib.Path = field(
-        default_factory=lambda: pathlib.Path(__file__).resolve().parent / "rules" / "default_rules.yaml"
+        default_factory=lambda: (
+            pathlib.Path(__file__).resolve().parent / "rules" / "default_rules.yaml"
+        )
     )
     REPORTS_DIR: pathlib.Path = field(
         default_factory=lambda: pathlib.Path(__file__).resolve().parents[2] / "reports"
@@ -98,6 +119,10 @@ class TesterConfig:
     VERBOSE: bool = False
     SKIP_AI_JUDGE: bool = False
     SECURITY_ONLY: bool = False
+    FAIL_FAST: bool = False
+    SKIP_LONG_NOTEBOOKS: bool = False
+    OVERRIDE_MODEL: Optional[str] = None
+    OVERRIDE_MAX_RETRIES: Optional[int] = None
 
     def get_api_key(self) -> Optional[str]:
         """

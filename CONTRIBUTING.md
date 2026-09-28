@@ -84,6 +84,14 @@ All media files (audio, images, video), datasets, and other external assets used
 
 Please mention the source and license in the markdown cell that introduces the asset. Prefer stable hosting (the cookbook's GCS bucket, Wikimedia Commons, Internet Archive, YouTube) over ephemeral URLs.
 
+* **Strictly no YouTube downloaders (`yt-dlp`, `pytube`, `pytubefix`, `youtube-dl`, etc.)**: Never use third-party tools or libraries to download, rip, or stream YouTube videos or audio, as this violates the [YouTube Terms of Service](https://www.youtube.com/t/terms#c3e2907ca8) and will fail CI checks. Instead, pass YouTube URLs directly to the Gemini API natively using `file_uri` (e.g., `types.Part.from_uri(file_uri="https://www.youtube.com/watch?v=...", mime_type="video/mp4")`).
+
+## Dependencies and SDKs
+
+Keep dependencies minimal. Do not add wrapper or orchestration frameworks solely for functionality available in the official `google-genai` SDK.
+
+Notebooks specifically demonstrating a third-party ecosystem integration may use that integration's library. Place these notebooks in the relevant integration directory and ensure each example provides clear technical learning value rather than promotional content.
+
 ## Using the Interactions API
 
 All quickstart notebooks **must** use the Interactions API (`client.interactions.create()`) as of `google-genai>=2.0.0`. This is the primary interface for text generation, multimodal understanding, structured output, function calling, grounding, and more.

@@ -180,10 +180,11 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
     interaction = client.interactions.create(
         model=MODEL_ID,
         input="Here's my prompt",
-        config={
-            "response_mime_type": "application/json",
-            "response_schema": Schema
-        }
+        response_format={
+            "type": "text",
+            "mime_type": "application/json",
+            "schema": Schema.model_json_schema(),
+        },
     )
     ```
 Notice the line break on the first and last lines.
@@ -260,3 +261,7 @@ Type Hints are not mandatory, but when used they should follow those conventions
 * **Write clear and concise comments:** Explain the "why" behind the code, not just the "what".
 * **Comment sparingly:** Well-written code should be self-documenting where possible.
 * **Use complete sentences:** Start comments with a capital letter and use proper punctuation.
+* **No leftover commit, changelog, or AI meta-comments:** All code comments and markdown text must be written from a timeless tutorial perspective for the reader—explaining how the code works in its current state, never narrating the git diff, what was removed/changed, or why a style rule was followed. Always flag and ask to remove:
+  * **Diff/commit comments** describing a fix or migration (e.g., `# Remove the outer 'musicGenerationConfig' key...`, `# Updated to use Interactions API`, `# Fixed per review feedback`, `# Changed model to gemini-3.8-flash`).
+  * **AI placeholder or scaffolding comments** (e.g., `# Rest of the code remains the same`, `# Insert your implementation here`).
+  * **Style-guide meta-commentary** in markdown or code where an AI assistant repeats review/style instructions (e.g., *"Use `%pip` with the required minimum SDK version as per the official style guide"*).

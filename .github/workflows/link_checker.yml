@@ -1,0 +1,65 @@
+name: Link Checker
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "**.ipynb"
+      - "**.md"
+      - "tools/check_all_links.py"
+      - "tools/config.py"
+  workflow_dispatch:
+    inputs:
+      check_external:
+        description: "Check external HTTP/HTTPS links (slow)"
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    # Run full external link check weekly on Mondays at 08:00 UTC
+    - cron: '0 8 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  check-links:
+    name: Link validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c  # v4
+        with:
+          python-version: "3.11"
+
+      - name: Fetch main branch
+        run: git fetch -u origin main:main
+
+      - name: Run unit tests for link checker
+        run: python3 -m unittest tools/test_check_all_links.py
+
+      - name: Run link audit
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "Pull request detected: checking changed Markdown and Notebook files..."
+            base_commit=$(git merge-base HEAD ${{ github.event.pull_request.base.sha }})
+            readarray -t changed_files < <(git diff --name-only "${base_commit}...HEAD" "*.ipynb" "*.md")
+            if [[ ${#changed_files[@]} == 0 ]]; then
+              echo "No .ipynb or .md files modified in this pull request."
+              exit 0
+            fi
+            echo "Auditing links in modified files: ${changed_files[*]}"
+            python3 tools/check_all_links.py "${changed_files[@]}"
+          elif [ "${{ github.event_name }}" == "schedule" ] || [ "${{ inputs.check_external }}" == "true" ]; then
+            echo "Scheduled or manual run with external check enabled: auditing all repository links..."
+            python3 tools/check_all_links.py --all
+          else
+            echo "Auditing all internal repository links..."
+            python3 tools/check_all_links.py
+          fi

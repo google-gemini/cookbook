@@ -26,11 +26,11 @@ See below for more detailed guidelines specific to writing notebooks and guides.
 
 ## Small fixes
 
-Small fixes, such as typos or bug fixes, can be submitted directly via a pull request.
+Small fixes, such as typos or bug fixes, can be submitted directly via a pull request. If you are looking for a place to start, check out the open issues labeled [`good first issue`](https://github.com/google-gemini/cookbook/labels/good%20first%20issue).
 
 ## Content submission
 
-Before you send a PR, or even write a single line, please file an [issue](https://github.com/google-gemini/cookbook/issues). There we can discuss the request and provide guidance about how to structure any content you write.
+Before you send a PR, or even write a single line, please file an [issue](https://github.com/google-gemini/cookbook/issues) (or pick an existing [`good first issue`](https://github.com/google-gemini/cookbook/labels/good%20first%20issue)) to discuss the request and receive guidance on how to structure any content you write.
 
 Adding a new guide often involves lots of detailed reviews and we want to make sure that your idea is fully formed and has full support before you start writing anything. If you want to port an existing guide across (e.g. if you have a guide for Gemini on your own GitHub), feel free to link to it in the issue.
 

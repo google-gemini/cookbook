@@ -153,7 +153,7 @@ with gr.Blocks() as demo:
         api_key = gr.Textbox(
             label="API Key",
             placeholder="Enter your API Key",
-            value=os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or "",
+            value=os.getenv("GEMINI_API_KEY") or "",
             type="password",
         )
     with gr.Row(visible=False) as row:

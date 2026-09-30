@@ -98,7 +98,7 @@ class GeminiHandler(AsyncStreamHandler):
         api_key, voice_name = self.latest_args[1:]
 
         client = genai.Client(
-            api_key=api_key or os.getenv("GEMINI_API_KEY"),
+            api_key=api_key or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY"),
             http_options={"api_version": "v1alpha"},
         )
 
@@ -153,7 +153,7 @@ with gr.Blocks() as demo:
         api_key = gr.Textbox(
             label="API Key",
             placeholder="Enter your API Key",
-            value=os.getenv("GOOGLE_API_KEY", ""),
+            value=os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or "",
             type="password",
         )
     with gr.Row(visible=False) as row:

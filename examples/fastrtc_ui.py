@@ -98,7 +98,7 @@ class GeminiHandler(AsyncStreamHandler):
         api_key, voice_name = self.latest_args[1:]
 
         client = genai.Client(
-            api_key=api_key or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY"),
+            api_key=api_key or os.getenv("GEMINI_API_KEY"),
             http_options={"api_version": "v1alpha"},
         )
 

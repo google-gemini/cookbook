@@ -13,6 +13,7 @@ These tools are natively hosted in this repository to provide fast, zero-depende
 | **`nblint`** | `tools/nblint_cli.py` | Lints notebooks for licensing, structure, style, SDK best practices, and model selectors. |
 | **`nbfmt`** | `tools/nbfmt_cli.py` | Automatically formats notebook JSON, standardizes metadata, strips empty cells, and aligns code formatting. |
 | **`readme_links`** | `tools/check_readme_links.py` | Validates that new/modified notebooks are linked in section Table of Contents READMEs. |
+| **`check_all_links`** | `tools/check_all_links.py` | Audits internal paths, anchors, blob URLs, and external links across `.md` and `.ipynb` files. |
 | **`config`** | `tools/config.py` | Central configuration file containing model hierarchies, wordlists, exclusions, and URL rules. |
 
 ---
@@ -53,6 +54,21 @@ python tools/check_readme_links.py quickstarts/Get_started.ipynb
 
 # Audit all notebooks in the repo
 python tools/check_readme_links.py --all
+```
+
+### Verifying Internal and External Links
+```bash
+# Validate internal links and anchors on specific files (fast CI check)
+python tools/check_all_links.py quickstarts/Get_started.ipynb README.md
+
+# Validate all git-modified files against upstream/main
+python tools/check_all_links.py --changed
+
+# Full repository audit of all internal relative links and anchor slugs
+python tools/check_all_links.py
+
+# Full repository audit including live external HTTP/HTTPS health checks
+python tools/check_all_links.py --all
 ```
 
 ---

@@ -24,6 +24,9 @@ from tools.check_all_links import (
     LinkCheckerConfig,
     extract_anchors_from_content,
     extract_links_from_file,
+    get_file_anchors,
+    normalize_cell_source,
+    run_link_audit,
     slugify_heading,
     validate_internal_link,
 )
@@ -155,6 +158,136 @@ class TestCheckAllLinks(unittest.TestCase):
         ok, err = validate_internal_link(self.ipynb_path, "guide.md#nonexistent", self.config)
         self.assertFalse(ok)
         self.assertIn("Anchor '#nonexistent' not found", err)
+
+    def test_normalize_cell_source(self) -> None:
+        """Verifies cell source normalization across None, str, list, and invalid types."""
+        # None source
+        self.assertEqual(normalize_cell_source(None), [])
+        # Single string
+        self.assertEqual(normalize_cell_source("Single line"), ["Single line"])
+        # Multiline string
+        self.assertEqual(
+            normalize_cell_source("Line 1\nLine 2\n"),
+            ["Line 1\n", "Line 2\n"],
+        )
+        # List of strings
+        self.assertEqual(
+            normalize_cell_source(["# Heading\n", "Content line\n"]),
+            ["# Heading\n", "Content line\n"],
+        )
+        # List with non-string elements filtered out
+        self.assertEqual(
+            normalize_cell_source(["# Heading\n", None, 42, "Valid\n"]),
+            ["# Heading\n", "Valid\n"],
+        )
+        # Invalid types
+        self.assertEqual(normalize_cell_source(123), [])
+        self.assertEqual(normalize_cell_source({}), [])
+
+    def test_extract_links_handles_source_variations(self) -> None:
+        """Verifies link extraction when notebook cell source is a string or None."""
+        nb_str_source = {
+            "cells": [
+                {
+                    "cell_type": "markdown",
+                    "source": "# Intro\nCheck [Docs](https://example.com/docs) and <a href=\"https://example.com/api\">API</a>.\n",
+                },
+                {
+                    "cell_type": "markdown",
+                    "source": None,
+                },
+            ],
+            "metadata": {},
+            "nbformat": 4,
+            "nbformat_minor": 4,
+        }
+        nb_path = self.repo_root / "quickstarts" / "str_source.ipynb"
+        nb_path.write_text(json.dumps(nb_str_source), encoding="utf-8")
+
+        links = extract_links_from_file(nb_path)
+        urls = [u for u, _ in links]
+        self.assertIn("https://example.com/docs", urls)
+        self.assertIn("https://example.com/api", urls)
+        self.assertEqual(len(links), 2)
+
+    def test_get_file_anchors_handles_source_variations(self) -> None:
+        """Verifies anchor extraction when notebook cell source is None or a string."""
+        nb_variations = {
+            "cells": [
+                {
+                    "cell_type": "markdown",
+                    "source": "# String Heading\n<a name=\"custom-html-anchor\"></a>\n",
+                },
+                {
+                    "cell_type": "markdown",
+                    "source": None,
+                },
+            ],
+            "metadata": {},
+            "nbformat": 4,
+            "nbformat_minor": 4,
+        }
+        nb_path = self.repo_root / "quickstarts" / "anchor_test.ipynb"
+        nb_path.write_text(json.dumps(nb_variations), encoding="utf-8")
+
+        anchors = get_file_anchors(nb_path, self.config)
+        self.assertIn("string-heading", anchors)
+        self.assertIn("custom-html-anchor", anchors)
+
+    def test_uppercase_scheme_link_handling(self) -> None:
+        """Verifies uppercase HTTP(S) schemes are treated as external and not local paths."""
+        # In validate_internal_link, external URLs should be skipped
+        ok, err = validate_internal_link(self.readme_path, "HTTPS://example.com/resource", self.config)
+        self.assertTrue(ok, err)
+
+        ok, err = validate_internal_link(self.readme_path, "Http://google.com/test", self.config)
+        self.assertTrue(ok, err)
+
+        # In run_link_audit, an uppercase external URL in a file should not trigger a broken link when internal_only=True
+        nb_content = {
+            "cells": [
+                {
+                    "cell_type": "markdown",
+                    "source": ["Link to [External](HTTPS://example.com/docs)\n"],
+                }
+            ],
+            "metadata": {},
+            "nbformat": 4,
+            "nbformat_minor": 4,
+        }
+        nb_path = self.repo_root / "quickstarts" / "https_test.ipynb"
+        nb_path.write_text(json.dumps(nb_content), encoding="utf-8")
+
+        exit_code = run_link_audit(self.config, explicit_files=[str(nb_path)])
+        self.assertEqual(exit_code, 0)
+
+    def test_github_blob_url_with_query_params_and_casing(self) -> None:
+        """Verifies GitHub blob URL validation strips query parameters and ignores scheme case."""
+        # Valid GitHub blob URL with query params
+        ok, err = validate_internal_link(
+            self.readme_path,
+            "https://github.com/google-gemini/cookbook/blob/main/README.md?raw=true",
+            self.config,
+        )
+        self.assertTrue(ok, err)
+
+        # Valid GitHub blob URL with query params, anchor fragment, and uppercase HTTPS
+        ok, err = validate_internal_link(
+            self.readme_path,
+            "HTTPS://github.com/google-gemini/cookbook/blob/main/README.md?plain=1#cookbook-overview",
+            self.config,
+        )
+        self.assertTrue(ok, err)
+
+        # Nonexistent target file with query params returns clean error message
+        ok, err = validate_internal_link(
+            self.readme_path,
+            "https://github.com/google-gemini/cookbook/blob/main/nonexistent.md?raw=true",
+            self.config,
+        )
+        self.assertFalse(ok)
+        self.assertIn("nonexistent.md", err)
+        self.assertNotIn("?raw=true", err)
 
 
 if __name__ == "__main__":

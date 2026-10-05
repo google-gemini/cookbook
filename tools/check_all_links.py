@@ -68,7 +68,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 # Ensure repository root is on sys.path to import centralized tools.config
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -190,6 +190,24 @@ def extract_anchors_from_content(content: str) -> Set[str]:
     return anchors
 
 
+def normalize_cell_source(source: Any) -> List[str]:
+    """Normalizes notebook cell source content into a list of string lines.
+
+    Handles cases where cell source is None, a single str, or a list of strings/objects.
+
+    Args:
+        source: The raw 'source' field from a notebook cell dictionary.
+
+    Returns:
+        A list of strings representing the cell lines.
+    """
+    if isinstance(source, str):
+        return source.splitlines(keepends=True)
+    if isinstance(source, list):
+        return [s for s in source if isinstance(s, str)]
+    return []
+
+
 def get_file_anchors(file_path: pathlib.Path, checker_config: LinkCheckerConfig) -> Set[str]:
     """Retrieves and caches anchor targets for a given file.
 
@@ -211,7 +229,8 @@ def get_file_anchors(file_path: pathlib.Path, checker_config: LinkCheckerConfig)
                 data = json.load(f)
             for cell in data.get("cells", []):
                 if cell.get("cell_type") in ("markdown", "raw"):
-                    cell_text = "".join(cell.get("source", []))
+                    lines = normalize_cell_source(cell.get("source"))
+                    cell_text = "".join(lines)
                     anchors.update(extract_anchors_from_content(cell_text))
                     # Also index Colab cell IDs for scrollTo references
                     cell_id = cell.get("metadata", {}).get("id") or cell.get("id")
@@ -314,7 +333,7 @@ def extract_links_from_file(file_path: pathlib.Path) -> List[Tuple[str, int]]:
                 data = json.load(f)
             for cell_idx, cell in enumerate(data.get("cells", [])):
                 if cell.get("cell_type") in ("markdown", "raw"):
-                    lines = cell.get("source", [])
+                    lines = normalize_cell_source(cell.get("source"))
                     in_fence = False
                     for line in lines:
                         stripped = line.strip()
@@ -363,13 +382,18 @@ def validate_internal_link(
         return True, "Excluded template placeholder"
 
     parsed = urllib.parse.urlparse(url)
-    clean_path = parsed.path
+    scheme = parsed.scheme.lower()
+    netloc = parsed.netloc.lower()
     fragment = parsed.fragment.strip().lower() if parsed.fragment else ""
 
     # 1. GitHub repository blob URLs (e.g. https://github.com/google-gemini/cookbook/blob/main/...)
-    github_blob_prefix = "https://github.com/google-gemini/cookbook/blob/main/"
-    if url.startswith(github_blob_prefix):
-        rel_subpath = url[len(github_blob_prefix):].split("#")[0].rstrip("/")
+    github_blob_path_prefix = "/google-gemini/cookbook/blob/main/"
+    if (
+        scheme in ("http", "https")
+        and netloc == "github.com"
+        and parsed.path.startswith(github_blob_path_prefix)
+    ):
+        rel_subpath = urllib.parse.unquote(parsed.path[len(github_blob_path_prefix):]).rstrip("/")
         target_path = checker_config.repo_root / rel_subpath
         if not target_path.exists():
             return False, f"Target repository path does not exist on disk: {rel_subpath}"
@@ -379,11 +403,12 @@ def validate_internal_link(
                 return False, f"Anchor '#{fragment}' not found in target file: {rel_subpath}"
         return True, ""
 
-    # Skip external URLs (checked separately in external phase)
-    if clean_path.startswith("http://") or clean_path.startswith("https://"):
+    # Skip external HTTP(S) URLs (checked separately in external phase)
+    if scheme in ("http", "https"):
         return True, ""
 
     # 2. Pure in-page anchor (#heading or #scrollTo=...)
+    clean_path = urllib.parse.unquote(parsed.path)
     if not clean_path and fragment:
         if fragment.startswith("scrollto="):
             return True, ""  # Colab UI cell scroll target
@@ -485,8 +510,15 @@ def run_link_audit(
                 continue
             total_links += 1
 
-            if url.startswith(("http://", "https://")):
-                if url.startswith("https://github.com/google-gemini/cookbook/blob/main/"):
+            parsed = urllib.parse.urlparse(url)
+            is_http = parsed.scheme.lower() in ("http", "https")
+
+            if is_http:
+                is_blob = (
+                    parsed.netloc.lower() == "github.com"
+                    and parsed.path.startswith("/google-gemini/cookbook/blob/main/")
+                )
+                if is_blob:
                     ok, err = validate_internal_link(f, url, config)
                     if not ok:
                         rel_file = f.relative_to(config.repo_root)

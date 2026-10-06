@@ -78,9 +78,17 @@ def check_model_selector(
                 )
                 continue
                 
-            if not isinstance(options_list, list) or len(options_list) == 0:
+            if (
+                not isinstance(options_list, list)
+                or len(options_list) == 0
+                or not all(isinstance(option, str) for option in options_list)
+            ):
                 violations.append(
-                    (f"Cell {cell_idx}: Model selector @param must contain a non-empty list of model names.", True)
+                    (
+                        f"Cell {cell_idx}: Model selector @param must contain a non-empty "
+                        "list of model names (strings).",
+                        True,
+                    )
                 )
                 continue
                 

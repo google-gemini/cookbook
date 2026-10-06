@@ -153,7 +153,7 @@ PIP_MAGIC_INSTALL_REGEX: Pattern = re.compile(r'^\s*%pip\s+install', re.MULTILIN
 # Regex to detect Colab form model selectors
 # e.g.: MODEL_ID = "gemini-3.7-flash" # @param ["gemini-3.1-pro-preview", "gemini-3.7-flash", "gemini-3.5-flash-lite", "gemini-2.5-pro"]
 MODEL_PARAM_SELECTOR_REGEX: Pattern = re.compile(
-    r'(?:MODEL_ID|model_id|MODEL|model)\s*=\s*["\']([^"\']+)["\']\s*#\s*@param\s*(\[[^\]]+\])',
+    r'(?:MODEL_ID|model_id|MODEL|model)\s*=\s*["\']([^"\']+)["\']\s*#\s*@param\s*(\[[^\]]*\])',
     re.MULTILINE
 )
 

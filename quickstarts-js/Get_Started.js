@@ -179,9 +179,6 @@ response = await ai.models.generateContent({
   contents:
     "Tell me how the internet works, but pretend I'm a puppy who only understands squeaky toys.",
   config: {
-    temperature: 1.0,
-    topP: 0.95,
-    topK: 20,
     candidateCount: 1,
     seed: 5,
     stopSequences: ["STOP!"],

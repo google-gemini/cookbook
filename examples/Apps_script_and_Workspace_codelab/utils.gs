@@ -90,7 +90,7 @@ const WORKSPACE_TOOLS = {
  ]
 };
 
-function callGemini(prompt, temperature=0) {
+function callGemini(prompt) {
   const payload = {
     "contents": [
       {
@@ -100,10 +100,7 @@ function callGemini(prompt, temperature=0) {
           },
         ]
       }
-    ], 
-    "generationConfig":  {
-      "temperature": temperature,
-    },
+    ],
   };
 
   const options = { 
@@ -125,7 +122,7 @@ function testGemini() {
 }
 
 
-function callGeminiProVision(prompt, image, temperature=0) {
+function callGeminiProVision(prompt, image) {
   const imageData = Utilities.base64Encode(image.getAs('image/png').getBytes());
 
   const payload = {
@@ -143,10 +140,7 @@ function callGeminiProVision(prompt, image, temperature=0) {
           }          
         ]
       }
-    ], 
-    "generationConfig":  {
-      "temperature": temperature,
-    },
+    ],
   };
 
   const options = { 
@@ -169,7 +163,7 @@ function testGeminiVision() {
   console.log(prompt, output);
 }
 
-function callGeminiWithTools(prompt, tools, temperature=0) {
+function callGeminiWithTools(prompt, tools) {
   const payload = {
     "contents": [
       {
@@ -181,9 +175,6 @@ function callGeminiWithTools(prompt, tools, temperature=0) {
       }
     ], 
     "tools" : tools,
-    "generationConfig":  {
-      "temperature": temperature,
-    },    
   };
 
   const options = { 

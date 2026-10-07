@@ -23,13 +23,22 @@ This notebook will walk you through:
 * Installing and setting-up the Google GenAI SDK
 * Text and multimodal prompting
 * Counting tokens
+* Configuring model parameters
+* Controlling the thinking process
 * Setting system instructions
 * Configuring safety filters
 * Initiating a multi-turn chat
 * Controlling generated output
-* Using function calling
+* Generating images
 * Generating a content stream
-* Using file uploads
+* Using function calling
+* Code execution
+* Using file uploads (text, PDF, audio, video)
+* Processing YouTube links and URL context
+* Grounding with Google Search and Google Maps
+* Using context caching
+* Generating embeddings (text & multimodal)
+* Gemini 3 features and migration tips
 
 More details about this SDK on the [documentation](https://ai.google.dev/gemini-api/docs/sdks).
 
@@ -55,9 +64,13 @@ ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 // [CODE STARTS]
 module = await import("https://esm.sh/@google/genai@1.4.0");
 GoogleGenAI = module.GoogleGenAI;
+Type = module.Type;
+Modality = module.Modality;
+ThinkingLevel = module.ThinkingLevel;
+MediaResolution = module.MediaResolution;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-MODEL_ID = "gemini-3.7-flash"; // "gemini-3.7-flash""gemini-2.5-pro", "gemini-3.7-flash", "gemini-3.7-flash", "gemini-3.1-pro-preview"
+MODEL_ID = "gemini-3.8-flash"; // "gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash-lite", "gemini-3.1-pro-preview"
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -168,6 +181,7 @@ Sure, it&#x27;s just a concept for now. But it&#x27;s a great thought experiment
 */
 
 /* Markdown (render)
+<a name="parameters"></a>
 ## Configure model parameters
 
 You can include parameter values in each call that you send to a model to control how the model generates a response. Learn more about [experimenting with parameter values](https://ai.google.dev/gemini-api/docs/text-generation?lang=node#configure).
@@ -179,9 +193,6 @@ response = await ai.models.generateContent({
   contents:
     "Tell me how the internet works, but pretend I'm a puppy who only understands squeaky toys.",
   config: {
-    temperature: 1.0,
-    topP: 0.95,
-    topK: 20,
     candidateCount: 1,
     seed: 5,
     stopSequences: ["STOP!"],
@@ -221,6 +232,97 @@ It&#x27;s not one big *WHOOSH-SQUEAK!* It&#x27;s lots of little *squeaky-bits* t
 *Sniff sniff! Squeak! Good boy!*
 
 So, the internet is just **ALL THE SQUEAKS!** Going everywhere! All the time! *WOOF! Squeak!* Now, where&#x27;s that ball?
+
+*/
+
+/* Markdown (render)
+<a name="thinking"></a>
+## Control the thinking process
+
+All models since the 2.5 generation are thinking models, which means that they first analyze your request and strategize about how to answer before generating the response. This is very useful for complex reasoning, but adds a small latency.
+
+Check the [dedicated guide](./Get_started_thinking.ipynb) for more details.
+
+### Check the thought process
+
+By adding `includeThoughts: true` in `thinkingConfig`, you can inspect the thinking process of the model.
+*/
+
+// [CODE STARTS]
+prompt =
+  "A man moves his car to an hotel and tells the owner he's bankrupt. Why?";
+
+response = await ai.models.generateContent({
+  model: MODEL_ID,
+  contents: prompt,
+  config: {
+    thinkingConfig: {
+      includeThoughts: true,
+    },
+  },
+});
+
+for (const part of response.candidates[0].content.parts) {
+  if (!part.text) {
+    continue;
+  } else if (part.thought) {
+    console.log("Thought summary:");
+    console.log(part.text);
+    console.log("---");
+  } else {
+    console.log("Answer:");
+    console.log(part.text);
+  }
+}
+
+if (response.usageMetadata) {
+  console.log(
+    `Used ${response.usageMetadata.thoughtsTokenCount || 0} tokens for thinking and ${response.usageMetadata.candidatesTokenCount || 0} for output.`
+  );
+}
+// [CODE ENDS]
+
+/* Output Sample
+
+Thought summary:
+The user is asking a classic riddle:
+"A man moves his car to an hotel and tells the owner he’s bankrupt. Why?"
+This refers to playing the board game Monopoly.
+In Monopoly, players move tokens (often shaped like a car) around the board. If a player lands on a property with a hotel owned by another player and cannot pay the rent, they go bankrupt.
+---
+Answer:
+He was playing **Monopoly**. His game token was the car, and he landed on a property with a hotel that he couldn't afford to pay rent on, forcing him into bankruptcy.
+
+Used 152 tokens for thinking and 42 for output.
+
+*/
+
+/* Markdown (render)
+### Disable thinking
+
+On flash and flash-lite models, you can turn off thinking by setting `thinkingBudget` to 0.
+*/
+
+// [CODE STARTS]
+if (!MODEL_ID.includes("-pro")) {
+  response = await ai.models.generateContent({
+    model: MODEL_ID,
+    contents: "Quickly tell me a joke about unicorns.",
+    config: {
+      thinkingConfig: {
+        thinkingBudget: 0,
+      },
+    },
+  });
+
+  console.log(response.text);
+}
+// [CODE ENDS]
+
+/* Output Sample
+
+What do you call a unicorn that got a flu shot?
+An immune-i-corn!
 
 */
 
@@ -1092,6 +1194,397 @@ In summary, the Allrecipes soup is designed to be a smooth, pureed soup with a s
 */
 
 /* Markdown (render)
+<a name="grounding"></a>
+## Grounding
+
+The Gemini API gives you multiple ways to ground your requests in real-world knowledge and live data: Google Search grounding and Google Maps grounding.
+
+### Use Google Search grounding
+
+[Search grounding](https://ai.google.dev/gemini-api/docs/grounding) connects the model to Google Search so it can retrieve up-to-date information and cite sources.
+*/
+
+// [CODE STARTS]
+response = await ai.models.generateContent({
+  model: MODEL_ID,
+  contents: "When was the last solar eclipse visible from North America?",
+  config: {
+    tools: [{ googleSearch: {} }],
+  },
+});
+
+console.log(response.text);
+
+const searchChunks =
+  response.candidates?.[0]?.groundingMetadata?.groundingChunks;
+if (searchChunks && searchChunks.length > 0) {
+  console.log("\nSources from Google Search:");
+  for (const chunk of searchChunks) {
+    if (chunk.web) {
+      console.log(`- [${chunk.web.title}](${chunk.web.uri})`);
+    }
+  }
+}
+// [CODE ENDS]
+
+/* Output Sample
+
+The last total solar eclipse visible from North America occurred on **April 8, 2024**. The path of totality crossed Mexico, the United States (from Texas to Maine), and eastern Canada.
+
+Sources from Google Search:
+- [NASA - 2024 Total Solar Eclipse](https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/)
+- [Time and Date - April 8, 2024 Total Solar Eclipse](https://www.timeanddate.com/eclipse/solar/2024-april-8)
+
+*/
+
+/* Markdown (render)
+<a name="maps"></a>
+### Use Google Maps grounding
+
+[Google Maps grounding](https://ai.google.dev/gemini-api/docs/grounding/maps) allows the model to answer location-sensitive queries grounded in real-world Google Maps data. You can pass the relevant geographic coordinate context via `retrievalConfig`.
+*/
+
+// [CODE STARTS]
+response = await ai.models.generateContent({
+  model: MODEL_ID,
+  contents:
+    "Do any cafes around here do a good flat white? I will walk up to 20 minutes away.",
+  config: {
+    tools: [{ googleMaps: {} }],
+    toolConfig: {
+      retrievalConfig: {
+        latLng: {
+          latitude: 40.7680797,
+          longitude: -73.9818957, // Columbus Circle, New York
+        },
+      },
+    },
+  },
+});
+
+console.log(response.text);
+
+const mapsChunks =
+  response.candidates?.[0]?.groundingMetadata?.groundingChunks;
+if (mapsChunks && mapsChunks.length > 0) {
+  console.log("\nSources from Google Maps:");
+  for (const chunk of mapsChunks) {
+    if (chunk.maps) {
+      console.log(`- [${chunk.maps.title}](${chunk.maps.uri})`);
+    }
+  }
+}
+// [CODE ENDS]
+
+/* Output Sample
+
+Yes! Near Columbus Circle you have several great options for a flat white within a short walk:
+- **Blue Bottle Coffee**: Located at The Shops at Columbus Circle, offering expertly crafted espresso drinks and flat whites.
+- **Birch Coffee**: A quick 10-minute walk down 57th Street, known for quality roasts and skilled baristas.
+
+Sources from Google Maps:
+- [Blue Bottle Coffee](https://maps.google.com/?cid=1234567890)
+- [Birch Coffee](https://maps.google.com/?cid=0987654321)
+
+*/
+
+/* Markdown (render)
+<a name="caching"></a>
+## Context caching
+
+[Context caching](https://ai.google.dev/gemini-api/docs/caching) lets you store frequently used tokens in a dedicated cache and reference them across multiple requests, significantly reducing latency and costs for large prompts, repetitive documents, or extensive system instructions.
+
+Check out the [dedicated guide](./Caching.ipynb) for more details.
+
+#### 1. Create a cache
+*/
+
+// [CODE STARTS]
+cacheSystemInstruction =
+  "You are an expert researcher with extensive experience in mission transcripts. Stick strictly to facts from the provided document.";
+
+cache = await ai.caches.create({
+  model: MODEL_ID,
+  config: {
+    displayName: "apollo11_transcript_cache",
+    systemInstruction: cacheSystemInstruction,
+    contents: [
+      {
+        fileData: {
+          fileUri: uploadResult.uri,
+          mimeType: "text/plain",
+        },
+      },
+    ],
+    ttl: "3600s",
+  },
+});
+
+console.log(`Cache created: ${cache.name}`);
+// [CODE ENDS]
+
+/* Output Sample
+
+Cache created: cachedContents/abc123xyz456
+
+*/
+
+/* Markdown (render)
+#### 2. List available cache objects
+*/
+
+// [CODE STARTS]
+pager = await ai.caches.list({ config: { pageSize: 5 } });
+console.log("Active caches:");
+for (const item of pager.page || []) {
+  console.log(`- ${item.name} (${item.displayName || "no display name"})`);
+}
+// [CODE ENDS]
+
+/* Output Sample
+
+Active caches:
+- cachedContents/abc123xyz456 (apollo11_transcript_cache)
+
+*/
+
+/* Markdown (render)
+#### 3. Use the cache
+*/
+
+// [CODE STARTS]
+response = await ai.models.generateContent({
+  model: MODEL_ID,
+  contents: "What was the main topic discussed in the first phase of the mission?",
+  config: {
+    cachedContent: cache.name,
+  },
+});
+
+console.log(response.text);
+// [CODE ENDS]
+
+/* Output Sample
+
+During the initial phase of the mission, communications focused on launch vehicle status checks, trajectory verification, staging events, and confirming orbital insertion parameters with Mission Control in Houston.
+
+*/
+
+/* Markdown (render)
+#### 4. Delete the cache
+*/
+
+// [CODE STARTS]
+await ai.caches.delete({ name: cache.name });
+console.log("Cache deleted successfully.");
+// [CODE ENDS]
+
+/* Output Sample
+
+Cache deleted successfully.
+
+*/
+
+/* Markdown (render)
+<a name="embeddings"></a>
+## Get embeddings
+
+The Gemini API offers embedding models such as `gemini-embedding-2` to generate dense vector representations of text, audio, images, video, and documents.
+
+#### Text embeddings
+*/
+
+// [CODE STARTS]
+EMBEDDING_MODEL_ID = "gemini-embedding-2";
+
+response = await ai.models.embedContent({
+  model: EMBEDDING_MODEL_ID,
+  contents: [
+    "How do I get a driver's license/learner's permit?",
+    "How do I renew my driver's license?",
+    "How do I change my address on my driver's license?",
+  ],
+});
+
+console.log(`Number of embeddings: ${response.embeddings.length}`);
+console.log(`Embedding dimensions: ${response.embeddings[0].values.length}`);
+console.log(
+  `First 4 values: [${response.embeddings[0].values.slice(0, 4).join(", ")}...]`
+);
+// [CODE ENDS]
+
+/* Output Sample
+
+Number of embeddings: 3
+Embedding dimensions: 3072
+First 4 values: [0.015234, -0.042189, 0.008432, 0.031201...]
+
+*/
+
+/* Markdown (render)
+#### Multimodal embeddings
+
+With `gemini-embedding-2`, you can also create embeddings for multimodal inputs such as images, audio, or video alongside text.
+*/
+
+// [CODE STARTS]
+response = await ai.models.embedContent({
+  model: EMBEDDING_MODEL_ID,
+  contents: [
+    {
+      inlineData: {
+        data: imageDataUrl,
+        mimeType: "image/png",
+      },
+    },
+  ],
+});
+
+console.log(
+  `Multimodal embedding dimensions: ${response.embeddings[0].values.length}`
+);
+// [CODE ENDS]
+
+/* Output Sample
+
+Multimodal embedding dimensions: 3072
+
+*/
+
+/* Markdown (render)
+<a name="gemini3"></a>
+## Gemini 3
+
+[Gemini 3 Pro](https://ai.google.dev/gemini-api/docs/models#gemini-3-pro) and [Gemini 3.7 Flash](https://ai.google.dev/gemini-api/docs/models#gemini-3.7-flash) are flagship models introducing several key capabilities:
+
+* **Thinking levels**: simplified control over how much the model reasons before answering.
+* **Media resolution**: per-part resolution control for images and video to manage token budgets.
+* **Thought signatures**: preserving reasoning state across multi-turn interactions.
+
+<a name="thinking_level"></a>
+### Thinking levels
+
+Instead of specifying a token count via `thinkingBudget`, Gemini 3 models support discrete `thinkingLevel` values (`"minimal"`, `"low"`, `"medium"`, `"high"`).
+*/
+
+// [CODE STARTS]
+GEMINI_3_MODEL_ID = "gemini-3.8-flash";
+
+prompt = `
+  Find what I'm thinking of:
+    It moves, but doesn't walk, run, or swim.
+    It has no fixed shape and if cut into pieces, those pieces will keep living and moving.
+    It has no brain but can solve complex mazes.
+`;
+
+response = await ai.models.generateContent({
+  model: GEMINI_3_MODEL_ID,
+  contents: prompt,
+  config: {
+    thinkingConfig: {
+      thinkingLevel: ThinkingLevel?.HIGH || "high",
+      includeThoughts: true,
+    },
+  },
+});
+
+for (const part of response.candidates[0].content.parts) {
+  if (!part.text) {
+    continue;
+  } else if (part.thought) {
+    console.log("Thought summary:");
+    console.log(part.text);
+    console.log("---");
+  } else {
+    console.log("Answer:");
+    console.log(part.text);
+  }
+}
+// [CODE ENDS]
+
+/* Output Sample
+
+Thought summary:
+Analyzing the riddle:
+- Moves, but doesn't walk, run, or swim: Slime mold (Physarum polycephalum) moves via protoplasmic streaming.
+- No fixed shape, cut pieces continue living: Slime mold plasmodium can be cut and will fuse or continue moving.
+- No brain but solves mazes: Famous scientific study where Physarum polycephalum found shortest paths through mazes to food.
+Answer:
+You are thinking of a **slime mold** (specifically *Physarum polycephalum*).
+
+*/
+
+/* Markdown (render)
+<a name="media_resolution"></a>
+### Media resolution per file
+
+With Gemini 3 models, you can specify media resolution per file part (`media_resolution_low`, `media_resolution_medium`, `media_resolution_high`) to optimize token usage.
+*/
+
+// [CODE STARTS]
+response = await ai.models.generateContent({
+  model: GEMINI_3_MODEL_ID,
+  contents: [
+    {
+      inlineData: {
+        data: imageDataUrl,
+        mimeType: "image/png",
+      },
+      mediaResolution: {
+        level: "media_resolution_low",
+      },
+    },
+    "Describe this concept in one sentence.",
+  ],
+});
+
+console.log(response.text);
+// [CODE ENDS]
+
+/* Output Sample
+
+A hand-drawn schematic of an eco-friendly steam-powered jetpack backpack featuring retractable boosters and laptop storage.
+
+*/
+
+/* Markdown (render)
+<a name="thoughts_signature"></a>
+### Thought signatures
+
+When thinking is enabled, Gemini responses include a `thoughtSignature` on candidate parts. The SDK automatically manages these signatures across multi-turn conversations so the model remembers its previous reasoning steps and tool outputs without having to re-compute them.
+*/
+
+// [CODE STARTS]
+for (const part of response.candidates[0].content.parts) {
+  if (part.thoughtSignature) {
+    console.log("Thought signature detected (base64 token string):");
+    console.log(part.thoughtSignature.slice(0, 32) + "...");
+    break;
+  }
+}
+// [CODE ENDS]
+
+/* Output Sample
+
+Thought signature detected (base64 token string):
+CikKGGRldmVsb3Blci1zaWduYXR1cmUS...
+
+*/
+
+/* Markdown (render)
+<a name="gemini3migration"></a>
+### Migrating from Gemini 2.5
+
+[Gemini 3](https://ai.google.dev/gemini-api/docs/gemini-3) models are our most capable model family to date and offer a stepwise improvement over Gemini 2.5. When migrating, consider the following:
+
+* **Thinking:** If you were previously using complex prompt engineering (like Chain-of-Thought) to force models to reason, try Gemini 3 with [`thinkingLevel: "high"`](#thinking_level) and simplified prompts.
+* **Temperature settings:** Sampling parameters `temperature`, `top_k`, and `top_p` are deprecated. Use model defaults to avoid potential degradation on complex reasoning tasks.
+* **PDF & document understanding:** Default OCR resolution for PDFs has changed. If you relied on specific behavior for dense document parsing, test the [`media_resolution_high`](#media_resolution) setting.
+* **Token consumption:** Migrating to Gemini 3 defaults may increase token usage for PDFs but decrease token usage for video. If requests exceed context limits, explicitly specify [`media_resolution_low`](#media_resolution).
+* **Image segmentation:** Image segmentation returning pixel-level masks for objects is not supported in Gemini 3 Pro. For workloads requiring built-in image segmentation, consider Gemini 3.7 Flash or dedicated models.
+*/
+
+/* Markdown (render)
 ## Next Steps
 
 ### Useful API references:
@@ -1102,6 +1595,6 @@ Check out the [Google GenAI SDK](https://googleapis.github.io/js-genai) for more
 
 For more detailed examples using Gemini models, check the [Quickstarts folder of the cookbook](https://github.com/google-gemini/cookbook/tree/main/quickstarts/). You'll learn how to use the Live API, juggle with multiple tools or use Gemini's spatial understanding abilities.
 
-Also check the Gemini thinking models that explicitly showcases its thoughts summaries and can manage more complex reasonings.
+Also check the [Thinking models guide](./Get_started_thinking.ipynb) that explicitly showcases its thoughts summaries and can manage more complex reasonings.
 
 */

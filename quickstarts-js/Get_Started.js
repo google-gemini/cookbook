@@ -262,7 +262,7 @@ response = await ai.models.generateContent({
   },
 });
 
-for (const part of response.candidates[0].content.parts) {
+for (const part of response.candidates?.[0]?.content?.parts || []) {
   if (!part.text) {
     continue;
   } else if (part.thought) {
@@ -1488,7 +1488,7 @@ response = await ai.models.generateContent({
   },
 });
 
-for (const part of response.candidates[0].content.parts) {
+for (const part of response.candidates?.[0]?.content?.parts || []) {
   if (!part.text) {
     continue;
   } else if (part.thought) {
@@ -1555,7 +1555,7 @@ When thinking is enabled, Gemini responses include a `thoughtSignature` on candi
 */
 
 // [CODE STARTS]
-for (const part of response.candidates[0].content.parts) {
+for (const part of response.candidates?.[0]?.content?.parts || []) {
   if (part.thoughtSignature) {
     console.log("Thought signature detected (base64 token string):");
     console.log(part.thoughtSignature.slice(0, 32) + "...");

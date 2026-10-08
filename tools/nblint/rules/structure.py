@@ -18,7 +18,7 @@ This module implements lint checks verifying essential notebook structure:
   - Copyright statement in cell 0.
   - Collapsed Apache 2.0 license code cell.
   - Colab badge button with the correct relative path and repository URL.
-  - 'Next Steps' or 'What's Next' closing section.
+  - Closing section: 'Next steps', 'What's next', 'Learn more' / 'Learning more', 'Further reading' / 'Further resources' or 'Conclusion'.
 
 Use Cases:
   - Validating that all published notebooks comply with open source licensing requirements.
@@ -162,7 +162,9 @@ def check_next_steps(
     file_path: pathlib.Path,
     is_redirect: bool = False
 ) -> List[str]:
-    """Validates that the notebook concludes with a 'Next Steps' or 'What's Next' section.
+    """Validates that the notebook concludes with a closing section.
+
+    Accepted headings: 'Next steps', 'What's next', 'Learn more' / 'Learning more', 'Further reading' / 'Further resources' or 'Conclusion'.
     
     Args:
         notebook_data: Parsed JSON content of the notebook.
@@ -183,7 +185,7 @@ def check_next_steps(
     md_cells = [c for c in cells if c.get("cell_type") == "markdown"]
     for cell in md_cells[-3:]:
         src = "".join(cell.get("source", [])).lower()
-        if re.search(r'#+\s*(?:next\s+steps|what\'?s\s+next|learn\s+more|conclusion)', src):
+        if re.search(r'#+\s*(?:next\s+steps|what\'?s\s+next|learn(?:ing)?\s+more|further\s+(?:reading|resources)|conclusion)', src):
             return []
             
-    return ["Missing recommended 'Next Steps' or 'What's Next' section at the end of the notebook."]
+    return ["Missing recommended closing section (e.g. 'Next steps', 'What's next', 'Further reading') at the end of the notebook."]

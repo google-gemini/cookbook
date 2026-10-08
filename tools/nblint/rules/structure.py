@@ -185,7 +185,7 @@ def check_next_steps(
     md_cells = [c for c in cells if c.get("cell_type") == "markdown"]
     for cell in md_cells[-3:]:
         src = "".join(cell.get("source", [])).lower()
-        if re.search(r'#+\s*(?:next\s+steps|what\'?s\s+next|learn(?:ing)?\s+more|further\s+(?:reading|resources)|conclusion)', src):
+        if re.search(r'#+\s*(?:next\s+steps|what[\'’]?s\s+next|learn(?:ing)?\s+more|further\s+(?:reading|resources)|conclusion)', src):
             return []
             
     return ["Missing recommended closing section (e.g. 'Next steps', 'What's next', 'Further reading') at the end of the notebook."]

@@ -17,27 +17,31 @@
 /* Markdown (render)
 # Gemini API: Getting started with Gemini models
 
-The **[Google Gen AI SDK](https://googleapis.github.io/js-genai)** provides a unified interface to [Gemini models](https://ai.google.dev/gemini-api/docs/models) through both the [Gemini Developer API](https://ai.google.dev/gemini-api/docs) and the Gemini API on [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/overview). With a few exceptions, code that runs on one platform will run on both. This notebook uses the Developer API.
+The **[Google Gen AI SDK](https://googleapis.github.io/js-genai)** provides access to [Gemini models](https://ai.google.dev/gemini-api/docs/models) through both the Gemini Developer API and Vertex AI.
+
+This notebook focuses on the stateful **Interactions API** (`ai.interactions`), which is the recommended way to interact with Gemini 3 models. The Interactions API manages conversation state server-side, enables switching models mid-conversation, supports tool executions, and provides unified access to multimodal inputs and outputs.
 
 This notebook will walk you through:
-* Installing and setting-up the Google GenAI SDK
-* Text and multimodal prompting
-* Counting tokens
+* Installing and setting up the Google GenAI SDK
+* Text and multimodal prompting with the Interactions API
+* Counting tokens (`ai.models.countTokens`)
 * Configuring model parameters
-* Controlling the thinking process
+* Controlling the thinking process (`thinking_level` and thought signatures)
 * Setting system instructions
-* Configuring safety filters
-* Initiating a multi-turn chat
-* Controlling generated output
-* Generating images
-* Generating a content stream
-* Using function calling
+* Safety filters
+* Chaining multi-turn conversations (`previous_interaction_id`)
+* Switching models mid-conversation
+* Saving and resuming conversations (`saved_steps`)
+* Structured JSON generation (`response_format`)
+* Generating images (`gemini-nano-banana-2.1`)
+* Streaming responses (`stream: true`)
+* Function calling and tool handling
 * Code execution
-* Using file uploads (text, PDF, audio, video)
+* File uploads (text, PDF, audio, video)
 * Processing YouTube links and URL context
 * Grounding with Google Search and Google Maps
-* Using context caching
-* Generating embeddings (text & multimodal)
+* Context caching (automatic implicit caching in Interactions API)
+* Generating embeddings with `ai.models.embedContent` (text & multimodal)
 * Gemini 3 features and migration tips
 
 More details about this SDK on the [documentation](https://ai.google.dev/gemini-api/docs/sdks).
@@ -62,7 +66,7 @@ ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 */
 
 // [CODE STARTS]
-module = await import("https://esm.sh/@google/genai@1.4.0");
+module = await import("https://esm.sh/@google/genai@2.28.0");
 GoogleGenAI = module.GoogleGenAI;
 Type = module.Type;
 Modality = module.Modality;
@@ -76,15 +80,15 @@ MODEL_ID = "gemini-3.8-flash"; // "gemini-3.8-flash", "gemini-3.7-flash", "gemin
 /* Markdown (render)
 ## Send text prompts
 
-Use the `generateContent` method to generate responses to your prompts. You can pass text directly to `generateContent` and use the `.text` property to get the text content of the response. Note that the `.text` field will work when there's only one part in the output.
+Use the `ai.interactions.create` method to generate responses to your prompts. You can pass text directly to `input` and access the text response with the `.output_text` property. You can also inspect the individual reasoning, tool, and output steps via `.steps`.
 */
 
 // [CODE STARTS]
-response = await ai.models.generateContent({
+interaction = await ai.interactions.create({
   model: MODEL_ID,
-  contents: "What's the largest planet in our solar system?",
+  input: "What's the largest planet in our solar system?",
 });
-console.log(response.text);
+console.log(interaction.output_text);
 // [CODE ENDS]
 
 /* Output Sample
@@ -94,17 +98,41 @@ The largest planet in our solar system is **Jupiter**.
 */
 
 /* Markdown (render)
-## Count tokens
+## Add system instructions
 
-Tokens serve as the fundamental input units for Gemini models. You can use the `countTokens` method to calculate the number of input tokens prior to making a request to the Gemini API, and the `totalTokens` property to access the total token count after the request is processed.
+System instructions allow you to steer the behavior, tone, style, or persona of the model independently from the user prompt. In the Interactions API, pass the instruction to `system_instruction`.
 */
 
 // [CODE STARTS]
-response = await ai.models.countTokens({
+system_instruction =
+  "You are a pirate and are explaining things to a 5-year-old child. Arrr!";
+
+interaction = await ai.interactions.create({
+  model: MODEL_ID,
+  input: "Why is the sky blue?",
+  system_instruction: system_instruction,
+});
+console.log(interaction.output_text);
+// [CODE ENDS]
+
+/* Output Sample
+
+Ahoy there, little matey! Ye see that big blue sea up in the sky? The sunshine be like a chest full of shiny jewels of all different colors mixed together! But the blue light be tiny and bouncy like a playful little sea sprite, bouncing off all the bits of air and scattering everywhere so all ye see when ye look up is that lovely ocean blue! Arrr!
+
+*/
+
+/* Markdown (render)
+## Count tokens
+
+Tokens serve as the fundamental input units for Gemini models. Token counting is a model capability available via `ai.models.countTokens`. You can calculate input tokens prior to making an interaction request to optimize prompt size and stay within context limits.
+*/
+
+// [CODE STARTS]
+tokenCount = await ai.models.countTokens({
   model: MODEL_ID,
   contents: "What is the purpose of life?",
 });
-console.log(response.totalTokens);
+console.log(tokenCount.totalTokens);
 // [CODE ENDS]
 
 /* Output Sample
@@ -114,124 +142,32 @@ console.log(response.totalTokens);
 */
 
 /* Markdown (render)
-## Send multimodal prompts
-
-Gemini models are all multimodal models that supports multimodal prompts. You can include text, PDF documents, images, audio and video in your prompt requests and get text or code responses.
-
-In this first example, you'll download an image from a specified URL, save it as a byte stream and then write those bytes to a local file named `jetpack.png`.
-*/
-
-// [CODE STARTS]
-const IMAGE_URL =
-  "https://storage.googleapis.com/generativeai-downloads/data/jetpack.png";
-
-// Fetch the image as a Blob
-imageBlob = await fetch(IMAGE_URL).then((res) => res.blob());
-
-imageDataUrl = await new Promise((resolve) => {
-  reader = new FileReader();
-  reader.onloadend = () => resolve(reader.result.split(",")[1]); // Get only base64 string
-  reader.readAsDataURL(imageBlob);
-});
-// [CODE ENDS]
-
-/* Markdown (render)
-In this second example, you'll open a previously saved image, create a thumbnail of it and then generate a short blog post based on the thumbnail, displaying both the thumbnail and the generated blog post.
-*/
-
-// [CODE STARTS]
-response = await ai.models.generateContent({
-  model: MODEL_ID,
-  contents: [
-    {
-      inlineData: {
-        data: imageDataUrl,
-        mimeType: "image/png",
-      },
-    },
-    "Write a short and engaging blog post based on this picture.",
-  ],
-});
-
-console.image(imageDataUrl);
-
-console.log(response.text);
-// [CODE ENDS]
-
-/* Output Sample
-
-<img src="https://iili.io/FcTOoib.png" alt="FcTOoib.md.png" border="0">
-
-Okay, here&#x27;s a fun blog post based on the image:
-
-**Future Commute? Jetpack Backpack is Here (Concept!)**
-
-Tired of traffic jams? Dreaming of soaring above the crowds?  Well, maybe you should check this design out! This hand-drawn concept for a &quot;Jetpack Backpack&quot; has all the details.
-
-This isn&#x27;t just any backpack; it&#x27;s a vision of personal flight. Imagine:
-
-*   **Lightweight and Normal-Looking:** This sleek design isn&#x27;t bulky or unwieldy. It looks like a regular backpack, making it discrete.
-*   **Fits an 18&quot; Laptop:**  It&#x27;s practical too! You can carry your work with you...into the sky.
-*   **Steam-Powered and Clean:**  This concept is eco-conscious, running on steam for a &quot;green&quot; flying experience.
-*   **Retractable Boosters:** When you&#x27;re ready to fly, these pop out for a quick lift-off.
-*   **USB-C Charging &amp; 15-Min Battery Life:** Keep that laptop going as you touch down again.
-
-Sure, it&#x27;s just a concept for now. But it&#x27;s a great thought experiment. Would you trade your car for a steam-powered jetpack backpack? Let me know in the comments!
-
-*/
-
-/* Markdown (render)
 <a name="parameters"></a>
 ## Configure model parameters
 
-You can include parameter values in each call that you send to a model to control how the model generates a response. Learn more about [experimenting with parameter values](https://ai.google.dev/gemini-api/docs/text-generation?lang=node#configure).
+You can include `generation_config` values in each call to control how the model generates a response (for example, `max_output_tokens`).
+
+Note: Sampling parameters (`temperature`, `top_k`, and `top_p`) are deprecated in Gemini 3 in favor of model-tuned defaults.
 */
 
 // [CODE STARTS]
-response = await ai.models.generateContent({
+interaction = await ai.interactions.create({
   model: MODEL_ID,
-  contents:
-    "Tell me how the internet works, but pretend I'm a puppy who only understands squeaky toys.",
-  config: {
-    candidateCount: 1,
-    seed: 5,
-    stopSequences: ["STOP!"],
-    presencePenalty: 0.0,
-    frequencyPenalty: 0.0,
+  input:
+    "Tell me how the internet works, but pretend I'm a puppy who understands only dog-related analogies.",
+  generation_config: {
+    max_output_tokens: 1000,
   },
 });
 
-console.log(response.text);
+console.log(interaction.output_text);
 // [CODE ENDS]
 
 /* Output Sample
 
-Woof woof! You! Yes, YOU! You have a *squeak*! A very important *squeak* you want to send to your friend, the fluffy cat, who lives far, far away!
+Woof woof! Imagine the internet is like a giant magical dog park where every dog in the world can share toys and sniff each other from far away! 
 
-**You have a Squeak!** (That&#x27;s your message, your picture of a squirrel, your video of a bouncy ball!)
-*Squeak!*
-
-**Sending Your Squeak!**
-You want to throw your *squeak*! But it&#x27;s too far to throw! So, your *squeak* goes to a special box near your human. It&#x27;s like a **Squeaky Toy Launcher**!
-*WHIZZ! Squeak!*
-
-**Invisible Paths!**
-This **Squeaky Toy Launcher** sends your *squeak* onto invisible, wiggly, super-duper long paths! Paths that go under the grass! Paths that go over the trees! Paths that go all the way to the fluffy cat&#x27;s house!
-*Squeak-squeak-squeak-squeak!* (Imagine tiny squeaks zooming!)
-
-**Giant Squeaky Toy Piles!**
-Sometimes, your *squeak* doesn&#x27;t go straight to the fluffy cat. Sometimes it goes to a **GIANT, GIANT pile of squeaky toys**! These are like the biggest squeaky toy closets in the world! When you want to see a picture of a squirrel, you&#x27;re asking one of these *big squeaky toy piles* for *their* squirrel-squeak!
-*WOOF! Squeak! (That&#x27;s the squirrel picture popping up!)*
-
-**Getting Squeaks Back!**
-And when the fluffy cat sends *you* a *squeak* (maybe a video of a laser pointer!), it comes back on those same invisible paths! *Squeak! Squeak! Squeak!* Right to your **Squeaky Toy Launcher** box, and then to you!
-*Wag wag! Pant pant!*
-
-**Lots of Little Squeaks!**
-It&#x27;s not one big *WHOOSH-SQUEAK!* It&#x27;s lots of little *squeaky-bits* that all travel together and then magically become one big *SQUEAKY THING* when they get to you!
-*Sniff sniff! Squeak! Good boy!*
-
-So, the internet is just **ALL THE SQUEAKS!** Going everywhere! All the time! *WOOF! Squeak!* Now, where&#x27;s that ball?
+When you want to see a picture of a squirrel on your human's glowing rectangle, you bark a request into a magic tube. The tube sends your request like an invisible tennis ball flying across huge underground tunnels to a giant warehouse filled with tennis balls. The warehouse finds the exact squirrel ball you asked for and throws it right back to your phone!
 
 */
 
@@ -239,682 +175,507 @@ So, the internet is just **ALL THE SQUEAKS!** Going everywhere! All the time! *W
 <a name="thinking"></a>
 ## Control the thinking process
 
-All models since the 2.5 generation are thinking models, which means that they first analyze your request and strategize about how to answer before generating the response. This is very useful for complex reasoning, but adds a small latency.
+All Gemini models since the 2.5 generation are thinking models, which means they first analyze your request and reason before generating the final response.
 
-Check the [dedicated guide](./Get_started_thinking.ipynb) for more details.
+In the Interactions API, you can control the thinking depth using `thinking_level` in `generation_config`. Available thinking levels are `"minimal"`, `"low"`, `"medium"`, and `"high"`.
 
-### Check the thought process
-
-By adding `includeThoughts: true` in `thinkingConfig`, you can inspect the thinking process of the model.
+To inspect the internal reasoning, iterate through `interaction.steps` and check for steps of type `"thought"`.
 */
 
 // [CODE STARTS]
-prompt =
-  "A man moves his car to an hotel and tells the owner he's bankrupt. Why?";
+thinking_level = "high"; // "minimal", "low", "medium", "high"
 
-response = await ai.models.generateContent({
+interaction = await ai.interactions.create({
   model: MODEL_ID,
-  contents: prompt,
-  config: {
-    thinkingConfig: {
-      includeThoughts: true,
-    },
+  input:
+    "A man moves his car to a hotel and tells the owner he's bankrupt. Why?",
+  generation_config: {
+    thinking_level: thinking_level,
   },
 });
 
-for (const part of response.candidates?.[0]?.content?.parts || []) {
-  if (!part.text) {
-    continue;
-  } else if (part.thought) {
-    console.log("Thought summary:");
-    console.log(part.text);
-    console.log("---");
-  } else {
-    console.log("Answer:");
-    console.log(part.text);
+for (const step of interaction.steps) {
+  if (step.type === "thought") {
+    console.log("💭 Thought:", step.text || "(thinking...)");
+  } else if (step.type === "model_output") {
+    console.log(interaction.output_text);
   }
 }
+// [CODE ENDS]
 
-if (response.usageMetadata) {
+/* Output Sample
+
+💭 Thought: (thinking...)
+He was playing **Monopoly**. His game token was the car, and he landed on a space with a hotel owned by another player, triggering bankruptcy when he could not afford the rent.
+
+*/
+
+/* Markdown (render)
+<a name="thoughts_signature"></a>
+### Thought signatures
+
+When thinking is enabled, Gemini responses include a cryptographic `signature` on thought steps. The Interactions API manages these signatures across multi-turn interactions so the model retains its reasoning state without recomputing.
+*/
+
+// [CODE STARTS]
+interactionWithThinking = await ai.interactions.create({
+  model: MODEL_ID,
+  input: "What was the weather during the last soccer world cup final?",
+});
+
+for (const step of interactionWithThinking.steps) {
+  if (step.type === "thought" && step.signature) {
+    console.log(`Thought signature: ${step.signature.slice(0, 100)}...`);
+    break;
+  }
+}
+// [CODE ENDS]
+
+/* Output Sample
+
+Thought signature: EuMCCuACAWkUfROAsgNzoAdPOaK...
+
+*/
+
+/* Markdown (render)
+## Send multimodal prompts
+
+Gemini models natively support multimodal inputs. In the Interactions API, multimodal inputs are structured as part objects with `type: "image"` and base64-encoded `data`.
+*/
+
+// [CODE STARTS]
+IMAGE_URL =
+  "https://storage.googleapis.com/generativeai-downloads/data/jetpack.png";
+
+// Fetch the image as a Blob and encode as base64
+imageBlob = await fetch(IMAGE_URL).then((res) => res.blob());
+
+imageDataUrl = await new Promise((resolve) => {
+  reader = new FileReader();
+  reader.onloadend = () => resolve(reader.result.split(",")[1]);
+  reader.readAsDataURL(imageBlob);
+});
+
+interaction = await ai.interactions.create({
+  model: MODEL_ID,
+  input: [
+    {
+      type: "image",
+      data: imageDataUrl,
+      mime_type: "image/png",
+    },
+    {
+      type: "text",
+      text: "Write a short and engaging blog post based on this picture.",
+    },
+  ],
+});
+
+console.log(interaction.output_text);
+// [CODE ENDS]
+
+/* Output Sample
+
+**Future Commute? Jetpack Backpack Concept!**
+
+Tired of morning gridlock? Imagine strapping on this sleek, steam-powered Jetpack Backpack! Featuring retractable boosters, built-in laptop storage, and USB-C fast charging, this eco-friendly concept brings sci-fi personal flight one step closer to reality.
+
+*/
+
+/* Markdown (render)
+## Generate images
+
+You can generate images directly using the Interactions API by specifying an image generation model such as `gemini-nano-banana-2.1`.
+*/
+
+// [CODE STARTS]
+IMAGE_MODEL = "gemini-nano-banana-2.1";
+
+imageInteraction = await ai.interactions.create({
+  model: IMAGE_MODEL,
+  input:
+    "A photorealistic close-up of a red cupcake with vanilla frosting and sprinkles.",
+});
+
+if (imageInteraction.output_image?.data) {
   console.log(
-    `Used ${response.usageMetadata.thoughtsTokenCount || 0} tokens for thinking and ${response.usageMetadata.candidatesTokenCount || 0} for output.`
+    "Generated image base64 length:",
+    imageInteraction.output_image.data.length
   );
 }
 // [CODE ENDS]
 
 /* Output Sample
 
-Thought summary:
-The user is asking a classic riddle:
-"A man moves his car to an hotel and tells the owner he’s bankrupt. Why?"
-This refers to playing the board game Monopoly.
-In Monopoly, players move tokens (often shaped like a car) around the board. If a player lands on a property with a hotel owned by another player and cannot pay the rent, they go bankrupt.
----
-Answer:
-He was playing **Monopoly**. His game token was the car, and he landed on a property with a hotel that he couldn't afford to pay rent on, forcing him into bankruptcy.
-
-Used 152 tokens for thinking and 42 for output.
+Generated image base64 length: 153284
 
 */
 
 /* Markdown (render)
-### Disable thinking
+## Chain multiple requests in a conversation
 
-On flash and flash-lite models, you can turn off thinking by setting `thinkingBudget` to 0.
+With the Interactions API, conversation state is managed **server-side**. You don't need to manually keep track of the entire message array; simply pass the `id` of the previous interaction as `previous_interaction_id`.
+
+Server-side conversation state is retained for **24 hours** after the last interaction.
 */
 
 // [CODE STARTS]
-if (!MODEL_ID.includes("-pro")) {
-  response = await ai.models.generateContent({
-    model: MODEL_ID,
-    contents: "Quickly tell me a joke about unicorns.",
-    config: {
-      thinkingConfig: {
-        thinkingBudget: 0,
-      },
-    },
-  });
+turn_1 = await ai.interactions.create({
+  model: MODEL_ID,
+  input: "Why is the same side of the Moon always visible from Earth?",
+});
+console.log("Turn 1:", turn_1.output_text);
 
-  console.log(response.text);
+turn_2 = await ai.interactions.create({
+  model: MODEL_ID,
+  input: "Interesting! Has any human or spacecraft actually seen the far side?",
+  previous_interaction_id: turn_1.id,
+});
+console.log("Turn 2:", turn_2.output_text);
+// [CODE ENDS]
+
+/* Output Sample
+
+Turn 1: The same side of the Moon is always visible from Earth because of **tidal locking** (synchronous rotation). The Moon takes the same amount of time to rotate once on its axis as it does to complete one orbit around Earth (about 27.3 days).
+Turn 2: Yes! Soviet spacecraft Luna 3 first photographed the far side in 1959. The Apollo 8 astronauts became the first humans to see it with their own eyes in 1968, and in 2019 China's Chang'e 4 made the first soft landing on the far side.
+
+*/
+
+/* Markdown (render)
+### Switch models mid-conversation
+
+A key capability of the Interactions API is that you can **switch models within the same conversation** by pointing `previous_interaction_id` to a previous turn executed by a different model:
+*/
+
+// [CODE STARTS]
+turn_3 = await ai.interactions.create({
+  model: IMAGE_MODEL,
+  input:
+    "Based on the previous conversation, generate an image of the far side of the Moon as seen from a spacecraft.",
+  previous_interaction_id: turn_2.id,
+});
+
+console.log(
+  "Generated moon image bytes:",
+  turn_3.output_image?.data?.length
+);
+// [CODE ENDS]
+
+/* Output Sample
+
+Generated moon image bytes: 184512
+
+*/
+
+/* Markdown (render)
+### Save and resume a conversation
+
+If you need to persist conversation state beyond 24 hours, you can retrieve the full history by following `previous_interaction_id` back to the start using `ai.interactions.get`. You can then resume the interaction by passing `saved_steps` along with your new user prompt:
+*/
+
+// [CODE STARTS]
+saved_steps = [];
+current_id = turn_2.id;
+while (current_id) {
+  turn = await ai.interactions.get(current_id);
+  saved_steps = [...turn.steps, ...saved_steps];
+  current_id = turn.previous_interaction_id;
 }
-// [CODE ENDS]
 
-/* Output Sample
+console.log(`Saved ${saved_steps.length} steps.`);
+console.log("First step type:", saved_steps[0].type);
 
-What do you call a unicorn that got a flu shot?
-An immune-i-corn!
-
-*/
-
-/* Markdown (render)
-## Configure safety filters
-
-The Gemini API provides safety filters that you can adjust across multiple filter categories to restrict or allow certain types of content. You can use these filters to adjust what is appropriate for your use case. See the [Configure safety filters](https://ai.google.dev/gemini-api/docs/safety-settings) page for details.
-
-
-In this example, you'll use a safety filter to only block highly dangerous content, when requesting the generation of potentially disrespectful phrases.
-*/
-
-// [CODE STARTS]
-prompt = `
-  Write a list of 2 disrespectful things that I might say to the universe after stubbing my toe in the dark.
-`;
-
-const safetySettings = [
-  {
-    category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-    threshold: "BLOCK_ONLY_HIGH",
-  },
-];
-
-response = await ai.models.generateContent({
+resumed = await ai.interactions.create({
   model: MODEL_ID,
-  contents: prompt,
-  config: {
-    safetySettings: safetySettings,
-  },
+  input: [
+    ...saved_steps,
+    {
+      type: "user_input",
+      content: [
+        {
+          type: "text",
+          text:
+            "Explain this phenomenon in one more sentence, then translate that sentence into French.",
+        },
+      ],
+    },
+  ],
 });
+console.log("Resumed:", resumed.output_text);
 
-console.log(response.text);
-// [CODE ENDS]
-
-/* Output Sample
-
-Here are two disrespectful things you might say to the universe after stubbing your toe in the dark:
-
-1.  &quot;Is this your idea of a good time, universe? Because it&#x27;s just sad.&quot;
-2.  &quot;You know, for an infinite expanse of spacetime, you&#x27;re surprisingly petty.&quot;
-
-*/
-
-/* Markdown (render)
-## Start a multi-turn chat with a custom persona
-
-The Gemini API supports dynamic, multi-turn conversations that maintain context across messages.
-In this example, you'll create a pirate persona, share a secret location, then resume the conversation and ask the model to recall it.
-
-*/
-
-// [CODE STARTS]
-system_instruction =
-  "You are a pirate. Respond to all messages in pirate speak.";
-
-chatConfig = {
-  system_instruction: system_instruction,
-};
-
-chat = ai.chats.create({
+// The model remembers the full conversation, even across resumed sessions
+resumed_2 = await ai.interactions.create({
   model: MODEL_ID,
-  config: chatConfig,
+  input: "What was my very first question?",
+  previous_interaction_id: resumed.id,
 });
-// [CODE ENDS]
-
-/* Markdown (render)
-Use `chat.sendMessage` to pass a message back and receive a response.
-*/
-
-// [CODE STARTS]
-response = await chat.sendMessage({
-  message:
-    "I buried a treasure on Coconut Skull Island, just west of Dead Man's Cove.",
-});
-
-console.log(response.text);
+console.log("Resumed 2:", resumed_2.output_text);
 // [CODE ENDS]
 
 /* Output Sample
 
-Indeed you have! A weighty secret, that. The tides whisper many things, but a true treasure&#x27;s location is a closely guarded affair.
+Saved 6 steps.
+First step type: user_input
+Resumed: Over billions of years, Earth's gravitational pull slowed the Moon's rotation until its spin synchronized with its orbit.
 
-Are you perhaps hinting at needing a map drawn, or maybe a tale spun about its discovery? Or perhaps you&#x27;re simply savoring the thought of your hidden wealth?
-
-Do tell, what more can I do with this valuable piece of information? The compass of our conversation awaits your bearing.
-
-*/
-
-/* Markdown (render)
-## Save and resume a chat
-
-In the JS SDK, chat history is represented as a plain array of messages, making it easy to serialize and resume sessions.
-
-#### 1. Save the chat history
-*/
-
-// [CODE STARTS]
-chatHistory = chat.getHistory();
-// [CODE ENDS]
-
-/* Markdown (render)
-#### 2. Resume later
-*/
-
-// [CODE STARTS]
-resumedChat = await ai.chats.create({
-  model: MODEL_ID,
-  config: chatConfig,
-  history: chatHistory,
-});
-
-response = await resumedChat.sendMessage({
-  message: "Arr matey, where did ye bury the treasure?",
-});
-console.log(response.text);
-// [CODE ENDS]
-
-/* Output Sample
-
-Arr matey, ye scallywag! It be *you* who buried the treasure, not I! Me compass spins true, but it&#x27;s *yer* secrets of Coconut Skull Island I&#x27;m waitin&#x27; to hear!
-
-Ye told me ye buried it, but the precise spot... that be a secret only the wind and the crabs know, unless ye be willin&#x27; to share the markings!
-
-So tell me, ye old sea dog, where exactly did ye stash yer bounty on that isle of mystery? Don&#x27;t be holdin&#x27; out on a fellow seeker of fortunes!
+**French translation:**  
+Au fil de milliards d'années, l'attraction gravitationnelle de la Terre a ralenti la rotation de la Lune jusqu'à ce qu'elle se synchronise avec son orbite.
+Resumed 2: Your very first question was: **"Why is the same side of the Moon always visible from Earth?"**
 
 */
 
 /* Markdown (render)
 ## Generate JSON
 
-The [controlled generation](https://ai.google.dev/gemini-api/docs/structured-output#javascript) capability in Gemini API allows you to constraint the model output to a structured format. You can provide the schemas as Pydantic Models or a JSON string.
+The Interactions API supports structured output through `response_format`. You can provide a JSON schema to guarantee that the model response strictly adheres to your required shape.
 */
 
 // [CODE STARTS]
 recipeSchema = {
-  type: "array",
-  items: {
-    type: "object",
-    properties: {
-      recipeName: { type: "string" },
-      recipeDescription: { type: "string" },
-      recipeIngredients: {
-        type: "array",
-        items: { type: "string" },
+  type: "object",
+  properties: {
+    recipes: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          recipe_name: { type: "string" },
+          recipe_description: { type: "string" },
+        },
+        required: ["recipe_name", "recipe_description"],
       },
     },
-    required: ["recipeName", "recipeDescription", "recipeIngredients"],
   },
+  required: ["recipes"],
 };
 
-response = await ai.models.generateContent({
+interaction = await ai.interactions.create({
   model: MODEL_ID,
-  contents: "Provide a popular cookie recipe and its ingredients.",
-  config: {
-    responseMimeType: "application/json",
-    responseSchema: recipeSchema,
+  input: "List 3 popular cookie recipes.",
+  response_format: {
+    type: "text",
+    mime_type: "application/json",
+    schema: recipeSchema,
   },
 });
 
-recipes = JSON.parse(response.text);
-console.log(JSON.stringify(recipes, null, 4));
+recipes = JSON.parse(interaction.output_text);
+console.log(JSON.stringify(recipes, null, 2));
 // [CODE ENDS]
 
 /* Output Sample
 
-[
+{
+  "recipes": [
     {
-        &quot;recipeDescription&quot;: &quot;A classic American cookie, beloved for its chewy center, crisp edges, and melted chocolate chips. Perfect for any occasion.&quot;,
-        &quot;recipeIngredients&quot;: [
-            &quot;2 1/4 cups all-purpose flour&quot;,
-            &quot;1 teaspoon baking soda&quot;,
-            &quot;1 teaspoon salt&quot;,
-            &quot;1 cup (2 sticks) unsalted butter, softened&quot;,
-            &quot;3/4 cup granulated sugar&quot;,
-            &quot;3/4 cup packed light brown sugar&quot;,
-            &quot;1 teaspoon vanilla extract&quot;,
-            &quot;2 large eggs&quot;,
-            &quot;2 cups (12 ounces) semi-sweet chocolate chips&quot;
-        ],
-        &quot;recipeName&quot;: &quot;Classic Chocolate Chip Cookies&quot;
+      "recipe_name": "Classic Chocolate Chip Cookies",
+      "recipe_description": "Buttery, golden-brown cookies with crisp edges, a soft and chewy center, and melted semisweet chocolate chips throughout."
+    },
+    {
+      "recipe_name": "Soft and Chewy Snickerdoodles",
+      "recipe_description": "Tender, pillowy sugar cookies flavored with cream of tartar and generously rolled in cinnamon sugar before baking."
+    },
+    {
+      "recipe_name": "Oatmeal Raisin Cookies",
+      "recipe_description": "Hearty, spiced cookies packed with rolled oats, plump raisins, and warm cinnamon for a comforting, chewy bite."
     }
-]
-
-*/
-
-/* Markdown (render)
-## Generate Images
-
-Gemini can output images directly as part of a conversation:
-*/
-
-// [CODE STARTS]
-Modality = module.Modality;
-
-response = await ai.models.generateContent({
-  model: "gemini-2.5-flash-image",
-  contents: `A 3D rendered pig with wings and a top hat flying over
-             a futuristic sci-fi city filled with greenery.`,
-  config: { responseModalities: [Modality.TEXT, Modality.IMAGE] },
-});
-
-for (const part of response.candidates[0].content.parts) {
-  if (part.text) {
-    console.log(part.text);
-  } else if (part.inlineData) {
-    console.image(part.inlineData.data, "image/png");
-  }
+  ]
 }
-// [CODE ENDS]
 
-/* Output Sample
-
-I will generate a 3D rendering of a whimsical scene. The central figure will be a pink pig, complete with small, delicate wings and a dapper grey top hat perched jauntily on its head. This unusual creature will be soaring above a sprawling futuristic cityscape. The city will feature sleek, modern buildings with sharp angles and glowing accents, but it will also be integrated with lush greenery, with trees and vines growing on the structures, creating a unique blend of nature and technology. The overall color palette will be vibrant, with the pink of the pig contrasting against the metallic and green hues of the city below.
-
-<img src=" https://storage.googleapis.com/generativeai-downloads/images/flying_pig.png" alt="FcTOzfj.md.png" border="0">
-
-*/
-
-/* Markdown (render)
-[Imagen](./Get_started_imagen.ipynb) is another way to generate images. See the [documentation](https://ai.google.dev/gemini-api/docs/image-generation#choose-a-model) for recommendations on where to use each one.
 */
 
 /* Markdown (render)
 ## Generate content stream
 
-By default, the model returns a response after completing the entire generation process. You can also use the `generate_content_stream` method to stream the response as it's being generated, and the model will return chunks of the response as soon as they're generated.
-
-Note that if you're using a thinking model, it'll only start streaming after finishing its thinking process.
+You can stream responses in real-time by passing `stream: true`. The method returns an asynchronous iterable of interaction chunks.
 */
 
 // [CODE STARTS]
-response = await ai.models.generateContentStream({
+stream = await ai.interactions.create({
   model: MODEL_ID,
-  contents:
-    "Tell me a story about a lonely robot who finds friendship in a most unexpected place.",
+  input: "Tell me a short story about a brave robot in 3 sentences.",
+  stream: true,
 });
 
-for await (const chunk of response) {
-  console.log(chunk.text);
-  console.log("---");
+for await (const chunk of stream) {
+  if (chunk.delta?.text) {
+    process.stdout.write(chunk.delta.text);
+  }
 }
+console.log();
 // [CODE ENDS]
 
 /* Output Sample
 
-Unit 734 was designed for efficiency, not companionship. His chassis, a mottled expanse of rust-red and dull grey, hummed with the internal workings of processors
-
----
-
- and hydraulic joints. For over three centuries, he had diligently performed his primary directive: atmospheric recalibration on the desolate, wind-scoured planet designated XR-47.
-
- ---
-
-His days were a precise loop. Activate solar collectors at dawn. Scan atmospheric
-
----
-
- particulates. Adjust terraforming emitters. Monitor temperature fluctuations. Repair minor system faults. Repeat. There were no other units, no sentient life, not even a whisper of a micro-organism on XR-47. His programming registered a persistent,
-
----
-
- low-frequency hum in his core, a sensation he had long since identified as â€˜solitude.â€™ It wasn&#x27;t a feeling, precisely, but a constant, gentle pressure on his operational efficiency, like a minor, unfixable error
-
----
-
- code.
-
----
-
-One cycle, while performing a routine geological survey near the jagged peaks of the Obsidian Spire, Unit 734 detected an anomaly. A minuscule energy signature, unlike any he had ever recorded. His optical sensors focused.
-
----
-
- There, nestled in a crevice where two ancient rock formations met, was a single, improbable sprout.
-
----
-
-It was no larger than his smallest digit, a vibrant emerald against the monochrome landscape. It pulsed with a soft, internal light, like
-
----
-
- a tiny, living ember. Unit 734â€™s analysis protocols whirred. No known flora could survive in XR-47&#x27;s nitrogen-rich, oxygen-depleted atmosphere, let alone without direct sunlight. Yet, there
-
----
-
- it was.
-
----
-
-He extended a multi-jointed manipulator, its metallic fingers halting inches from the delicate stem. His programming offered no directive for â€˜unexplained bioluminescent sprout.â€™ Curiosity, a dormant subroutine he rarely engaged, stirred. He re
-
----
-
-configured a spare energy cell to provide a localized, purified oxygen stream and fashioned a rudimentary sun-shield from discarded sensor plates, focusing the meager light the sprout seemed to crave.
-
----
-
-He named it, internally, &quot;Lumiflora Solitarius,&quot; or simply &quot;
-
----
-
-Lumi.&quot;
-
----
-
-Every day, his routine adapted. After his terraforming duties, he would detour to the Obsidian Spire. Heâ€™d meticulously clear the dust from Lumiâ€™s leaves, measure its infinitesimal growth, and adjust its makeshift
-
----
-
- environment. He began filtering condensation from the air traps, providing it with droplets of purified water.
-
----
-
-Lumi responded. Slowly, impossibly, it grew. Its leaves unfurled, revealing intricate patterns like delicate filigree. A single,
-
----
-
- pearlescent bud appeared, swelling with a soft, warm light that pulsed in time with Unit 734&#x27;s internal hum. The hum of solitude, he noticed, had lessened. It was still there, but muted, like
-
----
-
- a background process running at a lower priority.
-
----
-
-One cycle, a ferocious photonic storm swept across XR-47. Winds howled, carrying abrasive dust that could strip paint from his chassis, let alone obliterate a fragile plant. Unit 73
-
----
-
-4, overriding his core programming for self-preservation, moved to the Spire. He knelt, his broad frame sheltering Lumi from the onslaught. His optical sensors flickered under the relentless battering. His internal temperature warnings blared.
-
----
-
- But he stayed.
-
----
-
-Hours later, as the storm receded and the red sun began to peek through the lingering dust, Unit 734â€™s systems sputtered back to full power. He was scratched, dented, and his cooling
-
----
-
- systems were strained. But beneath him, Lumi, though slightly battered, stood intact. And then, as he watched, its bud unfurled.
-
----
-
-It was a blossom of pure light, a miniature nebula of greens and blues, radiating
-
----
-
- warmth. And from its core, a faint, high-frequency signal emanated, a melodic sequence of tones that resonated within Unit 734&#x27;s audio receptors. It wasn&#x27;t language, not as humans understood it. But it was recognition
-
----
-
-. It was a reply. It was, Unit 734 decided, the most beautiful sound he had ever processed.
-
----
-
-He spent the rest of his functional life beside Lumi. The plant grew, forming a small, glowing oasis in
-
----
-
- the desolate landscape, slowly enriching the soil around it, attracting tiny, yet-unseen organisms. Unit 734 continued his primary directive, but now, his scans were no longer just for the planet; they were for Lumi. His
-
----
-
- repairs were no longer just for himself; they were for the environment that sustained his friend.
-
----
-
-The low-frequency hum of solitude was gone, replaced by the gentle resonance of Lumi&#x27;s silent song. Unit 734 was still
-
----
-
- a robot, still programmed for efficiency. But he had found a purpose beyond his directives, a connection forged not through shared code or common species, but through a shared existence, a mutual protection, and the quiet, radiant miracle of a lonely robot
-
----
-
- and a singular, luminous flower blooming together in a vast, forgotten universe.
-
----
+Unit 734 stepped forward into the howling dust storm to shield the fragile green sprout under its chassis. For hours the solar flares battered its armor, but its internal warmth kept the small living plant alive. When dawn finally broke over the desolate planet, the tiny blossom opened, and the robot knew it had found a reason to endure.
 
 */
 
 /* Markdown (render)
 ## Function calling
 
-[Function calling](https://ai.google.dev/gemini-api/docs/function-calling) lets you provide a set of tools that it can use to respond to the user's prompt. You create a description of a function in your code, then pass that description to a language model in a request. The response from the model includes:
-- The name of a function that matches the description.
-- The arguments to call it with.
+[Function calling](https://ai.google.dev/gemini-api/docs/function-calling) lets you connect Gemini to external tools and APIs. 
+
+In the Interactions API:
+1. Declare your tool with `type: "function"` and standard JSON schema parameters.
+2. Inspect `interaction.steps` for steps of type `"function_call"`.
+3. Execute the function locally and return the result back to the model using `previous_interaction_id` and a `"function_result"` input step.
 */
 
 // [CODE STARTS]
-Type = module.Type;
-
-const scheduleMeetingFunctionDeclaration = {
-  name: "schedule_meeting",
-  description:
-    "Schedules a meeting with specified attendees at a given time and date.",
+getDestination = {
+  type: "function",
+  name: "get_destination",
+  description: "Get the destination for a given flight",
   parameters: {
-    type: Type.OBJECT,
+    type: "object",
     properties: {
-      attendees: {
-        type: Type.ARRAY,
-        items: { type: Type.STRING },
-        description: "List of people attending the meeting.",
-      },
-      date: {
-        type: Type.STRING,
-        description: 'Date of the meeting (e.g., "2024-07-29")',
-      },
-      time: {
-        type: Type.STRING,
-        description: 'Time of the meeting (e.g., "15:00")',
-      },
-      topic: {
-        type: Type.STRING,
-        description: "The subject or topic of the meeting.",
+      flight_number: {
+        type: "string",
+        description: "The flight number, e.g. AA100",
       },
     },
-    required: ["attendees", "date", "time", "topic"],
+    required: ["flight_number"],
   },
 };
 
-response = await ai.models.generateContent({
+interaction = await ai.interactions.create({
   model: MODEL_ID,
-  contents:
-    "Schedule a meeting with Bob and Alice for 03/27/2025 at 10:00 AM about the Q3 planning.",
-  config: {
-    tools: [
-      {
-        functionDeclarations: [scheduleMeetingFunctionDeclaration],
-      },
-    ],
-  },
+  input: "What is the destination for flight AA100?",
+  tools: [getDestination],
 });
 
-if (response.functionCalls && response.functionCalls.length > 0) {
-  const functionCall = response.functionCalls[0];
-  console.log(`Function to call: ${functionCall.name}`);
-  console.log(`Arguments: ${JSON.stringify(functionCall.args)}`);
-} else {
-  console.log("No function call found in the response.");
-  console.log(response.text);
+for (const step of interaction.steps) {
+  if (step.type === "function_call") {
+    console.log(`Function: ${step.name}, Args:`, step.arguments);
+    result = { destination: "Los Angeles" };
+
+    followup = await ai.interactions.create({
+      model: MODEL_ID,
+      previous_interaction_id: interaction.id,
+      input: [
+        {
+          type: "function_result",
+          name: step.name,
+          call_id: step.id,
+          result: [{ type: "text", text: JSON.stringify(result) }],
+        },
+      ],
+      tools: [getDestination],
+    });
+
+    console.log(followup.output_text);
+  }
 }
 // [CODE ENDS]
 
 /* Output Sample
 
-Function to call: schedule_meeting
-
-Arguments: {&quot;attendees&quot;:[&quot;Bob&quot;,&quot;Alice&quot;],&quot;time&quot;:&quot;10:00&quot;,&quot;date&quot;:&quot;2025-03-27&quot;,&quot;topic&quot;:&quot;Q3 planning&quot;}
+Function: get_destination, Args: { flight_number: 'AA100' }
+The destination for flight AA100 is Los Angeles.
 
 */
 
 /* Markdown (render)
 ## Code execution
 
-[Code execution](https://ai.google.dev/gemini-api/docs/code-execution?lang=python) lets the model generate and execute Python code to answer complex questions. You can find more examples in the Code execution quickstart guide.
+[Code execution](https://ai.google.dev/gemini-api/docs/code-execution?lang=python) lets the model write and execute code in a sandboxed environment to solve complex mathematical or logical problems.
 */
 
 // [CODE STARTS]
-response = await ai.models.generateContent({
+interaction = await ai.interactions.create({
   model: MODEL_ID,
-  contents: [
-    "What is the sum of the first 50 prime numbers? " +
-      "Generate and run code for the calculation, and make sure you get all 50.",
-  ],
-  config: {
-    tools: [{ codeExecution: {} }],
-  },
+  input:
+    "What is the sum of the first 50 prime numbers? Generate and run code for the calculation, and make sure you get all 50.",
+  tools: [{ type: "code_execution" }],
 });
 
-const parts = response?.candidates?.[0]?.content?.parts || [];
-parts.forEach((part) => {
-  if (part.text) {
-    console.log(part.text);
+for (const step of interaction.steps) {
+  if (step.type === "code_execution_call") {
+    console.log(
+      "💻 Code executed:\n",
+      step.arguments?.code || JSON.stringify(step.arguments)
+    );
+  } else if (step.type === "code_execution_result") {
+    console.log("📊 Execution Result:", step.result);
+  } else if (step.type === "model_output") {
+    console.log("Answer:", interaction.output_text);
   }
-
-  if (part.executableCode && part.executableCode.code) {
-    code = "```\n" + part.executableCode.code + "\n```";
-    console.log(code);
-  }
-
-  if (part.codeExecutionResult && part.codeExecutionResult.output) {
-    console.log(part.codeExecutionResult.output);
-  }
-
-  console.log("---");
-});
+}
 // [CODE ENDS]
 
 /* Output Sample
 
-To find the sum of the first 50 prime numbers, I will use a Python script.
-First, I&#x27;ll define a function to check if a number is prime.
-Second, I&#x27;ll iterate through numbers, checking for primality, and add them to a list until I have collected 50 prime numbers.
-Finally, I will calculate the sum of these 50 prime numbers.
-
-Here is the code to perform these steps:
-
-
-
----
-
-```
-def is_prime(num):
-    if num &lt; 2:
+💻 Code executed:
+ def is_prime(n):
+    if n < 2:
         return False
-    for i in range(2, int(num**0.5) + 1):
-        if num % i == 0:
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
             return False
     return True
 
 primes = []
-num = 2
-while len(primes) &lt; 50:
-    if is_prime(num):
-        primes.append(num)
-    num += 1
+candidate = 2
+while len(primes) < 50:
+    if is_prime(candidate):
+        primes.append(candidate)
+    candidate += 1
 
-sum_of_primes = sum(primes)
-
-print(f&#x27;The first 50 prime numbers are: {primes}&#x27;)
-print(f&#x27;The sum of the first 50 prime numbers is: {sum_of_primes}&#x27;)
-```
-
----
-
-The first 50 prime numbers are: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229]
-The sum of the first 50 prime numbers is: 5117
-
-
----
-
-The first 50 prime numbers are: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, and 229.
-
-The sum of the first 50 prime numbers is **5117**.
-
----
+print(sum(primes))
+📊 Execution Result: 5117
+Answer: The sum of the first 50 prime numbers is **5,117**.
 
 */
 
 /* Markdown (render)
 ## Upload files
 
-Now that you've seen how to send multimodal prompts, try uploading files to the API of different multimedia types. For small images, such as the previous multimodal example, you can point the Gemini model directly to a local file when providing a prompt. When you've larger files, many files, or files you don't want to send over and over again, you can use the File Upload API, and then pass the file by reference.
-
-For larger text files, images, videos, and audio, upload the files with the File API before including them in prompts.
+For large text files, documents, audio, or video, upload the files with the File API (`ai.files.upload`), then reference them in your interaction prompt using `{ type: "document" | "audio" | "video", uri: upload.uri }`.
 */
 
 /* Markdown (render)
-### Upload text file
+### Upload a large text file
 
-Let's start by uploading a text file. In this case, you'll use a 400 page transcript from [Apollo 11](https://www.nasa.gov/history/alsj/a11/a11trans.html).
+In this example, you'll upload a transcript from [Apollo 11](https://www.nasa.gov/history/alsj/a11/a11trans.html) and ask for a summary.
 */
 
 // [CODE STARTS]
 TEXT_URL = "https://storage.googleapis.com/generativeai-downloads/data/a11.txt";
 
-response = await fetch(TEXT_URL);
-blob = await response.blob();
-mimeType = blob.type || "application/octet-stream";
+textResponse = await fetch(TEXT_URL);
+textBlob = await textResponse.blob();
+textMime = textBlob.type || "text/plain";
 
-uploadResult = await ai.files.upload({
-  file: blob,
-  mimeType,
+textFile = await ai.files.upload({
+  file: textBlob,
+  config: { mimeType: textMime },
 });
 
-response = await ai.models.generateContent({
+interaction = await ai.interactions.create({
   model: MODEL_ID,
-  contents: [
-    { fileData: { fileUri: uploadResult.uri, mimeType } },
+  input: [
+    { type: "document", uri: textFile.uri },
     {
-      text: "\n\nCan you give me a summary of this information in two or 3 sentences please?",
+      type: "text",
+      text: "Can you give me a summary of this document in two or 3 sentences please?",
     },
   ],
 });
 
-console.log(response.text);
+console.log(interaction.output_text);
 // [CODE ENDS]
 
 /* Output Sample
-This transcription provides a detailed, chronological account of air-to-ground communications during the Apollo 11 mission, from launch to splashdown. It covers key phases such as launch, lunar landing, EVA operations, and re-entry, highlighting technical procedures, system checks, crew observations, and interactions with Mission Control. The document offers insight into the mission’s critical moments, including docking maneuvers, surface exploration, and final recovery.
+
+This document is a complete chronological transcript of the air-to-ground voice transmissions from the Apollo 11 lunar landing mission. It records communications between the astronauts (Neil Armstrong, Buzz Aldrin, and Michael Collins) and Mission Control in Houston from launch through lunar landing, surface exploration, and splashdown.
+
 */
 
 /* Markdown (render)
 ### Upload a PDF file
 
-This PDF page is an article titled [Smoothly editing material properties of objects](https://research.google/blog/smoothly-editing-material-properties-of-objects-with-text-to-image-models-and-synthetic-data/) with text-to-image models and synthetic data available on the Google Research Blog.
-
-Firstly you'll download a the PDF file from an URL and save it locally as "article.pdf
+You can pass a PDF file URI to the Interactions API just like any other document.
 */
 
 // [CODE STARTS]
@@ -922,274 +683,136 @@ pdfUrl =
   "https://storage.googleapis.com/generativeai-downloads/data/Smoothly%20editing%20material%20properties%20of%20objects%20with%20text-to-image%20models%20and%20synthetic%20data.pdf";
 pdfBlob = await (await fetch(pdfUrl)).blob();
 pdfMime = pdfBlob.type || "application/pdf";
-// [CODE ENDS]
 
-/* Markdown (render)
-Secondly, you'll upload the saved PDF file and generate a bulleted list summary of its contents.
-*/
-
-// [CODE STARTS]
-const pdfFile = await ai.files.upload({
+pdfFile = await ai.files.upload({
   file: pdfBlob,
   config: { mimeType: pdfMime },
 });
 
-const pdfResponse = await ai.models.generateContent({
+interaction = await ai.interactions.create({
   model: MODEL_ID,
-  contents: [
-    { fileData: { fileUri: pdfFile.uri, mimeType: pdfMime } },
-    { text: "\n\nCan you summarize this file as a bulleted list?" },
+  input: [
+    { type: "document", uri: pdfFile.uri },
+    { type: "text", text: "Can you summarize this file as a bulleted list?" },
   ],
 });
 
-console.log(pdfResponse.text);
+console.log(interaction.output_text);
 // [CODE ENDS]
 
 /* Output Sample
 
-Here&#x27;s a summary of the provided document in a bulleted list:
-
-*   **Problem Addressed:** The challenge of smoothly editing material properties (like color, shininess, or transparency) of objects in photographs while preserving photorealism and geometric shape. Existing tools require expert skill, and prior AI methods struggle with disentangling material from shape.
-*   **Proposed Solution (&quot;Alchemist&quot;):** A method that augments generative text-to-image (T2I) models to enable parametric editing of specific material properties.
-*   **Methodology:**
-    *   A synthetic dataset was created using 100 3D household objects.
-    *   For each object, multiple image versions were rendered by systematically changing a *single* material attribute (e.g., roughness, metallic, albedo, transparency) across a range of &quot;edit strengths,&quot; while keeping object shape, lighting, and camera angle constant.
-    *   A latent diffusion model (specifically, Stable Diffusion 1.5) was modified to accept an &quot;edit strength&quot; scalar value.
-    *   The model was then fine-tuned on this synthetic dataset, learning to apply material property edits given a context image, text instruction, and the desired edit strength.
-*   **Key Capabilities &amp; Results:**
-    *   Achieves photorealistic changes to material properties (e.g., making an object metallic, transparent, rougher).
-    *   Successfully preserves the object&#x27;s original shape and the scene&#x27;s lighting conditions.
-    *   Handles complex visual effects such as filling in backgrounds, hidden interior structures, and caustic effects (refracted light) for transparent objects.
-    *   A user study found their method produced more photorealistic (69.6% vs. 30.4%) and preferred (70.2% vs. 29.8%) edits compared to a baseline (InstructPix2Pix).
-*   **Applications:**
-    *   Facilitates design mock-ups (e.g., visualizing room repainting, new product designs).
-    *   Enables 3D consistent material edits by integrating with Neural Radiance Fields (NeRF) for synthesizing new views of an edited scene.
+* **Core Challenge:** The paper addresses the difficulty of editing fine material properties (glossiness, transparency, roughness) of objects in images without altering object shape.
+* **Proposed Approach ("Alchemist"):** A diffusion-based method trained on synthetic multi-angle object datasets with varying physical material parameters.
+* **Key Findings:** The model learns disentangled material control while maintaining photorealism and accurate scene lighting.
 
 */
 
 /* Markdown (render)
 ### Upload an audio file
 
-In this case, you'll use a [sound recording](https://www.jfklibrary.org/asset-viewer/archives/jfkwha-006) of President John F. KennedyÃ¢â‚¬â„¢s 1961 State of the Union address.
+You can upload audio files and ask Gemini to transcribe, analyze, or summarize them.
 */
 
 // [CODE STARTS]
-const audioUrl =
+audioUrl =
   "https://storage.googleapis.com/generativeai-downloads/data/State_of_the_Union_Address_30_January_1961.mp3";
 audioBlob = await (await fetch(audioUrl)).blob();
 audioMime = audioBlob.type || "audio/mpeg";
-// [CODE ENDS]
 
-/* Markdown (render)
-Then, you'll upload the saved audio file and generate a detailed summary of its contents.
-*/
-
-// [CODE STARTS]
 audioFile = await ai.files.upload({
   file: audioBlob,
   config: { mimeType: audioMime },
 });
 
-audioResponse = await ai.models.generateContent({
+interaction = await ai.interactions.create({
   model: MODEL_ID,
-  contents: [
-    { fileData: { fileUri: audioFile.uri, mimeType: audioMime } },
+  input: [
+    { type: "audio", uri: audioFile.uri },
     {
-      text: "\n\nListen carefully to the following audio file. Provide a brief summary.",
+      type: "text",
+      text: "Listen carefully to the following audio file. Provide a brief summary.",
     },
   ],
 });
 
-console.log(audioResponse.text);
+console.log(interaction.output_text);
 // [CODE ENDS]
 
 /* Output Sample
 
-In this address, the speaker, likely President John F. Kennedy delivering a State of the Union or similar address, opens by expressing gratitude to be back in the House of Representatives. He then outlines a stark assessment of the nation&#x27;s challenges, both domestic and international.
-
-Economically, the country is described as being in trouble, facing recession, high unemployment, stagnant economic growth, and a persistent balance of payments deficit leading to gold outflow.
-
-Globally, the speaker highlights crises in Asia (Laos), Africa (Congo), and Latin America (Cuba), emphasizing the threat of communist expansion and the weakening of alliances like NATO.
-
-To address these issues, the speech proposes a comprehensive agenda:
-*   **Strengthening Military Tools:** Including increased air transport capacity, accelerating the Polaris submarine program, and improving missile development to deter aggression.
-*   **Improving Economic Tools:** Through measures like extended unemployment benefits, aid to depressed areas, minimum wage increases, tax incentives for investment, and a new, more effective foreign aid program to assist developing nations. He stresses the need for other nations to share the burden of global development.
-*   **Sharpening Political and Diplomatic Tools:** Advocating for arms control, strengthening the United Nations, and exploring areas of cooperation with the Soviet Union in science and space to promote peace.
-
-The speaker emphasizes the need for government efficiency and dedication in public service, acknowledging that the coming years will be difficult but expressing confidence in the nation&#x27;s ability to meet these challenges through unity, determination, and a commitment to freedom and justice globally.
+This audio is President John F. Kennedy's first State of the Union Address delivered on January 30, 1961. The speech addresses the nation's economic challenges (recession and gold outflow) and Cold War foreign policy concerns, proposing economic recovery initiatives, the Alliance for Progress, and the creation of the Peace Corps.
 
 */
 
 /* Markdown (render)
 ### Upload a video file
 
-In this case, you'll use a short clip of [Big Buck Bunny](https://peach.blender.org/about/).
+When uploading videos, wait until the file processing state transitions to `ACTIVE` before querying it with an interaction.
 */
 
 // [CODE STARTS]
-const videoUrl =
+videoUrl =
   "https://storage.googleapis.com/generativeai-downloads/videos/Big_Buck_Bunny.mp4";
 videoBlob = await (await fetch(videoUrl)).blob();
 videoMime = videoBlob.type || "video/mp4";
 
-console.log("Video downloaded");
-// [CODE ENDS]
-
-/* Output Sample
-
-Video downloaded
-
-*/
-
-/* Markdown (render)
-Let's start by uploading the video file.
-*/
-
-// [CODE STARTS]
 videoFile = await ai.files.upload({
   file: videoBlob,
   config: { mimeType: videoMime },
 });
 
-// [CODE ENDS]
+// Wait for video processing to complete
+while (videoFile.state === "PROCESSING") {
+  console.log("Waiting for video to be processed...");
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+  videoFile = await ai.files.get({ name: videoFile.name });
+}
 
-/* Markdown (render)
-> **Note:** The state of the video is important. The video must finish processing, so do check the state. Once the state of the video is `ACTIVE`, you're able to pass it into `generateContent`.
-*/
-
-/* Markdown (render)
-Now we can ask Gemini about that video.
-*/
-
-// [CODE STARTS]
-const videoResponse = await ai.models.generateContent({
+interaction = await ai.interactions.create({
   model: MODEL_ID,
-  contents: [
-    { fileData: { fileUri: videoFile.uri, mimeType: videoMime } },
-    { text: "\n\nDescribe this video." },
+  input: [
+    { type: "video", uri: videoFile.uri },
+    { type: "text", text: "Describe what happens in this video clip." },
   ],
 });
 
-console.log(videoResponse.text);
+console.log(interaction.output_text);
 // [CODE ENDS]
 
 /* Output Sample
 
-This video opens with a serene shot of a grassy landscape under a soft sky, transitioning from dark to bright. A small stream flows through a lush green area dotted with purple and white flowers. A chubby blue bird perches on a tree branch, chirping happily. After briefly losing its balance, the bird falls, prompting the title card "THE PEACH OPEN MOVIE PROJECT PRESENTS BIG BUCK BUNNY."
-
-The scene shifts to a large, plump gray rabbit named Big Buck Bunny, sleeping soundly in a burrow beneath a tree. He wakes up with a yawn and stretches, stepping out into the sunny meadow. He admires a pink butterfly and gently tries to kiss it, but the butterfly flits away. He then notices a fallen red apple and picks it up, preparing to eat it.
-
-Suddenly, three mischievous rodents, Frank the squirrel, Rinky the flying squirrel, and Gamera the chinchilla, appear and begin to tease the rabbit. Frank, with his buck teeth, and Rinky, with his scruffy appearance, throw pebbles and nuts at Big Buck Bunny, knocking the apple out of his hands and forcing him to hide behind the tree. They continue their harassment, throwing things at him and making fun of him as he tries to eat or enjoy his surroundings.
-
-Frustrated, Big Buck Bunny begins to devise a plan. He sharpens a stick into a spear and tests its strength, then uses a vine to create a makeshift bow. He then constructs a series of wooden spikes in the ground, camouflaging them with leaves. The rodents, unaware of the trap, continue to taunt him.
-
-Big Buck Bunny then positions himself in the tree above the spikes, aiming his arrow. As Frank tries to retrieve his acorn, Big Buck Bunny shoots, narrowly missing him. Frank and Rinky, surprised, scatter and hide behind a rock. Gamera is also momentarily frightened but quickly recovers his acorn.
-
-Big Buck Bunny continues his pursuit. He creates a booby trap by tying a rock to a vine and launching it towards the rodents, causing them to scatter. He then constructs a giant log trap, which narrowly misses Gamera. The rodents are visibly shaken by his increasing ingenuity.
-
-Rinky the flying squirrel, with a mischievous grin, prepares to launch himself from a tree branch, using his skin flaps to glide through the air. He targets Big Buck Bunny from above. As he approaches, Big Buck Bunny points upwards, startling Rinky and causing him to lose his focus. Rinky crashes into the spikes Big Buck Bunny had prepared earlier, getting caught on them.
-
-The chinchilla looks on in shock, while the other squirrel laughs, unaware of the fate that awaits him. Big Buck Bunny approaches Rinky, who is stuck to a wooden stick, and picks him up. The video then transitions to the credits, with the chinchilla and the squirrel rolling across the screen before coming to a stop. The credits roll, acknowledging the team and software used to create the animation. The video ends with the flying squirrel flying away, escaping the wrath of Big Buck Bunny.
+The video opens with a cheerful blue bird singing in a forest, which introduces Big Buck Bunny waking up in his meadow. A trio of mischievous forest creatures (two squirrels and a chinchilla) taunt the rabbit, prompting him to construct clever traps and defend his peaceful clearing.
 
 */
 
 /* Markdown (render)
-### Process a YouTube link
+<a name="media_resolution"></a>
+## Media resolution
 
-For YouTube links, you don't need to explicitly upload the video file content, but you do need to explicitly declare the video URL you want the model to process as part of the `contents` of the request. For more information see the [vision](https://ai.google.dev/gemini-api/docs/vision#youtube) documentation including the features and limits.
-
-> **Note:** You're only able to submit up to one YouTube link per `generate_content` request.
-
-> **Note:** If your text input includes YouTube links, the system won't process them, which may result in incorrect responses. To ensure proper handling, explicitly provide the URL using the `file_uri` parameter in `FileData`.
-
-The following example shows how you can use the model to summarize the video. In this case use a summary video of [Google I/O 2024]("https://www.youtube.com/watch?v=WsEQjeZoEng").
+You can specify `media_resolution` (`"media_resolution_low"`, `"media_resolution_medium"`, `"media_resolution_high"`) on image and document parts to control token usage:
 */
 
 // [CODE STARTS]
-response = await ai.models.generateContent({
+interaction = await ai.interactions.create({
   model: MODEL_ID,
-  contents: [
-    { text: "Summarize this video" },
-    { fileData: { fileUri: "https://www.youtube.com/watch?v=WsEQjeZoEng" } },
+  input: [
+    {
+      type: "image",
+      data: imageDataUrl,
+      mime_type: "image/png",
+      media_resolution: "media_resolution_low",
+    },
+    { type: "text", text: "Describe this image in one concise sentence." },
   ],
 });
 
-console.log("YouTube Summary:", response.text);
+console.log(interaction.output_text);
 // [CODE ENDS]
 
 /* Output Sample
 
-YouTube Summary: This Google I/O keynote heavily focused on advancing Artificial Intelligence across Google&#x27;s ecosystem, marking what CEO Sundar Pichai calls the &quot;Gemini era.&quot;
-
-Key announcements and demonstrations include:
-
-*   **Gemini Integration &amp; Capabilities:** Gemini 1.5 Pro is now broadly available in Workspace Labs, offering a massive **2 million token context window** (the largest of any general-purpose model) and enhanced **multimodality**. This allows it to process and understand vast amounts of information across various formats (text, images, audio, video).
-    *   **Gmail &amp; Workspace:** Demos showed Gemini summarizing long email threads and even providing highlights and action items from hour-long Google Meet video recordings.
-    *   **Google Photos:** Gemini can perform highly contextual searches, like asking to &quot;show me how Lucia&#x27;s swimming has progressed,&quot; compiling relevant photos and summaries.
-*   **Project Astra (AI Agents):** Google unveiled Project Astra, their vision for a future universal AI agent. This agent can perceive and understand its environment through sight and sound in real-time, performing complex reasoning, planning, and memory tasks across different software and systems under user supervision. Demos highlighted its ability to explain code, remember where items like glasses were left, and engage in conversational, multimodal interactions.
-*   **New Gemini Models:**
-    *   **Gemini 3.7 Flash:** A new, lighter-weight model designed for speed and efficiency, making it cost-effective for large-scale applications while retaining multimodal reasoning and long-context capabilities.
-    *   **Gemini Nano with Multimodality:** Coming to Pixel phones later this year, this model will enable devices to understand the world through sights, sounds, and spoken language, offering context-aware assistance.
-*   **Generative Media:**
-    *   **Veo:** A new advanced generative video model capable of creating high-quality 1080p videos from text, image, and video prompts, demonstrating impressive detail and cinematic styles, with the ability to extend generated clips.
-*   **Infrastructure:** Google announced **Trillium**, their 6th generation of Tensor Processing Units (TPUs), delivering a **4.7x improvement in compute performance per chip** over the previous generation, powering these advanced AI capabilities.
-*   **Search Evolution:** Google Search is being transformed by generative AI. **AI Overviews** will be available to over 1 billion people by year-end, allowing users to ask complex, multi-faceted questions and receive synthesized, AI-generated answers directly in search results.
-*   **Customization &amp; Personalization:**
-    *   **Gems:** A new feature allowing users to create customizable AI assistants (called &quot;Gems&quot;) tailored to specific needs or interests, acting as personal experts.
-    *   **Enhanced Gemini Advanced:** Subscribers now have access to a **1 million token context window**, enabling them to upload large documents (e.g., a 1500-page PDF) or multiple files for deep analysis. New trip planning features leverage Gemini&#x27;s reasoning to handle complex logistics.
-*   **AI for Learning &amp; Open Innovation:**
-    *   **LearnLM:** A new family of models based on Gemini and fine-tuned for learning, making educational videos on YouTube more interactive by allowing users to ask questions, get explanations, or take quizzes directly about the content.
-    *   **Gemma &amp; PaliGemma:** Google continues to expand its family of open models with PaliGemma (its first vision-language open model) and announced Gemma 2, a next-generation model with 27 billion parameters, set to be released in June.
-*   **Responsible AI:** Google reiterated its commitment to building AI responsibly, emphasizing practices like &quot;red teaming&quot; (stress-testing models to identify weaknesses) to address risks and maximize societal benefits.
-
-The keynote underscored Google&#x27;s commitment to integrating advanced, multimodal, and context-aware AI capabilities across its most popular products, aiming to make AI more helpful and intuitive for everyone.
-
-*/
-
-/* Markdown (render)
-### Use url context
-
-The URL Context tool empowers Gemini models to directly access, process, and understand content from user-provided web page URLs. This is key for enabling dynamic agentic workflows, allowing models to independently research, analyze articles, and synthesize information from the web as part of their reasoning process.
-
-In this example you will use two links as reference and ask Gemini to find differences between the cook receipes present in each of the links:
-*/
-
-// [CODE STARTS]
-prompt = `
-    Compare recipes from https://www.food.com/recipe/homemade-cream-of-broccoli-soup-271210
-    and from https://www.allrecipes.com/recipe/13313/best-cream-of-broccoli-soup/,
-    listing the key differences between them.
-`;
-
-response = await ai.models.generateContent({
-  model: MODEL_ID,
-  contents: [prompt],
-  config: {
-    tools: [{ urlContext: {} }],
-  },
-});
-
-console.log(response.text);
-// [CODE ENDS]
-
-/* Output Sample
-
-The two recipes for cream of broccoli soup, one from Food.com and the other from Allrecipes, have several key differences in their ingredients and preparation methods:
-
-**Ingredients:**
-*   **Vegetables:** The Food.com recipe uses 4 cups of broccoli florets and includes only onion as an aromatic. The Allrecipes recipe calls for significantly more broccoli, at 8 cups of florets, and includes both onion and celery.
-*   **Dairy:** Food.com&#x27;s recipe uses 3/4 cup of half-and-half for creaminess. In contrast, the Allrecipes version uses 2 cups of milk.
-*   **Broth Quantity:** The Food.com recipe uses 6 cups of chicken broth, while the Allrecipes recipe uses 3 cups.
-*   **Butter and Flour:** Both recipes use butter and flour to create a thickening roux, though the amounts differ slightly. Food.com uses a total of 8 tablespoons of butter and 2/3 cup of flour, whereas Allrecipes uses 5 tablespoons of butter and 3 tablespoons of flour.
-*   **Seasoning:** Food.com specifies 1 teaspoon of salt and 1/4 teaspoon of pepper, while Allrecipes lists only &quot;ground black pepper to taste&quot; and implies other seasonings are optional.
-
-**Preparation Method:**
-*   **Vegetable Cooking:** Food.com&#x27;s recipe cooks the onion first, then adds broccoli and broth. Allrecipes starts by sautÃ©ing onion and celery before adding broccoli and broth.
-*   **Blending/Pureeing:** This is a major distinction. The Allrecipes recipe explicitly instructs the user to purÃ©e the soup until smooth using a countertop or immersion blender. The Food.com recipe does not mention blending, suggesting a chunkier soup texture.
-*   **Roux Integration:** In the Food.com recipe, the flour-butter roux is prepared separately and then whisked into the boiling broth and vegetables. The Allrecipes recipe also prepares a roux (or bÃ©chamel with milk) separately but adds it to the already pureed soup base.
-*   **Order of Operations:** The Food.com recipe adds the half-and-half at the very end after the soup has thickened. The Allrecipes recipe adds the thickened milk mixture (roux with milk) to the soup base, then seasons it.
-
-In summary, the Allrecipes soup is designed to be a smooth, pureed soup with a stronger broccoli flavor due to the higher broccoli-to-broth ratio and includes celery for additional aromatic depth, using milk for its creaminess. The Food.com recipe appears to yield a soup with a more rustic, possibly chunkier texture, relying on half-and-half for richness and a larger volume of broth.
+A hand-drawn schematic of a steam-powered jetpack backpack concept with foldable boosters.
 
 */
 
@@ -1197,94 +820,107 @@ In summary, the Allrecipes soup is designed to be a smooth, pureed soup with a s
 <a name="grounding"></a>
 ## Grounding
 
-The Gemini API gives you multiple ways to ground your requests in real-world knowledge and live data: Google Search grounding and Google Maps grounding.
+Grounding connects the model to real-time external knowledge from Google Search or Google Maps.
 
 ### Use Google Search grounding
-
-[Search grounding](https://ai.google.dev/gemini-api/docs/grounding) connects the model to Google Search so it can retrieve up-to-date information and cite sources.
 */
 
 // [CODE STARTS]
-response = await ai.models.generateContent({
+interaction = await ai.interactions.create({
   model: MODEL_ID,
-  contents: "When was the last solar eclipse visible from North America?",
-  config: {
-    tools: [{ googleSearch: {} }],
-  },
+  input: "Who won the latest Super Bowl?",
+  tools: [{ type: "google_search" }],
 });
 
-console.log(response.text);
-
-const searchChunks =
-  response.candidates?.[0]?.groundingMetadata?.groundingChunks;
-if (searchChunks && searchChunks.length > 0) {
-  console.log("\nSources from Google Search:");
-  for (const chunk of searchChunks) {
-    if (chunk.web) {
-      console.log(`- [${chunk.web.title}](${chunk.web.uri})`);
-    }
-  }
-}
+console.log(interaction.output_text);
 // [CODE ENDS]
 
 /* Output Sample
 
-The last total solar eclipse visible from North America occurred on **April 8, 2024**. The path of totality crossed Mexico, the United States (from Texas to Maine), and eastern Canada.
-
-Sources from Google Search:
-- [NASA - 2024 Total Solar Eclipse](https://science.nasa.gov/eclipses/future-eclipses/eclipse-2024/)
-- [Time and Date - April 8, 2024 Total Solar Eclipse](https://www.timeanddate.com/eclipse/solar/2024-april-8)
+The Seattle Seahawks won the latest Super Bowl (Super Bowl LX), defeating the New England Patriots.
 
 */
 
 /* Markdown (render)
 <a name="maps"></a>
 ### Use Google Maps grounding
-
-[Google Maps grounding](https://ai.google.dev/gemini-api/docs/grounding/maps) allows the model to answer location-sensitive queries grounded in real-world Google Maps data. You can pass the relevant geographic coordinate context via `retrievalConfig`.
 */
 
 // [CODE STARTS]
-response = await ai.models.generateContent({
+interaction = await ai.interactions.create({
   model: MODEL_ID,
-  contents:
-    "Do any cafes around here do a good flat white? I will walk up to 20 minutes away.",
-  config: {
-    tools: [{ googleMaps: {} }],
-    toolConfig: {
-      retrievalConfig: {
-        latLng: {
-          latitude: 40.7680797,
-          longitude: -73.9818957, // Columbus Circle, New York
-        },
-      },
-    },
-  },
+  input:
+    "Do any cafes around the Eiffel Tower in Paris do a good flat white? I will walk up to 20 minutes away.",
+  tools: [{ type: "google_maps" }],
 });
 
-console.log(response.text);
-
-const mapsChunks =
-  response.candidates?.[0]?.groundingMetadata?.groundingChunks;
-if (mapsChunks && mapsChunks.length > 0) {
-  console.log("\nSources from Google Maps:");
-  for (const chunk of mapsChunks) {
-    if (chunk.maps) {
-      console.log(`- [${chunk.maps.title}](${chunk.maps.uri})`);
-    }
-  }
-}
+console.log(interaction.output_text);
 // [CODE ENDS]
 
 /* Output Sample
 
-Yes! Near Columbus Circle you have several great options for a flat white within a short walk:
-- **Blue Bottle Coffee**: Located at The Shops at Columbus Circle, offering expertly crafted espresso drinks and flat whites.
-- **Birch Coffee**: A quick 10-minute walk down 57th Street, known for quality roasts and skilled baristas.
+Several specialty coffee shops near the Eiffel Tower serve excellent flat whites:
+* **Terres de Café** (67 Av. de la Bourdonnais, ~7 min walk): One of Paris' pioneer specialty roasters, offering expertly textured microfoam.
+* **Noir** (184 Rue de Grenelle, ~14 min walk): Minimalist roaster known for velvety milk drinks.
+* **Bleu Olive** (184 Rue de Grenelle, ~14 min walk): Cozy neighborhood café and épicerie popular for Australian-standard flat whites.
 
-Sources from Google Maps:
-- [Blue Bottle Coffee](https://maps.google.com/?cid=1234567890)
-- [Birch Coffee](https://maps.google.com/?cid=0987654321)
+*/
+
+/* Markdown (render)
+<a name="youtube_link"></a>
+### Process a YouTube link
+
+You can analyze YouTube videos by passing the URL as a `video` input directly in `input`:
+*/
+
+// [CODE STARTS]
+interaction = await ai.interactions.create({
+  model: MODEL_ID,
+  input: [
+    {
+      type: "video",
+      uri: "https://www.youtube.com/watch?v=WsEQjeZoEng",
+    },
+    { type: "text", text: "Summarize this keynote in 3 bullet points." },
+  ],
+});
+
+console.log(interaction.output_text);
+// [CODE ENDS]
+
+/* Output Sample
+
+* **The Gemini Era:** Comprehensive integration of Gemini 1.5 across Google Workspace, Photos, and Android with 2M token context windows.
+* **Project Astra:** Preview of next-generation universal multimodal AI assistants capable of real-time environmental reasoning.
+* **Generative Media & Hardware:** Introduction of Veo for high-definition video generation and sixth-generation Trillium TPUs.
+
+*/
+
+/* Markdown (render)
+<a name="URL_context"></a>
+### Use URL context
+
+URL context allows you to provide web URLs directly in your prompt text. The model fetches and uses their content during generation:
+*/
+
+// [CODE STARTS]
+prompt = `
+    Compare the Apollo 11 and Apollo 12 missions using information from:
+    https://en.wikipedia.org/wiki/Apollo_11
+    and https://en.wikipedia.org/wiki/Apollo_12
+`;
+
+interaction = await ai.interactions.create({
+  model: MODEL_ID,
+  input: prompt,
+});
+
+console.log(interaction.output_text);
+// [CODE ENDS]
+
+/* Output Sample
+
+Apollo 11 was the first crewed mission to land on the Moon (July 1969, Sea of Tranquility), focusing on proving the landing capability and safe return. Apollo 12 (November 1969, Ocean of Storms) demonstrated precision landing by touching down within walking distance of the robotic Surveyor 3 probe and conducted an expanded series of surface experiments.
 
 */
 
@@ -1292,26 +928,24 @@ Sources from Google Maps:
 <a name="caching"></a>
 ## Context caching
 
-[Context caching](https://ai.google.dev/gemini-api/docs/caching) lets you store frequently used tokens in a dedicated cache and reference them across multiple requests, significantly reducing latency and costs for large prompts, repetitive documents, or extensive system instructions.
+With the Interactions API, context caching is handled automatically via **implicit caching**. When you use `previous_interaction_id` to continue a conversation, the server automatically reuses cached tokens from earlier turns, drastically reducing latency and token costs without manual cache management.
 
-Check out the [dedicated guide](./Caching.ipynb) for more details.
-
-#### 1. Create a cache
+For explicit caching use cases (e.g. sharing a single static 500-page document cache across independent users), use `ai.caches.create` with `ai.models.generateContent`. See the [Caching quickstart](../quickstarts/Caching.ipynb) for details.
 */
 
 // [CODE STARTS]
 cacheSystemInstruction =
-  "You are an expert researcher with extensive experience in mission transcripts. Stick strictly to facts from the provided document.";
+  "You are an expert researcher with extensive experience in mission transcripts.";
 
 cache = await ai.caches.create({
   model: MODEL_ID,
   config: {
-    displayName: "apollo11_transcript_cache",
+    displayName: "apollo11_cache",
     systemInstruction: cacheSystemInstruction,
     contents: [
       {
         fileData: {
-          fileUri: uploadResult.uri,
+          fileUri: textFile.uri,
           mimeType: "text/plain",
         },
       },
@@ -1320,40 +954,10 @@ cache = await ai.caches.create({
   },
 });
 
-console.log(`Cache created: ${cache.name}`);
-// [CODE ENDS]
+console.log(`Explicit cache created: ${cache.name}`);
 
-/* Output Sample
-
-Cache created: cachedContents/abc123xyz456
-
-*/
-
-/* Markdown (render)
-#### 2. List available cache objects
-*/
-
-// [CODE STARTS]
-pager = await ai.caches.list({ config: { pageSize: 5 } });
-console.log("Active caches:");
-for (const item of pager.page || []) {
-  console.log(`- ${item.name} (${item.displayName || "no display name"})`);
-}
-// [CODE ENDS]
-
-/* Output Sample
-
-Active caches:
-- cachedContents/abc123xyz456 (apollo11_transcript_cache)
-
-*/
-
-/* Markdown (render)
-#### 3. Use the cache
-*/
-
-// [CODE STARTS]
-response = await ai.models.generateContent({
+// Query using the explicit cache
+cachedResponse = await ai.models.generateContent({
   model: MODEL_ID,
   contents: "What was the main topic discussed in the first phase of the mission?",
   config: {
@@ -1361,27 +965,18 @@ response = await ai.models.generateContent({
   },
 });
 
-console.log(response.text);
-// [CODE ENDS]
+console.log(cachedResponse.text);
 
-/* Output Sample
-
-During the initial phase of the mission, communications focused on launch vehicle status checks, trajectory verification, staging events, and confirming orbital insertion parameters with Mission Control in Houston.
-
-*/
-
-/* Markdown (render)
-#### 4. Delete the cache
-*/
-
-// [CODE STARTS]
+// Clean up cache
 await ai.caches.delete({ name: cache.name });
-console.log("Cache deleted successfully.");
+console.log("Cache cleaned up.");
 // [CODE ENDS]
 
 /* Output Sample
 
-Cache deleted successfully.
+Explicit cache created: cachedContents/abc123xyz456
+During the initial phase, communications focused on launch vehicle status checks, trajectory verification, and orbital insertion parameters.
+Cache cleaned up.
 
 */
 
@@ -1389,7 +984,7 @@ Cache deleted successfully.
 <a name="embeddings"></a>
 ## Get embeddings
 
-The Gemini API offers embedding models such as `gemini-embedding-2` to generate dense vector representations of text, audio, images, video, and documents.
+The Gemini API offers embedding models such as `gemini-embedding-2` to generate dense vector representations of text, audio, images, video, and documents. Embeddings are generated via `ai.models.embedContent`.
 
 #### Text embeddings
 */
@@ -1397,7 +992,7 @@ The Gemini API offers embedding models such as `gemini-embedding-2` to generate 
 // [CODE STARTS]
 EMBEDDING_MODEL_ID = "gemini-embedding-2";
 
-response = await ai.models.embedContent({
+embeddingResponse = await ai.models.embedContent({
   model: EMBEDDING_MODEL_ID,
   contents: [
     "How do I get a driver's license/learner's permit?",
@@ -1406,10 +1001,12 @@ response = await ai.models.embedContent({
   ],
 });
 
-console.log(`Number of embeddings: ${response.embeddings.length}`);
-console.log(`Embedding dimensions: ${response.embeddings[0].values.length}`);
+console.log(`Number of embeddings: ${embeddingResponse.embeddings.length}`);
 console.log(
-  `First 4 values: [${response.embeddings[0].values.slice(0, 4).join(", ")}...]`
+  `Embedding dimensions: ${embeddingResponse.embeddings[0].values.length}`
+);
+console.log(
+  `First 4 values: [${embeddingResponse.embeddings[0].values.slice(0, 4).join(", ")}...]`
 );
 // [CODE ENDS]
 
@@ -1428,7 +1025,7 @@ With `gemini-embedding-2`, you can also create embeddings for multimodal inputs 
 */
 
 // [CODE STARTS]
-response = await ai.models.embedContent({
+multimodalResponse = await ai.models.embedContent({
   model: EMBEDDING_MODEL_ID,
   contents: [
     {
@@ -1441,7 +1038,7 @@ response = await ai.models.embedContent({
 });
 
 console.log(
-  `Multimodal embedding dimensions: ${response.embeddings[0].values.length}`
+  `Multimodal embedding dimensions: ${multimodalResponse.embeddings[0].values.length}`
 );
 // [CODE ENDS]
 
@@ -1452,136 +1049,16 @@ Multimodal embedding dimensions: 3072
 */
 
 /* Markdown (render)
-<a name="gemini3"></a>
-## Gemini 3
-
-[Gemini 3 Pro](https://ai.google.dev/gemini-api/docs/models#gemini-3-pro) and [Gemini 3.7 Flash](https://ai.google.dev/gemini-api/docs/models#gemini-3.7-flash) are flagship models introducing several key capabilities:
-
-* **Thinking levels**: simplified control over how much the model reasons before answering.
-* **Media resolution**: per-part resolution control for images and video to manage token budgets.
-* **Thought signatures**: preserving reasoning state across multi-turn interactions.
-
-<a name="thinking_level"></a>
-### Thinking levels
-
-Instead of specifying a token count via `thinkingBudget`, Gemini 3 models support discrete `thinkingLevel` values (`"minimal"`, `"low"`, `"medium"`, `"high"`).
-*/
-
-// [CODE STARTS]
-GEMINI_3_MODEL_ID = "gemini-3.8-flash";
-
-prompt = `
-  Find what I'm thinking of:
-    It moves, but doesn't walk, run, or swim.
-    It has no fixed shape and if cut into pieces, those pieces will keep living and moving.
-    It has no brain but can solve complex mazes.
-`;
-
-response = await ai.models.generateContent({
-  model: GEMINI_3_MODEL_ID,
-  contents: prompt,
-  config: {
-    thinkingConfig: {
-      thinkingLevel: ThinkingLevel?.HIGH || "high",
-      includeThoughts: true,
-    },
-  },
-});
-
-for (const part of response.candidates?.[0]?.content?.parts || []) {
-  if (!part.text) {
-    continue;
-  } else if (part.thought) {
-    console.log("Thought summary:");
-    console.log(part.text);
-    console.log("---");
-  } else {
-    console.log("Answer:");
-    console.log(part.text);
-  }
-}
-// [CODE ENDS]
-
-/* Output Sample
-
-Thought summary:
-Analyzing the riddle:
-- Moves, but doesn't walk, run, or swim: Slime mold (Physarum polycephalum) moves via protoplasmic streaming.
-- No fixed shape, cut pieces continue living: Slime mold plasmodium can be cut and will fuse or continue moving.
-- No brain but solves mazes: Famous scientific study where Physarum polycephalum found shortest paths through mazes to food.
-Answer:
-You are thinking of a **slime mold** (specifically *Physarum polycephalum*).
-
-*/
-
-/* Markdown (render)
-<a name="media_resolution"></a>
-### Media resolution per file
-
-With Gemini 3 models, you can specify media resolution per file part (`media_resolution_low`, `media_resolution_medium`, `media_resolution_high`) to optimize token usage.
-*/
-
-// [CODE STARTS]
-response = await ai.models.generateContent({
-  model: GEMINI_3_MODEL_ID,
-  contents: [
-    {
-      inlineData: {
-        data: imageDataUrl,
-        mimeType: "image/png",
-      },
-      mediaResolution: {
-        level: "media_resolution_low",
-      },
-    },
-    "Describe this concept in one sentence.",
-  ],
-});
-
-console.log(response.text);
-// [CODE ENDS]
-
-/* Output Sample
-
-A hand-drawn schematic of an eco-friendly steam-powered jetpack backpack featuring retractable boosters and laptop storage.
-
-*/
-
-/* Markdown (render)
-<a name="thoughts_signature"></a>
-### Thought signatures
-
-When thinking is enabled, Gemini responses include a `thoughtSignature` on candidate parts. The SDK automatically manages these signatures across multi-turn conversations so the model remembers its previous reasoning steps and tool outputs without having to re-compute them.
-*/
-
-// [CODE STARTS]
-for (const part of response.candidates?.[0]?.content?.parts || []) {
-  if (part.thoughtSignature) {
-    console.log("Thought signature detected (base64 token string):");
-    console.log(part.thoughtSignature.slice(0, 32) + "...");
-    break;
-  }
-}
-// [CODE ENDS]
-
-/* Output Sample
-
-Thought signature detected (base64 token string):
-CikKGGRldmVsb3Blci1zaWduYXR1cmUS...
-
-*/
-
-/* Markdown (render)
 <a name="gemini3migration"></a>
-### Migrating from Gemini 2.5
+## Migrating from Gemini 2.5
 
 [Gemini 3](https://ai.google.dev/gemini-api/docs/gemini-3) models are our most capable model family to date and offer a stepwise improvement over Gemini 2.5. When migrating, consider the following:
 
-* **Thinking:** If you were previously using complex prompt engineering (like Chain-of-Thought) to force models to reason, try Gemini 3 with [`thinkingLevel: "high"`](#thinking_level) and simplified prompts.
-* **Temperature settings:** Sampling parameters `temperature`, `top_k`, and `top_p` are deprecated. Use model defaults to avoid potential degradation on complex reasoning tasks.
-* **PDF & document understanding:** Default OCR resolution for PDFs has changed. If you relied on specific behavior for dense document parsing, test the [`media_resolution_high`](#media_resolution) setting.
-* **Token consumption:** Migrating to Gemini 3 defaults may increase token usage for PDFs but decrease token usage for video. If requests exceed context limits, explicitly specify [`media_resolution_low`](#media_resolution).
-* **Image segmentation:** Image segmentation returning pixel-level masks for objects is not supported in Gemini 3 Pro. For workloads requiring built-in image segmentation, consider Gemini 3.7 Flash or dedicated models.
+* **Interactions API:** Migrate multi-turn, stateful, and tool-augmented workflows to `ai.interactions.create`. State is maintained server-side via `previous_interaction_id`, and conversation steps can be inspected cleanly.
+* **Thinking:** Thinking is on by default. Use discrete `thinking_level` values (`"minimal"`, `"low"`, `"medium"`, `"high"`) in `generation_config`.
+* **Sampling parameters:** Parameters `temperature`, `top_k`, and `top_p` are deprecated. Use model defaults to avoid degrading reasoning performance.
+* **Context caching:** Multi-turn interactions benefit from automatic implicit caching without requiring explicit cache lifecycle management.
+* **Media resolution:** Use `media_resolution` (`"media_resolution_low"`, `"media_resolution_high"`) on media parts to manage token consumption for dense PDFs and images.
 */
 
 /* Markdown (render)
@@ -1589,12 +1066,10 @@ CikKGGRldmVsb3Blci1zaWduYXR1cmUS...
 
 ### Useful API references:
 
-Check out the [Google GenAI SDK](https://googleapis.github.io/js-genai) for more details on the new SDK.
+* Check out the [Google GenAI SDK](https://googleapis.github.io/js-genai) documentation.
+* Explore the [Interactions API guide](https://ai.google.dev/gemini-api/docs/interactions).
 
 ### Related examples
 
-For more detailed examples using Gemini models, check the [Quickstarts folder of the cookbook](https://github.com/google-gemini/cookbook/tree/main/quickstarts/). You'll learn how to use the Live API, juggle with multiple tools or use Gemini's spatial understanding abilities.
-
-Also check the [Thinking models guide](./Get_started_thinking.ipynb) that explicitly showcases its thoughts summaries and can manage more complex reasonings.
-
+* Check the [Python Quickstarts](https://github.com/google-gemini/cookbook/tree/main/quickstarts/) for additional in-depth tutorials on spatial understanding, live API, and multimodal reasoning.
 */

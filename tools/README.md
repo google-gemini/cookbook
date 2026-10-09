@@ -82,7 +82,7 @@ python tools/check_all_links.py --all
 - **`structure::copyright`**: Verifies that cell 0 contains a valid Google / Gemini copyright statement (`##### Copyright 2026 Google LLC.`).
 - **`structure::license`**: Verifies that the notebook contains a collapsed Apache 2.0 license code cell with `# @title Licensed under the Apache License`.
 - **`structure::colab_button`**: Checks for the "Open in Colab" badge and verifies that its destination URL matches `https://colab.research.google.com/github/<repo>/blob/<branch>/<path>`. Automatically adjusts for redirect stubs.
-- **`structure::next_steps`**: Emits a warning if a concluding "Next Steps" or "What's Next" section is missing.
+- **`structure::next_steps`**: Emits a warning if a closing section is missing. Accepted headings: "Next steps", "What's next", "Learn more" / "Learning more", "Further reading" / "Further resources" or "Conclusion".
 
 ### Style & Language Rules (`tools/nblint/rules/style.py`)
 - **`style::inclusive_language`**: Flags discouraged terminology (`blacklist`, `whitelist`, `master`, `slave`) and suggests modern alternatives. **Note**: The word `"native"` is deliberately allowed because terms like *"native audio"*, *"native TTS"*, and *"native multimodal"* are standard Gemini API features.

@@ -162,7 +162,7 @@ See [`.gemini/styleguide.md`](./.gemini/styleguide.md) for the full list and res
 * Demonstrate small parts before combining them into something more complex.
 * If you define a function, ideally run it and show its output immediately before using it in another function or a more complex block.
 * Only use helper functions when necessary (e.g., for code reuse or complexity management). If a piece of logic is only a couple of lines and used once, it's often clearer to write it inline so readers don't have to look up the function definition. Hide helper function definitions using `# @title`.
-* Keep examples quick and concise. Do not add extra options or parameters (like `temperature`) without explaining them; focus on what you want to showcase.
+* Keep examples quick and concise. Do not add extra options or parameters without explaining them; focus on what you want to showcase.
 * If you *must* use extra parameters, explain *why* they are needed and the reasoning behind the specific value the first time you use them.
 * When selecting a model, use a Colab form selector for easier maintainability:
     ```python

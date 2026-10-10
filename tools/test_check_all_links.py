@@ -346,6 +346,39 @@ class TestCheckAllLinks(unittest.TestCase):
                 self.assertEqual(exit_context.exception.code, 0, output.getvalue())
                 self.assertIn("No modified .md or .ipynb files detected", output.getvalue())
 
+    def test_changed_files_returns_none_when_no_base_is_available(self) -> None:
+        """Unavailable comparison bases must be distinct from an empty diff."""
+        with (
+            mock.patch(
+                "tools.check_all_links.subprocess.check_output",
+                side_effect=subprocess.CalledProcessError(128, "git diff"),
+            ),
+            self.assertLogs("link_checker", level="WARNING"),
+        ):
+            self.assertIsNone(get_changed_files_from_git(self.repo_root))
+
+    def test_changed_cli_audits_all_files_when_no_base_is_available(self) -> None:
+        """A Git repository without commits must still report broken links."""
+        subprocess.run(["git", "init", "--quiet"], cwd=self.repo_root, check=True)
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(pathlib.Path(__file__).with_name("check_all_links.py")),
+                "--repo-dir",
+                str(self.repo_root),
+                "--changed",
+            ],
+            cwd=self.repo_root,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("Falling back to all files", result.stderr)
+        self.assertIn("Scanning 3 file(s)", result.stderr)
+        self.assertIn("quickstarts/guide.md", result.stdout)
+        self.assertIn("quickstarts/sample.ipynb", result.stdout)
+        self.assertNotIn("No modified .md or .ipynb files detected", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

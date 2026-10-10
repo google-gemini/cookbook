@@ -308,9 +308,9 @@ def get_changed_files_from_git(repo_root: pathlib.Path) -> List[str]:
             cmd = ["git", "diff", "--name-only", f"{base}...HEAD"]
             out = subprocess.check_output(cmd, cwd=repo_root, text=True, stderr=subprocess.DEVNULL)
             lines = [line.strip() for line in out.splitlines() if line.strip().endswith((".md", ".ipynb"))]
-            if lines:
-                logger.info("Detected %d changed file(s) against %s", len(lines), base)
-                return lines
+            # A successful empty diff still establishes the comparison base.
+            logger.info("Detected %d changed file(s) against %s", len(lines), base)
+            return lines
         except Exception:
             continue
     logger.warning("Could not determine base branch for --changed. Falling back to all files.")

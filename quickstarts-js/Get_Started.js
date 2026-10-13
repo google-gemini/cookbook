@@ -191,12 +191,13 @@ interaction = await ai.interactions.create({
     "A man moves his car to a hotel and tells the owner he's bankrupt. Why?",
   generation_config: {
     thinking_level: thinking_level,
+    thinking_summaries: "auto",
   },
 });
 
 for (const step of interaction.steps) {
   if (step.type === "thought") {
-    console.log("💭 Thought:", step.text || "(thinking...)");
+    console.log("💭 Thought:", step.summary?.[0]?.text || "(thinking...)");
   } else if (step.type === "model_output") {
     console.log(interaction.output_text);
   }
@@ -499,7 +500,7 @@ stream = await ai.interactions.create({
 
 for await (const chunk of stream) {
   if (chunk.delta?.text) {
-    process.stdout.write(chunk.delta.text);
+    console.log(chunk.delta.text);
   }
 }
 console.log();
@@ -801,7 +802,7 @@ interaction = await ai.interactions.create({
       type: "image",
       data: imageDataUrl,
       mime_type: "image/png",
-      media_resolution: "media_resolution_low",
+      resolution: "low",
     },
     { type: "text", text: "Describe this image in one concise sentence." },
   ],
@@ -913,6 +914,7 @@ prompt = `
 interaction = await ai.interactions.create({
   model: MODEL_ID,
   input: prompt,
+  tools: [{ type: "url_context" }],
 });
 
 console.log(interaction.output_text);

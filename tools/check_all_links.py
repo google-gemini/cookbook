@@ -292,14 +292,14 @@ def find_files_to_scan(
     return files
 
 
-def get_changed_files_from_git(repo_root: pathlib.Path) -> List[str]:
+def get_changed_files_from_git(repo_root: pathlib.Path) -> Optional[List[str]]:
     """Finds files changed relative to upstream/main or origin/main via git diff.
 
     Args:
         repo_root: Root directory of repository.
 
     Returns:
-        List of changed relative file path strings.
+        List of changed relative file path strings, or None if no base is available.
     """
     # Try upstream/main, then origin/main, then HEAD~1
     base_refs = ["upstream/main", "origin/main", "main", "HEAD~1"]
@@ -308,13 +308,13 @@ def get_changed_files_from_git(repo_root: pathlib.Path) -> List[str]:
             cmd = ["git", "diff", "--name-only", f"{base}...HEAD"]
             out = subprocess.check_output(cmd, cwd=repo_root, text=True, stderr=subprocess.DEVNULL)
             lines = [line.strip() for line in out.splitlines() if line.strip().endswith((".md", ".ipynb"))]
-            if lines:
-                logger.info("Detected %d changed file(s) against %s", len(lines), base)
-                return lines
+            # A successful empty diff still establishes the comparison base.
+            logger.info("Detected %d changed file(s) against %s", len(lines), base)
+            return lines
         except Exception:
             continue
     logger.warning("Could not determine base branch for --changed. Falling back to all files.")
-    return []
+    return None
 
 
 def extract_links_from_file(file_path: pathlib.Path) -> List[Tuple[str, int]]:
@@ -616,7 +616,7 @@ def main() -> None:
 
     if args.changed and not target_files:
         target_files = get_changed_files_from_git(repo_root)
-        if not target_files:
+        if target_files == []:
             print("No modified .md or .ipynb files detected against base branch.")
             sys.exit(0)
 

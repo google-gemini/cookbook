@@ -400,7 +400,7 @@ def validate_internal_link(
         if (
             fragment
             and not fragment.startswith("scrollto=")
-            and target_path.suffix in (".md", ".ipynb")
+            and target_path.suffix.lower() in (".md", ".ipynb")
         ):
             anchors = get_file_anchors(target_path, checker_config)
             if fragment not in anchors:

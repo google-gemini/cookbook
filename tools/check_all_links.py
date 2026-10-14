@@ -397,9 +397,13 @@ def validate_internal_link(
         target_path = checker_config.repo_root / rel_subpath
         if not target_path.exists():
             return False, f"Target repository path does not exist on disk: {rel_subpath}"
-        if fragment and not fragment.startswith("scrollto="):
+        if (
+            fragment
+            and not fragment.startswith("scrollto=")
+            and target_path.suffix in (".md", ".ipynb")
+        ):
             anchors = get_file_anchors(target_path, checker_config)
-            if anchors and fragment not in anchors:
+            if fragment not in anchors:
                 return False, f"Anchor '#{fragment}' not found in target file: {rel_subpath}"
         return True, ""
 
@@ -413,7 +417,7 @@ def validate_internal_link(
         if fragment.startswith("scrollto="):
             return True, ""  # Colab UI cell scroll target
         anchors = get_file_anchors(source_file, checker_config)
-        if anchors and fragment not in anchors:
+        if fragment not in anchors:
             return False, f"In-page anchor '#{fragment}' not found in {source_file.name}"
         return True, ""
 
@@ -428,9 +432,14 @@ def validate_internal_link(
         return False, f"File does not exist: {clean_path} (resolved to {target_path})"
 
     # If anchor is present on local file, verify it exists
-    if fragment and not fragment.startswith("scrollto=") and target_path.is_file():
+    if (
+        fragment
+        and not fragment.startswith("scrollto=")
+        and target_path.is_file()
+        and target_path.suffix in (".md", ".ipynb")
+    ):
         anchors = get_file_anchors(target_path, checker_config)
-        if anchors and fragment not in anchors:
+        if fragment not in anchors:
             return False, f"Anchor '#{fragment}' not found in target file: {clean_path}"
 
     return True, ""

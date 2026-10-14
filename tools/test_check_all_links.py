@@ -191,6 +191,59 @@ class TestCheckAllLinks(unittest.TestCase):
         self.assertEqual(normalize_cell_source(123), [])
         self.assertEqual(normalize_cell_source({}), [])
 
+    def test_missing_anchors_in_documents_without_headings(self) -> None:
+        """Deleting the last heading must not make broken fragments valid."""
+        documents = {
+            "empty.md": "No headings remain.\n",
+            "empty.ipynb": json.dumps(
+                {"cells": [{"cell_type": "markdown", "source": "No headings remain."}]}
+            ),
+        }
+        for name, content in documents.items():
+            target = self.repo_root / name
+            target.write_text(content, encoding="utf-8")
+            links = (
+                (self.readme_path, f"{name}#deleted-section"),
+                (target, "#deleted-section"),
+                (
+                    self.readme_path,
+                    f"https://github.com/google-gemini/cookbook/blob/main/{name}#deleted-section",
+                ),
+            )
+            for source, url in links:
+                with self.subTest(name=name, url=url):
+                    ok, err = validate_internal_link(source, url, self.config)
+                    self.assertFalse(ok)
+                    self.assertIn("'#deleted-section' not found", err)
+
+    def test_empty_document_anchor_audit_fails(self) -> None:
+        """The audit must fail for a broken link to a document with no anchors."""
+        target = self.repo_root / "empty.md"
+        target.write_text("No headings remain.\n", encoding="utf-8")
+        self.readme_path.write_text("[Section](empty.md#deleted-section)\n", encoding="utf-8")
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            exit_code = run_link_audit(self.config, [str(self.readme_path)])
+        self.assertEqual(exit_code, 1, output.getvalue())
+        self.assertIn("Anchor '#deleted-section' not found", output.getvalue())
+
+    def test_non_document_and_colab_fragments_remain_allowed(self) -> None:
+        """Code line references and Colab scroll targets do not use heading slugs."""
+        target = self.repo_root / "sample.py"
+        target.write_text("print('hello')\n", encoding="utf-8")
+        self.readme_path.write_text("No headings.\n", encoding="utf-8")
+        for url in (
+            "sample.py#L1",
+            "https://github.com/google-gemini/cookbook/blob/main/sample.py#L1",
+            "#scrollTo=cell-intro-123",
+            "quickstarts/sample.ipynb#scrollTo=cell-intro-123",
+            "https://github.com/google-gemini/cookbook/blob/main/"
+            "quickstarts/sample.ipynb#scrollTo=cell-intro-123",
+        ):
+            with self.subTest(url=url):
+                ok, err = validate_internal_link(self.readme_path, url, self.config)
+                self.assertTrue(ok, err)
+
     def test_extract_links_handles_source_variations(self) -> None:
         """Verifies link extraction when notebook cell source is a string or None."""
         nb_str_source = {

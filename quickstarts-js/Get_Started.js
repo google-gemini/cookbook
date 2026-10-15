@@ -28,7 +28,6 @@ This notebook will walk you through:
 * Configuring model parameters
 * Controlling the thinking process (`thinking_level` and thought signatures)
 * Setting system instructions
-* Safety filters
 * Chaining multi-turn conversations (`previous_interaction_id`)
 * Switching models mid-conversation
 * Saving and resuming conversations (`saved_steps`)
@@ -68,10 +67,6 @@ ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 // [CODE STARTS]
 module = await import("https://esm.sh/@google/genai@2.28.0");
 GoogleGenAI = module.GoogleGenAI;
-Type = module.Type;
-Modality = module.Modality;
-ThinkingLevel = module.ThinkingLevel;
-MediaResolution = module.MediaResolution;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 MODEL_ID = "gemini-3.8-flash"; // "gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash-lite", "gemini-3.1-pro-preview"
@@ -791,7 +786,7 @@ The video opens with a cheerful blue bird singing in a forest, which introduces 
 <a name="media_resolution"></a>
 ## Media resolution
 
-You can specify `media_resolution` (`"media_resolution_low"`, `"media_resolution_medium"`, `"media_resolution_high"`) on image and document parts to control token usage:
+You can specify `resolution` (`"low"`, `"medium"`, `"high"`, `"ultra_high"`) on image and document parts to control token usage:
 */
 
 // [CODE STARTS]
@@ -1060,7 +1055,7 @@ Multimodal embedding dimensions: 3072
 * **Thinking:** Thinking is on by default. Use discrete `thinking_level` values (`"minimal"`, `"low"`, `"medium"`, `"high"`) in `generation_config`.
 * **Sampling parameters:** Parameters `temperature`, `top_k`, and `top_p` are deprecated. Use model defaults to avoid degrading reasoning performance.
 * **Context caching:** Multi-turn interactions benefit from automatic implicit caching without requiring explicit cache lifecycle management.
-* **Media resolution:** Use `media_resolution` (`"media_resolution_low"`, `"media_resolution_high"`) on media parts to manage token consumption for dense PDFs and images.
+* **Media resolution:** Use `resolution` (`"low"`, `"medium"`, `"high"`, `"ultra_high"`) on media parts to manage token consumption for dense PDFs and images.
 */
 
 /* Markdown (render)

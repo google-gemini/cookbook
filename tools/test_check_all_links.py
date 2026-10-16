@@ -18,6 +18,7 @@
 import contextlib
 import io
 import json
+import locale
 import pathlib
 import subprocess
 import sys
@@ -440,6 +441,26 @@ class TestCheckAllLinks(unittest.TestCase):
         self.assertEqual(exit_context.exception.code, 1, output.getvalue())
         self.assertIn("quickstarts/指南.md", output.getvalue())
         self.assertIn("File does not exist: missing.md", output.getvalue())
+
+    def test_changed_files_decodes_utf8_with_non_utf8_locale(self) -> None:
+        """Unicode paths must survive subprocess decoding under an ASCII locale."""
+        path = "quickstarts/指南.md"
+        raw_output = (path + "\0").encode("utf-8")
+        check_output = subprocess.check_output
+        original_locale = locale.setlocale(locale.LC_CTYPE)
+        self.addCleanup(locale.setlocale, locale.LC_CTYPE, original_locale)
+        locale.setlocale(locale.LC_CTYPE, "C")
+
+        def git_diff_output(cmd, **kwargs):
+            return check_output(
+                [sys.executable, "-c", f"import sys; sys.stdout.buffer.write({raw_output!r})"],
+                **kwargs,
+            )
+
+        with mock.patch(
+            "tools.check_all_links.subprocess.check_output", side_effect=git_diff_output
+        ):
+            self.assertEqual(get_changed_files_from_git(self.repo_root), [path])
 
     def test_changed_files_returns_none_when_no_base_is_available(self) -> None:
         """Unavailable comparison bases must be distinct from an empty diff."""

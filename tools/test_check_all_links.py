@@ -18,6 +18,7 @@
 import contextlib
 import io
 import json
+import locale
 import pathlib
 import subprocess
 import sys
@@ -351,11 +352,11 @@ class TestCheckAllLinks(unittest.TestCase):
 
     def test_changed_files_stops_at_available_base_without_documents(self) -> None:
         """An empty document diff must not select changes from an older base."""
-        for diff in ("", "tools/check_all_links.py\n"):
+        for diff in ("", "tools/check_all_links.py\0"):
             with self.subTest(diff=diff):
                 with mock.patch(
                     "tools.check_all_links.subprocess.check_output",
-                    side_effect=[diff, "quickstarts/guide.md\n"],
+                    side_effect=[diff, "quickstarts/guide.md\0"],
                 ):
                     self.assertEqual(get_changed_files_from_git(self.repo_root), [])
 
@@ -365,7 +366,7 @@ class TestCheckAllLinks(unittest.TestCase):
             "tools.check_all_links.subprocess.check_output",
             side_effect=[
                 subprocess.CalledProcessError(128, "git diff"),
-                "README.md\ntools/check_all_links.py\nquickstarts/sample.ipynb\n",
+                "README.md\0tools/check_all_links.py\0quickstarts/sample.ipynb\0",
             ],
         ):
             self.assertEqual(
@@ -375,7 +376,7 @@ class TestCheckAllLinks(unittest.TestCase):
 
     def test_changed_cli_skips_unrelated_broken_links(self) -> None:
         """No document changes against origin must not audit an older broken guide."""
-        for diff in ("", "tools/check_all_links.py\n"):
+        for diff in ("", "tools/check_all_links.py\0"):
             with self.subTest(diff=diff):
                 output = io.StringIO()
                 with (
@@ -384,7 +385,7 @@ class TestCheckAllLinks(unittest.TestCase):
                         side_effect=[
                             subprocess.CalledProcessError(128, "git diff"),
                             diff,
-                            "quickstarts/guide.md\n",
+                            "quickstarts/guide.md\0",
                         ],
                     ),
                     mock.patch.object(
@@ -398,6 +399,68 @@ class TestCheckAllLinks(unittest.TestCase):
                     main()
                 self.assertEqual(exit_context.exception.code, 0, output.getvalue())
                 self.assertIn("No modified .md or .ipynb files detected", output.getvalue())
+
+    def test_changed_files_preserves_special_characters(self) -> None:
+        """Git paths must not be quoted, split on newlines, or stripped."""
+        paths = [
+            "quickstarts/指南.ipynb",
+            "quickstarts/line\nbreak.md",
+            "quickstarts/tab\tname.md",
+            'quickstarts/quoted"name.md',
+            " leading-space.md",
+        ]
+        with mock.patch(
+            "tools.check_all_links.subprocess.check_output",
+            return_value="\0".join(paths + ["tools/check_all_links.py", ""]),
+        ) as git_diff:
+            self.assertEqual(get_changed_files_from_git(self.repo_root), paths)
+        self.assertEqual(
+            git_diff.call_args.args[0],
+            ["git", "diff", "--name-only", "-z", "upstream/main...HEAD"],
+        )
+
+    def test_changed_cli_audits_unicode_filename(self) -> None:
+        """A changed Unicode filename must not hide a broken link from the CLI."""
+        target = self.quickstarts_dir / "指南.md"
+        target.write_text("[Broken](missing.md)\n", encoding="utf-8")
+        output = io.StringIO()
+        with (
+            mock.patch(
+                "tools.check_all_links.subprocess.check_output",
+                return_value="quickstarts/指南.md\0",
+            ),
+            mock.patch.object(
+                sys,
+                "argv",
+                ["check_all_links.py", "--repo-dir", str(self.repo_root), "--changed"],
+            ),
+            contextlib.redirect_stdout(output),
+            self.assertRaises(SystemExit) as exit_context,
+        ):
+            main()
+        self.assertEqual(exit_context.exception.code, 1, output.getvalue())
+        self.assertIn("quickstarts/指南.md", output.getvalue())
+        self.assertIn("File does not exist: missing.md", output.getvalue())
+
+    def test_changed_files_decodes_utf8_with_non_utf8_locale(self) -> None:
+        """Unicode paths must survive subprocess decoding under an ASCII locale."""
+        path = "quickstarts/指南.md"
+        raw_output = (path + "\0").encode("utf-8")
+        check_output = subprocess.check_output
+        original_locale = locale.setlocale(locale.LC_CTYPE)
+        self.addCleanup(locale.setlocale, locale.LC_CTYPE, original_locale)
+        locale.setlocale(locale.LC_CTYPE, "C")
+
+        def git_diff_output(cmd, **kwargs):
+            return check_output(
+                [sys.executable, "-c", f"import sys; sys.stdout.buffer.write({raw_output!r})"],
+                **kwargs,
+            )
+
+        with mock.patch(
+            "tools.check_all_links.subprocess.check_output", side_effect=git_diff_output
+        ):
+            self.assertEqual(get_changed_files_from_git(self.repo_root), [path])
 
     def test_changed_files_returns_none_when_no_base_is_available(self) -> None:
         """Unavailable comparison bases must be distinct from an empty diff."""

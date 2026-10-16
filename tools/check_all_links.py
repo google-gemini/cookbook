@@ -305,9 +305,11 @@ def get_changed_files_from_git(repo_root: pathlib.Path) -> Optional[List[str]]:
     base_refs = ["upstream/main", "origin/main", "main", "HEAD~1"]
     for base in base_refs:
         try:
-            cmd = ["git", "diff", "--name-only", f"{base}...HEAD"]
-            out = subprocess.check_output(cmd, cwd=repo_root, text=True, stderr=subprocess.DEVNULL)
-            lines = [line.strip() for line in out.splitlines() if line.strip().endswith((".md", ".ipynb"))]
+            cmd = ["git", "diff", "--name-only", "-z", f"{base}...HEAD"]
+            out = subprocess.check_output(
+                cmd, cwd=repo_root, encoding="utf-8", stderr=subprocess.DEVNULL
+            )
+            lines = [path for path in out.split("\0") if path.endswith((".md", ".ipynb"))]
             # A successful empty diff still establishes the comparison base.
             logger.info("Detected %d changed file(s) against %s", len(lines), base)
             return lines

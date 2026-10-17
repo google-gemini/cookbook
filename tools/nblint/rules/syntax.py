@@ -105,7 +105,7 @@ def check_code_cell_syntax(
         src = "".join(cell.get("source", []))
         if not src.strip():
             continue
-        if src.lstrip().startswith("%%") and src.split()[0] != "%%time":
+        if src.lstrip().startswith("%%") and src.split(maxsplit=1)[0] != "%%time":
             # Only %%time is known here to execute its body as Python.
             continue
 

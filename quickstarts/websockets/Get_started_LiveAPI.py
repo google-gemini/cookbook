@@ -148,7 +148,7 @@ class AudioLoop:
                 break
             await asyncio.sleep(1.0)
 
-            msg = {"realtime_input": {"media_chunks": [frame]}}
+            msg = {"realtime_input": {"video": frame}}
             await self.out_queue.put(msg)
 
         # Release the VideoCapture object
@@ -178,7 +178,7 @@ class AudioLoop:
             
             await asyncio.sleep(1.0)
 
-            msg = {"realtime_input": {"media_chunks": frame}}
+            msg = {"realtime_input": {"video": frame}}
             await self.out_queue.put(msg)
 
     async def send_realtime(self):
@@ -202,12 +202,10 @@ class AudioLoop:
             data = await asyncio.to_thread(self.audio_stream.read, CHUNK_SIZE)
             msg = {
                 "realtime_input": {
-                    "media_chunks": [
-                        {
-                            "data": base64.b64encode(data).decode(),
-                            "mime_type": "audio/pcm",
-                        }
-                    ]
+                    "audio": {
+                        "data": base64.b64encode(data).decode(),
+                        "mime_type": f"audio/pcm;rate={SEND_SAMPLE_RATE}",
+                    }
                 }
             }
             await self.out_queue.put(msg)
@@ -218,28 +216,24 @@ class AudioLoop:
             # Other things could be returned here, but we'll ignore those for now.
             response = json.loads(raw_response.decode("ascii"))
 
-            try:
-                b64data = response["serverContent"]["modelTurn"]["parts"][0][
-                    "inlineData"
-                ]["data"]
-            except KeyError:
-                pass
-            else:
-                pcm_data = base64.b64decode(b64data)
-                self.audio_in_queue.put_nowait(pcm_data)
+            server_content = response.get("serverContent")
+            if server_content is None:
+                continue
 
-            try:
-                turn_complete = response["serverContent"]["turnComplete"]
-            except KeyError:
-                pass
-            else:
-                if turn_complete:
-                    # If you interrupt the model, it sends an end_of_turn.
-                    # For interruptions to work, we need to empty out the audio queue
-                    # Because it may have loaded much more audio than has played yet.
-                    print("\nEnd of turn")
-                    while not self.audio_in_queue.empty():
-                        self.audio_in_queue.get_nowait()
+            # If you interrupt the model, the server sets `interrupted`.
+            # Empty out the audio queue so playback stops right away,
+            # because it may have loaded much more audio than has played yet.
+            if server_content.get("interrupted"):
+                while not self.audio_in_queue.empty():
+                    self.audio_in_queue.get_nowait()
+
+            # A single message can carry several parts, so play all of them.
+            for part in server_content.get("modelTurn", {}).get("parts", []):
+                if b64data := part.get("inlineData", {}).get("data"):
+                    self.audio_in_queue.put_nowait(base64.b64decode(b64data))
+
+            if server_content.get("turnComplete"):
+                print("\nEnd of turn")
 
     async def play_audio(self):
         pya = pyaudio.PyAudio()

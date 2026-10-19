@@ -97,7 +97,7 @@ class AudioLoop:
         setup_msg = {"setup": {"model": f"models/{model}"}}
         await self.ws.send(json.dumps(setup_msg))
         raw_response = await self.ws.recv(decode=False)
-        setup_response = json.loads(raw_response.decode("ascii"))
+        setup_response = json.loads(raw_response)
 
     async def send_text(self):
         while True:
@@ -214,7 +214,7 @@ class AudioLoop:
         "Background task to reads from the websocket and write pcm chunks to the output queue"
         async for raw_response in self.ws:
             # Other things could be returned here, but we'll ignore those for now.
-            response = json.loads(raw_response.decode("ascii"))
+            response = json.loads(raw_response)
 
             server_content = response.get("serverContent")
             if server_content is None:
@@ -228,8 +228,8 @@ class AudioLoop:
                     self.audio_in_queue.get_nowait()
 
             # A single message can carry several parts, so play all of them.
-            for part in server_content.get("modelTurn", {}).get("parts", []):
-                if b64data := part.get("inlineData", {}).get("data"):
+            for part in (server_content.get("modelTurn") or {}).get("parts", []):
+                if b64data := (part.get("inlineData") or {}).get("data"):
                     self.audio_in_queue.put_nowait(base64.b64decode(b64data))
 
             if server_content.get("turnComplete"):
@@ -279,7 +279,8 @@ class AudioLoop:
         except asyncio.CancelledError:
             pass
         except ExceptionGroup as EG:
-            self.audio_stream.close()
+            if self.audio_stream:
+                self.audio_stream.close()
             traceback.print_exception(EG)
 
 

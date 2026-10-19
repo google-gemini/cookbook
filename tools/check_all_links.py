@@ -177,13 +177,31 @@ def extract_anchors_from_content(content: str) -> Set[str]:
         Set of valid anchor slugs and HTML names.
     """
     anchors: Set[str] = set()
+    lines: List[str] = []
+    fence_backticks = 0
+    for line in content.splitlines():
+        stripped = line.strip()
+        if fence_backticks == 0:
+            backticks = len(stripped) - len(stripped.lstrip("`"))
+            if backticks >= 3 and "`" not in stripped[backticks:]:
+                fence_backticks = backticks
+                continue
+        else:
+            backticks = len(stripped) - len(stripped.lstrip("`"))
+            if backticks >= fence_backticks and "`" not in stripped[backticks:]:
+                fence_backticks = 0
+                continue
+        if fence_backticks == 0:
+            lines.append(line)
+    unfenced_content = "\n".join(lines)
+
     # 1. HTML <a name="..."> or <a id="..."> tags
-    for match in ANCHOR_TAG_REGEX.finditer(content):
+    for match in ANCHOR_TAG_REGEX.finditer(unfenced_content):
         name = match.group("name").strip().lower()
         if name:
             anchors.add(name)
     # 2. Markdown headings (# Heading)
-    for match in HEADING_REGEX.finditer(content):
+    for match in HEADING_REGEX.finditer(unfenced_content):
         slug = slugify_heading(match.group("title"))
         if slug:
             anchors.add(slug)

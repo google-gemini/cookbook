@@ -120,6 +120,24 @@ class TestCheckAllLinks(unittest.TestCase):
         self.assertIn("secondary_id", anchors)
         self.assertIn("sub-section-alpha", anchors)
 
+    def test_extract_anchors_skips_fenced_code(self) -> None:
+        """Verifies that headings inside fenced code blocks are not extracted as anchors."""
+        content = (
+            "# Document Heading\n\n"
+            "````markdown\n"
+            "```python\n"
+            "# Inside Code Block\n"
+            '<a name="inside_code"></a>\n'
+            "```\n"
+            "````\n\n"
+            "## Real Section\n"
+        )
+        anchors = extract_anchors_from_content(content)
+        self.assertIn("document-heading", anchors)
+        self.assertIn("real-section", anchors)
+        self.assertNotIn("inside-code-block", anchors)
+        self.assertNotIn("inside_code", anchors)
+
     def test_extract_links_skips_data_uris(self) -> None:
         """Verifies that inline base64 image data URIs are not treated as target file links."""
         links = extract_links_from_file(self.guide_path)

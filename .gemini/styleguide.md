@@ -152,7 +152,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 ## Examples
 
 * Keep examples quick and concise.
-* Do not use extra parameters (like temperature) when not needed to keep the focus on what your notebook is illustrating.
+* Do not use extra parameters when not needed to keep the focus on what your notebook is illustrating.
 * If you have to use extra-parameters, explain why and why the specific value the first time you do.
 * **Strictly Forbidden (Blocking Review Error)**: Any examples using `yt-dlp`, `yt_dlp`, `pytube`, `pytubefix`, `youtube-dl`, `youtube_dl`, or equivalent tools that download, rip, or stream YouTube content are strictly forbidden as they violate the [YouTube Terms of Service](https://www.youtube.com/t/terms#c3e2907ca8). Always reject any PR introducing them and instruct the author to pass YouTube URLs natively to the Gemini API via `file_uri` (e.g., `types.Part.from_uri(file_uri="https://www.youtube.com/watch?v=...", mime_type="video/mp4")`).
 * Any crypto or blockchain related topics are also forbidden

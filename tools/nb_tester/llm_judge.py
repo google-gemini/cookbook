@@ -175,12 +175,10 @@ class GeminiOutputJudge:
         for model_name in models_to_try:
             gen_config = types.GenerateContentConfig(
                 system_instruction=system_instruction,
-                temperature=0.0,
                 response_mime_type="application/json",
                 response_schema=SemanticComparisonResult
             )
             parameters_dict = {
-                "temperature": 0.0,
                 "response_mime_type": "application/json",
                 "model": model_name
             }

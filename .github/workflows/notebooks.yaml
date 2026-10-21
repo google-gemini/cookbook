@@ -7,6 +7,8 @@ on:
   pull_request:
     paths:
     - "**.ipynb"
+    - "tools/**.py"
+    - ".github/workflows/notebooks.yaml"
   # Allow manual runs
   workflow_dispatch:
 
@@ -55,6 +57,9 @@ jobs:
     - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
     - name: Fetch main branch
       run: git fetch -u origin main:main
+
+    - name: Run syntax unit tests
+      run: python3 -m unittest tools.test_nblint_syntax
 
     # Lint for all notebooks
     - name: Lint notebooks

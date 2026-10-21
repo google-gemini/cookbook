@@ -138,6 +138,13 @@ class TestCheckAllLinks(unittest.TestCase):
         self.assertNotIn("inside-code-block", anchors)
         self.assertNotIn("inside_code", anchors)
 
+    def test_extract_anchors_ignores_inner_fence_with_info_string(self) -> None:
+        """Verifies that an inner fence with an info string does not close an outer fence."""
+        content = "```markdown\n```python\n# Hidden\n```\n# Visible\n"
+        anchors = extract_anchors_from_content(content)
+        self.assertIn("visible", anchors)
+        self.assertNotIn("hidden", anchors)
+
     def test_extract_links_skips_data_uris(self) -> None:
         """Verifies that inline base64 image data URIs are not treated as target file links."""
         links = extract_links_from_file(self.guide_path)

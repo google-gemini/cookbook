@@ -188,7 +188,7 @@ def extract_anchors_from_content(content: str) -> Set[str]:
                 continue
         else:
             backticks = len(stripped) - len(stripped.lstrip("`"))
-            if backticks >= fence_backticks and "`" not in stripped[backticks:]:
+            if backticks >= fence_backticks and not stripped[backticks:].strip():
                 fence_backticks = 0
                 continue
         if fence_backticks == 0:

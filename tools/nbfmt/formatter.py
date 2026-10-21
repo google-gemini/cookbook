@@ -178,8 +178,8 @@ class NotebookFormatter:
             ensure_ascii=False
         )
         
-        # Clean trailing whitespace on each line
-        lines = [line.rstrip() for line in formatted_json.splitlines()]
+        # Split only on JSON formatting newlines, preserving Unicode separators in strings.
+        lines = [line.rstrip() for line in formatted_json.split("\n")]
         clean_json_str = "\n".join(lines) + "\n"
         
         # Match standard HTML entity escape conventions

@@ -29,6 +29,7 @@ from tools.check_all_links import (
     LinkCheckerConfig,
     extract_anchors_from_content,
     extract_links_from_file,
+    filter_unfenced_lines,
     get_changed_files_from_git,
     get_file_anchors,
     main,
@@ -144,6 +145,19 @@ class TestCheckAllLinks(unittest.TestCase):
         anchors = extract_anchors_from_content(content)
         self.assertIn("visible", anchors)
         self.assertNotIn("hidden", anchors)
+
+    def test_filter_unfenced_lines(self) -> None:
+        """Verifies that filter_unfenced_lines excludes code blocks and respects GFM fence rules."""
+        raw = [
+            "# Title",
+            "```markdown",
+            "```python",
+            "[inside](https://example.com/inside)",
+            "```",
+            "[outside](https://example.com/outside)",
+        ]
+        unfenced = [line for _, line in filter_unfenced_lines(raw)]
+        self.assertEqual(unfenced, ["# Title", "[outside](https://example.com/outside)"])
 
     def test_extract_links_skips_data_uris(self) -> None:
         """Verifies that inline base64 image data URIs are not treated as target file links."""

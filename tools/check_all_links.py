@@ -68,7 +68,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
 # Ensure repository root is on sys.path to import centralized tools.config
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -167,6 +167,29 @@ def slugify_heading(title: str) -> str:
     return slug
 
 
+def filter_unfenced_lines(
+    lines: Iterable[str], start_index: int = 1
+) -> List[Tuple[int, str]]:
+    """Filters lines to exclude content inside fenced code blocks per GFM rules."""
+    result: List[Tuple[int, str]] = []
+    fence_backticks = 0
+    for idx, line in enumerate(lines, start=start_index):
+        stripped = line.strip()
+        if fence_backticks == 0:
+            backticks = len(stripped) - len(stripped.lstrip("`"))
+            if backticks >= 3 and "`" not in stripped[backticks:]:
+                fence_backticks = backticks
+                continue
+        else:
+            backticks = len(stripped) - len(stripped.lstrip("`"))
+            if backticks >= fence_backticks and not stripped[backticks:].strip():
+                fence_backticks = 0
+                continue
+        if fence_backticks == 0:
+            result.append((idx, line))
+    return result
+
+
 def extract_anchors_from_content(content: str) -> Set[str]:
     """Extracts all possible anchor targets from Markdown or notebook text.
 
@@ -177,13 +200,17 @@ def extract_anchors_from_content(content: str) -> Set[str]:
         Set of valid anchor slugs and HTML names.
     """
     anchors: Set[str] = set()
+    unfenced_content = "\n".join(
+        line for _, line in filter_unfenced_lines(content.splitlines())
+    )
+
     # 1. HTML <a name="..."> or <a id="..."> tags
-    for match in ANCHOR_TAG_REGEX.finditer(content):
+    for match in ANCHOR_TAG_REGEX.finditer(unfenced_content):
         name = match.group("name").strip().lower()
         if name:
             anchors.add(name)
     # 2. Markdown headings (# Heading)
-    for match in HEADING_REGEX.finditer(content):
+    for match in HEADING_REGEX.finditer(unfenced_content):
         slug = slugify_heading(match.group("title"))
         if slug:
             anchors.add(slug)
@@ -334,28 +361,14 @@ def extract_links_from_file(file_path: pathlib.Path) -> List[Tuple[str, int]]:
             for cell_idx, cell in enumerate(data.get("cells", [])):
                 if cell.get("cell_type") in ("markdown", "raw"):
                     lines = normalize_cell_source(cell.get("source"))
-                    in_fence = False
-                    for line in lines:
-                        stripped = line.strip()
-                        if stripped.startswith("```"):
-                            in_fence = not in_fence
-                            continue
-                        if in_fence:
-                            continue
+                    for _, line in filter_unfenced_lines(lines):
                         for m in MD_LINK_REGEX.finditer(line):
                             links.append((m.group("url").strip(), cell_idx))
                         for m in HTML_LINK_REGEX.finditer(line):
                             links.append((m.group("url").strip(), cell_idx))
         else:
             with open(file_path, "r", encoding="utf-8") as f:
-                in_fence = False
-                for line_idx, line in enumerate(f, start=1):
-                    stripped = line.strip()
-                    if stripped.startswith("```"):
-                        in_fence = not in_fence
-                        continue
-                    if in_fence:
-                        continue
+                for line_idx, line in filter_unfenced_lines(f):
                     for m in MD_LINK_REGEX.finditer(line):
                         links.append((m.group("url").strip(), line_idx))
                     for m in HTML_LINK_REGEX.finditer(line):

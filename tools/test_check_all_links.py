@@ -29,6 +29,7 @@ from tools.check_all_links import (
     LinkCheckerConfig,
     extract_anchors_from_content,
     extract_links_from_file,
+    filter_unfenced_lines,
     get_changed_files_from_git,
     get_file_anchors,
     main,
@@ -119,6 +120,44 @@ class TestCheckAllLinks(unittest.TestCase):
         self.assertIn("my_target", anchors)
         self.assertIn("secondary_id", anchors)
         self.assertIn("sub-section-alpha", anchors)
+
+    def test_extract_anchors_skips_fenced_code(self) -> None:
+        """Verifies that headings inside fenced code blocks are not extracted as anchors."""
+        content = (
+            "# Document Heading\n\n"
+            "````markdown\n"
+            "```python\n"
+            "# Inside Code Block\n"
+            '<a name="inside_code"></a>\n'
+            "```\n"
+            "````\n\n"
+            "## Real Section\n"
+        )
+        anchors = extract_anchors_from_content(content)
+        self.assertIn("document-heading", anchors)
+        self.assertIn("real-section", anchors)
+        self.assertNotIn("inside-code-block", anchors)
+        self.assertNotIn("inside_code", anchors)
+
+    def test_extract_anchors_ignores_inner_fence_with_info_string(self) -> None:
+        """Verifies that an inner fence with an info string does not close an outer fence."""
+        content = "```markdown\n```python\n# Hidden\n```\n# Visible\n"
+        anchors = extract_anchors_from_content(content)
+        self.assertIn("visible", anchors)
+        self.assertNotIn("hidden", anchors)
+
+    def test_filter_unfenced_lines(self) -> None:
+        """Verifies that filter_unfenced_lines excludes code blocks and respects GFM fence rules."""
+        raw = [
+            "# Title",
+            "```markdown",
+            "```python",
+            "[inside](https://example.com/inside)",
+            "```",
+            "[outside](https://example.com/outside)",
+        ]
+        unfenced = [line for _, line in filter_unfenced_lines(raw)]
+        self.assertEqual(unfenced, ["# Title", "[outside](https://example.com/outside)"])
 
     def test_extract_links_skips_data_uris(self) -> None:
         """Verifies that inline base64 image data URIs are not treated as target file links."""

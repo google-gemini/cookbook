@@ -62,13 +62,14 @@ def strip_ipython_syntax(source: str) -> str:
     try:
         tokens = tokenize.generate_tokens(io.StringIO(source).readline)
         for token in tokens:
-            if token.type == tokenize.STRING:
+            token_name = tokenize.tok_name.get(token.type, "")
+            if token.type == tokenize.STRING or "FSTRING" in token_name:
                 start_line, _ = token.start
                 end_line, _ = token.end
                 if end_line > start_line:
                     multiline_string_lines.update(range(start_line + 1, end_line + 1))
     except tokenize.TokenError as e:
-        if "multi-line" in str(e) and len(e.args) > 1 and isinstance(e.args[1], tuple):
+        if "string" in str(e).lower() and len(e.args) > 1 and isinstance(e.args[1], tuple):
             start_line = e.args[1][0]
             total_lines = source.count("\n") + 1
             multiline_string_lines.update(range(start_line + 1, total_lines + 1))

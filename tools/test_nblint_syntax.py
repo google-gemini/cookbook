@@ -36,6 +36,17 @@ class TestSyntaxRule(unittest.TestCase):
         violations = check_code_cell_syntax(notebook, self.dummy_path)
         self.assertEqual(violations, [])
 
+    def test_multiline_fstring_containing_magic_like_lines(self) -> None:
+        source = (
+            'prompt = f"""Follow this instruction:\n'
+            '! Keep the answer short.\n'
+            '% This is a LaTeX comment."""\n'
+            'print(prompt)'
+        )
+        notebook = {"cells": [{"cell_type": "code", "source": source}]}
+        violations = check_code_cell_syntax(notebook, self.dummy_path)
+        self.assertEqual(violations, [])
+
     def test_strip_ipython_magics_and_shell_escapes(self) -> None:
         source = (
             "!pip install -q google-genai\n"

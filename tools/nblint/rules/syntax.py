@@ -32,9 +32,11 @@ Use Cases:
 
 from typing import Any, Dict, List
 import ast
+import io
 import logging
 import pathlib
 import re
+import tokenize
 
 logger = logging.getLogger(__name__)
 
@@ -56,13 +58,33 @@ def strip_ipython_syntax(source: str) -> str:
     cleaned = []
     in_continuation = False
 
-    for line in source.split("\n"):
+    multiline_string_lines = set()
+    try:
+        tokens = tokenize.generate_tokens(io.StringIO(source).readline)
+        for token in tokens:
+            if token.type == tokenize.STRING:
+                start_line, _ = token.start
+                end_line, _ = token.end
+                if end_line > start_line:
+                    multiline_string_lines.update(range(start_line + 1, end_line + 1))
+    except tokenize.TokenError as e:
+        if "multi-line" in str(e) and len(e.args) > 1 and isinstance(e.args[1], tuple):
+            start_line = e.args[1][0]
+            total_lines = source.count("\n") + 1
+            multiline_string_lines.update(range(start_line + 1, total_lines + 1))
+    except Exception:
+        pass
+
+    for line_idx, line in enumerate(source.split("\n"), start=1):
         stripped = line.lstrip()
         indent = line[:len(line) - len(stripped)]
 
         if in_continuation:
             # Trailing part of a magic or shell line; a comment keeps it inert.
             cleaned.append("#")
+        elif line_idx in multiline_string_lines:
+            cleaned.append(line)
+            continue
         else:
             capture_match = SHELL_CAPTURE_REGEX.match(line)
             if capture_match:

@@ -132,6 +132,33 @@ class TestCheckAllLinks(unittest.TestCase):
         self.assertIn("setup-1", anchors)
         self.assertIn("setup-2", anchors)
 
+    def test_get_file_anchors_numbers_duplicates_across_notebook_cells(self) -> None:
+        """Duplicate ## Setup headings in separate cells must yield setup / setup-1."""
+        nb = {
+            "cells": [
+                {
+                    "cell_type": "markdown",
+                    "metadata": {"id": "cell-a"},
+                    "source": ["## Setup\n", "First cell.\n"],
+                },
+                {
+                    "cell_type": "markdown",
+                    "metadata": {"id": "cell-b"},
+                    "source": ["## Setup\n", "Second cell.\n"],
+                },
+            ],
+            "metadata": {},
+            "nbformat": 4,
+            "nbformat_minor": 5,
+        }
+        nb_path = self.repo_root / "cross_cell_setup.ipynb"
+        nb_path.write_text(json.dumps(nb), encoding="utf-8")
+        anchors = get_file_anchors(nb_path, self.config)
+        self.assertIn("setup", anchors)
+        self.assertIn("setup-1", anchors)
+        self.assertNotIn("setup-2", anchors)
+
+
     def test_run_link_audit_accepts_numbered_duplicate_heading_anchor(self) -> None:
         """In-page #setup-1 must resolve when a second ## Setup exists."""
         guide = self.repo_root / "repeat.md"

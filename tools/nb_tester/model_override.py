@@ -188,12 +188,20 @@ class ModelOverrideTransformer:
         def _replace_match(match: re.Match) -> str:
             nonlocal replacements
 
-            # Ignore matches that occur inside string literals or comments
-            m_start = match.start()
-            if any(s_start <= m_start < s_end for s_start, s_end in literal_spans):
+            prefix = match.group(1)
+
+            # Ignore matches that occur inside string literals or comments.
+            # We check the start of the actual model identifier being assigned to,
+            # rather than the start of the line, to handle cases where the assignment
+            # is on the same line as the start of a string literal.
+            id_match = re.search(
+                r"(?:MODEL_ID|MODEL_NAME|MODEL|model_id|model)(?:\s*:\s*[^=]+)?\s*=\s*$",
+                prefix,
+            )
+            identifier_start = match.start() + (id_match.start() if id_match else 0)
+            if any(s_start <= identifier_start < s_end for s_start, s_end in literal_spans):
                 return match.group(0)
 
-            prefix = match.group(1)
             current_model = match.group(2) or match.group(3) or ""
             suffix = match.group(4)
             original_match = match.group(0).strip()

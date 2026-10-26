@@ -26,12 +26,25 @@ class TestModelOverrideTransformer(unittest.TestCase):
     """Test suite for ModelOverrideTransformer."""
 
     def test_prompt_string_literal_preservation(self) -> None:
-        """Regression test for #1447: assignments inside multiline strings must not be rewritten."""
+        """Test that assignments inside multiline strings are not rewritten (#1447)."""
         source = '''prompt = """Translate this Python example without changing it:
 MODEL_ID = 'gemini-2.5-flash'
 """
 MODEL_ID = "gemini-2.5-flash"
 '''
+        transformer = ModelOverrideTransformer("gemini-3.7-flash")
+        transformed, count = transformer.transform_cell_source(source)
+
+        self.assertEqual(count, 1)
+        self.assertIn("MODEL_ID = 'gemini-2.5-flash'", transformed)
+        self.assertIn('MODEL_ID = "gemini-3.7-flash"', transformed)
+
+    def test_single_line_prompt_string_literal_preservation(self) -> None:
+        """Assignments inside single-line string literals must not be rewritten."""
+        source = (
+            'prompt = "MODEL_ID = \'gemini-2.5-flash\'"\n'
+            'MODEL_ID = "gemini-2.5-flash"\n'
+        )
         transformer = ModelOverrideTransformer("gemini-3.7-flash")
         transformed, count = transformer.transform_cell_source(source)
 
@@ -74,11 +87,26 @@ MODEL_ID = "gemini-2.5-flash"
     def test_standard_model_assignments(self) -> None:
         """Standard model assignments in executable code must be rewritten."""
         test_cases = [
-            ('MODEL_ID = "gemini-2.5-flash"', 'MODEL_ID = "gemini-3.7-flash"'),
-            ("MODEL_NAME = 'gemini-2.5-flash'", 'MODEL_NAME = "gemini-3.7-flash"'),
-            ('MODEL_ID: str = "gemini-2.5-flash"', 'MODEL_ID: str = "gemini-3.7-flash"'),
-            ('model_id = "gemini-2.5-flash"  # @param ["gemini-2.5-flash"]', 'model_id = "gemini-3.7-flash"  # @param ["gemini-2.5-flash"]'),
-            ('EMBEDDING_MODEL_ID = MODEL_ID = "gemini-2.5-flash"', 'EMBEDDING_MODEL_ID = MODEL_ID = "gemini-3.7-flash"'),
+            (
+                'MODEL_ID = "gemini-2.5-flash"',
+                'MODEL_ID = "gemini-3.7-flash"',
+            ),
+            (
+                "MODEL_NAME = 'gemini-2.5-flash'",
+                'MODEL_NAME = "gemini-3.7-flash"',
+            ),
+            (
+                'MODEL_ID: str = "gemini-2.5-flash"',
+                'MODEL_ID: str = "gemini-3.7-flash"',
+            ),
+            (
+                'model_id = "gemini-2.5-flash"  # @param ["gemini-2.5-flash"]',
+                'model_id = "gemini-3.7-flash"  # @param ["gemini-2.5-flash"]',
+            ),
+            (
+                'EMBEDDING_MODEL_ID = MODEL_ID = "gemini-2.5-flash"',
+                'EMBEDDING_MODEL_ID = MODEL_ID = "gemini-3.7-flash"',
+            ),
         ]
         transformer = ModelOverrideTransformer("gemini-3.7-flash")
         for input_code, expected_code in test_cases:
@@ -117,14 +145,21 @@ MODEL_ID = "gemini-2.5-flash"
         """Transformations apply properly across NotebookNode code cells."""
         nb = nbformat.v4.new_notebook()
         nb.cells.append(nbformat.v4.new_markdown_cell("# Title\nMODEL_ID = 'gemini-1.5'"))
-        nb.cells.append(nbformat.v4.new_code_cell('prompt = """MODEL_ID = \'gemini-1.5\'"""\nMODEL_ID = "gemini-2.5-flash"'))
+        cell_source = (
+            "prompt = \"\"\"MODEL_ID = 'gemini-1.5'\"\"\"\n"
+            'MODEL_ID = "gemini-2.5-flash"'
+        )
+        nb.cells.append(nbformat.v4.new_code_cell(cell_source))
 
         transformer = ModelOverrideTransformer("gemini-3.7-flash")
         modified_nb, total = transformer.transform_notebook(nb, "test.ipynb")
 
         self.assertEqual(total, 1)
         self.assertIn("gemini-3.7-flash", modified_nb.cells[1].source)
-        self.assertIn("prompt = \"\"\"MODEL_ID = 'gemini-1.5'\"\"\"", modified_nb.cells[1].source)
+        self.assertIn(
+            "prompt = \"\"\"MODEL_ID = 'gemini-1.5'\"\"\"",
+            modified_nb.cells[1].source,
+        )
 
 
 if __name__ == "__main__":

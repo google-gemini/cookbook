@@ -120,6 +120,30 @@ class TestCheckAllLinks(unittest.TestCase):
         self.assertIn("secondary_id", anchors)
         self.assertIn("sub-section-alpha", anchors)
 
+    def test_extract_anchors_numbers_duplicate_headings(self) -> None:
+        """GitHub assigns setup, setup-1, setup-2 for repeated headings."""
+        content = (
+            "## Setup\n\nFirst.\n\n"
+            "## Setup\n\nSecond.\n\n"
+            "## Setup\n\nThird.\n"
+        )
+        anchors = extract_anchors_from_content(content)
+        self.assertIn("setup", anchors)
+        self.assertIn("setup-1", anchors)
+        self.assertIn("setup-2", anchors)
+
+    def test_run_link_audit_accepts_numbered_duplicate_heading_anchor(self) -> None:
+        """In-page #setup-1 must resolve when a second ## Setup exists."""
+        guide = self.repo_root / "repeat.md"
+        guide.write_text(
+            "## Setup\n\nFirst.\n\n## Setup\n\nSecond.\n\n"
+            "[Second section](#setup-1)\n",
+            encoding="utf-8",
+        )
+        exit_code = run_link_audit(LinkCheckerConfig(self.repo_root), [str(guide)])
+        self.assertEqual(exit_code, 0)
+
+
     def test_extract_links_skips_data_uris(self) -> None:
         """Verifies that inline base64 image data URIs are not treated as target file links."""
         links = extract_links_from_file(self.guide_path)

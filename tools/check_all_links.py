@@ -170,6 +170,10 @@ def slugify_heading(title: str) -> str:
 def extract_anchors_from_content(content: str) -> Set[str]:
     """Extracts all possible anchor targets from Markdown or notebook text.
 
+    Heading slugs follow GitHub's numbering for duplicates: the first
+    occurrence of a slug is bare (`setup`), the second is `setup-1`, then
+    `setup-2`, and so on.
+
     Args:
         content: Raw text content of file or cell.
 
@@ -182,11 +186,15 @@ def extract_anchors_from_content(content: str) -> Set[str]:
         name = match.group("name").strip().lower()
         if name:
             anchors.add(name)
-    # 2. Markdown headings (# Heading)
+    # 2. Markdown headings (# Heading), with GitHub-style duplicate suffixes
+    seen_slugs: dict[str, int] = {}
     for match in HEADING_REGEX.finditer(content):
         slug = slugify_heading(match.group("title"))
-        if slug:
-            anchors.add(slug)
+        if not slug:
+            continue
+        count = seen_slugs.get(slug, 0)
+        anchors.add(slug if count == 0 else f"{slug}-{count}")
+        seen_slugs[slug] = count + 1
     return anchors
 
 

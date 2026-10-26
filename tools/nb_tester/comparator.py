@@ -294,22 +294,40 @@ class OutputComparator:
                 is_regression=False
             )
 
-        # Check for numeric token count or integer drift within 25%
-        old_digits = re.findall(r"\b\d+\b", old_clean)
-        new_digits = re.findall(r"\b\d+\b", new_clean)
-        if old_digits and new_digits and len(old_digits) == len(new_digits):
-            differences = [abs(int(a) - int(b)) / (int(a) or 1) for a, b in zip(old_digits, new_digits)]
-            if max(differences) <= 0.35:
-                return CellComparisonReport(
-                    cell_index=cell_index,
-                    source_code=source_code,
-                    strategy="exact_or_fuzzy",
-                    verdict="SLIGHT_VARIATION",
-                    explanation=f"Minor numeric variation ({max(differences)*100:.1f}%), within acceptable tolerance.",
-                    old_output_snippet=old_snip,
-                    new_output_snippet=new_snip,
-                    is_regression=False
-                )
+        # Check for numeric drift within acceptable tolerance.
+        # Only compare numbers when the non-numeric template structure is identical.
+        numeric_pattern = re.compile(r"(?<!\w)-?\d+(?:\.\d+)?\b")
+        old_template = numeric_pattern.sub("<NUM>", old_clean)
+        new_template = numeric_pattern.sub("<NUM>", new_clean)
+
+        if old_template == new_template:
+            old_nums = numeric_pattern.findall(old_clean)
+            new_nums = numeric_pattern.findall(new_clean)
+            if old_nums and new_nums and len(old_nums) == len(new_nums):
+                differences: List[float] = []
+                for a_str, b_str in zip(old_nums, new_nums):
+                    a, b = float(a_str), float(b_str)
+                    if (a > 0 and b < 0) or (a < 0 and b > 0):
+                        differences.append(float("inf"))
+                    else:
+                        denom = abs(a) if abs(a) > 1e-9 else 1.0
+                        differences.append(abs(a - b) / denom)
+
+                max_diff = max(differences)
+                if max_diff <= 0.35:
+                    return CellComparisonReport(
+                        cell_index=cell_index,
+                        source_code=source_code,
+                        strategy="exact_or_fuzzy",
+                        verdict="SLIGHT_VARIATION",
+                        explanation=(
+                            f"Minor numeric variation ({max_diff * 100:.1f}%), "
+                            "within acceptable tolerance."
+                        ),
+                        old_output_snippet=old_snip,
+                        new_output_snippet=new_snip,
+                        is_regression=False,
+                    )
 
         return CellComparisonReport(
             cell_index=cell_index,

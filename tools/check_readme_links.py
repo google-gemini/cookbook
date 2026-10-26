@@ -33,7 +33,7 @@ import os
 import pathlib
 import re
 import sys
-from typing import List, Set, Tuple
+from typing import List, Optional, Set, Tuple
 
 # Ensure tools module can be imported
 repo_root = pathlib.Path(__file__).resolve().parent.parent
@@ -172,7 +172,7 @@ def _normalize_link_destination(raw: str) -> str:
     return dest.strip()
 
 
-def _repo_path_from_link(readme_rel: pathlib.Path, destination: str) -> str | None:
+def _repo_path_from_link(readme_rel: pathlib.Path, destination: str) -> Optional[str]:
     """Resolve a README link destination to a repo-relative posix notebook path.
 
     Relative destinations are resolved against the README's directory.

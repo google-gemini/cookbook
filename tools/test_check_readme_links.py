@@ -94,6 +94,25 @@ class TestIsNotebookLinked(unittest.TestCase):
         self.assertTrue(linked)
         self.assertEqual(found, ["examples/README.md"])
 
+    def test_link_with_query_parameters_is_linked(self) -> None:
+        (self.repo_root / "README.md").write_text(
+            "[New tutorial](examples/new/demo.ipynb?authuser=1)\n",
+            encoding="utf-8",
+        )
+        linked, found = checker.is_notebook_linked(self.new_nb)
+        self.assertTrue(linked)
+        self.assertEqual(found, ["README.md"])
+
+    def test_root_relative_link_is_linked(self) -> None:
+        (self.repo_root / "README.md").write_text(
+            "[New tutorial](/examples/new/demo.ipynb)\n",
+            encoding="utf-8",
+        )
+        linked, found = checker.is_notebook_linked(self.new_nb)
+        self.assertTrue(linked)
+        self.assertEqual(found, ["README.md"])
+
+
 
 if __name__ == "__main__":
     unittest.main()

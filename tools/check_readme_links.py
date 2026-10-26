@@ -156,15 +156,17 @@ _GITHUB_BLOB_RE = re.compile(
 
 
 def _normalize_link_destination(raw: str) -> str:
-    """Strip optional angle brackets, title, and fragment from a markdown URL."""
+    """Strip optional angle brackets, title, query parameters, and fragment from a markdown URL."""
     dest = raw.strip()
     if dest.startswith("<") and ">" in dest:
         dest = dest[1:dest.index(">")].strip()
     # Markdown titles: url "title" or url 'title'
     if " " in dest:
         dest = dest.split(" ", 1)[0].strip()
-    if dest.startswith(("\"", "'")) and dest.endswith(("\"", "'")) and len(dest) >= 2:
+    if dest.startswith(('"', "'")) and dest.endswith(('"', "'")) and len(dest) >= 2:
         dest = dest[1:-1]
+    if "?" in dest:
+        dest = dest.split("?", 1)[0]
     if "#" in dest:
         dest = dest.split("#", 1)[0]
     return dest.strip()
@@ -188,10 +190,15 @@ def _repo_path_from_link(readme_rel: pathlib.Path, destination: str) -> str | No
             return None
         candidate = match.group(1)
     else:
-        # Resolve relative to the README file's directory, then to repo root.
-        readme_dir = (repo_root / readme_rel).parent
+        # Resolve relative to the README directory, or repo root for root-relative "/…".
+        if dest.startswith("/"):
+            resolved_base = repo_root
+            dest_path = dest.lstrip("/")
+        else:
+            resolved_base = (repo_root / readme_rel).parent
+            dest_path = dest
         try:
-            resolved = (readme_dir / dest).resolve()
+            resolved = (resolved_base / dest_path).resolve()
             candidate = str(resolved.relative_to(repo_root.resolve())).replace("\\", "/")
         except (OSError, ValueError):
             return None

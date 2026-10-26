@@ -31,6 +31,7 @@ import glob
 import logging
 import os
 import pathlib
+import re
 import sys
 from typing import List, Set, Tuple
 
@@ -147,8 +148,68 @@ def get_candidate_readmes(notebook_path: pathlib.Path) -> List[pathlib.Path]:
     return candidates
 
 
+_MARKDOWN_LINK_RE = re.compile(r"\]\(([^)]+)\)")  # destinations only; handles [text](url) and [![alt](img)](url)
+_GITHUB_BLOB_RE = re.compile(
+    r"(?:github\.com/[^/]+/[^/]+|colab\.research\.google\.com/github/[^/]+/[^/]+)"
+    r"/blob/[^/]+/(.+?)(?:#|$)"
+)
+
+
+def _normalize_link_destination(raw: str) -> str:
+    """Strip optional angle brackets, title, and fragment from a markdown URL."""
+    dest = raw.strip()
+    if dest.startswith("<") and ">" in dest:
+        dest = dest[1:dest.index(">")].strip()
+    # Markdown titles: url "title" or url 'title'
+    if " " in dest:
+        dest = dest.split(" ", 1)[0].strip()
+    if dest.startswith(("\"", "'")) and dest.endswith(("\"", "'")) and len(dest) >= 2:
+        dest = dest[1:-1]
+    if "#" in dest:
+        dest = dest.split("#", 1)[0]
+    return dest.strip()
+
+
+def _repo_path_from_link(readme_rel: pathlib.Path, destination: str) -> str | None:
+    """Resolve a README link destination to a repo-relative posix notebook path.
+
+    Relative destinations are resolved against the README's directory.
+    Absolute GitHub/Colab blob URLs yield the path after `/blob/<ref>/`.
+    Non-notebook or unresolvable destinations return None.
+    """
+    dest = _normalize_link_destination(destination)
+    if not dest or dest.startswith(("mailto:", "data:", "#")):
+        return None
+
+    lower = dest.lower()
+    if lower.startswith(("http://", "https://")):
+        match = _GITHUB_BLOB_RE.search(dest)
+        if not match:
+            return None
+        candidate = match.group(1)
+    else:
+        # Resolve relative to the README file's directory, then to repo root.
+        readme_dir = (repo_root / readme_rel).parent
+        try:
+            resolved = (readme_dir / dest).resolve()
+            candidate = str(resolved.relative_to(repo_root.resolve())).replace("\\", "/")
+        except (OSError, ValueError):
+            return None
+
+    candidate = candidate.replace("\\", "/")
+    if candidate.startswith("./"):
+        candidate = candidate[2:]
+    if not candidate.endswith(".ipynb"):
+        return None
+    return candidate
+
+
 def is_notebook_linked(notebook_path: pathlib.Path) -> Tuple[bool, List[str]]:
     """Checks if a notebook is linked in any candidate README.md file.
+
+    Only actual markdown link destinations count. A prose mention of the
+    basename (or a link to a different notebook that shares the basename)
+    does not count as linked.
     
     Args:
         notebook_path: Path to the notebook.
@@ -158,8 +219,6 @@ def is_notebook_linked(notebook_path: pathlib.Path) -> Tuple[bool, List[str]]:
     """
     rel_path = to_repo_relative_path(notebook_path)
     normalized_path_str = to_repo_relative_str(notebook_path)
-        
-    filename = rel_path.name
     candidate_readmes = get_candidate_readmes(rel_path)
     
     found_in = []
@@ -170,20 +229,12 @@ def is_notebook_linked(notebook_path: pathlib.Path) -> Tuple[bool, List[str]]:
         except Exception as e:
             logger.warning("Failed to read %s: %s", to_repo_relative_str(readme_rel), e)
             continue
-            
-        # Match patterns:
-        # 1. Exact full relative path: quickstarts/Get_started.ipynb
-        # 2. Local relative link: (Get_started.ipynb) or (./Get_started.ipynb)
-        # 3. Subfolder link: (rest/JSON_mode_REST.ipynb)
-        # 4. Colab badge link containing filename: blob/main/.../Get_started.ipynb
-        if (
-            filename in content or
-            normalized_path_str in content or
-            f"({filename})" in content or
-            f"(./{filename})" in content or
-            f"/{filename}" in content
-        ):
-            found_in.append(to_repo_relative_str(readme_rel))
+
+        for raw_dest in _MARKDOWN_LINK_RE.findall(content):
+            linked_path = _repo_path_from_link(readme_rel, raw_dest)
+            if linked_path == normalized_path_str:
+                found_in.append(to_repo_relative_str(readme_rel))
+                break
             
     return (len(found_in) > 0, found_in)
 

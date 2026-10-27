@@ -567,7 +567,7 @@ def run_link_audit(
 
     print(f"[FAIL] Found {len(broken_links)} broken or dead link(s):\n")
     for src, line, url, err in broken_links:
-        src_str = src.as_posix() if isinstance(src, pathlib.Path) else str(src)
+        src_str = src.as_posix() if isinstance(src, pathlib.PurePath) else str(src)
         location = f"{src_str}:{line}" if line > 0 else src_str
         print(f"  - {location} -> {url}")
         print(f"     Reason: {err}\n")

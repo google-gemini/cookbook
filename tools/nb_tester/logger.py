@@ -23,7 +23,7 @@ This module provides fine-grained logging for all stages of notebook testing:
   is logged in full detail, capturing:
     * The exact model called.
     * The prompt sent (cleanly truncated for massive inputs, noting original length).
-    * Generation parameters (temperature, maxOutputTokens, tools).
+    * Generation parameters (maxOutputTokens, tools).
     * The response received (raw and parsed).
     * Latency and token usage metadata.
 
@@ -136,7 +136,7 @@ def log_llm_call(
         feature: The feature making the call (e.g. 'SecurityAuditor', 'OutputJudge', 'GroundedVerifier').
         model: Name of the model invoked.
         prompt: The prompt text sent to the model.
-        parameters: Dict of hyper-parameters (temperature, max_output_tokens, etc.).
+        parameters: Dict of hyper-parameters (max_output_tokens, etc.).
         response: The response object or text received from the model.
         duration_sec: Execution duration in seconds.
         metadata: Optional extra context (notebook name, cell index).

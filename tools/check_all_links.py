@@ -167,11 +167,22 @@ def slugify_heading(title: str) -> str:
     return slug
 
 
-def extract_anchors_from_content(content: str) -> Set[str]:
+def extract_anchors_from_content(
+    content: str,
+    seen_slugs: Optional[dict[str, int]] = None,
+) -> Set[str]:
     """Extracts all possible anchor targets from Markdown or notebook text.
+
+    Heading slugs follow GitHub's numbering for duplicates: the first
+    occurrence of a slug is bare (`setup`), the second is `setup-1`, then
+    `setup-2`, and so on. Pass a shared `seen_slugs` dict when scanning
+    notebook cells so duplicate numbering continues across cell boundaries
+    (matching GitHub's whole-document heading anchors).
 
     Args:
         content: Raw text content of file or cell.
+        seen_slugs: Optional mutable map of base slug -> occurrence count.
+            When provided, counters persist across calls (e.g. notebook cells).
 
     Returns:
         Set of valid anchor slugs and HTML names.
@@ -182,11 +193,16 @@ def extract_anchors_from_content(content: str) -> Set[str]:
         name = match.group("name").strip().lower()
         if name:
             anchors.add(name)
-    # 2. Markdown headings (# Heading)
+    # 2. Markdown headings (# Heading), with GitHub-style duplicate suffixes
+    if seen_slugs is None:
+        seen_slugs = {}
     for match in HEADING_REGEX.finditer(content):
         slug = slugify_heading(match.group("title"))
-        if slug:
-            anchors.add(slug)
+        if not slug:
+            continue
+        count = seen_slugs.get(slug, 0)
+        anchors.add(slug if count == 0 else f"{slug}-{count}")
+        seen_slugs[slug] = count + 1
     return anchors
 
 
@@ -227,11 +243,13 @@ def get_file_anchors(file_path: pathlib.Path, checker_config: LinkCheckerConfig)
         if resolved.suffix == ".ipynb":
             with open(resolved, "r", encoding="utf-8") as f:
                 data = json.load(f)
+            # Share heading counters across cells so duplicate slugs match GitHub.
+            seen_slugs: dict[str, int] = {}
             for cell in data.get("cells", []):
                 if cell.get("cell_type") in ("markdown", "raw"):
                     lines = normalize_cell_source(cell.get("source"))
                     cell_text = "".join(lines)
-                    anchors.update(extract_anchors_from_content(cell_text))
+                    anchors.update(extract_anchors_from_content(cell_text, seen_slugs))
                     # Also index Colab cell IDs for scrollTo references
                     cell_id = cell.get("metadata", {}).get("id") or cell.get("id")
                     if cell_id:

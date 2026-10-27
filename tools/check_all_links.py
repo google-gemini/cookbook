@@ -384,7 +384,11 @@ def validate_internal_link(
     parsed = urllib.parse.urlparse(url)
     scheme = parsed.scheme.lower()
     netloc = parsed.netloc.lower()
-    fragment = parsed.fragment.strip().lower() if parsed.fragment else ""
+    # Percent-decode before comparing: browsers decode fragments when looking up
+    # the indicated part of the document (HTML). Paths already use unquote().
+    fragment = (
+        urllib.parse.unquote(parsed.fragment).strip().lower() if parsed.fragment else ""
+    )
 
     # 1. GitHub repository blob URLs (e.g. https://github.com/google-gemini/cookbook/blob/main/...)
     github_blob_path_prefix = "/google-gemini/cookbook/blob/main/"

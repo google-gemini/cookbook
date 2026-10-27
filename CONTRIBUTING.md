@@ -71,7 +71,7 @@ See [`tools/README.md`](./tools/README.md) for full documentation and options.
 The priority is maintaining the notebooks and guides. For the internal helper scripts under [`tools/`](./tools/):
 
 * **Active `main`-branch bugs only:** Only open issues or pull requests for `tools/` when a bug **actively breaks or misformats existing notebooks, Markdown files, or CI checks on the `main` branch**. Issues and PRs targeting theoretical or synthetic edge cases that do not occur on `main` will be closed; latent edge cases are fixed organically if they ever arise in practice.
-* **No unit tests:** Internal scripts under `tools/` do not need unit tests. **Do not submit new unit test files or add unit tests (`tools/test_*.py`)**, as we keep these helper scripts lightweight without maintaining a test suite.
+* **No unit tests:** Internal scripts under `tools/` do not need unit tests. **Do not submit new unit test files or add unit tests (`tools/test_*.py`)**, as these helper scripts are kept lightweight without maintaining a test suite.
 
 ## Things we consider
 

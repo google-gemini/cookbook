@@ -567,14 +567,19 @@ def run_link_audit(
 
     print(f"[FAIL] Found {len(broken_links)} broken or dead link(s):\n")
     for src, line, url, err in broken_links:
-        location = f"{src}:{line}" if line > 0 else str(src)
-        print(f"  ❌ {location} -> {url}")
+        src_str = src.as_posix() if isinstance(src, pathlib.PurePath) else str(src)
+        location = f"{src_str}:{line}" if line > 0 else src_str
+        print(f"  - {location} -> {url}")
         print(f"     Reason: {err}\n")
     return 1
 
 
 def main() -> None:
     """CLI entrypoint."""
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(
         description="Audit links across Gemini API Cookbook Markdown files and Notebooks."
     )

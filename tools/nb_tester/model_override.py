@@ -52,8 +52,11 @@ Use Cases:
 3. Running dry-run audits to inspect which notebooks would be affected by a model migration.
 """
 
+import io
 import re
-from typing import Optional, Tuple
+import tokenize
+from typing import List, Optional, Tuple
+
 import nbformat
 
 from .logger import logger
@@ -136,6 +139,34 @@ class ModelOverrideTransformer:
         """
         return bool(self.override_model)
 
+    @staticmethod
+    def _get_literal_spans(source: str) -> List[Tuple[int, int]]:
+        """
+        Extracts character index spans (start, end) for string literals and comments
+        using Python's tokenize module so replacements avoid docstrings and prompts.
+        """
+        spans: List[Tuple[int, int]] = []
+        try:
+            lines = source.splitlines(keepends=True)
+            line_offsets = [0]
+            for line in lines:
+                line_offsets.append(line_offsets[-1] + len(line))
+
+            for tok in tokenize.generate_tokens(io.StringIO(source).readline):
+                if tok.type in (
+                    tokenize.STRING,
+                    tokenize.COMMENT,
+                    getattr(tokenize, "FSTRING_START", -1),
+                    getattr(tokenize, "FSTRING_MIDDLE", -1),
+                    getattr(tokenize, "FSTRING_END", -1),
+                ):
+                    s_char = line_offsets[tok.start[0] - 1] + tok.start[1]
+                    e_char = line_offsets[tok.end[0] - 1] + tok.end[1]
+                    spans.append((s_char, e_char))
+        except (tokenize.TokenError, SyntaxError, UnicodeError) as exc:
+            logger.debug(f"Tokenization skipped for cell: {exc}")
+        return spans
+
     def transform_cell_source(self, source: str, cell_index: int = 0) -> Tuple[str, int]:
         """
         Transforms a single code cell's source string to replace compatible model assignments.
@@ -151,11 +182,26 @@ class ModelOverrideTransformer:
         if not self.is_active() or not source:
             return source, 0
 
+        literal_spans = self._get_literal_spans(source)
         replacements = 0
 
         def _replace_match(match: re.Match) -> str:
             nonlocal replacements
+
             prefix = match.group(1)
+
+            # Ignore matches that occur inside string literals or comments.
+            # We check the start of the actual model identifier being assigned to,
+            # rather than the start of the line, to handle cases where the assignment
+            # is on the same line as the start of a string literal.
+            id_match = re.search(
+                r"(?:MODEL_ID|MODEL_NAME|MODEL|model_id|model)(?:\s*:\s*[^=]+)?\s*=\s*$",
+                prefix,
+            )
+            identifier_start = match.start() + (id_match.start() if id_match else 0)
+            if any(s_start <= identifier_start < s_end for s_start, s_end in literal_spans):
+                return match.group(0)
+
             current_model = match.group(2) or match.group(3) or ""
             suffix = match.group(4)
             original_match = match.group(0).strip()

@@ -227,6 +227,36 @@ class TestCheckAllLinks(unittest.TestCase):
         self.assertEqual(exit_code, 1, output.getvalue())
         self.assertIn("Anchor '#deleted-section' not found", output.getvalue())
 
+    def test_percent_encoded_unicode_heading_anchors(self) -> None:
+        """Percent-encoded fragments must match the decoded heading slug."""
+        cafe = self.repo_root / "cafe.md"
+        cafe.write_text("# Café\n\nBody.\n", encoding="utf-8")
+        for url in (
+            "#caf%C3%A9",
+            "cafe.md#caf%C3%A9",
+            "https://github.com/google-gemini/cookbook/blob/main/cafe.md#caf%C3%A9",
+            "#café",
+            "cafe.md#café",
+        ):
+            with self.subTest(url=url):
+                source = cafe if url.startswith("#") else self.readme_path
+                ok, err = validate_internal_link(source, url, self.config)
+                self.assertTrue(ok, err)
+
+        # Still reject a missing target after decoding.
+        ok, err = validate_internal_link(cafe, "#missing%2Dsection", self.config)
+        self.assertFalse(ok)
+        self.assertIn("'#missing-section' not found", err)
+
+    def test_percent_encoded_unicode_anchor_audit_passes(self) -> None:
+        """Full audit must accept a working percent-encoded section link."""
+        guide = self.repo_root / "guide_encoded.md"
+        guide.write_text("# Café\n\n[Jump](#caf%C3%A9)\n", encoding="utf-8")
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            exit_code = run_link_audit(self.config, [str(guide)])
+        self.assertEqual(exit_code, 0, output.getvalue())
+
     def test_non_document_and_colab_fragments_remain_allowed(self) -> None:
         """Code line references and Colab scroll targets do not use heading slugs."""
         target = self.repo_root / "sample.py"

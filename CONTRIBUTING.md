@@ -66,6 +66,13 @@ python tools/nblint_cli.py quickstarts/**/*.ipynb examples/**/*.ipynb
 
 See [`tools/README.md`](./tools/README.md) for full documentation and options.
 
+## Internal tooling (`tools/`)
+
+The priority is maintaining the notebooks and guides. For the internal helper scripts under [`tools/`](./tools/):
+
+* **Active `main`-branch bugs only:** Only open issues or pull requests for `tools/` when a bug **actively breaks or misformats existing notebooks, Markdown files, or CI checks on the `main` branch**. Issues and PRs targeting theoretical or synthetic edge cases that do not occur on `main` will be closed; latent edge cases are fixed organically if they ever arise in practice.
+* **No unit tests:** Internal scripts under `tools/` do not need unit tests. **Do not submit new unit test files or add unit tests (`tools/test_*.py`)**, as these helper scripts are kept lightweight without maintaining a test suite.
+
 ## Things we consider
 
 When accepting a new guide, we want to balance a few aspects.
@@ -162,7 +169,7 @@ See [`.gemini/styleguide.md`](./.gemini/styleguide.md) for the full list and res
 * Demonstrate small parts before combining them into something more complex.
 * If you define a function, ideally run it and show its output immediately before using it in another function or a more complex block.
 * Only use helper functions when necessary (e.g., for code reuse or complexity management). If a piece of logic is only a couple of lines and used once, it's often clearer to write it inline so readers don't have to look up the function definition. Hide helper function definitions using `# @title`.
-* Keep examples quick and concise. Do not add extra options or parameters (like `temperature`) without explaining them; focus on what you want to showcase.
+* Keep examples quick and concise. Do not add extra options or parameters without explaining them; focus on what you want to showcase.
 * If you *must* use extra parameters, explain *why* they are needed and the reasoning behind the specific value the first time you use them.
 * When selecting a model, use a Colab form selector for easier maintainability:
     ```python

@@ -15,21 +15,11 @@
 """
 ## Setup
 
-The gradio-webrtc install fails unless you have ffmpeg@6, on mac:
-
-```
-brew uninstall ffmpeg
-brew install ffmpeg@6
-brew link ffmpeg@6
-```
-
 Create a virtual python environment, then install the dependencies for this script:
 
 ```
-pip install websockets numpy gradio-webrtc "gradio>=5.9.1"
+pip install websockets numpy fastrtc "gradio>=5.9.1"
 ```
-
-If installation fails it may be
 
 Before running this script, ensure the `GOOGLE_API_KEY` environment
 
@@ -44,7 +34,7 @@ You can get an api-key from Google AI Studio (https://aistudio.google.com/apikey
 To run the script:
 
 ```
-python gemini_gradio_audio.py
+python gradio_audio.py
 ```
 
 On the gradio page (http://127.0.0.1:7860/) click record, and talk, gemini will reply. But note that interruptions
@@ -58,7 +48,7 @@ import json
 import numpy as np
 import gradio as gr
 import websockets.sync.client
-from gradio_webrtc import StreamHandler, WebRTC
+from fastrtc import StreamHandler, WebRTC
 
 __version__ = "0.0.3"
 
@@ -70,7 +60,7 @@ class GeminiConfig:
     def __init__(self):
         self.api_key = os.getenv(KEY_NAME)
         self.host = "generativelanguage.googleapis.com"
-        self.model = "models/gemini-3.7-flash"
+        self.model = "models/gemini-3.8-live"
         self.ws_url = f"wss://{self.host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key={self.api_key}"
 
 class AudioProcessor:
@@ -81,12 +71,10 @@ class AudioProcessor:
         encoded = base64.b64encode(data.tobytes()).decode("UTF-8")
         return {
             "realtimeInput": {
-                "mediaChunks": [
-                    {
-                        "mimeType": f"audio/pcm;rate={sample_rate}",
-                        "data": encoded,
-                    }
-                ],
+                "audio": {
+                    "mimeType": f"audio/pcm;rate={sample_rate}",
+                    "data": encoded,
+                },
             },
         }
 
@@ -117,11 +105,12 @@ class GeminiHandler(StreamHandler):
     def _initialize_websocket(self):
         """Initializes the WebSocket connection to the Gemini API."""
         try:
-            self.ws = websockets.sync.client.connect(self.config.ws_url, timeout=3000)
+            ws = websockets.sync.client.connect(self.config.ws_url, timeout=3000)
             initial_request = {"setup": {"model": self.config.model,"tools":[{"google_search": {}}]}}
-            self.ws.send(json.dumps(initial_request))
-            setup_response = json.loads(self.ws.recv())
+            ws.send(json.dumps(initial_request))
+            setup_response = json.loads(ws.recv())
             print(f"Setup response: {setup_response}")
+            self.ws = ws
         except websockets.exceptions.WebSocketException as e:
             print(f"WebSocket connection failed: {str(e)}")
             self.ws = None
@@ -136,18 +125,11 @@ class GeminiHandler(StreamHandler):
                 self._initialize_websocket()
 
             sample_rate, array = frame
-            message = {"realtimeInput": {"mediaChunks": []}}
-
             if sample_rate > 0 and array is not None:
                 array = array.squeeze()
-                audio_data = self.audio_processor.encode_audio(array, self.output_sample_rate)
-                message["realtimeInput"]["mediaChunks"].append({
-                    "mimeType": f"audio/pcm;rate={self.output_sample_rate}",
-                    "data": audio_data["realtimeInput"]["mediaChunks"][0]["data"],
-                })
-
-            if message["realtimeInput"]["mediaChunks"]:
+                message = self.audio_processor.encode_audio(array, self.output_sample_rate)
                 self.ws.send(json.dumps(message))
+
         except Exception as e:
             print(f"Error in receive: {str(e)}")
             if self.ws:
@@ -259,6 +241,6 @@ def registry(
 
 # Launch the Gradio interface
 gr.load(
-    name="gemini-3.7-flash",
+    name="gemini-3.8-live",
     src=registry,
 ).launch()

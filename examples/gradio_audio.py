@@ -21,10 +21,10 @@ Create a virtual python environment, then install the dependencies for this scri
 pip install websockets numpy fastrtc "gradio>=5.9.1"
 ```
 
-Before running this script, ensure the `GOOGLE_API_KEY` environment
+Before running this script, set the GEMINI_API_KEY environment variable
 
 ```
-$ export GOOGLE_API_KEY ='add your key here'
+$ export GEMINI_API_KEY='add your key here'
 ```
 
 You can get an api-key from Google AI Studio (https://aistudio.google.com/apikey)
@@ -52,7 +52,7 @@ from fastrtc import StreamHandler, WebRTC
 
 __version__ = "0.0.3"
 
-KEY_NAME="GOOGLE_API_KEY"
+KEY_NAME="GEMINI_API_KEY"
 
 # Configuration and Utilities
 class GeminiConfig:
@@ -104,6 +104,7 @@ class GeminiHandler(StreamHandler):
 
     def _initialize_websocket(self):
         """Initializes the WebSocket connection to the Gemini API."""
+        ws = None
         try:
             ws = websockets.sync.client.connect(self.config.ws_url, timeout=3000)
             initial_request = {"setup": {"model": self.config.model,"tools":[{"google_search": {}}]}}
@@ -113,9 +114,13 @@ class GeminiHandler(StreamHandler):
             self.ws = ws
         except websockets.exceptions.WebSocketException as e:
             print(f"WebSocket connection failed: {str(e)}")
+            if ws:
+                ws.close()
             self.ws = None
         except Exception as e:
             print(f"Setup failed: {str(e)}")
+            if ws:
+                ws.close()
             self.ws = None
 
     def receive(self, frame: tuple[int, np.ndarray]) -> None:
@@ -123,13 +128,13 @@ class GeminiHandler(StreamHandler):
         try:
             if not self.ws:
                 self._initialize_websocket()
-
+            if not self.ws:
+                return  # connection failed; the next frame will retry
             sample_rate, array = frame
             if sample_rate > 0 and array is not None:
                 array = array.squeeze()
                 message = self.audio_processor.encode_audio(array, self.output_sample_rate)
                 self.ws.send(json.dumps(message))
-
         except Exception as e:
             print(f"Error in receive: {str(e)}")
             if self.ws:

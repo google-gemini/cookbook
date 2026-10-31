@@ -92,6 +92,18 @@ class TestOutputComparatorExactOrFuzzy(unittest.TestCase):
         self.assertEqual(report.verdict, "SLIGHT_VARIATION")
         self.assertFalse(report.is_regression)
 
+    def test_scientific_notation_drift(self) -> None:
+        """Scientific notation values within tolerance report SLIGHT_VARIATION."""
+        report = self._compare("Loss: 1.2e-5", "Loss: 1.3e-5")
+        self.assertEqual(report.verdict, "SLIGHT_VARIATION")
+        self.assertFalse(report.is_regression)
+
+    def test_scientific_notation_regression(self) -> None:
+        """Scientific notation values with large exponent drift report REGRESSION."""
+        report = self._compare("Loss: 1e-5", "Loss: 1e-6")
+        self.assertEqual(report.verdict, "REGRESSION")
+        self.assertTrue(report.is_regression)
+
 
 if __name__ == "__main__":
     unittest.main()

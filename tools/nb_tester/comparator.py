@@ -296,7 +296,7 @@ class OutputComparator:
 
         # Check for numeric drift within acceptable tolerance.
         # Only compare numbers when the non-numeric template structure is identical.
-        numeric_pattern = re.compile(r"(?<!\w)-?\d+(?:\.\d+)?\b")
+        numeric_pattern = re.compile(r"(?<!\w)-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b")
         old_template = numeric_pattern.sub("<NUM>", old_clean)
         new_template = numeric_pattern.sub("<NUM>", new_clean)
 

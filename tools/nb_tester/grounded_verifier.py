@@ -148,11 +148,9 @@ class GroundedFactualVerifier:
         for model_name in models_to_try:
             gen_config = types.GenerateContentConfig(
                 system_instruction=system_instruction,
-                temperature=0.0,
                 tools=[types.Tool(google_search=types.GoogleSearch())],
             )
             parameters_dict = {
-                "temperature": 0.0,
                 "tools": ["google_search"],
                 "model": model_name
             }

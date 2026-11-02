@@ -19,8 +19,9 @@ compile is caught before it is published:
   - IPython line magics (`%pip install ...`), shell escapes (`!ls`), and shell
     capture assignments (`files = !ls`) are neutralized first, since they are
     valid in a kernel but not in plain Python.
-  - Cells whose first line is a cell magic (`%%bash`, `%%writefile`, ...) are
-    skipped entirely, because their body is not Python at all.
+  - `%%time` cells are checked after neutralizing the magic header, because
+    their body is Python. Other cell magics (`%%bash`, `%%writefile`, ...) are
+    skipped, since their body may use another language or contain arbitrary text.
 
 Use Cases:
   - Catching unterminated or prematurely closed triple-quoted strings, which
@@ -32,9 +33,11 @@ Use Cases:
 
 from typing import Any, Dict, List
 import ast
+import io
 import logging
 import pathlib
 import re
+import tokenize
 
 logger = logging.getLogger(__name__)
 
@@ -56,13 +59,34 @@ def strip_ipython_syntax(source: str) -> str:
     cleaned = []
     in_continuation = False
 
-    for line in source.split("\n"):
+    multiline_string_lines = set()
+    try:
+        tokens = tokenize.generate_tokens(io.StringIO(source).readline)
+        for token in tokens:
+            token_name = tokenize.tok_name.get(token.type, "")
+            if token.type == tokenize.STRING or "FSTRING" in token_name:
+                start_line, _ = token.start
+                end_line, _ = token.end
+                if end_line > start_line:
+                    multiline_string_lines.update(range(start_line + 1, end_line + 1))
+    except tokenize.TokenError as e:
+        if "string" in str(e).lower() and len(e.args) > 1 and isinstance(e.args[1], tuple):
+            start_line = e.args[1][0]
+            total_lines = source.count("\n") + 1
+            multiline_string_lines.update(range(start_line + 1, total_lines + 1))
+    except Exception:
+        pass
+
+    for line_idx, line in enumerate(source.split("\n"), start=1):
         stripped = line.lstrip()
         indent = line[:len(line) - len(stripped)]
 
         if in_continuation:
             # Trailing part of a magic or shell line; a comment keeps it inert.
             cleaned.append("#")
+        elif line_idx in multiline_string_lines:
+            cleaned.append(line)
+            continue
         else:
             capture_match = SHELL_CAPTURE_REGEX.match(line)
             if capture_match:
@@ -102,8 +126,10 @@ def check_code_cell_syntax(
             continue
 
         src = "".join(cell.get("source", []))
-        if not src.strip() or src.lstrip().startswith("%%"):
-            # Empty cell, or a cell magic whose body is not Python.
+        if not src.strip():
+            continue
+        if src.lstrip().startswith("%%") and src.split(maxsplit=1)[0] != "%%time":
+            # Only %%time is known here to execute its body as Python.
             continue
 
         try:

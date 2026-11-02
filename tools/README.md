@@ -76,7 +76,7 @@ python tools/check_all_links.py --all
 ## 2. Lint Rules Reference
 
 ### Python Syntax Rules (`tools/nblint/rules/syntax.py`)
-- **`syntax::code_cell`**: Parses every code cell with `ast.parse` (after neutralizing IPython magics, shell escapes, and skipping `%%` cell magics) and reports the cell index and line of any `SyntaxError`.
+- **`syntax::code_cell`**: Parses code cells, including `%%time` bodies, with `ast.parse` after neutralizing IPython magics and shell escapes. Other `%%` cell magics are skipped. Reports the cell index and original line of any `SyntaxError`.
 
 ### Structure Rules (`tools/nblint/rules/structure.py`)
 - **`structure::copyright`**: Verifies that cell 0 contains a valid Google / Gemini copyright statement (`##### Copyright 2026 Google LLC.`).

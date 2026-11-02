@@ -35,6 +35,11 @@ This guide is mostly about the python content and the notebook, but don't forget
 * **Google AI Studio:** Direct questions or PRs about Google AI Studio, including API key generation or project settings, to the [Google AI Developer Forum](https://discuss.ai.google.dev/c/gemini-api/4) or official [Google AI Studio documentation](https://aistudio.google.com/docs/ai-studio-quickstart).
 * **Promotional content:** Call out in the review PRs that primarily promote a paid or proprietary third-party service. Third-party integrations must provide clear technical learning value.
 
+## Internal tooling (`tools/`)
+
+* **Active `main`-branch bugs only:** Our priority is maintaining the notebooks themselves. Changes to internal scripts under `tools/` are only accepted when they fix a concrete bug **actively affecting existing notebooks, Markdown files, or CI checks on the `main` branch**. If a PR only addresses theoretical or synthetic edge cases that do not occur on `main`, call it out in the review and recommend closing it; latent edge cases are fixed organically when they happen in practice.
+* **No unit tests for `tools/`:** Internal helper scripts under `tools/` do not need unit tests, and we do not want to multiply or maintain unit test suites (`tools/test_*.py`). Never ask authors to add unit tests for `tools/` changes, and ask to remove any new unit test files or unit test additions submitted for `tools/`.
+
 ## Dependencies and third-party frameworks
 
 * **Avoid unnecessary orchestration frameworks:** Do not introduce third-party wrapper or orchestration frameworks, such as `langchain`, `llamaindex`, `crewai`, or `litellm`, when `google-genai` supports the demonstrated capability. In that case, it must be clearly explain what the value added of the framework is compared to the official Gemini API/SDK.
@@ -152,7 +157,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 ## Examples
 
 * Keep examples quick and concise.
-* Do not use extra parameters (like temperature) when not needed to keep the focus on what your notebook is illustrating.
+* Do not use extra parameters when not needed to keep the focus on what your notebook is illustrating.
 * If you have to use extra-parameters, explain why and why the specific value the first time you do.
 * **Strictly Forbidden (Blocking Review Error)**: Any examples using `yt-dlp`, `yt_dlp`, `pytube`, `pytubefix`, `youtube-dl`, `youtube_dl`, or equivalent tools that download, rip, or stream YouTube content are strictly forbidden as they violate the [YouTube Terms of Service](https://www.youtube.com/t/terms#c3e2907ca8). Always reject any PR introducing them and instruct the author to pass YouTube URLs natively to the Gemini API via `file_uri` (e.g., `types.Part.from_uri(file_uri="https://www.youtube.com/watch?v=...", mime_type="video/mp4")`).
 * Any crypto or blockchain related topics are also forbidden

@@ -19,8 +19,9 @@ compile is caught before it is published:
   - IPython line magics (`%pip install ...`), shell escapes (`!ls`), and shell
     capture assignments (`files = !ls`) are neutralized first, since they are
     valid in a kernel but not in plain Python.
-  - Cells whose first line is a cell magic (`%%bash`, `%%writefile`, ...) are
-    skipped entirely, because their body is not Python at all.
+  - `%%time` cells are checked after neutralizing the magic header, because
+    their body is Python. Other cell magics (`%%bash`, `%%writefile`, ...) are
+    skipped, since their body may use another language or contain arbitrary text.
 
 Use Cases:
   - Catching unterminated or prematurely closed triple-quoted strings, which
@@ -102,8 +103,10 @@ def check_code_cell_syntax(
             continue
 
         src = "".join(cell.get("source", []))
-        if not src.strip() or src.lstrip().startswith("%%"):
-            # Empty cell, or a cell magic whose body is not Python.
+        if not src.strip():
+            continue
+        if src.lstrip().startswith("%%") and src.split(maxsplit=1)[0] != "%%time":
+            # Only %%time is known here to execute its body as Python.
             continue
 
         try:

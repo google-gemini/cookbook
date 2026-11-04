@@ -597,14 +597,15 @@ def run_link_audit(
         return 0
 
     print(f"[FAIL] Found {len(broken_links)} broken or dead link(s):\n")
+    marker = "❌"
+    try:
+        marker.encode(getattr(sys.stdout, "encoding", None) or "utf-8")
+    except Exception:
+        marker = "[X]"
+
     for src, line, url, err in broken_links:
         src_str = src.as_posix() if isinstance(src, pathlib.Path) else str(src)
         location = f"{src_str}:{line}" if line > 0 else src_str
-        marker = "❌"
-        try:
-            marker.encode(sys.stdout.encoding or "utf-8")
-        except Exception:
-            marker = "[X]"
         print(f"  {marker} {location} -> {url}")
         print(f"     Reason: {err}\n")
     return 1

@@ -29,7 +29,7 @@ This guide is mostly about the python content and the notebook, but don't forget
 
 ## Repository scope and redirects
 
-* **Prohibited use policy:** If a PR appears to involve a restricted use case under [Google's Generative AI Prohibited Use Policy](https://policies.google.com/terms/generative-ai/use-policy), call out the concern in the review and do not approve the PR until it is resolved. Restricted uses include NFTs, crytocurrencies, automated credit or loan eligibility decisions, biometric background profiling, and unauthorized surveillance.
+* **Prohibited use policy:** If a PR appears to involve a restricted use case under [Google's Generative AI Prohibited Use Policy](https://policies.google.com/terms/generative-ai/use-policy), call out the concern in the review and do not approve the PR until it is resolved. Restricted uses include NFTs, cryptocurrencies, automated credit or loan eligibility decisions, biometric background profiling, and unauthorized surveillance.
 * **Gemma models:** If a PR is specifically about Gemma open models, such as Gemma fine-tuning or Logit Lens, direct the author to [google-gemma/cookbook](https://github.com/google-gemma/cookbook).
 * **Gemini Enterprise Agent Platform (fka. Vertex AI) workflows and administration:** Redirect notebooks specifically focused on enterprise Vertex AI or Gemini Enterprise Agent Platform infrastructure, pipelines, or Google Cloud administration to [GoogleCloudPlatform/generative-ai](https://github.com/GoogleCloudPlatform/generative-ai). Direct SDK bugs to their dedicated repos (ex: [googleapis/python-genai](https://github.com/googleapis/python-genai)).
 * **Google AI Studio:** Direct questions or PRs about Google AI Studio, including API key generation or project settings, to the [Google AI Developer Forum](https://discuss.ai.google.dev/c/gemini-api/4) or official [Google AI Studio documentation](https://aistudio.google.com/docs/ai-studio-quickstart).
@@ -42,7 +42,7 @@ This guide is mostly about the python content and the notebook, but don't forget
 
 ## Dependencies and third-party frameworks
 
-* **Avoid unnecessary orchestration frameworks:** Do not introduce third-party wrapper or orchestration frameworks, such as `langchain`, `llamaindex`, `crewai`, or `litellm`, when `google-genai` supports the demonstrated capability. In that case, it must be clearly explain what the value added of the framework is compared to the official Gemini API/SDK.
+* **Avoid unnecessary orchestration frameworks:** Do not introduce third-party wrapper or orchestration frameworks, such as `langchain`, `llamaindex`, `crewai`, or `litellm`, when `google-genai` supports the demonstrated capability. In that case, it must be clearly explained what the value added of the framework is compared to the official Gemini API/SDK.
 * **Integration exceptions:** Third-party frameworks are permitted when the notebook's explicit purpose is to demonstrate that integration. Place the notebook in the relevant existing integration directory.
 * Keep `%pip install` requirements minimal to ensure fast Colab startup times and avoid dependency conflicts.
 
@@ -122,7 +122,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 ## Code style
 
 * Notebooks are for people. Write code optimized for clarity.
-* Use the [Google Python Style Guide](http://google.github.io/styleguide/pyguide.html), where applicable. Code formatted
+* Use the [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html), where applicable. Code formatted
   by [`pyink`](https://github.com/google/pyink) will always be accepted.
 * Ideally, if you define a function, run it and show us what it does before using it in another function.
 * Demonstrate small parts before combining them into something more complex.
@@ -180,7 +180,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 ## Indentation
 
 * **Use 4 spaces per indentation level.** (PEP 8 recommendation)
-* When a function has multiple parameters, expend it on multiple lines with proper indentation for better readability:
+* When a function has multiple parameters, expand it on multiple lines with proper indentation for better readability:
     ```python
     interaction = client.interactions.create(
         model=MODEL_ID,

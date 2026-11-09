@@ -12,7 +12,7 @@ This Arduino-based application demonstrates how to capture audio from a micropho
 * Adafruit NeoPixel ring (connected to `NEOPIXEL_PIN`)
 * SD card module (connected to `SD_CS`)
 * WiFi network
-* [Google Gemini API key](http://aistudio.google.com/app/apikey)
+* [Google Gemini API key](https://aistudio.google.com/app/apikey)
 
 ## Hardware Setup
 
@@ -79,7 +79,7 @@ This Arduino-based application demonstrates how to capture audio from a micropho
 * **Base64 Encoding:** The audio data is encoded in base64 format for transmission to the Gemini API.
 * **Gemini API Interaction:** The application sends a JSON request to the Gemini API with the base64 encoded audio data and instructions.
 * **LED Control:** The application interprets the API's response and controls the LED and NeoPixel ring accordingly.
-* **Function Calling:** The Gemini api utilizes function calling to allow for the control of the LED's.
+* **Function Calling:** The Gemini API utilizes function calling to allow for the control of the LEDs.
 
 ## Code Structure
 
@@ -98,7 +98,7 @@ This Arduino-based application demonstrates how to capture audio from a micropho
 * Ensure that your WiFi network has internet access.
 * Verify that your Gemini API key is valid.
 * Adjust the `RECORD_DURATION` constant to change the recording length. Longer durations may be too much for the limited memory of the ESP32.
-* Adjust the `NEOPIXEL_COUNT` constant to match the amount of neopixels you have.
+* Adjust the `NEOPIXEL_COUNT` constant to match the number of NeoPixels you have.
 * The `jsonBufferSize` may need to be adjusted depending on the length of the audio recording.
 * The application uses an insecure WiFi client for simplicity. For production use, consider using a secure connection.
 * The application disables brownout detection and watchdog timers. This is for testing purposes and may not be suitable for production environments.

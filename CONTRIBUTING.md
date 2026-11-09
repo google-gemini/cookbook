@@ -133,7 +133,7 @@ See [`.gemini/styleguide.md`](./.gemini/styleguide.md) for the full list and res
 ## Code Style
 
 * Notebooks are for people. Write code optimized for clarity.
-* Use the [Google Python Style Guide](http://google.github.io/styleguide/pyguide.html), where applicable. Code formatted by [`pyink`](https://github.com/google/pyink) will always be accepted.
+* Use the [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html), where applicable. Code formatted by [`pyink`](https://github.com/google/pyink) will always be accepted.
 * **Use 4 spaces per indentation level.** (PEP 8 recommendation)
 * In particular, defining functions and variables takes extra spaces around the `=` sign, while function parameters don't:
     ```python
@@ -218,7 +218,7 @@ See [`.gemini/styleguide.md`](./.gemini/styleguide.md) for the full list and res
 
 * Be consistent about how you save your notebooks (e.g., with ToC open, potentially omitting outputs) to keep JSON diffs manageable. In-repo tools like [`nbfmt` and `nblint`](./tools/README.md) help enforce consistency.
 * Consider setting the "Omit code cell output when saving this notebook" option if outputs (like inline images) make diffs too large for GitHub.
-* [ReviewNB.com](http://reviewnb.com) can assist with reviewing notebook diffs in pull requests.
+* [ReviewNB.com](https://www.reviewnb.com) can assist with reviewing notebook diffs in pull requests.
 * Use the [Open in Colab](https://chrome.google.com/webstore/detail/open-in-colab/iogfkhleblhcpcekbiedikdehleodpjo) browser extension to easily open GitHub notebooks in Colab.
 * The easiest way to edit a notebook tracked in GitHub is often:
     1.  Open the notebook in Colab directly from the GitHub branch you intend to edit.

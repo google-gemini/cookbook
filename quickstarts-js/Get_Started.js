@@ -982,9 +982,7 @@ if (!MODEL_ID.startsWith("gemini-4-")) {
 
 /* Output Sample
 
-Explicit cache created: cachedContents/abc123xyz456
-During the initial phase, communications focused on launch vehicle status checks, trajectory verification, and orbital insertion parameters.
-Cache cleaned up.
+Skipping explicit cache creation for gemini-4-hydrogen (uses automatic implicit caching).
 
 */
 

@@ -113,6 +113,8 @@ class ModelOverrideTransformer:
             return "omni"
         if "learnlm" in clean:
             return "learnlm"
+        if "decision" in clean:
+            return "decision"
         return "text"
 
     def __init__(self, override_model: Optional[str] = None):

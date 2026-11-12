@@ -70,7 +70,7 @@ For more information about all Gemini models, check the [documentation](https://
 */
 
 // [CODE STARTS]
-MODEL_ID = "gemini-3.7-flash"; // e.g., "gemini-3.7-flash", "gemini-3.1-pro-preview"
+MODEL_ID = "gemini-4-hydrogen"; // e.g., "gemini-4-hydrogen", "gemini-4-argon", "gemini-4-carbon", "gemini-3.8-flash"
 // [CODE ENDS]
 
 /* Markdown (render)

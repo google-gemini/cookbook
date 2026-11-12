@@ -163,11 +163,11 @@ def get_model_sort_key(model_name: str) -> tuple:
     Order:
       1. Family / Media type category (General Gemini -> Live -> TTS -> Omni -> Image -> Embeddings -> Veo -> Imagen -> Lyria -> Other)
       2. Generation version descending (e.g. 4.x before 3.x before 2.x before 1.x)
-      3. Capability tier ascending: Ultra -> Carbon -> Argon / Pro -> Flash -> Flash-Lite / 8b (least capable)
+      3. Capability tier ascending: Ultra -> Carbon -> Argon / Pro -> Hydrogen / Flash -> Flash-Lite / 8b (least capable)
       4. Specific version descending (e.g. 3.8 before 3.1)
     
     Args:
-        model_name: The string ID of the model (e.g. 'gemini-3.7-flash').
+        model_name: The string ID of the model (e.g. 'gemini-4-hydrogen').
         
     Returns:
         A tuple sort key where lower values appear earlier in the list.
@@ -219,7 +219,7 @@ def get_model_sort_key(model_name: str) -> tuple:
         tier_rank = 10
     elif "flash-lite" in cleaned or "flash_lite" in cleaned or "8b" in cleaned or "-lite" in cleaned or "clip" in cleaned:
         tier_rank = 30
-    elif "flash" in cleaned:
+    elif "flash" in cleaned or "hydrogen" in cleaned:
         tier_rank = 20
     elif "fast" in cleaned:
         tier_rank = 25

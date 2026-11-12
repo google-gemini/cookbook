@@ -19,7 +19,7 @@
 
 The **[Google Gen AI SDK](https://googleapis.github.io/js-genai)** provides access to [Gemini models](https://ai.google.dev/gemini-api/docs/models) through both the Gemini Developer API and Vertex AI.
 
-This notebook focuses on the stateful **Interactions API** (`ai.interactions`), which is the recommended way to interact with Gemini 3 models. The Interactions API manages conversation state server-side, enables switching models mid-conversation, supports tool executions, and provides unified access to multimodal inputs and outputs.
+This notebook focuses on the stateful **Interactions API** (`ai.interactions`), which is the recommended way to interact with Gemini 4 and Gemini 3 models. The Interactions API manages conversation state server-side, enables switching models mid-conversation, supports tool executions, and provides unified access to multimodal inputs and outputs.
 
 This notebook will walk you through:
 * Installing and setting up the Google GenAI SDK
@@ -41,7 +41,7 @@ This notebook will walk you through:
 * Grounding with Google Search and Google Maps
 * Context caching (automatic implicit caching in Interactions API)
 * Generating embeddings with `ai.models.embedContent` (text & multimodal)
-* Gemini 3 features and migration tips
+* Gemini 4 features and migration tips
 
 More details about this SDK on the [documentation](https://ai.google.dev/gemini-api/docs/sdks).
 
@@ -65,11 +65,11 @@ ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 */
 
 // [CODE STARTS]
-module = await import("https://esm.sh/@google/genai@2.28.0");
+module = await import("https://esm.sh/@google/genai@2.30.0");
 GoogleGenAI = module.GoogleGenAI;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-MODEL_ID = "gemini-3.8-flash"; // "gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash-lite", "gemini-3.1-pro-preview"
+MODEL_ID = "gemini-4-hydrogen"; // "gemini-4-carbon", "gemini-4-argon", "gemini-4-hydrogen", "gemini-3.8-flash", "gemini-3.5-flash-lite"
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -142,7 +142,7 @@ console.log(tokenCount.totalTokens);
 
 You can include `generation_config` values in each call to control how the model generates a response (for example, `max_output_tokens`).
 
-Note: Sampling parameters (`temperature`, `top_k`, and `top_p`) are deprecated in Gemini 3 in favor of model-tuned defaults.
+Note: In Gemini 4, `max_output_tokens` caps `thinking + output` tokens combined within the shared 1M-token context window (keep it at `32768` or higher so reasoning does not exhaust the budget). Sampling parameters (`temperature`, `top_k`, and `top_p`) are ignored on Gemini 4 models in favor of model-tuned defaults (`thinking_level` is your primary reasoning control).
 */
 
 // [CODE STARTS]
@@ -151,7 +151,7 @@ interaction = await ai.interactions.create({
   input:
     "Tell me how the internet works, but pretend I'm a puppy who understands only dog-related analogies.",
   generation_config: {
-    max_output_tokens: 1000,
+    max_output_tokens: 32768,
   },
 });
 
@@ -172,13 +172,18 @@ When you want to see a picture of a squirrel on your human's glowing rectangle, 
 
 All Gemini models since the 2.5 generation are thinking models, which means they first analyze your request and reason before generating the final response.
 
-In the Interactions API, you can control the thinking depth using `thinking_level` in `generation_config`. Available thinking levels are `"minimal"`, `"low"`, `"medium"`, and `"high"`.
+In the Interactions API, you can control the thinking depth using `thinking_level` in `generation_config`. Gemini 4 Hydrogen (`gemini-4-hydrogen`) supports `"low"`, `"medium"`, `"high"` (its default), and `"xhigh"`; `gemini-4-carbon` and `gemini-4-argon` support `"low"`, `"medium"` (their default), and `"high"` (`"minimal"` is only supported on legacy Gemini 3.6 / 3.5 Flash models).
 
 To inspect the internal reasoning, iterate through `interaction.steps` and check for steps of type `"thought"`.
 */
 
 // [CODE STARTS]
-thinking_level = "high"; // "minimal", "low", "medium", "high"
+thinking_level = "high"; // "low", "medium", "high", "xhigh" (gemini-4-hydrogen only)
+
+if (thinking_level === "xhigh" && MODEL_ID !== "gemini-4-hydrogen") {
+  console.log('thinking_level="xhigh" is exclusive to gemini-4-hydrogen; falling back to "high".');
+  thinking_level = "high";
+}
 
 interaction = await ai.interactions.create({
   model: MODEL_ID,
@@ -925,55 +930,59 @@ Apollo 11 was the first crewed mission to land on the Moon (July 1969, Sea of Tr
 <a name="caching"></a>
 ## Context caching
 
-With the Interactions API, context caching is handled automatically via **implicit caching**. When you use `previous_interaction_id` to continue a conversation, the server automatically reuses cached tokens from earlier turns, drastically reducing latency and token costs without manual cache management.
+With the Interactions API, context caching is handled automatically via **implicit caching**. When you use `previous_interaction_id` to continue a conversation or send shared prompt prefixes of 4,096 tokens or more, the server automatically reuses cached tokens from earlier turns (95% discount on Gemini 4 models), drastically reducing latency and token costs without manual cache management.
 
-For explicit caching use cases (e.g. sharing a single static 500-page document cache across independent users), use `ai.caches.create` with `ai.models.generateContent`. See the [Caching quickstart](../quickstarts/Caching.ipynb) for details.
+For explicit caching use cases on Gemini 3 and 2.5 models (e.g. sharing a single static 500-page document cache across independent users), use `ai.caches.create` with `ai.models.generateContent` (explicit caching is not supported on Gemini 4 models). See the [Caching quickstart](../quickstarts/Caching.ipynb) for details.
 */
 
 // [CODE STARTS]
 cacheSystemInstruction =
   "You are an expert researcher with extensive experience in mission transcripts.";
 
-cache = await ai.caches.create({
-  model: MODEL_ID,
-  config: {
-    displayName: "apollo11_cache",
-    systemInstruction: cacheSystemInstruction,
-    contents: [
-      {
-        fileData: {
-          fileUri: textFile.uri,
-          mimeType: "text/plain",
+if (!MODEL_ID.startsWith("gemini-4-")) {
+  cache = await ai.caches.create({
+    model: MODEL_ID,
+    config: {
+      displayName: "apollo11_cache",
+      systemInstruction: cacheSystemInstruction,
+      contents: [
+        {
+          fileData: {
+            fileUri: textFile.uri,
+            mimeType: "text/plain",
+          },
         },
-      },
-    ],
-    ttl: "3600s",
-  },
-});
+      ],
+      ttl: "3600s",
+    },
+  });
 
-console.log(`Explicit cache created: ${cache.name}`);
+  console.log(`Explicit cache created: ${cache.name}`);
 
-// Query using the explicit cache
-cachedResponse = await ai.models.generateContent({
-  model: MODEL_ID,
-  contents: "What was the main topic discussed in the first phase of the mission?",
-  config: {
-    cachedContent: cache.name,
-  },
-});
+  // Query using the explicit cache
+  cachedResponse = await ai.models.generateContent({
+    model: MODEL_ID,
+    contents: "What was the main topic discussed in the first phase of the mission?",
+    config: {
+      cachedContent: cache.name,
+    },
+  });
 
-console.log(cachedResponse.text);
+  console.log(cachedResponse.text);
 
-// Clean up cache
-await ai.caches.delete({ name: cache.name });
-console.log("Cache cleaned up.");
+  // Clean up cache
+  await ai.caches.delete({ name: cache.name });
+  console.log("Cache cleaned up.");
+} else {
+  console.log(
+    `Skipping explicit cache creation for ${MODEL_ID} (uses automatic implicit caching).`
+  );
+}
 // [CODE ENDS]
 
 /* Output Sample
 
-Explicit cache created: cachedContents/abc123xyz456
-During the initial phase, communications focused on launch vehicle status checks, trajectory verification, and orbital insertion parameters.
-Cache cleaned up.
+Skipping explicit cache creation for gemini-4-hydrogen (uses automatic implicit caching).
 
 */
 
@@ -1046,15 +1055,16 @@ Multimodal embedding dimensions: 3072
 */
 
 /* Markdown (render)
-<a name="gemini3migration"></a>
-## Migrating from Gemini 2.5
+<a name="gemini4"></a><a name="gemini4migration"></a><a name="gemini3migration"></a>
+## Gemini 4 highlights and migrating from Gemini 3 & 2.5
 
-[Gemini 3](https://ai.google.dev/gemini-api/docs/gemini-3) models are our most capable model family to date and offer a stepwise improvement over Gemini 2.5. When migrating, consider the following:
+The [Gemini 4](https://ai.google.dev/gemini-api/docs/models) family—**[Gemini 4 Hydrogen](https://ai.google.dev/gemini-api/docs/models/gemini-4-hydrogen)** (`gemini-4-hydrogen`, default across free and paid tiers), **[Gemini 4 Argon](https://ai.google.dev/gemini-api/docs/models/gemini-4-argon)** (`gemini-4-argon`), and **[Gemini 4 Carbon](https://ai.google.dev/gemini-api/docs/models/gemini-4-carbon)** (`gemini-4-carbon`)—combines a unified 1M-token context window, long decode up to 1M output tokens, and simplified thinking controls:
 
-* **Interactions API:** Migrate multi-turn, stateful, and tool-augmented workflows to `ai.interactions.create`. State is maintained server-side via `previous_interaction_id`, and conversation steps can be inspected cleanly.
-* **Thinking:** Thinking is on by default. Use discrete `thinking_level` values (`"minimal"`, `"low"`, `"medium"`, `"high"`) in `generation_config`.
-* **Sampling parameters:** Parameters `temperature`, `top_k`, and `top_p` are deprecated. Use model defaults to avoid degrading reasoning performance.
-* **Context caching:** Multi-turn interactions benefit from automatic implicit caching without requiring explicit cache lifecycle management.
+* **Interactions API:** Build stateful, tool-augmented workflows with `ai.interactions.create`. Server-side state persists via `previous_interaction_id`, and you can switch between `gemini-4-hydrogen`, `gemini-4-argon`, and `gemini-4-carbon` mid-conversation.
+* **Thinking:** Thinking is always enabled. Use `thinking_level` (`"low"`, `"medium"` default on Carbon/Argon, `"high"` default on `gemini-4-hydrogen`, and `"xhigh"` exclusive to `gemini-4-hydrogen`) in `generation_config`; `"minimal"` and `thinking_budget` are unsupported on Gemini 4.
+* **Unified 1M context & long decode:** `max_output_tokens` covers `thinking + output` tokens combined (`>= 32768` recommended; `65536` synchronous cap). For outputs above 64K (up to `1,048,576` minus input), pass `background: true` and `max_output_tokens > 65536`.
+* **Sampling parameters:** Omit `temperature`, `top_k`, and `top_p` (ignored on Gemini 4 models).
+* **Context caching:** Gemini 4 uses automatic **implicit caching** (95% discount on shared prefixes `>= 4,096` tokens) instead of `ai.caches.create`.
 * **Media resolution:** Use `resolution` (`"low"`, `"medium"`, `"high"`, `"ultra_high"`) on media parts to manage token consumption for dense PDFs and images.
 */
 

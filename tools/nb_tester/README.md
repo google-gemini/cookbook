@@ -18,7 +18,7 @@ An automated, security-gated test runner and semantic regression evaluator desig
 4. **📋 Declarative Rules & Exception Registry (`rules/default_rules.yaml`)**:
    - Easily configure cell-level actions (e.g. skipping interactive `input()` cells) and per-notebook timeouts.
 5. **🎯 Family-Aware Dynamic Model Identifier Override (`--model <name>`)**:
-   - Test the entire cookbook (or specific notebooks) against candidate or pre-release models (e.g. `gemini-3.8-flash`, `gemini-3.1-pro-preview`) by dynamically overriding `MODEL_ID` in memory across compatible cells without touching disk.
+   - Test the entire cookbook (or specific notebooks) against candidate or pre-release models (e.g. `gemini-4-hydrogen`, `gemini-3.8-flash`, `gemini-3.1-pro-preview`) by dynamically overriding `MODEL_ID` in memory across compatible cells without touching disk.
    - Automatically preserves specialized non-text models (`-live`, `-tts`, `-image`, `embedding`, `veo`, `lyria`, `transcribe`) unless the override model itself belongs to that same model family.
 6. **📊 CI & Pull Request Integration**:
    - Generates persistent JSON reports under `reports/` and auto-appends formatted Markdown tables to `$GITHUB_STEP_SUMMARY`.

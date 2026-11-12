@@ -46,6 +46,7 @@ class TesterConfig:
     SECURITY_AUDITOR_FALLBACKS: List[str] = field(
         default_factory=lambda: [
             "gemini-3.1-pro-preview",
+            "gemini-4-hydrogen",
             "gemini-3.8-flash",
             "gemini-3.7-flash",
             "gemini-3.6-flash",
@@ -57,6 +58,7 @@ class TesterConfig:
     OUTPUT_JUDGE_FALLBACKS: List[str] = field(
         default_factory=lambda: [
             "gemini-3.5-flash-lite",
+            "gemini-4-hydrogen",
             "gemini-3.8-flash",
             "gemini-3.7-flash",
             "gemini-3.6-flash",
@@ -68,6 +70,7 @@ class TesterConfig:
     GROUNDED_VERIFIER_FALLBACKS: List[str] = field(
         default_factory=lambda: [
             "gemini-3.8-flash",
+            "gemini-4-hydrogen",
             "gemini-3.7-flash",
             "gemini-3.6-flash",
             "gemini-2.5-flash",

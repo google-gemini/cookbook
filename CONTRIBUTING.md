@@ -28,7 +28,7 @@ See below for more detailed guidelines specific to writing notebooks and guides.
 
 Small fixes, such as typos or bug fixes, can be submitted directly via a pull request. If you are looking for a place to start, check out the open issues labeled [`good first issue`](https://github.com/google-gemini/cookbook/labels/good%20first%20issue).
 
-Small fixes must address something that is actually wrong: a broken link, a cell that errors, an outdated model name, a genuine typo. We don't accept editorial restyles (heading renames, rewording that doesn't fix an error, boilerplate sections) or PRs that only clear `nblint` warnings, and related fixes must be bundled into a single PR (for example, one PR for all the typos you found, not one per notebook). PRs outside this scope will be closed.
+Small fixes must address something that is actually wrong: a broken link, a cell that errors, an outdated model name, a genuine typo. Editorial restyles (heading renames, rewording that doesn't fix an error, boilerplate sections) or PRs that only clear nblint warnings are not accepted. Related fixes must be bundled into a single PR (for example, one PR for all the typos you find, not one per notebook). PRs outside this scope will be closed.
 
 ## Content submission
 

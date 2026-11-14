@@ -1,5 +1,7 @@
 # Welcome to the Gemini API Cookbook
 
+[English](README.md) | [简体中文](README.zh.md)
+
 This cookbook provides a structured learning path for using the Gemini API, focusing on hands-on tutorials and practical examples.
 
 **For comprehensive API documentation, visit [ai.google.dev](https://ai.google.dev/gemini-api/docs).**

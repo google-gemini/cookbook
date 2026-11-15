@@ -12,13 +12,13 @@
 ---
 > **Gemini 4 Hydrogen、Carbon 与 Argon**：从 **[Gemini 4 Hydrogen](https://ai.google.dev/gemini-api/docs/models/gemini-4-hydrogen)**（`gemini-4-hydrogen`）开始探索，它是 Gemini 4 系列中全新默认模型，免费与付费层级均可使用，适用于日常高速编码、多模态工作流以及工具调用智能体（提供最高至 `xhigh` 的四级思维链深度）；同时提供具备极致推理深度的 **[Gemini 4 Carbon](https://ai.google.dev/gemini-api/docs/models/gemini-4-carbon)**（`gemini-4-carbon`）与专为前沿高速推理设计的 **[Gemini 4 Argon](https://ai.google.dev/gemini-api/docs/models/gemini-4-argon)**（`gemini-4-argon`）——全系列均支持统一的 1M 上下文窗口与长达 1M 输出 Token 的长解码。欢迎探索[快速入门（Get Started）](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb) 与[深度思考（Thinking）](./quickstarts/Get_started_thinking.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb#gemini4) 指南，包括[迁移指南（Migration Guide）](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#gemini4migration)。
 >
-> **Gemini 3.8 Flash**：我们最智能的 Flash 模型，专为长程软件工程、自主智能体以及企业级复杂工作流打造。欢迎从[快速入门](./quickstarts/Get_started.ipynb#choosing_gemini4) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#choosing_gemini4) 与[深度思考](./quickstarts/Get_started_thinking.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb#gemini3) 指南开始上手。
+> **Gemini 3.8 Flash**：最智能的 Flash 模型，专为长程软件工程、自主智能体以及企业级复杂工作流打造。欢迎从[快速入门](./quickstarts/Get_started.ipynb#choosing_gemini4) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#choosing_gemini4) 与[深度思考](./quickstarts/Get_started_thinking.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_thinking.ipynb#gemini3) 指南开始上手。
 >
 > **🎙️ Gemini 3.8 TTS 与自定义音色（Custom Voices）**：通过 [Gemini 3.8 TTS](./quickstarts/Get_started_TTS.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_TTS.ipynb) 生成富有表现力的单人与多人语音对话，并借助全新[音色设计指南（Voices Guide）](./quickstarts/Get_Started_Voices.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Voices.ipynb) 从文本设计专属音色或通过音频样本复刻声音！
 >
 > **Omni Flash**：视频编辑领域的 Nano Banana 震撼登场！了解如何通过 Interactions API 调用模型、使用自然语言编辑视频，详情请见[此处指南](./quickstarts/Get_started_Omni.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_Omni.ipynb)！
 > 
-> **🍌 Nano-Banana 2.1**：体验我们最新的图像生成模型：**Nano-Banana 2.1**。在[此处入门](./quickstarts/Get_Started_Nano_Banana.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb#nano-banana-pro) 与 512px、深度思考、搜索与图像事实依据接地（Grounding），并提供海量示例！
+> **🍌 Nano-Banana 2.1**：体验最新的图像生成模型：**Nano-Banana 2.1**。在[此处入门](./quickstarts/Get_Started_Nano_Banana.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Nano_Banana.ipynb#nano-banana-pro) 与 512px、深度思考、搜索与图像事实依据接地（Grounding），并提供海量示例！
 > 
 > **🎶 Lyria 3.5**：释放您的音乐创作潜能：体验 **Lyria 3.5**。在[此处入门](./quickstarts/Get_started_Lyria.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_Lyria.ipynb)，支持完整歌曲生成、图像生音乐（Image-to-Music）及丰富范例！
 > 
@@ -35,7 +35,7 @@
 1.  **[快速入门（Quick Starts）](https://github.com/google-gemini/cookbook/tree/main/quickstarts/)：** 循序渐进的动手指南，涵盖基础入门主题（"[快速入门](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb)"）以及具体 API 功能特性。
 2.  **[实用示例（Examples）](https://github.com/google-gemini/cookbook/tree/main/examples/)：** 展示如何组合多种特性的落地实战案例。
 
-我们还在独立的外部代码库中展示了端到端实际应用 **Demos**，展示 Gemini API 在真实业务场景下的强大能力。
+独立的外部代码库中还展示了端到端实际应用 **Demos**，展示 Gemini API 在真实业务场景下的强大能力。
 <br><br>
 
 ## 最新动态（What's New?）
@@ -43,10 +43,10 @@
 以下是 Gemini API 与 Cookbook 的最新功能特性与更新内容： 
 * **Gemini 4 Hydrogen**：Gemini 4 系列中高速且兼具高性价比的日常生产力主力模型——在免费与付费层级均可使用，具备统一的 1M 上下文窗口、支持长达 1M 输出 Token 的长解码续写，以及最高达 `xhigh` 的思考级别（`gemini-4-hydrogen` 现已成为 Cookbook 快速入门的默认模型）。欢迎在[快速入门指南](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb)中开启构建。
 * **Decisions API**：借助 `gemini-decision-1` 和 `client.decisions.create`，以校准的概率分布与零输出 Token 成本回答类型化的 是/否（`noul`）、选项选择与数值评分问题。从 [Decisions API 快速入门](./quickstarts/Get_started_decisions.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_decisions.ipynb) 快速上手！ 
-* **Gemini 4 Carbon**：我们最强大的前沿推理模型，专为长程自主编码、多模态专业知识工作、科学推理与网络安全防御设计，具备统一的 1M 上下文窗口与长达 1M Token 的长解码能力。在[快速入门指南](./quickstarts/Get_started.ipynb#choosing_gemini4) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#choosing_gemini4) 中了解如何基于 `gemini-4-carbon` 构建应用，以及如何在 Hydrogen、Carbon 和 Argon 之间进行选型。
+* **Gemini 4 Carbon**：功能最强劲的前沿推理模型，专为长程自主编码、多模态专业知识工作、科学推理与网络安全防御设计，具备统一的 1M 上下文窗口与长达 1M Token 的长解码能力。在[快速入门指南](./quickstarts/Get_started.ipynb#choosing_gemini4) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#choosing_gemini4) 中了解如何基于 `gemini-4-carbon` 构建应用，以及如何在 Hydrogen、Carbon 和 Argon 之间进行选型。
 * **Gemini 4 Argon**：高效的前沿推理模型，专为复杂软件工程、深度数理与科学难题求解、多步自主智能体打造，支持长达 1M 输出 Token 的长解码能力。在[快速入门指南](./quickstarts/Get_started.ipynb#choosing_gemini4) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb#choosing_gemini4) 中了解如何使用 `gemini-4-argon`。
 * **🎙️ Gemini 3.8 TTS、声音设计（Voice Design）与声音克隆（Voice Replication）**：通过 [TTS 快速入门](./quickstarts/Get_started_TTS.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_TTS.ipynb) 生成富有表现力的单人与多发音人语音，并借助[音色指南（声音设计与克隆）](./quickstarts/Get_Started_Voices.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_Started_Voices.ipynb) 从文本提示设计专属音色角色或根据参考音频复刻克隆声音。
-* **Gemini 3.8 Flash**：我们最智能的 Flash 模型，专为长时程软件工程、自主智能体与企业复杂流程而设计。欢迎在[快速入门指南](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb) 中学习如何使用该模型。
+* **Gemini 3.8 Flash**：最智能的 Flash 模型，专为长时程软件工程、自主智能体与企业复杂流程而设计。欢迎在[快速入门指南](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb) 中学习如何使用该模型。
 * **Gemini 3.5 Flash-Lite**：3.5 系列中速度最快、成本最低的模型。在高吞吐执行场景下性能优于以往历代 Flash-Lite 模型。在[快速入门指南](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb) 中了解更多。
 * **Omni Flash 1.2**：在 [Omni Flash 指南](./quickstarts/Get_started_Omni.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_Omni.ipynb) 中体验使用 Gemini Omni Flash 与 Interactions API 进行对话式视频生成与编辑！
 * **Agents API**：在受控安全环境中通过 [Antigravity 智能体](./quickstarts/Get_started_managed_agents.ipynb) [![Antigravity agent](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started_managed_agents.ipynb) 创建并运行智能体。
@@ -77,7 +77,7 @@
 2.  一枚 API 密钥（可前往 [Google AI Studio](https://aistudio.google.com/app/apikey) 创建获取）。
 <br><br>
 
-我们推荐您从以下内容开始：
+推荐从以下内容开始：
 
 *   [身份认证（Authentication）](./quickstarts/Authentication.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Authentication.ipynb)：配置您的 API 密钥以建立访问连接。
 *   [**快速入门（Get Started）**](./quickstarts/Get_started.ipynb) [![Colab](https://storage.googleapis.com/generativeai-downloads/images/colab_icon16.png)](https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb)：上手 Gemini 模型与 Gemini API，涵盖基础提示词编写与多模态输入交互。
@@ -125,7 +125,7 @@
 
 ## 官方 SDK
 
-Gemini API 本质为标准 REST API。您可以直接使用诸如 `curl` 等工具进行调用（参见 [REST 示例](https://github.com/google-gemini/cookbook/tree/main/quickstarts/rest/) 或优秀的 [Postman 工作区](https://www.postman.com/ai-on-postman/google-gemini-apis/overview)），也可以直接选用我们官方维护的各类语言 SDK：
+Gemini API 本质为标准 REST API。您可以直接使用诸如 `curl` 等工具进行调用（参见 [REST 示例](https://github.com/google-gemini/cookbook/tree/main/quickstarts/rest/) 或优秀的 [Postman 工作区](https://www.postman.com/ai-on-postman/google-gemini-apis/overview)），也可以直接选用官方维护的各类语言 SDK：
 * [Python](https://github.com/googleapis/python-genai)
 * [Go](https://github.com/googleapis/go-genai)
 * [Node.js](https://github.com/googleapis/js-genai)
@@ -145,4 +145,4 @@ Gemini API 本质为标准 REST API。您可以直接使用诸如 `curl` 等工�
 
 热烈欢迎广大开发者参与贡献！有关详情请参阅 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
-感谢您基于 Gemini API 进行开发！我们无比期待见证您的非凡创造。
+感谢您基于 Gemini API 进行开发！期待见证您的非凡创造。

@@ -40,6 +40,12 @@ This guide is mostly about the python content and the notebook, but don't forget
 * **Active `main`-branch bugs only:** Our priority is maintaining the notebooks themselves. Changes to internal scripts under `tools/` are only accepted when they fix a concrete bug **actively affecting existing notebooks, Markdown files, or CI checks on the `main` branch**. If a PR only addresses theoretical or synthetic edge cases that do not occur on `main`, call it out in the review and recommend closing it; latent edge cases are fixed organically when they happen in practice.
 * **No unit tests for `tools/`:** Internal helper scripts under `tools/` do not need unit tests, and we do not want to multiply or maintain unit test suites (`tools/test_*.py`). Never ask authors to add unit tests for `tools/` changes, and ask to remove any new unit test files or unit test additions submitted for `tools/`.
 
+## Editorial and cosmetic changes
+
+* **Small PRs must fix something that is actually wrong:** a broken or incorrect link, a cell that errors, an outdated model or API call, or a genuine typo. Call out in the review and recommend closing PRs that only restyle content, such as heading renames, rewording that doesn't fix an error, adding boilerplate sections to existing notebooks, or changing links that already work.
+* **Lint warnings are not a to-do list:** `nblint` *warnings* (as opposed to errors) are recommendations for authors of new content. Do not accept standalone PRs whose purpose is to clear warnings in notebooks they don't otherwise change.
+* **Bundle related fixes:** several small fixes of the same kind (for example typos across notebooks) must be submitted as a single PR. Recommend closing PRs that split one sweep into many and ask the author to resubmit them combined.
+
 ## Dependencies and third-party frameworks
 
 * **Avoid unnecessary orchestration frameworks:** Do not introduce third-party wrapper or orchestration frameworks, such as `langchain`, `llamaindex`, `crewai`, or `litellm`, when `google-genai` supports the demonstrated capability. In that case, it must be clearly explained what the value added of the framework is compared to the official Gemini API/SDK.

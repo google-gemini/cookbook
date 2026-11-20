@@ -163,7 +163,8 @@ def get_model_sort_key(model_name: str) -> tuple:
     Order:
       1. Family / Media type category (General Gemini -> Live -> TTS -> Omni -> Image -> Embeddings -> Veo -> Imagen -> Lyria -> Other)
       2. Generation version descending (e.g. 4.x before 3.x before 2.x before 1.x)
-      3. Capability tier ascending: Ultra -> Carbon -> Argon / Pro -> Neon -> Hydrogen / Flash -> Flash-Lite / 8b (least capable)
+      3. Capability tier (most to least capable):
+         Ultra -> Carbon -> Argon / Pro -> Neon -> Hydrogen / Flash -> Flash-Lite / 8b
       4. Specific version descending (e.g. 3.8 before 3.1)
     
     Args:

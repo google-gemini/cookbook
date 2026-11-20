@@ -182,7 +182,9 @@ thinking_level = "high"; // "low", "medium", "high", "xhigh" (gemini-4-neon and 
 
 if (
   thinking_level === "xhigh" &&
-  !["gemini-4-neon", "gemini-4-hydrogen"].includes(MODEL_ID)
+  !["gemini-4-neon", "gemini-4-hydrogen"].includes(
+    MODEL_ID.replace(/^models\//, "")
+  )
 ) {
   console.log(
     'thinking_level="xhigh" is only supported on gemini-4-neon and gemini-4-hydrogen; falling back to "high".'

@@ -69,7 +69,7 @@ module = await import("https://esm.sh/@google/genai@2.30.0");
 GoogleGenAI = module.GoogleGenAI;
 ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-MODEL_ID = "gemini-4-hydrogen"; // "gemini-4-carbon", "gemini-4-argon", "gemini-4-hydrogen", "gemini-3.8-flash", "gemini-3.5-flash-lite"
+MODEL_ID = "gemini-4-hydrogen"; // "gemini-4-carbon", "gemini-4-argon", "gemini-4-neon", "gemini-4-hydrogen", "gemini-3.8-flash", "gemini-3.5-flash-lite"
 // [CODE ENDS]
 
 /* Markdown (render)
@@ -172,16 +172,21 @@ When you want to see a picture of a squirrel on your human's glowing rectangle, 
 
 All Gemini models since the 2.5 generation are thinking models, which means they first analyze your request and reason before generating the final response.
 
-In the Interactions API, you can control the thinking depth using `thinking_level` in `generation_config`. Gemini 4 Hydrogen (`gemini-4-hydrogen`) supports `"low"`, `"medium"`, `"high"` (its default), and `"xhigh"`; `gemini-4-carbon` and `gemini-4-argon` support `"low"`, `"medium"` (their default), and `"high"` (`"minimal"` is only supported on legacy Gemini 3.6 / 3.5 Flash models).
+In the Interactions API, you can control the thinking depth using `thinking_level` in `generation_config`. Gemini 4 Neon (`gemini-4-neon`) and Gemini 4 Hydrogen (`gemini-4-hydrogen`) support `"low"`, `"medium"`, `"high"` (their default), and `"xhigh"`; `gemini-4-carbon` and `gemini-4-argon` support `"low"`, `"medium"` (their default), and `"high"` (`"minimal"` is only supported on legacy Gemini 3.6 / 3.5 Flash models).
 
 To inspect the internal reasoning, iterate through `interaction.steps` and check for steps of type `"thought"`.
 */
 
 // [CODE STARTS]
-thinking_level = "high"; // "low", "medium", "high", "xhigh" (gemini-4-hydrogen only)
+thinking_level = "high"; // "low", "medium", "high", "xhigh" (gemini-4-neon and gemini-4-hydrogen)
 
-if (thinking_level === "xhigh" && MODEL_ID !== "gemini-4-hydrogen") {
-  console.log('thinking_level="xhigh" is exclusive to gemini-4-hydrogen; falling back to "high".');
+if (
+  thinking_level === "xhigh" &&
+  !["gemini-4-neon", "gemini-4-hydrogen"].includes(MODEL_ID)
+) {
+  console.log(
+    'thinking_level="xhigh" is only supported on gemini-4-neon and gemini-4-hydrogen; falling back to "high".'
+  );
   thinking_level = "high";
 }
 
@@ -1058,10 +1063,10 @@ Multimodal embedding dimensions: 3072
 <a name="gemini4"></a><a name="gemini4migration"></a><a name="gemini3migration"></a>
 ## Gemini 4 highlights and migrating from Gemini 3 & 2.5
 
-The [Gemini 4](https://ai.google.dev/gemini-api/docs/models) family—**[Gemini 4 Hydrogen](https://ai.google.dev/gemini-api/docs/models/gemini-4-hydrogen)** (`gemini-4-hydrogen`, default across free and paid tiers), **[Gemini 4 Argon](https://ai.google.dev/gemini-api/docs/models/gemini-4-argon)** (`gemini-4-argon`), and **[Gemini 4 Carbon](https://ai.google.dev/gemini-api/docs/models/gemini-4-carbon)** (`gemini-4-carbon`)—combines a unified 1M-token context window, long decode up to 1M output tokens, and simplified thinking controls:
+The [Gemini 4](https://ai.google.dev/gemini-api/docs/models) family—**[Gemini 4 Hydrogen](https://ai.google.dev/gemini-api/docs/models/gemini-4-hydrogen)** (`gemini-4-hydrogen`, default across free and paid tiers), **[Gemini 4 Neon](https://ai.google.dev/gemini-api/docs/models/gemini-4-neon)** (`gemini-4-neon`), **[Gemini 4 Argon](https://ai.google.dev/gemini-api/docs/models/gemini-4-argon)** (`gemini-4-argon`), and **[Gemini 4 Carbon](https://ai.google.dev/gemini-api/docs/models/gemini-4-carbon)** (`gemini-4-carbon`)—combines a unified 1M-token context window, long decode up to 1M output tokens, and simplified thinking controls:
 
-* **Interactions API:** Build stateful, tool-augmented workflows with `ai.interactions.create`. Server-side state persists via `previous_interaction_id`, and you can switch between `gemini-4-hydrogen`, `gemini-4-argon`, and `gemini-4-carbon` mid-conversation.
-* **Thinking:** Thinking is always enabled. Use `thinking_level` (`"low"`, `"medium"` default on Carbon/Argon, `"high"` default on `gemini-4-hydrogen`, and `"xhigh"` exclusive to `gemini-4-hydrogen`) in `generation_config`; `"minimal"` and `thinking_budget` are unsupported on Gemini 4.
+* **Interactions API:** Build stateful, tool-augmented workflows with `ai.interactions.create`. Server-side state persists via `previous_interaction_id`, and you can switch between `gemini-4-hydrogen`, `gemini-4-neon`, `gemini-4-argon`, and `gemini-4-carbon` mid-conversation.
+* **Thinking:** Thinking is always enabled. Use `thinking_level` (`"low"`, `"medium"` default on Carbon/Argon, `"high"` default on `gemini-4-neon` and `gemini-4-hydrogen`, and `"xhigh"` supported on `gemini-4-neon` and `gemini-4-hydrogen`) in `generation_config`; `"minimal"` and `thinking_budget` are unsupported on Gemini 4.
 * **Unified 1M context & long decode:** `max_output_tokens` covers `thinking + output` tokens combined (`>= 32768` recommended; `65536` synchronous cap). For outputs above 64K (up to `1,048,576` minus input), pass `background: true` and `max_output_tokens > 65536`.
 * **Sampling parameters:** Omit `temperature`, `top_k`, and `top_p` (ignored on Gemini 4 models).
 * **Context caching:** Gemini 4 uses automatic **implicit caching** (95% discount on shared prefixes `>= 4,096` tokens) instead of `ai.caches.create`.

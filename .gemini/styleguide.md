@@ -107,6 +107,9 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Ideally we want the outputs to be saved in the notebooks so that one can see what the code does without runnning it. The only exception is when the output is too large (it contains images or videos for ex.).
 * If the `execution_count` has changed to something else than `null`, it usually indicates that the formatting script has not
   been run. A warning should be raised, but only once per notebook. Be very clear that it means that the formatting script must be run, not that the outputs should be removed.
+* **Code and Markdown prose synchronization:** When a PR modifies code cells, always check the surrounding Markdown cells as well (even when those Markdown cells are unchanged in the diff). Raise a review comment if:
+  * The PR adds non-default parameters, API version pins (such as `http_options={'api_version': 'v1beta'}`), or workarounds in code without explaining **why** they are needed in the preceding Markdown text (an inline `#` code comment alone is not sufficient, and feature-specific `v1beta` clients should be initialized in the section that requires them rather than in the notebook's global setup).
+  * Code cells are updated to new SDK methods, models, or parameters while the surrounding Markdown text still describes outdated APIs, model versions, or behavior.
 
 ## Notebook style
 

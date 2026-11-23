@@ -82,7 +82,7 @@ async def main():
                 elif message.filtered_prompt:
                     print("Prompt was filtered out: ", message.filtered_prompt)
                 else:
-                    print("Unknown error occured with message: ", message)
+                    print("Unknown error occurred with message: ", message)
                 await asyncio.sleep(10**-12)
 
         async def send():

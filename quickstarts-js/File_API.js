@@ -179,7 +179,7 @@ This ingenious invention, proudly titled at the top, presents itself as an unass
 
 On the left, we learn of its ergonomic design, promising &quot;PADDED STRAP SUPPORT&quot; for comfort, even when soaring above the daily commute. Below, the future of charging is here, with &quot;USB-C CHARGING,&quot; though adventurers will need to plan their flights carefully, as it offers a &quot;15-MIN BATTERY LIFE.&quot;
 
-To the right, the backpack&#x27;s true magic is revealed. It&#x27;s designed to be &quot;LIGHTWEIGHT&quot; and, crucially, &quot;LOOKS LIKE A NORMAL BACKPACK,&quot; allowing its wearer to blend seamlessly into any crowd before making a grand exit. It&#x27;s capacious too, designed to fit an &quot;18&quot; LAPTOP.&quot; The core of its power lies beneath, with &quot;RETRACTABLE BOOSTERS&quot; ready to emerge when needed, unleashing whimsical, swirling plumes of &quot;STEAM-POWERED&quot; propulsion â€“ a promise of &quot;GREEN/CLEAN&quot; flight that leaves nothing but a charming vapor trail in its wake.
+To the right, the backpack&#x27;s true magic is revealed. It&#x27;s designed to be &quot;LIGHTWEIGHT&quot; and, crucially, &quot;LOOKS LIKE A NORMAL BACKPACK,&quot; allowing its wearer to blend seamlessly into any crowd before making a grand exit. It&#x27;s capacious too, designed to fit an &quot;18&quot; LAPTOP.&quot; The core of its power lies beneath, with &quot;RETRACTABLE BOOSTERS&quot; ready to emerge when needed, unleashing whimsical, swirling plumes of &quot;STEAM-POWERED&quot; propulsion – a promise of &quot;GREEN/CLEAN&quot; flight that leaves nothing but a charming vapor trail in its wake.
 
 This handwritten blueprint captures the dream of everyday flight, balancing the fantastical with thoughtful, if ambitious, specifications.
 

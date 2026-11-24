@@ -25,6 +25,11 @@ import tempfile
 import unittest
 from unittest import mock
 
+# Ensure repository root is on sys.path when tests are run directly
+_repo_root = pathlib.Path(__file__).resolve().parent.parent
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
+
 from tools.check_all_links import (
     LinkCheckerConfig,
     extract_anchors_from_content,

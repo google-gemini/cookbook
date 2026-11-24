@@ -107,6 +107,9 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Ideally we want the outputs to be saved in the notebooks so that one can see what the code does without runnning it. The only exception is when the output is too large (it contains images or videos for ex.).
 * If the `execution_count` has changed to something else than `null`, it usually indicates that the formatting script has not
   been run. A warning should be raised, but only once per notebook. Be very clear that it means that the formatting script must be run, not that the outputs should be removed.
+* **Code and Markdown prose synchronization:** When a PR modifies code cells, always check the surrounding Markdown cells as well (even when those Markdown cells are unchanged in the diff). Raise a review comment if:
+  * The PR adds non-default parameters, API version pins (such as `http_options={'api_version': 'v1beta'}`), or workarounds in code without explaining **why** they are needed in the preceding Markdown text (an inline `#` code comment alone is not sufficient, and feature-specific `v1beta` clients should be initialized in the section that requires them rather than in the notebook's global setup).
+  * Code cells are updated to new SDK methods, models, or parameters while the surrounding Markdown text still describes outdated APIs, model versions, or behavior.
 
 ## Notebook style
 
@@ -135,7 +138,7 @@ Most of the cookbook content is Colab notebooks, which are stored as Json.
 * Only use helper function when you don't have a choice. If it's only a couple of lines, it's usually better to write them
   everytime so that the readers don't have to check the function definition all the time.
 * When selecting a model, use a colab selector for easier maintainability:
-  `MODEL_ID = "gemini-4-hydrogen"  # @param ["gemini-4-carbon", "gemini-4-argon", "gemini-4-hydrogen", "gemini-3.1-pro-preview", "gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-2.5-pro"] {"allow-input": true, "isTemplate": true}`
+  `MODEL_ID = "gemini-4-hydrogen"  # @param ["gemini-4-carbon", "gemini-4-argon", "gemini-4-neon", "gemini-4-hydrogen", "gemini-3.1-pro-preview", "gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-2.5-pro"] {"allow-input": true, "isTemplate": true}`
   * Always use double quotes `"` for string values and list items.
   * Always format the configuration dictionary as valid JSON (with double-quoted keys like `{"allow-input": true, "isTemplate": true}`).
   * Variable naming: `MODEL_ID` is standard for new notebooks. For existing notebooks that already use `MODEL` or `model_name` across downstream cells, keeping the existing variable name is fully compliant and encouraged to prevent broken references.

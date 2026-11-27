@@ -104,7 +104,7 @@ Here is your requested image:
 /* Markdown (render)
 ## Edit images
 
-You can also do image editing, simply pass the original image as part of the prompt. Don't limit yourself to simple edit, Gemini is able to keep the character consistency and reprensent you character in different behaviors or places.
+You can also do image editing, simply pass the original image as part of the prompt. Don't limit yourself to simple edit, Gemini is able to keep the character consistency and represent you character in different behaviors or places.
 */
 
 // [CODE STARTS]
@@ -194,7 +194,7 @@ for (const part of response.candidates[0].content.parts) {
 /* Markdown (render)
 ## Get multiple images (e: tell stories)
 
-So far you've only generated one image per call, but you can request way more than that! Let's try a baking receipe or telling a story.
+So far you've only generated one image per call, but you can request way more than that! Let's try a baking recipe or telling a story.
 */
 
 // [CODE STARTS]
@@ -380,7 +380,7 @@ for (const part of response.candidates[0].content.parts) {
 
 /* Markdown (render)
 ## Mix multiple pictures
-You can also mix multiple images (up to 3 with nano-banana, 14 with pro), either because there are multiple characters in your image, or because you want to hightlight a certain product, or set the background.
+You can also mix multiple images (up to 3 with nano-banana, 14 with pro), either because there are multiple characters in your image, or because you want to highlight a certain product, or set the background.
 */
 
 // [CODE STARTS]

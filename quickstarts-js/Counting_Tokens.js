@@ -92,7 +92,7 @@ The API provides an endpoint for counting the number of tokens in a request: [`a
 
 ### Choose a model
 
-Now select the model you want to use in this guide, either by selecting one in the list or writing it down. Keep in mind that some models, like the 2.5 ones are thinking models and thus take slightly more time to respond (cf. [thinking notebook](https://github.com/google-gemini/cookbook/blob/main/quickstarts-js/Get_started_thinking.js) for more details and in particular learn how to switch the thiking off).
+Now select the model you want to use in this guide, either by selecting one in the list or writing it down. Keep in mind that some models, like the 2.5 ones are thinking models and thus take slightly more time to respond (cf. [thinking notebook](https://github.com/google-gemini/cookbook/blob/main/quickstarts-js/Get_started_thinking.js) for more details and in particular learn how to switch the thinking off).
 
 The tokenization should be more or less the same for each of the Gemini models, but you can still switch between the different ones to double-check.
 

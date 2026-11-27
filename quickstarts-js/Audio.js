@@ -16,7 +16,7 @@
 
 /* Markdown (render)
 # Gemini API: Audio Quickstart
-This notebook provides an example of how to prompt Gemini Flash using an audio file. In this case, you'll use a [sound recording](https://www.jfklibrary.org/asset-viewer/archives/jfkwha-006) of President John F. Kennedyâ€™s 1961 State of the Union address.
+This notebook provides an example of how to prompt Gemini Flash using an audio file. In this case, you'll use a [sound recording](https://www.jfklibrary.org/asset-viewer/archives/jfkwha-006) of President John F. Kennedy's 1961 State of the Union address.
 */
 
 /* Markdown (render)

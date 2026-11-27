@@ -138,7 +138,7 @@ console.log(genResponse.text);
 
 Indeed it is!
 
-This is a classic example of a **pangram**â€”a sentence that contains every letter of the alphabet at least once.
+This is a classic example of a **pangram**—a sentence that contains every letter of the alphabet at least once.
 
 It&#x27;s famously used for testing typewriters, keyboards, and fonts, as it allows you to see all the letters in action. It&#x27;s remarkably efficient and widely recognized!
 
